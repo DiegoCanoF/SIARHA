@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SIARHA | Inicio de Sesión</title>
+
+    <!-- Bootstrap CSS -->
+    <link 
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" 
+        rel="stylesheet"
+    >
+
+    <!-- Estilos propios -->
+    <link rel="stylesheet" href="assets/css/login.css">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark border-bottom navbar-custom">
+    <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-end" href="#">
+            <img 
+                src="assets/img/Logo_Login.svg"
+                alt="Logo institucional SIARHA"
+                height="100"
+                class="me-1"
+            >
+            <span class="brand-text text-white align-self-end">
+                SIARHA
+            </span>
+        </a>
+    </div>
+</nav>
+
+<!-- CONTENIDO -->
+<main class="container main-login">
+
+    <div class="card shadow-sm p-4 login-card">
+
+        <!-- TÍTULO -->
+        <div class="text-center mb-4">
+            <h2 
+                class="fw-bold d-flex align-items-center justify-content-center gap-2"
+                style="font-family: 'Times New Roman', Times, serif; color: #501013;"
+            >
+                <img 
+                    src="assets/img/garza.svg"
+                    alt="Emblema SIARHA"
+                    height="60"
+                >
+                ACCESO GENERAL
+            </h2>
+
+            <p class="text-muted small">
+                Sistema Automatizado de Registro de Horas y Actividades de Servicio Social y Prácticas Profesionales
+            </p>
+        </div>
+
+        <!-- FORMULARIO -->
+        <form 
+            method="POST"
+            action="/login"
+            autocomplete="off"
+            novalidate
+        >
+
+            <!-- Selección de Rol -->
+            <div class="mb-4 text-center">
+                <div class="d-flex gap-3 justify-content-center rol-buttons">
+                    <button type="button" class="btn btn-lg rol-btn" onclick="seleccionarRol('admin', this)">
+                        Administradores
+                    </button>
+
+                    <button type="button" class="btn btn-lg rol-btn" onclick="seleccionarRol('alumno', this)">
+                        Alumnos
+                    </button>
+
+                    <!--
+                    NOTA BACKEND(Dani ¿):
+                    - Para el rol "alumno", el sistema debe detectar automáticamente
+                    si pertenece a servicio social, prácticas profesionales.
+                    - El frontend NO pregunta este dato.
+                    - La redirección y permisos lo hacemos desde el backend.
+                    -->
+
+
+                    <button type="button" class="btn btn-lg rol-btn" onclick="seleccionarRol('ur', this)">
+                        Unidad Receptora
+                    </button>
+                </div>
+
+                <!-- Rol seleccionado (NO confiable, solo UX) -->
+                <input type="hidden" name="rol" id="rol" required>
+            </div>
+
+            <!-- CAMPOS LOGIN -->
+            <div id="loginFields" hidden>
+
+                <div class="form-floating mb-3">
+                    <input
+                        type="text"
+                        class="form-control input-custom"
+                        id="usuario"
+                        name="usuario"
+                        required
+                        maxlength="50"
+                        placeholder="Usuario"
+                        autocomplete="username"
+                    >
+                    <label for="usuario" id="labelUsuario">
+                        Usuario
+                    </label>
+                </div>
+
+                <div class="form-floating mb-2">
+                    <input
+                        type="password"
+                        class="form-control input-custom"
+                        id="password"
+                        name="password"
+                        required
+                        minlength="8"
+                        autocomplete="current-password"
+                        placeholder="Contraseña"
+                    >
+                    <label for="password">
+                        Contraseña
+                    </label>
+                </div>
+
+                <!-- RECUPERAR ACCESO -->
+                <div class="text-center mb-3" id="linksAyuda">
+                    <span class="small text-muted d-block mb-1">
+                        ¿Perdiste acceso?
+                    </span>
+
+                    <a 
+                        href="recuperar-acceso.html"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="small text-decoration-none fw-bold"
+                    >
+                        Recupéralo aquí
+                    </a>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-login">
+                        Iniciar sesión
+                    </button>
+                </div>
+
+            </div>
+        </form>
+
+        <div class="text-center mt-3">
+            <small class="text-muted">
+                Uso exclusivo para personal y alumnos autorizados
+            </small>
+        </div>
+
+    </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer-login">
+    <div class="container text-center">
+        <small>
+            © <span id="year"></span> SIARHA. Todos los derechos reservados.
+        </small>
+    </div>
+</footer>
+
+<!-- JS -->
+<script>
+function seleccionarRol(rol, boton) {
+
+    document.getElementById('rol').value = rol;
+    document.getElementById('loginFields').hidden = false;
+
+    document.querySelectorAll('.rol-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    boton.classList.add('active');
+
+    const labelUsuario = document.getElementById('labelUsuario');
+    const inputUsuario = document.getElementById('usuario');
+
+    if (rol === 'alumno') {
+        labelUsuario.textContent = 'Número de cuenta';
+        inputUsuario.placeholder = 'Ej. 2020123456';
+        inputUsuario.pattern = '[0-9]+';
+        inputUsuario.maxLength = 10;
+    } else if (rol === 'admin') {
+        labelUsuario.textContent = 'Correo institucional';
+        inputUsuario.placeholder = 'serviciosocial@institucion.mx';
+        inputUsuario.pattern = '';
+        inputUsuario.maxLength = 50;
+    } else {
+        labelUsuario.textContent = 'Usuario';
+        inputUsuario.placeholder = 'Correo o identificador asignado';
+        inputUsuario.pattern = '';
+        inputUsuario.maxLength = 50;
+    }
+}
+
+document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
