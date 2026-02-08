@@ -21,18 +21,37 @@
 
 <!-- NAVBAR -->
 <nav class="navbar navbar-dark border-bottom navbar-custom">
-    <div class="container-fluid">
-        <a class="navbar-brand d-flex align-items-end" href="#">
-            <img 
-                src="assets/img/Logo_Login.svg"
-                alt="Logo institucional SIARHA"
-                height="100"
-                class="me-1"
-            >
-            <span class="brand-text text-white align-self-end">
+    <div class="container-fluid position-relative justify-content-between">
+
+        <!-- LOGO + SIARHA -->
+        <div class="d-flex flex-column flex-md-row align-items-center align-items-md-end">
+
+            <a href="https://www.uaeh.edu.mx" target="_blank" rel="noopener noreferrer">
+                <img 
+                    src="assets/img/Logo_Login.svg"
+                    alt="Logo institucional SIARHA"
+                    height="100"
+                    style="cursor: pointer;"
+                >
+            </a>
+
+            <span class="brand-text text-white ms-md-2">
                 SIARHA
             </span>
-        </a>
+
+            <!-- TEXTO SOLO MÓVIL -->
+            <span class="navbar-subtitle text-white d-md-none text-center mt-1">
+                Dirección de Servicio Social y Prácticas Profesionales
+            </span>
+        </div>
+
+        <!-- TEXTO CENTRADO SOLO DESKTOP -->
+        <div class="navbar-center d-none d-md-block text-center">
+            <span class="navbar-subtitle text-white">
+                Dirección de Servicio Social y Prácticas Profesionales
+            </span>
+        </div>
+
     </div>
 </nav>
 
@@ -142,10 +161,11 @@
                         href="recuperar-acceso.html"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="small text-decoration-none fw-bold"
+                        class="small fw-bold text-dark text-decoration-underline"
                     >
                         Recupéralo aquí
                     </a>
+
                 </div>
 
                 <div class="d-grid">
