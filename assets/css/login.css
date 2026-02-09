@@ -81,7 +81,7 @@ main {
 .login-card {
     width: 100%;
     max-width: 720px;
-    background-color: #ffffff;
+    background-color: #e6e6e6ef;
     border-radius: 8px;
     padding: 2rem;
 }

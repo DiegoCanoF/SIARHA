@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SIARHA | Dashboard Alumno</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap -->
+    <link 
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Estilos propios -->
+    <link rel="stylesheet" href="../assets/css/dashboard-alumno.css">
+</head>
+
+<body class="bg-light">
+
+<!-- ===============================
+     NAVBAR
+================================ -->
+<nav class="navbar navbar-dark border-bottom navbar-custom sticky-top">
+    <div class="container-fluid position-relative">
+
+        <!-- LOGO + TEXTO -->
+        <div class="d-flex flex-column flex-md-row align-items-center align-items-md-end">
+
+            <a href="https://www.uaeh.edu.mx" target="_blank" rel="noopener noreferrer">
+                <img 
+                    src="../assets/img/Logo_Login.svg"
+                    alt="Logo institucional SIARHA"
+                    height="80"
+                    style="cursor: pointer;"
+                >
+            </a>
+
+            <span class="brand-text text-white ms-md-2">
+                SIARHA
+            </span>
+
+            <!-- TEXTO SOLO MÓVIL -->
+            <span class="navbar-subtitle text-white d-md-none text-center mt-1">
+                Dirección de Servicio Social y Prácticas Profesionales
+            </span>
+        </div>
+
+        <!-- TEXTO CENTRADO DESKTOP -->
+        <div class="navbar-center d-none d-md-block text-center">
+            <span class="navbar-subtitle text-white">
+                Dirección de Servicio Social y Prácticas Profesionales
+            </span>
+        </div>
+
+        <!-- BOTÓN MENÚ -->
+        <button 
+            class="navbar-toggler ms-auto"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#menuAlumno"
+            aria-controls="menuAlumno"
+            aria-label="Abrir menú"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+    </div>
+</nav>
+
+<!-- ===============================
+     MENÚ OFFCANVAS
+================================ -->
+<div 
+    class="offcanvas offcanvas-end offcanvas-custom"
+    tabindex="-1"
+    id="menuAlumno"
+    aria-labelledby="menuAlumnoLabel"
+>
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title" id="menuAlumnoLabel">
+            Menú
+        </h5>
+        <button 
+            type="button"
+            class="btn-close btn-close-white"
+            data-bs-dismiss="offcanvas"
+            aria-label="Cerrar"
+        ></button>
+    </div>
+
+    <div class="offcanvas-body">
+        <ul class="navbar-nav gap-2">
+
+            <li class="nav-item">
+                <a class="nav-link active" href="#">
+                    Inicio
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    Mi perfil
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    Contactar UR
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    Contactar con Dirección de Servicio Social y Prácticas Profesionales
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    Reportes
+                </a>
+            </li>
+
+            <hr class="menu-divider">
+
+            <li class="nav-item">
+                <a class="nav-link text-danger" href="#">
+                    Cerrar sesión
+                </a>
+            </li>
+
+        </ul>
+    </div>
+</div>
+
+<!-- ===============================
+     CONTENIDO PRINCIPAL
+================================ -->
+<main class="container-fluid p-4">
+
+    <!-- BIENVENIDA -->
+    <div class="mb-4">
+        <h4 class="fw-bold">
+            Bienvenido, <span id="nombreAlumno">Alumno</span>
+        </h4>
+        <p class="text-muted small">
+            Programa: <strong id="tipoPrograma">Prácticas Profesionales</strong>
+        </p>
+    </div>
+
+    <!-- TARJETAS RESUMEN -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3">
+            <div class="card card-soft">
+                <div class="card-body">
+                    <small class="text-muted">Horas realizadas</small>
+                    <h5 id="horasRealizadas">0</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card card-soft">
+                <div class="card-body">
+                    <small class="text-muted">Horas faltantes</small>
+                    <h5 id="horasFaltantes">0</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card card-soft">
+                <div class="card-body">
+                    <small class="text-muted">% de avance</small>
+                    <h5 id="porcentajeAvance">0%</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card card-soft">
+                <div class="card-body">
+                    <small class="text-muted">Promedio diario</small>
+                    <h5 id="promedioDiario">0:00</h5>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- PERFIL -->
+    <div class="card card-soft mb-4">
+        <div class="card-header bg-white fw-bold">
+            Mi perfil
+        </div>
+
+        <div class="card-body">
+            <div class="row g-3">
+
+                <div class="col-md-4">
+                    <label class="form-label small">Nombre completo</label>
+                    <input type="text" class="form-control" disabled>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label small">Número de cuenta</label>
+                    <input type="text" class="form-control" disabled>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label small">Correo institucional</label>
+                    <input type="email" class="form-control">
+                </div>
+
+            </div>
+        </div>
+    </div>
+<!-- BITÁCORA -->
+<div class="card card-soft mb-4">
+
+    <!-- HEADER -->
+    <div class="card-header bg-white fw-bold">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <span>Bitácora de horas</span>
+
+            <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-outline-secondary">
+                    Exportar Excel
+                </button>
+                <button class="btn btn-sm btn-outline-secondary">
+                    Exportar PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="card-body border-bottom">
+        <div class="row g-3 align-items-end">
+
+            <div class="col-md-3">
+                <label class="form-label small">Vista</label>
+                <select class="form-select">
+                    <option value="mes">Por mes</option>
+                    <option value="semana">Por semana</option>
+                    <option value="dia">Por día</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label small">Mes</label>
+                <input type="month" class="form-control">
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label small">Semana / Fecha</label>
+                <input type="week" class="form-control">
+            </div>
+
+            <div class="col-md-3 d-grid">
+                <button class="btn btn-primary">
+                    Aplicar filtro
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- RESUMEN DEL PERIODO -->
+    <div class="card-body border-bottom bg-light">
+        <div class="row text-center g-3">
+            <div class="col-md-4">
+                <small class="text-muted">Horas del periodo</small>
+                <h6 class="fw-bold mb-0">24:00</h6>
+            </div>
+            <div class="col-md-4">
+                <small class="text-muted">Días registrados</small>
+                <h6 class="fw-bold mb-0">5</h6>
+            </div>
+            <div class="col-md-4">
+                <small class="text-muted">Estado general</small>
+                <span class="badge bg-warning text-dark">
+                    En revisión
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABLA -->
+    <div class="table-responsive">
+    <table class="table table-bordered align-middle text-center mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Fecha</th>
+                    <th>Día</th>
+                    <th>Entrada</th>
+                    <th>Salida</th>
+                    <th>Total</th>
+                    <th>Actividad</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Backend llena esto -->
+                <tr>
+                    <td>2026-02-01</td>
+                    <td>Lunes</td>
+                    <td>08:00</td>
+                    <td>14:00</td>
+                    <td>06:00</td>
+                    <td>Apoyo administrativo</td>
+                    <td>
+                        <span class="badge bg-warning text-dark">
+                            Pendiente
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+</main>
+
+<!-- ===============================
+     FOOTER
+================================ -->
+<footer class="footer-login text-center py-2">
+    <small>
+        © 2026 SIARHA · Uso exclusivo institucional
+    </small>
+</footer>
+
+<!-- Bootstrap JS -->
+<script 
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+</html>

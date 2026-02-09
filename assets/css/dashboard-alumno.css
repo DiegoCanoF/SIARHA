@@ -1,0 +1,231 @@
+/* ===============================
+   VARIABLES INSTITUCIONALES
+================================ */
+:root {
+    --primario: #501013;      /* vino institucional UAEH */
+    --secundario: #C9A24D;    /* dorado */
+    --fondo: #F2F4F8;
+    --blanco: #FFFFFF;
+    --texto: #1F2933;
+    --gris: #E5E7EB;
+}
+
+/* ===============================
+   GLOBAL
+================================ */
+body {
+    background-color: var(--fondo) !important;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    color: var(--texto);
+}
+
+/* ===============================
+   NAVBAR
+================================ */
+.navbar-custom {
+    background-color: var(--primario);
+    z-index: 1050;
+}
+
+/* LOGO */
+.navbar-custom img {
+    object-fit: contain;
+}
+
+/* SIARHA */
+.brand-text {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 1.8rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    line-height: 1;
+}
+
+/* SUBTÍTULO */
+.navbar-subtitle {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 1.2rem;
+    line-height: 1.2;
+    white-space: normal;
+}
+
+/* TEXTO CENTRADO DESKTOP */
+.navbar-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* ===============================
+   OFFCANVAS MENÚ
+================================ */
+.offcanvas-custom {
+    background-color: var(--primario);
+    color: var(--blanco);
+}
+
+.offcanvas-custom .offcanvas-title {
+    color: var(--blanco);
+    font-weight: bold;
+}
+
+.offcanvas-custom .nav-link {
+    color: var(--blanco);
+    border-radius: 14px;
+    padding: 0.6rem 1rem;
+    transition: background-color 0.2s ease;
+}
+
+.offcanvas-custom .nav-link:hover,
+.offcanvas-custom .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.menu-divider {
+    border-color: rgba(255,255,255,0.3);
+}
+
+
+
+/* ===============================
+   FIX OFFCANVAS SOBRE NAVBAR
+================================ */
+
+/* Offcanvas siempre encima */
+.offcanvas {
+    z-index: 1100 !important;
+}
+
+/* Backdrop (fondo oscuro) */
+.offcanvas-backdrop {
+    z-index: 1090 !important;
+}
+
+/* Navbar un poco más abajo que el offcanvas */
+.navbar-custom {
+    z-index: 1050;
+}
+
+/* ===============================
+   MAIN CONTENT
+================================ */
+main {
+    padding-bottom: 3rem;
+}
+
+/* ===============================
+   CARDS SUAVES
+================================ */
+.card-soft {
+    border-radius: 16px;
+    border: none;
+    background-color: var(--blanco);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.card-soft h5 {
+    color: var(--primario);
+    font-weight: bold;
+}
+
+/* ===============================
+   PERFIL / SECCIONES
+================================ */
+.card-header {
+    border-bottom: 1px solid var(--gris);
+}
+
+/* ===============================
+   TABLA BITÁCORA
+================================ */
+table th {
+    background-color: var(--primario) !important;
+    color: var(--blanco);
+    font-weight: 600;
+}
+
+table td {
+    vertical-align: middle;
+}
+
+table tr:nth-child(even) {
+    background-color: var(--fondo);
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.table-bordered th {
+    color: #dee2e6;
+}
+
+
+/* ===============================
+   BOTONES
+================================ */
+.btn-outline-secondary {
+    border-radius: 12px;
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--primario);
+    color: var(--blanco);
+}
+
+.btn-primary {
+    background-color: var(--primario) !important;
+    border-color: var(--primario) !important;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background-color: #5e002f !important; /* un poco más oscuro */
+    border-color: #5e002f !important;
+}
+
+.btn-primary:focus,
+.btn-primary:active {
+    box-shadow: 0 0 0 0.2rem rgba(122, 0, 60, 0.35);
+}
+
+/* ===============================
+   FORMULARIOS
+================================ */
+input,
+select,
+textarea {
+    border-radius: 14px;
+}
+
+/* ===============================
+   FOOTER
+================================ */
+.footer-login {
+    background-color: var(--primario);
+    color: var(--blanco);
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+
+    .navbar-subtitle {
+        font-size: 1rem;
+    }
+
+    .brand-text {
+        font-size: 1.5rem;
+    }
+}
+@media (max-width: 768px) {
+    table {
+        font-size: 0.85rem;
+    }
+
+    th, td {
+        white-space: nowrap;
+    }
+}
