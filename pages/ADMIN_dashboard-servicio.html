@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SIARHA | Panel Administrativo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/siarha.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primario:     #501013;
+            --primario-dk:  #3a0b0e;
+            --primario-lt:  #f7eaea;
+            --primario-mid: #7a1820;
+            --dorado:       #C9A24D;
+            --dorado-lt:    #fdf6e3;
+            --bg:           #F2F4F8;
+            --card-bg:      #ffffff;
+            --text:         #1F2933;
+            --muted:        #6b7280;
+            --border:       #E5E7EB;
+            --radius-card:  18px;
+            --radius-sm:    10px;
+            --shadow:       0 2px 16px rgba(80,16,19,.08);
+            --shadow-hover: 0 6px 28px rgba(80,16,19,.15);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar-custom {
+            background: var(--primario);
+            padding: 0 1.5rem;
+            height: 70px;
+            box-shadow: 0 2px 16px rgba(0,0,0,.15);
+            position: sticky;
+            top: 0;
+            z-index: 1050;
+        }
+
+        .brand-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: .04em;
+            line-height: 1;
+        }
+
+        .navbar-subtitle {
+            font-size: .7rem;
+            font-weight: 500;
+            opacity: .85;
+            letter-spacing: .02em;
+        }
+
+        .navbar-toggler {
+            border: none;
+            color: #fff;
+            font-size: 1.25rem;
+            padding: .4rem .6rem;
+            border-radius: var(--radius-sm);
+            background: rgba(255,255,255,.12);
+            transition: background .2s;
+        }
+        .navbar-toggler:hover { background: rgba(255,255,255,.22); }
+
+        /* ── OFFCANVAS ── */
+        .offcanvas-custom {
+            background: var(--primario-dk);
+            color: #fff;
+            width: 280px !important;
+            border-radius: var(--radius-card) 0 0 var(--radius-card);
+        }
+        .offcanvas-custom .offcanvas-header {
+            border-color: rgba(255,255,255,.12) !important;
+            padding: 1.25rem 1.5rem;
+        }
+        .offcanvas-custom .offcanvas-title { font-weight: 700; font-size: 1rem; }
+        .offcanvas-custom .nav-link {
+            color: rgba(255,255,255,.8);
+            font-weight: 500;
+            font-size: .9rem;
+            padding: .65rem 1rem;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            transition: background .2s, color .2s;
+        }
+        .offcanvas-custom .nav-link:hover,
+        .offcanvas-custom .nav-link.active {
+            background: rgba(255,255,255,.12);
+            color: #fff;
+        }
+        .offcanvas-custom .nav-link.active { font-weight: 700; }
+        .offcanvas-custom .nav-link.danger { color: #ff9090 !important; }
+        .offcanvas-custom .nav-link.danger:hover { background: rgba(255,80,80,.15); }
+        .menu-divider { border-color: rgba(255,255,255,.12); margin: .5rem 0; }
+
+        /* ── MAIN ── */
+        main { flex: 1; padding: 1.75rem 1.5rem; max-width: 1200px; width: 100%; margin: 0 auto; }
+
+        /* ── ENCABEZADO ── */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: .75rem;
+            margin-bottom: 1.75rem;
+        }
+        .page-header h4 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin: 0;
+        }
+        .page-header p {
+            font-size: .8rem;
+            color: var(--muted);
+            margin: .2rem 0 0;
+        }
+        .badge-admin {
+            background: var(--primario-lt);
+            color: var(--primario);
+            font-weight: 700;
+            font-size: .78rem;
+            padding: .35rem .85rem;
+            border-radius: 20px;
+            border: 1px solid rgba(80,16,19,.18);
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+        }
+
+        /* ── STAT CARDS ── */
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow);
+            padding: 1.25rem 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: box-shadow .25s, transform .25s;
+            border: 1px solid var(--border);
+        }
+        .stat-card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+        .stat-icon {
+            width: 48px; height: 48px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+        .si-vino   { background: var(--primario-lt); color: var(--primario); }
+        .si-dorado { background: var(--dorado-lt);   color: #8a6820; }
+        .si-vino2  { background: var(--primario-lt); color: var(--primario-mid); }
+        .si-gold2  { background: var(--dorado-lt);   color: var(--dorado); }
+
+        .stat-label { font-size: .73rem; font-weight: 500; color: var(--muted); margin-bottom: .2rem; }
+        .stat-value { font-size: 1.4rem; font-weight: 800; color: var(--text); line-height: 1; }
+
+        /* ── SECTION CARDS ── */
+        .section-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+        .section-header {
+            padding: 1rem 1.4rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: .5rem;
+        }
+        .section-header .title {
+            font-weight: 700;
+            font-size: .95rem;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            color: var(--primario);
+        }
+
+        /* ── BOTONES ── */
+        .btn-outline-custom {
+            border: 1.5px solid var(--border);
+            background: #fff;
+            color: var(--muted);
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: .82rem;
+            padding: .45rem .9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            transition: border-color .2s, color .2s, background .2s;
+            cursor: pointer;
+        }
+        .btn-outline-custom:hover { border-color: var(--primario); color: var(--primario); background: var(--primario-lt); }
+
+        .btn-primary-custom {
+            background: var(--primario);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: .82rem;
+            padding: .45rem .9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            cursor: pointer;
+            transition: background .2s;
+        }
+        .btn-primary-custom:hover { background: var(--primario-dk); }
+
+        /* ── SEARCH BAR ── */
+        .search-bar {
+            display: flex;
+            gap: .6rem;
+            flex-wrap: wrap;
+        }
+        .search-bar input {
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: .45rem .85rem;
+            font-size: .83rem;
+            font-family: inherit;
+            color: var(--text);
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+            min-width: 180px;
+        }
+        .search-bar input:focus {
+            border-color: var(--primario);
+            box-shadow: 0 0 0 3px rgba(80,16,19,.1);
+        }
+        .search-bar select {
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: .45rem .75rem;
+            font-size: .83rem;
+            font-family: inherit;
+            color: var(--text);
+            background: #fff;
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* ── TABLE ── */
+        .table-responsive { overflow-x: auto; }
+        table { margin: 0; font-size: .83rem; width: 100%; border-collapse: collapse; }
+        table thead th {
+            background: var(--primario);
+            color: #fff;
+            font-weight: 700;
+            font-size: .75rem;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            padding: .8rem 1rem;
+            border: none;
+            white-space: nowrap;
+        }
+        table tbody td {
+            padding: .7rem 1rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+            color: var(--text);
+        }
+        table tbody tr:last-child td { border-bottom: none; }
+        table tbody tr:hover { background: var(--primario-lt); }
+
+        /* badges */
+        .badge-revision  { background: var(--primario-lt); color: var(--primario); border-radius: 20px; font-size: .74rem; font-weight: 700; padding: .28rem .7rem; }
+        .badge-activo    { background: var(--dorado-lt); color: #7a5a00; border-radius: 20px; font-size: .74rem; font-weight: 700; padding: .28rem .7rem; border: 1px solid #C9A24D; }
+        .badge-pendiente { background: #fff3cd; color: #856404; border-radius: 20px; font-size: .74rem; font-weight: 700; padding: .28rem .7rem; }
+        .badge-inactivo  { background: #f3f4f6; color: #6b7280; border-radius: 20px; font-size: .74rem; font-weight: 700; padding: .28rem .7rem; }
+
+        /* avance bar */
+        .avance-wrap { display: flex; align-items: center; gap: .5rem; min-width: 90px; }
+        .avance-bar  { flex: 1; height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+        .avance-fill { height: 100%; background: var(--primario); border-radius: 99px; }
+        .avance-pct  { font-size: .78rem; font-weight: 700; color: var(--primario); min-width: 30px; text-align: right; }
+
+        /* ── FOOTER ── */
+        .footer-custom {
+            background: var(--primario);
+            color: rgba(255,255,255,.7);
+            text-align: center;
+            padding: .75rem;
+            font-size: .75rem;
+            letter-spacing: .02em;
+        }
+
+
+        /* ── PAGINACIÓN ── */
+        .pag-wrap { display:flex; align-items:center; justify-content:space-between; padding:.85rem 1.4rem; border-top:1px solid var(--border); flex-wrap:wrap; gap:.5rem; }
+        .pag-info { font-size:.78rem; color:var(--muted); font-weight:500; }
+        .pag-btns { display:flex; gap:.35rem; }
+        .pag-btn { width:32px; height:32px; border-radius:8px; border:1.5px solid var(--border); background:#fff; color:var(--muted); font-size:.82rem; font-weight:600; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; }
+        .pag-btn:hover { border-color:var(--primario); color:var(--primario); background:var(--primario-lt); }
+        .pag-btn.active { background:var(--primario); color:#fff; border-color:var(--primario); }
+        .pag-btn:disabled { opacity:.4; cursor:not-allowed; }
+
+        /* ── TAB NAVEGACIÓN ── */
+        .tab-nav { display:flex; gap:0; border-bottom:2px solid var(--border); margin-bottom:1.5rem; }
+        .tab-nav-btn { padding:.7rem 1.4rem; font-size:.88rem; font-weight:700; color:var(--muted); border:none; background:transparent; cursor:pointer; border-bottom:3px solid transparent; margin-bottom:-2px; transition:color .2s,border-color .2s; display:flex; align-items:center; gap:.45rem; }
+        .tab-nav-btn:hover { color:var(--primario); }
+        .tab-nav-btn.active { color:var(--primario); border-bottom-color:var(--primario); }
+        .tab-panel { display:none; }
+        .tab-panel.active { display:block; }
+
+        /* ── FILTROS AVANZADOS ── */
+        .filtros-bar { background:var(--bg); border-bottom:1px solid var(--border); padding:.9rem 1.4rem; }
+        .filtros-bar .form-field { border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:.44rem .8rem; font-size:.82rem; font-family:inherit; color:var(--text); background:#fff; outline:none; transition:border-color .2s; }
+        .filtros-bar .form-field:focus { border-color:var(--primario); box-shadow:0 0 0 3px rgba(80,16,19,.1); }
+
+        /* ── RESUMEN RÁPIDO ── */
+        .resumen-strip { display:flex; border-bottom:1px solid var(--border); }
+        .resumen-item { flex:1; text-align:center; padding:.75rem .5rem; border-right:1px solid var(--border); }
+        .resumen-item:last-child { border-right:none; }
+        .resumen-item .r-val { font-size:1.05rem; font-weight:800; color:var(--text); }
+        .resumen-item .r-lab { font-size:.68rem; color:var(--muted); font-weight:500; margin-top:.12rem; }
+
+        /* ── BADGES NUEVOS ── */
+        .badge-finalizado { background:#d1fae5; color:#065f46; border-radius:20px; font-size:.73rem; font-weight:700; padding:.26rem .68rem; }
+        .badge-baja       { background:#fee2e2; color:#991b1b; border-radius:20px; font-size:.73rem; font-weight:700; padding:.26rem .68rem; }
+        .badge-ss  { background:var(--primario-lt); color:var(--primario); border-radius:20px; font-size:.71rem; font-weight:700; padding:.22rem .6rem; border:1px solid rgba(80,16,19,.18); }
+        .badge-pp  { background:var(--dorado-lt); color:#7a5a00; border-radius:20px; font-size:.71rem; font-weight:700; padding:.22rem .6rem; border:1px solid rgba(201,162,77,.35); }
+        .badge-ur-act  { background:var(--dorado-lt); color:#7a5a00; border-radius:20px; font-size:.73rem; font-weight:700; padding:.26rem .68rem; border:1px solid var(--dorado); }
+        .badge-ur-ina  { background:#f3f4f6; color:#6b7280; border-radius:20px; font-size:.73rem; font-weight:700; padding:.26rem .68rem; }
+        .badge-ur-sus  { background:#fee2e2; color:#991b1b; border-radius:20px; font-size:.73rem; font-weight:700; padding:.26rem .68rem; }
+
+        /* ── AVANCE COLOREADO ── */
+        .af-low  { background:#e57373 !important; }
+        .af-mid  { background:var(--dorado) !important; }
+        .af-high { background:var(--primario-mid) !important; }
+        .af-done { background:var(--primario) !important; }
+
+        /* ── OCUPACIÓN BAR ── */
+        .ocup-wrap { display:flex; align-items:center; gap:.5rem; min-width:110px; }
+        .ocup-bar { flex:1; height:6px; background:var(--border); border-radius:99px; overflow:hidden; }
+        .ocup-fill { height:100%; border-radius:99px; background:var(--primario); }
+        .ocup-txt { font-size:.77rem; font-weight:700; color:var(--text); white-space:nowrap; }
+
+        /* ── ROL BADGE ── */
+        .rol-badge { display:inline-flex; align-items:center; gap:.4rem; font-size:.75rem; font-weight:700;
+                     padding:.32rem .85rem; border-radius:20px; border:1px solid; }
+        .rol-superadmin { background:#f7eaea; color:#501013; border-color:rgba(80,16,19,.25); }
+        .rol-area       { background:#fdf6e3; color:#7a5a00; border-color:rgba(201,162,77,.4); }
+        .rol-reportes   { background:#f0fdf4; color:#065f46; border-color:rgba(34,197,94,.35); }
+
+        /* ── FILTRO INSTITUTO (superadmin) ── */
+        .filtro-instituto { display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+                            padding:.6rem 0; margin-bottom:1rem; }
+        .inst-chip { border:1.5px solid var(--border); background:#fff; color:var(--muted);
+                     border-radius:20px; font-size:.76rem; font-weight:600; padding:.28rem .8rem;
+                     cursor:pointer; transition:all .2s; user-select:none; }
+        .inst-chip:hover { border-color:var(--primario); color:var(--primario); background:var(--primario-lt); }
+        .inst-chip.active { background:var(--primario); color:#fff; border-color:var(--primario); }
+
+        /* ── INFO ÁREA (admin de área) ── */
+        .area-banner { background:var(--dorado-lt); border:1px solid rgba(201,162,77,.35);
+                       border-radius:var(--radius-sm); padding:.6rem 1rem; font-size:.82rem;
+                       color:#7a5a00; display:flex; align-items:center; gap:.6rem;
+                       margin-bottom:1rem; flex-wrap:wrap; }
+        .area-banner strong { color:#501013; }
+
+        /* ── OCULTAR POR ROL (el backend inyecta ADMIN_ROL) ── */
+        [data-visible] { transition: opacity .2s; }
+        @media (max-width: 767px) {
+            main { padding: 1.25rem 1rem; }
+            .search-bar { width: 100%; }
+            .search-bar input, .search-bar select { width: 100%; }
+        }
+    
+        /* ══ NOTIFICACIONES ══ */
+        .notif-btn{position:relative;background:rgba(255,255,255,.12);border:none;color:#fff;width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;transition:background .2s;flex-shrink:0;}
+        .notif-btn:hover{background:rgba(255,255,255,.22);}
+        .notif-count{position:absolute;top:4px;right:4px;background:#C9A24D;color:#fff;font-size:.58rem;font-weight:800;border-radius:20px;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0 .25rem;border:1.5px solid #501013;}
+        .notif-panel{position:fixed;top:70px;right:0;width:360px;max-height:calc(100vh - 80px);background:#fff;border:1px solid #E5E7EB;border-radius:18px 0 0 18px;box-shadow:-4px 8px 32px rgba(80,16,19,.18);z-index:1049;display:flex;flex-direction:column;transform:translateX(110%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow:hidden;}
+        .notif-panel.open{transform:translateX(0);}
+        .notif-header{padding:1rem 1.2rem;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;justify-content:space-between;background:#501013;color:#fff;flex-shrink:0;}
+        .notif-header h6{font-size:.92rem;font-weight:800;margin:0;}
+        .btn-mark-all{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.8);background:rgba(255,255,255,.12);border:none;border-radius:20px;padding:.2rem .7rem;cursor:pointer;}
+        .btn-mark-all:hover{background:rgba(255,255,255,.22);}
+        .btn-close-notif{background:none;border:none;color:rgba(255,255,255,.7);font-size:1rem;cursor:pointer;padding:.2rem;display:flex;align-items:center;border-radius:6px;}
+        .btn-close-notif:hover{color:#fff;}
+        .notif-tabs{display:flex;border-bottom:1px solid #E5E7EB;flex-shrink:0;}
+        .notif-tab{flex:1;padding:.6rem;font-size:.8rem;font-weight:700;color:#6b7280;border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;text-align:center;}
+        .notif-tab.active{color:#501013;border-bottom-color:#501013;}
+        .notif-list{overflow-y:auto;flex:1;}
+        .notif-item{padding:.9rem 1.2rem;border-bottom:1px solid #E5E7EB;display:flex;align-items:flex-start;gap:.75rem;cursor:pointer;transition:background .15s;position:relative;}
+        .notif-item:hover{background:#F2F4F8;}
+        .notif-item.unread{background:#f7eaea;}
+        .notif-item.unread::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#501013;}
+        .notif-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+        .ni-ap{background:#d1fae5;color:#065f46;} .ni-re{background:#fee2e2;color:#991b1b;} .ni-msg{background:#dbeafe;color:#1e40af;} .ni-sis{background:#f7eaea;color:#501013;} .ni-rec{background:#fdf6e3;color:#7a5a00;}
+        .notif-title{font-size:.83rem;font-weight:700;color:#1F2933;margin-bottom:.15rem;}
+        .notif-item.unread .notif-title{color:#501013;}
+        .notif-desc{font-size:.76rem;color:#6b7280;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .notif-time{font-size:.68rem;color:#6b7280;margin-top:.3rem;font-weight:500;}
+        .notif-footer{padding:.75rem 1.2rem;border-top:1px solid #E5E7EB;text-align:center;flex-shrink:0;}
+        .notif-footer a{font-size:.8rem;font-weight:700;color:#501013;text-decoration:none;}
+        .notif-overlay{display:none;position:fixed;inset:0;z-index:1048;}
+        .notif-overlay.open{display:block;}
+        .menu-badge{margin-left:auto;background:#C9A24D;color:#fff;font-size:.68rem;font-weight:800;border-radius:20px;padding:.1rem .55rem;}
+        @media(max-width:480px){.notif-panel{width:100%;border-radius:0;}}
+
+    </style>
+</head>
+
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar navbar-custom d-flex align-items-center">
+    <div class="container-fluid d-flex align-items-center">
+
+        <div class="d-flex align-items-center gap-2">
+            <a href="https://www.uaeh.edu.mx" target="_blank" rel="noopener noreferrer">
+                <img src="../assets/img/Logo_Login.svg" alt="Logo SIARHA" height="46">
+            </a>
+            <div class="d-flex flex-column">
+                <span class="brand-text text-white">SIARHA</span>
+                <span class="navbar-subtitle text-white d-none d-md-block">
+                    Dirección de Servicio Social y Prácticas Profesionales
+                </span>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 ms-auto">
+            <div class="d-none d-md-flex align-items-center gap-2 text-white"
+                 style="font-size:.83rem;font-weight:600;opacity:.9;">
+                <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);
+                            display:flex;align-items:center;justify-content:center;">
+                    <i class="bi bi-person-fill"></i>
+                </div>
+                <span>Administrador</span>
+            </div>
+            <button class="notif-btn" id="btnNotif" onclick="toggleNotif()" title="Notificaciones"><i class="bi bi-bell-fill"></i><span class="notif-count" id="notifCount">4</span></button>
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="offcanvas" data-bs-target="#menuAdmin"
+                    aria-label="Abrir menú">
+                <i class="bi bi-list"></i>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- ── OFFCANVAS ── -->
+<div class="offcanvas offcanvas-end offcanvas-custom" tabindex="-1"
+     id="menuAdmin" aria-labelledby="menuAdminLabel">
+    <div class="offcanvas-header">
+        <div class="d-flex align-items-center gap-2">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);
+                        display:flex;align-items:center;justify-content:center;">
+                <i class="bi bi-shield-fill"></i>
+            </div>
+            <div>
+                <div style="font-weight:700;font-size:.9rem;">Administrador</div>
+                <div style="font-size:.72rem;opacity:.7;">Panel de control</div>
+            </div>
+        </div>
+        <button type="button" class="btn-close btn-close-white"
+                data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="navbar-nav gap-1">
+            <li><a class="nav-link active" href="ADMIN_dashboard-servicio.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
+            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html"><i class="bi bi-people-fill"></i> Alumnos</a></li>
+            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html"><i class="bi bi-building"></i> Unidades Receptoras</a></li>
+            <li><a class="nav-link" href="ADMIN_gestion-administradores.html"><i class="bi bi-person-gear"></i> Administradores</a></li>
+            <li><a class="nav-link" href="ADMIN_reportes-globales.html"><i class="bi bi-bar-chart-fill"></i> Reportes Globales</a></li>
+            <li><a class="nav-link" href="ADMIN_mensajes-admin.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge">3</span></a></li>
+            <hr class="menu-divider">
+            <li><a class="nav-link danger" href="../index.html"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
+        </ul>
+    </div>
+</div>
+
+<!-- ── MAIN ── -->
+<main>
+
+    <!-- ENCABEZADO -->
+    <div class="page-header">
+        <div>
+            <h4>Panel Administrativo</h4>
+            <p id="subtituloPanel">Gestión general del sistema SIARHA · Periodo Enero – Junio 2026</p>
+        </div>
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            <!-- El backend reemplaza este badge según el rol real -->
+            <span class="rol-badge rol-superadmin" id="rolBadge">
+                <i class="bi bi-shield-fill"></i>
+                <span id="rolNombre">Superadministrador</span>
+            </span>
+        </div>
+    </div>
+
+    <!-- Banner visible solo para admin de área (el JS lo muestra según ADMIN_ROL) -->
+    <div class="area-banner" id="areaBanner" style="display:none;" data-visible="area">
+        <i class="bi bi-building-fill"></i>
+        Estás gestionando:
+        <span id="institutosAsignados"><strong>ICBI</strong> · <strong>Actopan</strong></span>
+    </div>
+
+    <!-- Filtro de institutos — visible solo para superadmin -->
+    <div id="filtroInstitutos" data-visible="superadmin" style="display:none;">
+        <div class="filtro-instituto">
+            <span style="font-size:.76rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;">Filtrar por:</span>
+            <span class="inst-chip active" onclick="filtrarInstituto('todos',this)">Todos</span>
+            <span style="font-size:.72rem;color:var(--muted);font-weight:600;">— Institutos —</span>
+            <span class="inst-chip" onclick="filtrarInstituto('IDA',this)">Artes</span>
+            <span class="inst-chip" onclick="filtrarInstituto('ICAP',this)">Agropecuarias</span>
+            <span class="inst-chip" onclick="filtrarInstituto('ICBI',this)">ICBI</span>
+            <span class="inst-chip" onclick="filtrarInstituto('ICSa',this)">ICSa</span>
+            <span class="inst-chip" onclick="filtrarInstituto('ICEA',this)">ICEA</span>
+            <span class="inst-chip" onclick="filtrarInstituto('ICSHu',this)">ICSHu</span>
+            <span style="font-size:.72rem;color:var(--muted);font-weight:600;">— Escuelas —</span>
+            <span class="inst-chip" onclick="filtrarInstituto('ES-ACT',this)">Actopan</span>
+            <span class="inst-chip" onclick="filtrarInstituto('ES-APA',this)">Apan</span>
+            <span class="inst-chip" onclick="filtrarInstituto('ES-ATO',this)">Atotonilco</span>
+            <span class="inst-chip" onclick="filtrarInstituto('ES-SAH',this)">Cd. Sahagún</span>
+            <span class="inst-chip" onclick="filtrarInstituto('ES-HUE',this)">Huejutla</span>
+            <span class="inst-chip" onclick="filtrarInstituto('ES-TEP',this)">Tepeji</span>
+            <span class="inst-chip" onclick="filtrarInstituto('ES-TIZ',this)">Tizayuca</span>
+            <span class="inst-chip" onclick="filtrarInstituto('ES-TLA',this)">Tlahuelilpan</span>
+            <span class="inst-chip" onclick="filtrarInstituto('ES-ZIM',this)">Zimapán</span>
+        </div>
+    </div>
+
+    <!-- STAT CARDS -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon si-vino"><i class="bi bi-people-fill"></i></div>
+                <div>
+                    <div class="stat-label">Alumnos activos</div>
+                    <div class="stat-value">245</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon si-dorado"><i class="bi bi-building-fill"></i></div>
+                <div>
+                    <div class="stat-label">Unidades receptoras</div>
+                    <div class="stat-value">38</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon si-vino2"><i class="bi bi-journal-check"></i></div>
+                <div>
+                    <div class="stat-label">Servicio Social</div>
+                    <div class="stat-value">160</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon si-gold2"><i class="bi bi-briefcase-fill"></i></div>
+                <div>
+                    <div class="stat-label">Prácticas Prof.</div>
+                    <div class="stat-value">85</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ── TABS ALUMNOS / UNIDADES ── -->
+    <div class="tab-nav">
+        <button class="tab-nav-btn active" onclick="setTab('alumnos',this)" id="tabBtnAlumnos">
+            <i class="bi bi-people-fill"></i> Alumnos
+            <span style="background:var(--primario);color:#fff;border-radius:20px;font-size:.68rem;font-weight:700;padding:.15rem .55rem;margin-left:.2rem;">245</span>
+        </button>
+        <button class="tab-nav-btn" onclick="setTab('unidades',this)" id="tabBtnUnidades">
+            <i class="bi bi-building-fill"></i> Unidades Receptoras
+            <span style="background:var(--border);color:var(--muted);border-radius:20px;font-size:.68rem;font-weight:700;padding:.15rem .55rem;margin-left:.2rem;">38</span>
+        </button>
+    </div>
+
+    <!-- ══════════════════════════════════
+         PANEL ALUMNOS
+    ══════════════════════════════════ -->
+    <div id="panelAlumnos" class="tab-panel active">
+        <div class="section-card">
+
+            <!-- HEADER -->
+            <div class="section-header">
+                <span class="title"><i class="bi bi-people-fill"></i> Alumnos registrados</span>
+                <div class="d-flex gap-2 flex-wrap">
+                    <button class="btn-outline-custom" onclick="showToast('Exportando Excel…')"><i class="bi bi-file-earmark-excel"></i> Exportar</button>
+                    <a href="ADMIN_alta-alumno.html" class="btn-primary-custom" data-visible="superadmin,area"><i class="bi bi-person-plus-fill"></i> Nuevo alumno</a>
+                </div>
+            </div>
+
+            <!-- FILTROS ALUMNOS -->
+            <div class="filtros-bar">
+                <div class="row g-2 align-items-end">
+                    <div class="col-6 col-md-2">
+                        <div class="form-field" style="padding:0;border:none;">
+                            <input type="text" class="form-field" placeholder="🔍  Buscar alumno…">
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <select class="form-field">
+                            <option value="">Programa</option>
+                            <option>Servicio Social</option>
+                            <option>Prácticas Prof.</option>
+                        </select>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <select class="form-field">
+                            <option value="">Estado</option>
+                            <option>Activo</option>
+                            <option>En revisión</option>
+                            <option>Finalizado</option>
+                            <option>Pendiente</option>
+                            <option>Baja</option>
+                        </select>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <select class="form-field" id="filtroAvance">
+                            <option value="">Avance</option>
+                            <option>0 – 25%</option>
+                            <option>26 – 50%</option>
+                            <option>51 – 75%</option>
+                            <option>76 – 99%</option>
+                            <option>100% (Terminado)</option>
+                        </select>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <select class="form-field">
+                            <option value="">Unidad Receptora</option>
+                            <option>Hospital General</option>
+                            <option>Secretaría Académica</option>
+                            <option>DIF Municipal</option>
+                            <option>IMSS Pachuca</option>
+                        </select>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <button class="btn-primary-custom w-100"><i class="bi bi-funnel-fill"></i> Filtrar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RESUMEN RÁPIDO ALUMNOS -->
+            <div class="resumen-strip">
+                <div class="resumen-item"><div class="r-val">245</div><div class="r-lab">Total alumnos</div></div>
+                <div class="resumen-item"><div class="r-val" style="color:var(--primario);">160</div><div class="r-lab">Servicio Social</div></div>
+                <div class="resumen-item"><div class="r-val" style="color:#7a5a00;">85</div><div class="r-lab">Prácticas Prof.</div></div>
+                <div class="resumen-item"><div class="r-val">18</div><div class="r-lab">Finalizados</div></div>
+                <div class="resumen-item"><div class="r-val" style="color:#856404;">32</div><div class="r-lab">Pendientes revisar</div></div>
+            </div>
+
+            <!-- TABLA ALUMNOS -->
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Alumno</th>
+                            <th>No. Cuenta</th>
+                            <th>Programa</th>
+                            <th>Unidad Receptora</th>
+                            <th>Horas</th>
+                            <th>Avance</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div style="font-weight:700;font-size:.86rem;">Juan Pérez García</div>
+                                <div style="font-size:.72rem;color:var(--muted);">Ing. en Computación · ICBI</div>
+                            </td>
+                            <td style="color:var(--muted);font-size:.82rem;">2020123456</td>
+                            <td><span class="badge-ss">Serv. Social</span></td>
+                            <td style="font-size:.82rem;">Hospital General</td>
+                            <td>
+                                <div style="font-weight:800;color:var(--primario);font-size:.88rem;">320 <span style="font-weight:500;color:var(--muted);font-size:.75rem;">/ 480 hrs</span></div>
+                            </td>
+                            <td>
+                                <div class="avance-wrap">
+                                    <div class="avance-bar"><div class="avance-fill af-high" style="width:80%;"></div></div>
+                                    <span class="avance-pct">80%</span>
+                                </div>
+                            </td>
+                            <td><span class="badge-revision">En revisión</span></td>
+                            <td><a href="ADMIN_detalle-alumno-admin.html" class="btn-outline-custom"><i class="bi bi-eye-fill"></i> Ver</a></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="font-weight:700;font-size:.86rem;">María González López</div>
+                                <div style="font-size:.72rem;color:var(--muted);">Lic. Administración · ICSA</div>
+                            </td>
+                            <td style="color:var(--muted);font-size:.82rem;">2021123478</td>
+                            <td><span class="badge-pp">Prácticas Prof.</span></td>
+                            <td style="font-size:.82rem;">Secretaría Académica</td>
+                            <td>
+                                <div style="font-weight:800;color:var(--primario);font-size:.88rem;">144 <span style="font-weight:500;color:var(--muted);font-size:.75rem;">/ 240 hrs</span></div>
+                            </td>
+                            <td>
+                                <div class="avance-wrap">
+                                    <div class="avance-bar"><div class="avance-fill af-mid" style="width:60%;"></div></div>
+                                    <span class="avance-pct">60%</span>
+                                </div>
+                            </td>
+                            <td><span class="badge-activo">Activo</span></td>
+                            <td><a href="ADMIN_detalle-alumno-admin.html" class="btn-outline-custom"><i class="bi bi-eye-fill"></i> Ver</a></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="font-weight:700;font-size:.86rem;">Carlos Ramírez Soto</div>
+                                <div style="font-size:.72rem;color:var(--muted);">Ing. Civil · ICBI</div>
+                            </td>
+                            <td style="color:var(--muted);font-size:.82rem;">2020987654</td>
+                            <td><span class="badge-ss">Serv. Social</span></td>
+                            <td style="font-size:.82rem;">Hospital General</td>
+                            <td>
+                                <div style="font-weight:800;color:var(--primario);font-size:.88rem;">480 <span style="font-weight:500;color:var(--muted);font-size:.75rem;">/ 480 hrs</span></div>
+                            </td>
+                            <td>
+                                <div class="avance-wrap">
+                                    <div class="avance-bar"><div class="avance-fill af-done" style="width:100%;"></div></div>
+                                    <span class="avance-pct" style="color:#065f46;">100%</span>
+                                </div>
+                            </td>
+                            <td><span class="badge-finalizado">Finalizado</span></td>
+                            <td><a href="ADMIN_detalle-alumno-admin.html" class="btn-outline-custom"><i class="bi bi-eye-fill"></i> Ver</a></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="font-weight:700;font-size:.86rem;">Ana López Ramírez</div>
+                                <div style="font-size:.72rem;color:var(--muted);">Lic. Enfermería · ICSa</div>
+                            </td>
+                            <td style="color:var(--muted);font-size:.82rem;">2022233445</td>
+                            <td><span class="badge-pp">Prácticas Prof.</span></td>
+                            <td style="font-size:.82rem;">DIF Municipal</td>
+                            <td>
+                                <div style="font-weight:800;color:var(--primario);font-size:.88rem;">84 <span style="font-weight:500;color:var(--muted);font-size:.75rem;">/ 240 hrs</span></div>
+                            </td>
+                            <td>
+                                <div class="avance-wrap">
+                                    <div class="avance-bar"><div class="avance-fill af-low" style="width:35%;"></div></div>
+                                    <span class="avance-pct">35%</span>
+                                </div>
+                            </td>
+                            <td><span class="badge-pendiente">Pendiente</span></td>
+                            <td><a href="ADMIN_detalle-alumno-admin.html" class="btn-outline-custom"><i class="bi bi-eye-fill"></i> Ver</a></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="font-weight:700;font-size:.86rem;">Daniel Torres Vega</div>
+                                <div style="font-size:.72rem;color:var(--muted);">Lic. Psicología · ICSHu</div>
+                            </td>
+                            <td style="color:var(--muted);font-size:.82rem;">2021345678</td>
+                            <td><span class="badge-ss">Serv. Social</span></td>
+                            <td style="font-size:.82rem;">IMSS Pachuca</td>
+                            <td>
+                                <div style="font-weight:800;color:var(--primario);font-size:.88rem;">96 <span style="font-weight:500;color:var(--muted);font-size:.75rem;">/ 480 hrs</span></div>
+                            </td>
+                            <td>
+                                <div class="avance-wrap">
+                                    <div class="avance-bar"><div class="avance-fill af-low" style="width:20%;"></div></div>
+                                    <span class="avance-pct">20%</span>
+                                </div>
+                            </td>
+                            <td><span class="badge-activo">Activo</span></td>
+                            <td><a href="ADMIN_detalle-alumno-admin.html" class="btn-outline-custom"><i class="bi bi-eye-fill"></i> Ver</a></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="font-weight:700;font-size:.86rem;">Laura Méndez Cruz</div>
+                                <div style="font-size:.72rem;color:var(--muted);">Ing. en Sistemas · ICBI</div>
+                            </td>
+                            <td style="color:var(--muted);font-size:.82rem;">2023112233</td>
+                            <td><span class="badge-pp">Prácticas Prof.</span></td>
+                            <td style="font-size:.82rem;">Secretaría Académica</td>
+                            <td>
+                                <div style="font-weight:800;color:var(--primario);font-size:.88rem;">210 <span style="font-weight:500;color:var(--muted);font-size:.75rem;">/ 240 hrs</span></div>
+                            </td>
+                            <td>
+                                <div class="avance-wrap">
+                                    <div class="avance-bar"><div class="avance-fill af-high" style="width:87%;"></div></div>
+                                    <span class="avance-pct">87%</span>
+                                </div>
+                            </td>
+                            <td><span class="badge-revision">En revisión</span></td>
+                            <td><a href="ADMIN_detalle-alumno-admin.html" class="btn-outline-custom"><i class="bi bi-eye-fill"></i> Ver</a></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="font-weight:700;font-size:.86rem;">Roberto Salinas Flores</div>
+                                <div style="font-size:.72rem;color:var(--muted);">Lic. Contaduría · ICSA</div>
+                            </td>
+                            <td style="color:var(--muted);font-size:.82rem;">2020778899</td>
+                            <td><span class="badge-ss">Serv. Social</span></td>
+                            <td style="font-size:.82rem;">DIF Municipal</td>
+                            <td>
+                                <div style="font-weight:800;color:#991b1b;font-size:.88rem;">0 <span style="font-weight:500;color:var(--muted);font-size:.75rem;">/ 480 hrs</span></div>
+                            </td>
+                            <td>
+                                <div class="avance-wrap">
+                                    <div class="avance-bar"><div class="avance-fill" style="width:0%;background:var(--border);"></div></div>
+                                    <span class="avance-pct">0%</span>
+                                </div>
+                            </td>
+                            <td><span class="badge-baja">Baja</span></td>
+                            <td><a href="ADMIN_detalle-alumno-admin.html" class="btn-outline-custom"><i class="bi bi-eye-fill"></i> Ver</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- PAGINACIÓN -->
+            <div class="pag-wrap">
+                <span class="pag-info">Mostrando 1–7 de 245 alumnos</span>
+                <div class="pag-btns">
+                    <button class="pag-btn" disabled><i class="bi bi-chevron-left"></i></button>
+                    <button class="pag-btn active">1</button>
+                    <button class="pag-btn">2</button>
+                    <button class="pag-btn">3</button>
+                    <span style="padding:0 .25rem;color:var(--muted);line-height:32px;">…</span>
+                    <button class="pag-btn">35</button>
+                    <button class="pag-btn"><i class="bi bi-chevron-right"></i></button>
+                </div>
+            </div>
+
+        </div><!-- /section-card alumnos -->
+    </div><!-- /panel alumnos -->
+
+
+    <!-- ══════════════════════════════════
+         PANEL UNIDADES RECEPTORAS
+    ══════════════════════════════════ -->
+    <div id="panelUnidades" class="tab-panel">
+        <div class="section-card">
+
+            <!-- HEADER -->
+            <div class="section-header">
+                <span class="title"><i class="bi bi-building-fill"></i> Unidades Receptoras registradas</span>
+                <div class="d-flex gap-2 flex-wrap">
+                    <button class="btn-outline-custom" onclick="showToast('Exportando PDF…')"><i class="bi bi-file-earmark-pdf"></i> Exportar</button>
+                    <a href="ADMIN_gestion-ur.html" class="btn-primary-custom" data-visible="superadmin"><i class="bi bi-plus-circle-fill"></i> Nueva unidad</a>
+                </div>
+            </div>
+
+            <!-- FILTROS UR -->
+            <div class="filtros-bar">
+                <div class="row g-2 align-items-end">
+                    <div class="col-6 col-md-3">
+                        <input type="text" class="form-field" placeholder="🔍  Buscar institución…">
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <select class="form-field">
+                            <option value="">Sector</option>
+                            <option>Salud</option>
+                            <option>Educación</option>
+                            <option>Gobierno</option>
+                            <option>Empresa privada</option>
+                            <option>ONG / Social</option>
+                        </select>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <select class="form-field">
+                            <option value="">Estado</option>
+                            <option>Activa</option>
+                            <option>Inactiva</option>
+                            <option>Suspendida</option>
+                        </select>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <select class="form-field">
+                            <option value="">Programa</option>
+                            <option>Ambos</option>
+                            <option>Solo Serv. Social</option>
+                            <option>Solo Prácticas</option>
+                        </select>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <select class="form-field">
+                            <option value="">Ocupación</option>
+                            <option>Disponibles</option>
+                            <option>Llenas</option>
+                        </select>
+                    </div>
+                    <div class="col-6 col-md-1">
+                        <button class="btn-primary-custom w-100"><i class="bi bi-funnel-fill"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RESUMEN RÁPIDO UR -->
+            <div class="resumen-strip">
+                <div class="resumen-item"><div class="r-val">38</div><div class="r-lab">Total registradas</div></div>
+                <div class="resumen-item"><div class="r-val" style="color:#7a5a00;">31</div><div class="r-lab">Activas</div></div>
+                <div class="resumen-item"><div class="r-val" style="color:var(--muted);">5</div><div class="r-lab">Inactivas</div></div>
+                <div class="resumen-item"><div class="r-val" style="color:#991b1b;">2</div><div class="r-lab">Suspendidas</div></div>
+                <div class="resumen-item"><div class="r-val">245 / 420</div><div class="r-lab">Lugares ocupados</div></div>
+            </div>
+
+            <!-- TABLA UR -->
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Institución</th>
+                            <th>Sector</th>
+                            <th>Responsable</th>
+                            <th>Programas</th>
+                            <th>Ocupación</th>
+                            <th>Convenio hasta</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div style="font-weight:700;font-size:.86rem;">Hospital General</div>
+                                <div style="font-size:.72rem;color:var(--muted);">hospital@institucion.mx · 771 200 0000</div>
+                            </td>
+                            <td style="font-size:.82rem;">Salud</td>
+                            <td style="font-size:.82rem;">Dr. R. Martínez</td>
+                            <td>
+                                <div style="display:flex;gap:.3rem;flex-wrap:wrap;">
+                                    <span class="badge-ss" style="font-size:.68rem;">SS</span>
+                                    <span class="badge-pp" style="font-size:.68rem;">PP</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="ocup-wrap">
+                                    <div class="ocup-bar"><div class="ocup-fill" style="width:80%;"></div></div>
+                                    <span class="ocup-txt">12 / 15</span>
+                                </div>
+                            </td>
+                            <td style="font-size:.82rem;color:var(--muted);">Dic 2026</td>
+                            <td><span class="badge-ur-act">Activa</span></td>
+                            <td><a href="ADMIN_gestion-ur.html" class="btn-outline-custom"><i class="bi bi-gear-fill"></i> Gestionar</a></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="font-weight:700;font-size:.86rem;">Secretaría Académica UAEH</div>
+                                <div style="font-size:.72rem;color:var(--muted);">academica@institucion.mx · 771 717 2000</div>
+                            </td>
+                            <td style="font-size:.82rem;">Educación</td>
+                            <td style="font-size:.82rem;">Lic. Hernández</td>
+                            <td>
+                                <div style="display:flex;gap:.3rem;flex-wrap:wrap;">
+                                    <span class="badge-pp" style="font-size:.68rem;">PP</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="ocup-wrap">
+                                    <div class="ocup-bar"><div class="ocup-fill" style="width:70%;"></div></div>
+                                    <span class="ocup-txt">7 / 10</span>
+                                </div>
+                            </td>
+                            <td style="font-size:.82rem;color:var(--muted);">Jun 2026</td>
+                            <td><span class="badge-ur-act">Activa</span></td>
+                            <td><a href="ADMIN_gestion-ur.html" class="btn-outline-custom"><i class="bi bi-gear-fill"></i> Gestionar</a></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="font-weight:700;font-size:.86rem;">DIF Municipal Pachuca</div>
+                                <div style="font-size:.72rem;color:var(--muted);">dif@municipal.mx · 771 300 1200</div>
+                            </td>
+                            <td style="font-size:.82rem;">Social</td>
+                            <td style="font-size:.82rem;">Lic. Torres</td>
+                            <td>
+                                <div style="display:flex;gap:.3rem;flex-wrap:wrap;">
+                                    <span class="badge-ss" style="font-size:.68rem;">SS</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="ocup-wrap">
+                                    <div class="ocup-bar"><div class="ocup-fill" style="width:40%;"></div></div>
+                                    <span class="ocup-txt">4 / 10</span>
+                                </div>
+                            </td>
+                            <td style="font-size:.82rem;color:var(--muted);">Mar 2027</td>
+                            <td><span class="badge-ur-act">Activa</span></td>
+                            <td><a href="ADMIN_gestion-ur.html" class="btn-outline-custom"><i class="bi bi-gear-fill"></i> Gestionar</a></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="font-weight:700;font-size:.86rem;">IMSS Delegación Hidalgo</div>
+                                <div style="font-size:.72rem;color:var(--muted);">imss.hidalgo@imss.gob.mx · 771 400 8000</div>
+                            </td>
+                            <td style="font-size:.82rem;">Salud</td>
+                            <td style="font-size:.82rem;">Dr. Ávila</td>
+                            <td>
+                                <div style="display:flex;gap:.3rem;flex-wrap:wrap;">
+                                    <span class="badge-ss" style="font-size:.68rem;">SS</span>
+                                    <span class="badge-pp" style="font-size:.68rem;">PP</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="ocup-wrap">
+                                    <div class="ocup-bar"><div class="ocup-fill" style="width:100%;"></div></div>
+                                    <span class="ocup-txt" style="color:#991b1b;">20 / 20</span>
+                                </div>
+                            </td>
+                            <td style="font-size:.82rem;color:var(--muted);">Dic 2026</td>
+                            <td><span class="badge-ur-act">Activa</span></td>
+                            <td><a href="ADMIN_gestion-ur.html" class="btn-outline-custom"><i class="bi bi-gear-fill"></i> Gestionar</a></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="font-weight:700;font-size:.86rem;">Presidencia Municipal Mineral de la Reforma</div>
+                                <div style="font-size:.72rem;color:var(--muted);">presidencia@mineral.gob.mx</div>
+                            </td>
+                            <td style="font-size:.82rem;">Gobierno</td>
+                            <td style="font-size:.82rem;">C. Directora López</td>
+                            <td>
+                                <div style="display:flex;gap:.3rem;flex-wrap:wrap;">
+                                    <span class="badge-pp" style="font-size:.68rem;">PP</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="ocup-wrap">
+                                    <div class="ocup-bar"><div class="ocup-fill" style="width:0%;"></div></div>
+                                    <span class="ocup-txt" style="color:var(--muted);">0 / 8</span>
+                                </div>
+                            </td>
+                            <td style="font-size:.82rem;color:#991b1b;font-weight:700;">Venc. Ene 2026</td>
+                            <td><span class="badge-ur-ina">Inactiva</span></td>
+                            <td><a href="ADMIN_gestion-ur.html" class="btn-outline-custom"><i class="bi bi-gear-fill"></i> Gestionar</a></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="font-weight:700;font-size:.86rem;">Cruz Roja Mexicana Pachuca</div>
+                                <div style="font-size:.72rem;color:var(--muted);">cruzroja.pachuca@cruzroja.mx</div>
+                            </td>
+                            <td style="font-size:.82rem;">Salud / ONG</td>
+                            <td style="font-size:.82rem;">Enf. Ramírez</td>
+                            <td>
+                                <div style="display:flex;gap:.3rem;flex-wrap:wrap;">
+                                    <span class="badge-ss" style="font-size:.68rem;">SS</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="ocup-wrap">
+                                    <div class="ocup-bar"><div class="ocup-fill" style="width:0%;"></div></div>
+                                    <span class="ocup-txt" style="color:var(--muted);">0 / 6</span>
+                                </div>
+                            </td>
+                            <td style="font-size:.82rem;color:var(--muted);">—</td>
+                            <td><span class="badge-ur-sus">Suspendida</span></td>
+                            <td><a href="ADMIN_gestion-ur.html" class="btn-outline-custom"><i class="bi bi-gear-fill"></i> Gestionar</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- PAGINACIÓN -->
+            <div class="pag-wrap">
+                <span class="pag-info">Mostrando 1–6 de 38 unidades</span>
+                <div class="pag-btns">
+                    <button class="pag-btn" disabled><i class="bi bi-chevron-left"></i></button>
+                    <button class="pag-btn active">1</button>
+                    <button class="pag-btn">2</button>
+                    <button class="pag-btn">3</button>
+                    <span style="padding:0 .25rem;color:var(--muted);line-height:32px;">…</span>
+                    <button class="pag-btn">7</button>
+                    <button class="pag-btn"><i class="bi bi-chevron-right"></i></button>
+                </div>
+            </div>
+
+        </div><!-- /section-card UR -->
+    </div><!-- /panel UR -->
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer class="footer-custom">
+    © 2026 SIARHA · Uso exclusivo institucional · UAEH
+</footer>
+
+
+<!-- ══ PANEL NOTIFICACIONES ══ -->
+<div class="notif-overlay" id="notifOverlay" onclick="cerrarNotif()"></div>
+<div class="notif-panel" id="notifPanel">
+    <div class="notif-header">
+        <h6><i class="bi bi-bell-fill me-2"></i>Notificaciones</h6>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn-mark-all" onclick="marcarTodasLeidas()">Marcar leídas</button>
+            <button class="btn-close-notif" onclick="cerrarNotif()"><i class="bi bi-x-lg"></i></button>
+        </div>
+    </div>
+    <div class="notif-tabs">
+        <button class="notif-tab active" onclick="setNotifTab('todas',this)">Todas <span id="badgeTodas" style="background:#501013;color:#fff;border-radius:20px;font-size:.65rem;padding:.08rem .45rem;margin-left:.25rem;">4</span></button>
+        <button class="notif-tab" onclick="setNotifTab('ni-msg',this)">Mensajes</button>
+        <button class="notif-tab" onclick="setNotifTab('ni-rec',this)">Reportes</button>
+        <button class="notif-tab" onclick="setNotifTab('ni-sis',this)">Sistema</button>
+    </div>
+    <div class="notif-list" id="notifList">
+        <div class="notif-item unread" data-tipo="ni-msg" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div>
+            <div><div class="notif-title">Mensaje de Juan Pérez García</div><div class="notif-desc">Solicitud de prórroga de 2 semanas</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 15 min</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-msg" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div>
+            <div><div class="notif-title">2 mensajes de Ana López</div><div class="notif-desc">Problema con acceso al sistema</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 30 min</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-rec" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-rec"><i class="bi bi-flag-fill"></i></div>
+            <div><div class="notif-title">Reporte escalado #RPT-0042</div><div class="notif-desc">El coordinador te escaló un reporte</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 2 horas</div></div>
+        </div>
+        <div class="notif-item" data-tipo="ni-sis" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-sis"><i class="bi bi-person-plus-fill"></i></div>
+            <div><div class="notif-title">Nuevo alumno dado de alta</div><div class="notif-desc">María González — Prácticas Profesionales</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer, 4:00 p.m.</div></div>
+        </div>
+        <div class="notif-item" data-tipo="ni-sis" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-sis"><i class="bi bi-building-fill"></i></div>
+            <div><div class="notif-title">Nueva UR registrada</div><div class="notif-desc">IMSS Pachuca fue agregada al sistema</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer, 10:00 a.m.</div></div>
+        </div>
+    </div>
+    <div class="notif-footer"><a href="ADMIN_mensajes-admin.html">Ver todo →</a></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     VARIABLES INYECTADAS POR EL BACKEND
+     El backend debe reemplazar estos valores con los reales
+══════════════════════════════════════════════════════════ -->
+<script>
+    // ── CONFIGURACIÓN DEL ADMINISTRADOR ACTIVO ──────────────────
+    // El backend inyecta estos valores según la sesión autenticada
+    // Valores posibles para ADMIN_ROL: 'superadmin' | 'area' | 'reportes'
+    const ADMIN_ROL        = 'superadmin'; // ← BACKEND REEMPLAZA ESTO
+    const ADMIN_NOMBRE     = 'Rosa Alvarado García'; // ← BACKEND REEMPLAZA ESTO
+    const ADMIN_INSTITUTOS = [];           // ← BACKEND REEMPLAZA ESTO (solo para rol 'area')
+    //   Ejemplo área: ['ICBI', 'ES-ACT']
+    // ────────────────────────────────────────────────────────────
+
+    // ── CATÁLOGO DE INSTITUTOS ───────────────────────────────────
+    const INSTITUTOS_CAT = {
+      'IDA':    'Instituto de Artes',
+      'ICAP':   'Instituto de Ciencias Agropecuarias',
+      'ICBI':   'Instituto de Ciencias Básicas e Ingeniería',
+      'ICSa':   'Instituto de Ciencias de la Salud',
+      'ICEA':   'Instituto de Ciencias Económico Administrativas',
+      'ICSHu':  'Instituto de Ciencias Sociales y Humanidades',
+      'ES-ACT': 'ES Actopan',
+      'ES-APA': 'ES Apan',
+      'ES-ATO': 'ES Atotonilco de Tula',
+      'ES-SAH': 'ES Ciudad Sahagún',
+      'ES-HUE': 'ES Huejutla',
+      'ES-TEP': 'ES Tepeji del Río',
+      'ES-TIZ': 'ES Tizayuca',
+      'ES-TLA': 'ES Tlahuelilpan',
+      'ES-ZIM': 'ES Zimapán',
+    };
+
+    // ── APLICAR VISIBILIDAD POR ROL ──────────────────────────────
+    function aplicarVisibilidad() {
+      const rolBadge = document.getElementById('rolBadge');
+      const rolNombre = document.getElementById('rolNombre');
+      const subtitulo = document.getElementById('subtituloPanel');
+
+      // Badge de rol
+      rolNombre.textContent = {
+        superadmin: 'Superadministrador',
+        area:       'Admin de área',
+        reportes:   'Coordinador de reportes'
+      }[ADMIN_ROL] || 'Administrador';
+
+      rolBadge.className = 'rol-badge ' + {
+        superadmin: 'rol-superadmin',
+        area:       'rol-area',
+        reportes:   'rol-reportes'
+      }[ADMIN_ROL];
+
+      // Subtítulo
+      if (ADMIN_ROL === 'area') {
+        const nombres = ADMIN_INSTITUTOS.map(id => INSTITUTOS_CAT[id] || id).join(' · ');
+        subtitulo.textContent = nombres || 'Sin institutos asignados';
+      } else if (ADMIN_ROL === 'reportes') {
+        subtitulo.textContent = 'Gestión de reportes e incidencias del sistema';
+      }
+
+      // Mostrar/ocultar elementos con data-visible
+      document.querySelectorAll('[data-visible]').forEach(el => {
+        const roles = el.dataset.visible.split(',').map(r => r.trim());
+        const visible = roles.includes(ADMIN_ROL);
+        if (el.tagName === 'A' || el.tagName === 'BUTTON' || el.tagName === 'LI') {
+          el.style.display = visible ? '' : 'none';
+        } else {
+          el.style.display = visible ? '' : 'none';
+        }
+      });
+
+      // Mostrar banner de área
+      if (ADMIN_ROL === 'area' && ADMIN_INSTITUTOS.length > 0) {
+        document.getElementById('areaBanner').style.display = 'flex';
+        const html = ADMIN_INSTITUTOS.map(id =>
+          `<strong>${INSTITUTOS_CAT[id] || id}</strong>`
+        ).join(' · ');
+        document.getElementById('institutosAsignados').innerHTML = html;
+      }
+
+      // Redirigir coordinador de reportes a su dashboard
+      if (ADMIN_ROL === 'reportes') {
+        window.location.href = 'dashboard-reportes.html';
+        return;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', aplicarVisibilidad);
+
+    // ── FILTRO POR INSTITUTO ──────────────────────────────────────
+    let institutoActivo = 'todos';
+
+    function filtrarInstituto(id, chip) {
+      institutoActivo = id;
+      document.querySelectorAll('.inst-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      // El backend filtra los datos reales; aquí solo feedback visual
+      showToast(id === 'todos' ? 'Mostrando todos los institutos' : 'Filtrando: ' + (window.INSTITUTOS_CAT && INSTITUTOS_CAT[id] ? INSTITUTOS_CAT[id] : id));
+    }
+
+</script>
+
+<script>
+    function setTab(nombre, btn) {
+        document.querySelectorAll('.tab-nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('panel' + nombre.charAt(0).toUpperCase() + nombre.slice(1)).classList.add('active');
+    }
+
+    // Navegación desde menú lateral
+    function irATab(nombre) {
+        const btn = document.getElementById('tabBtn' + nombre.charAt(0).toUpperCase() + nombre.slice(1));
+        if (btn) setTab(nombre, btn);
+        window.scrollTo({ top: document.querySelector('.tab-nav').offsetTop - 80, behavior: 'smooth' });
+    }
+
+    // Toast
+    function showToast(msg) {
+        let t = document.getElementById('_toast');
+        if (!t) {
+            t = document.createElement('div');
+            t.id = '_toast';
+            t.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;background:#501013;color:#fff;border-radius:10px;padding:.9rem 1.3rem;display:flex;align-items:center;gap:.6rem;font-size:.85rem;font-weight:600;box-shadow:0 8px 24px rgba(80,16,19,.25);transition:transform .35s ease,opacity .35s ease;z-index:9999;transform:translateY(80px);opacity:0;';
+            document.body.appendChild(t);
+        }
+        t.innerHTML = '<i class="bi bi-check-circle-fill" style="font-size:1.1rem;"></i>' + msg;
+        t.style.transform = 'translateY(0)'; t.style.opacity = '1';
+        setTimeout(() => { t.style.transform = 'translateY(80px)'; t.style.opacity = '0'; }, 3200);
+    }
+
+    // Activar tab según hash de la URL
+    if (window.location.hash === '#unidades') irATab('unidades');
+
+    // ══ NOTIFICACIONES ══════════════════════════════════════════════
+        function abrirNotif(){document.getElementById('notifPanel').classList.add('open');document.getElementById('notifOverlay').classList.add('open');_nOpen=true;}
+    function cerrarNotif(){document.getElementById('notifPanel').classList.remove('open');document.getElementById('notifOverlay').classList.remove('open');_nOpen=false;}
+    function marcarLeida(item){if(!item.classList.contains('unread'))return;item.classList.remove('unread');_badge();}
+    function marcarTodasLeidas(){document.querySelectorAll('.notif-item.unread').forEach(i=>i.classList.remove('unread'));_badge();}
+    function _badge(){const n=document.querySelectorAll('.notif-item.unread').length;const b=document.getElementById('notifCount');if(b){b.textContent=n;b.style.display=n>0?'flex':'none';}const bt=document.getElementById('badgeTodas');if(bt)bt.textContent=n;}
+    function setNotifTab(tipo,btn){document.querySelectorAll('.notif-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.notif-item').forEach(i=>{i.style.display=(tipo==='todas'||i.dataset.tipo===tipo)?'':'none';});}
+    // ════════════════════════════════════════════════════════════════
+
+</script>
+
+
+<script>
+    let _nOpen = false;
+    function toggleNotif() { _nOpen ? cerrarNotif() : abrirNotif(); }
+    function abrirNotif()  { document.getElementById('notifPanel').classList.add('open');    document.getElementById('notifOverlay').classList.add('open');    _nOpen = true;  }
+    function cerrarNotif() { document.getElementById('notifPanel').classList.remove('open'); document.getElementById('notifOverlay').classList.remove('open'); _nOpen = false; }
+    function marcarLeida(item) { if (!item.classList.contains('unread')) return; item.classList.remove('unread'); _badge(); }
+    function marcarTodasLeidas() { document.querySelectorAll('.notif-item.unread').forEach(i => i.classList.remove('unread')); _badge(); }
+    function _badge() {
+        const n = document.querySelectorAll('.notif-item.unread').length;
+        const b = document.getElementById('notifCount');  if (b)  { b.textContent = n; b.style.display = n > 0 ? 'flex' : 'none'; }
+        const bt = document.getElementById('badgeTodas'); if (bt) bt.textContent = n;
+    }
+    function setNotifTab(tipo, btn) {
+        document.querySelectorAll('.notif-tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.notif-item').forEach(i => {
+            i.style.display = (tipo === 'todas' || i.dataset.tipo === tipo) ? '' : 'none';
+        });
+    }
+</script>
+</body>
+</html>

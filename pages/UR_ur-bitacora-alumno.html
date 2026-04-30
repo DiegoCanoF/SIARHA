@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SIARHA | Bitácora Alumno - Unidad Receptora</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/siarha.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primario:     #501013;
+            --primario-dk:  #3a0b0e;
+            --primario-lt:  #f7eaea;
+            --primario-mid: #7a1820;
+            --dorado:       #C9A24D;
+            --dorado-lt:    #fdf6e3;
+            --bg:           #F2F4F8;
+            --card-bg:      #ffffff;
+            --text:         #1F2933;
+            --muted:        #6b7280;
+            --border:       #E5E7EB;
+            --radius-card:  18px;
+            --radius-sm:    10px;
+            --shadow:       0 2px 16px rgba(80,16,19,.08);
+            --shadow-hover: 0 6px 28px rgba(80,16,19,.15);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar-custom {
+            background: var(--primario);
+            padding: 0 1.5rem;
+            height: 70px;
+            box-shadow: 0 2px 16px rgba(0,0,0,.15);
+            position: sticky;
+            top: 0;
+            z-index: 1050;
+            display: flex;
+            align-items: center;
+        }
+        .brand-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: .04em;
+            line-height: 1;
+        }
+        .navbar-subtitle {
+            font-size: .7rem;
+            font-weight: 500;
+            opacity: .85;
+            letter-spacing: .02em;
+        }
+        .navbar-toggler {
+            border: none;
+            color: #fff;
+            font-size: 1.25rem;
+            padding: .4rem .6rem;
+            border-radius: var(--radius-sm);
+            background: rgba(255,255,255,.12);
+            transition: background .2s;
+        }
+        .navbar-toggler:hover { background: rgba(255,255,255,.22); }
+
+        /* ── OFFCANVAS ── */
+        .offcanvas-custom {
+            background: var(--primario-dk);
+            color: #fff;
+            width: 280px !important;
+            border-radius: var(--radius-card) 0 0 var(--radius-card);
+        }
+        .offcanvas-custom .offcanvas-header {
+            border-color: rgba(255,255,255,.12) !important;
+            padding: 1.25rem 1.5rem;
+        }
+        .offcanvas-custom .offcanvas-title { font-weight: 700; font-size: 1rem; }
+        .offcanvas-custom .nav-link {
+            color: rgba(255,255,255,.8);
+            font-weight: 500;
+            font-size: .9rem;
+            padding: .65rem 1rem;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            transition: background .2s, color .2s;
+        }
+        .offcanvas-custom .nav-link:hover,
+        .offcanvas-custom .nav-link.active {
+            background: rgba(255,255,255,.12);
+            color: #fff;
+        }
+        .offcanvas-custom .nav-link.active { font-weight: 700; }
+        .offcanvas-custom .nav-link.danger { color: #ff9090 !important; }
+        .offcanvas-custom .nav-link.danger:hover { background: rgba(255,80,80,.15); }
+        .menu-divider { border-color: rgba(255,255,255,.12); margin: .5rem 0; }
+
+        /* ── MAIN ── */
+        main { flex: 1; padding: 1.75rem 1.5rem; max-width: 1200px; width: 100%; margin: 0 auto; }
+
+        /* ── BOTÓN VOLVER ── */
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            font-size: .83rem;
+            font-weight: 600;
+            color: var(--muted);
+            background: var(--card-bg);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: .45rem .9rem;
+            text-decoration: none;
+            margin-bottom: 1.4rem;
+            transition: border-color .2s, color .2s, background .2s;
+        }
+        .btn-back:hover { border-color: var(--primario); color: var(--primario); background: var(--primario-lt); }
+
+        /* ── INFO CARD ── */
+        .info-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            padding: 1.3rem 1.5rem;
+            margin-bottom: 1.4rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .info-field { display: flex; flex-direction: column; gap: .2rem; }
+        .info-label { font-size: .72rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+        .info-value { font-size: .95rem; font-weight: 700; color: var(--text); }
+
+        /* ── STAT CARDS ── */
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow);
+            padding: 1.25rem 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: box-shadow .25s, transform .25s;
+            border: 1px solid var(--border);
+        }
+        .stat-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+        .stat-icon {
+            width: 48px; height: 48px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+        .si-vino   { background: var(--primario-lt); color: var(--primario); }
+        .si-dorado { background: var(--dorado-lt);   color: #8a6820; }
+        .si-vino2  { background: var(--primario-lt); color: var(--primario-mid); }
+        .si-warn   { background: #fff3cd;            color: #856404; }
+        .stat-label { font-size: .73rem; font-weight: 500; color: var(--muted); margin-bottom: .2rem; }
+        .stat-value { font-size: 1.4rem; font-weight: 800; color: var(--text); line-height: 1; }
+        .stat-value.warn { color: #a16207; }
+
+        /* ── SECTION CARDS ── */
+        .section-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+        .section-header {
+            padding: 1rem 1.4rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: .5rem;
+        }
+        .section-header .title {
+            font-weight: 700;
+            font-size: .95rem;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            color: var(--primario);
+        }
+
+        /* ── FILTROS ── */
+        .filtros-body {
+            padding: 1.1rem 1.4rem;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+        }
+        .form-label-sm { font-size: .76rem; font-weight: 600; color: var(--muted); margin-bottom: .3rem; display: block; }
+        .form-control-custom, .form-select-custom {
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: .48rem .85rem;
+            font-size: .83rem;
+            font-family: inherit;
+            color: var(--text);
+            background: #fff;
+            width: 100%;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        .form-control-custom:focus, .form-select-custom:focus {
+            border-color: var(--primario);
+            box-shadow: 0 0 0 3px rgba(80,16,19,.1);
+        }
+
+        /* ── BOTONES ── */
+        .btn-primary-custom {
+            background: var(--primario);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: .83rem;
+            padding: .5rem 1.1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            cursor: pointer;
+            transition: background .2s;
+            width: 100%;
+            justify-content: center;
+        }
+        .btn-primary-custom:hover { background: var(--primario-dk); }
+
+        .btn-outline-custom {
+            border: 1.5px solid var(--border);
+            background: #fff;
+            color: var(--muted);
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: .8rem;
+            padding: .48rem .9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            cursor: pointer;
+            transition: border-color .2s, color .2s, background .2s;
+            width: 100%;
+            justify-content: center;
+        }
+        .btn-outline-custom:hover { border-color: var(--primario); color: var(--primario); background: var(--primario-lt); }
+
+        /* acciones inline */
+        .btn-aprobar {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1.5px solid #6ee7b7;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: .76rem;
+            padding: .3rem .75rem;
+            display: inline-flex;
+            align-items: center;
+            gap: .3rem;
+            cursor: pointer;
+            transition: background .2s, border-color .2s;
+            white-space: nowrap;
+        }
+        .btn-aprobar:hover { background: #a7f3d0; border-color: #34d399; }
+
+        .btn-rechazar {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1.5px solid #fca5a5;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: .76rem;
+            padding: .3rem .75rem;
+            display: inline-flex;
+            align-items: center;
+            gap: .3rem;
+            cursor: pointer;
+            transition: background .2s, border-color .2s;
+            white-space: nowrap;
+        }
+        .btn-rechazar:hover { background: #fecaca; border-color: #f87171; }
+
+        .btn-ver {
+            border: 1.5px solid var(--border);
+            background: #fff;
+            color: var(--muted);
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: .76rem;
+            padding: .3rem .75rem;
+            display: inline-flex;
+            align-items: center;
+            gap: .3rem;
+            cursor: pointer;
+            transition: border-color .2s, color .2s;
+            white-space: nowrap;
+        }
+        .btn-ver:hover { border-color: var(--primario); color: var(--primario); background: var(--primario-lt); }
+
+        /* ── TABLE ── */
+        .table-responsive { overflow-x: auto; }
+        table { margin: 0; font-size: .83rem; width: 100%; border-collapse: collapse; }
+        table thead th {
+            background: var(--primario);
+            color: #fff;
+            font-weight: 700;
+            font-size: .74rem;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            padding: .8rem 1rem;
+            border: none;
+            white-space: nowrap;
+        }
+        table tbody td {
+            padding: .72rem 1rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+        table tbody tr:last-child td { border-bottom: none; }
+        table tbody tr:hover { background: var(--primario-lt); }
+
+        /* badges estado */
+        .badge-pendiente     { background: #fff3cd; color: #856404; border-radius: 20px; font-size: .73rem; font-weight: 700; padding: .28rem .7rem; display:inline-block; }
+        .badge-aprobado      { background: var(--dorado-lt); color: #7a5a00; border-radius: 20px; font-size: .73rem; font-weight: 700; padding: .28rem .7rem; border: 1px solid var(--dorado); display:inline-block; }
+        .badge-rechazado     { background: #fee2e2; color: #991b1b; border-radius: 20px; font-size: .73rem; font-weight: 700; padding: .28rem .7rem; display:inline-block; }
+        .badge-ss            { background: var(--primario-lt); color: var(--primario); border-radius: 20px; font-size: .72rem; font-weight: 700; padding: .25rem .65rem; border: 1px solid rgba(80,16,19,.18); display:inline-block; }
+        .badge-revision      { background: var(--primario-lt); color: var(--primario); border-radius: 20px; font-size: .73rem; font-weight: 700; padding: .28rem .7rem; display:inline-block; }
+
+        /* ── PROGRESS ── */
+        .prog-wrap { display: flex; align-items: center; gap: .5rem; }
+        .prog-bar  { flex: 1; height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; min-width: 80px; }
+        .prog-fill { height: 100%; background: var(--primario-mid); border-radius: 99px; }
+
+        /* ── FOOTER ── */
+        .footer-custom {
+            background: var(--primario);
+            color: rgba(255,255,255,.7);
+            text-align: center;
+            padding: .75rem;
+            font-size: .75rem;
+            letter-spacing: .02em;
+        }
+
+        @media (max-width: 767px) {
+            main { padding: 1.25rem 1rem; }
+            .info-card { gap: 1rem; }
+            .info-field { min-width: 140px; }
+        }
+    
+        /* ══ NOTIFICACIONES ══ */
+        .notif-btn{position:relative;background:rgba(255,255,255,.12);border:none;color:#fff;width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;transition:background .2s;flex-shrink:0;}
+        .notif-btn:hover{background:rgba(255,255,255,.22);}
+        .notif-count{position:absolute;top:4px;right:4px;background:#C9A24D;color:#fff;font-size:.58rem;font-weight:800;border-radius:20px;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0 .25rem;border:1.5px solid #501013;}
+        .notif-panel{position:fixed;top:70px;right:0;width:360px;max-height:calc(100vh - 80px);background:#fff;border:1px solid #E5E7EB;border-radius:18px 0 0 18px;box-shadow:-4px 8px 32px rgba(80,16,19,.18);z-index:1049;display:flex;flex-direction:column;transform:translateX(110%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow:hidden;}
+        .notif-panel.open{transform:translateX(0);}
+        .notif-header{padding:1rem 1.2rem;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;justify-content:space-between;background:#501013;color:#fff;flex-shrink:0;}
+        .notif-header h6{font-size:.92rem;font-weight:800;margin:0;}
+        .btn-mark-all{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.8);background:rgba(255,255,255,.12);border:none;border-radius:20px;padding:.2rem .7rem;cursor:pointer;}
+        .btn-mark-all:hover{background:rgba(255,255,255,.22);}
+        .btn-close-notif{background:none;border:none;color:rgba(255,255,255,.7);font-size:1rem;cursor:pointer;padding:.2rem;display:flex;align-items:center;border-radius:6px;}
+        .btn-close-notif:hover{color:#fff;}
+        .notif-tabs{display:flex;border-bottom:1px solid #E5E7EB;flex-shrink:0;}
+        .notif-tab{flex:1;padding:.6rem;font-size:.8rem;font-weight:700;color:#6b7280;border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;text-align:center;}
+        .notif-tab.active{color:#501013;border-bottom-color:#501013;}
+        .notif-list{overflow-y:auto;flex:1;}
+        .notif-item{padding:.9rem 1.2rem;border-bottom:1px solid #E5E7EB;display:flex;align-items:flex-start;gap:.75rem;cursor:pointer;transition:background .15s;position:relative;}
+        .notif-item:hover{background:#F2F4F8;}
+        .notif-item.unread{background:#f7eaea;}
+        .notif-item.unread::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#501013;}
+        .notif-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+        .ni-ap{background:#d1fae5;color:#065f46;} .ni-re{background:#fee2e2;color:#991b1b;} .ni-msg{background:#dbeafe;color:#1e40af;} .ni-sis{background:#f7eaea;color:#501013;} .ni-rec{background:#fdf6e3;color:#7a5a00;}
+        .notif-title{font-size:.83rem;font-weight:700;color:#1F2933;margin-bottom:.15rem;}
+        .notif-item.unread .notif-title{color:#501013;}
+        .notif-desc{font-size:.76rem;color:#6b7280;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .notif-time{font-size:.68rem;color:#6b7280;margin-top:.3rem;font-weight:500;}
+        .notif-footer{padding:.75rem 1.2rem;border-top:1px solid #E5E7EB;text-align:center;flex-shrink:0;}
+        .notif-footer a{font-size:.8rem;font-weight:700;color:#501013;text-decoration:none;}
+        .notif-overlay{display:none;position:fixed;inset:0;z-index:1048;}
+        .notif-overlay.open{display:block;}
+        .menu-badge{margin-left:auto;background:#C9A24D;color:#fff;font-size:.68rem;font-weight:800;border-radius:20px;padding:.1rem .55rem;}
+        @media(max-width:480px){.notif-panel{width:100%;border-radius:0;}}
+
+    </style>
+</head>
+
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar-custom w-100">
+    <div class="container-fluid d-flex align-items-center" style="height:70px;">
+        <div class="d-flex align-items-center gap-2">
+            <a href="https://www.uaeh.edu.mx" target="_blank" rel="noopener noreferrer">
+                <img src="../assets/img/Logo_Login.svg" alt="Logo SIARHA" height="46">
+            </a>
+            <div class="d-flex flex-column">
+                <span class="brand-text text-white">SIARHA</span>
+                <span class="navbar-subtitle text-white d-none d-md-block">
+                    Dirección de Servicio Social y Prácticas Profesionales
+                </span>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-2 ms-auto">
+            <div class="d-none d-md-flex align-items-center gap-2 text-white"
+                 style="font-size:.83rem;font-weight:600;opacity:.9;">
+                <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);
+                            display:flex;align-items:center;justify-content:center;">
+                    <i class="bi bi-building-fill"></i>
+                </div>
+                <span>Hospital General</span>
+            </div>
+                        <button class="notif-btn" id="btnNotif" onclick="toggleNotif()" title="Notificaciones">
+                <i class="bi bi-bell-fill"></i>
+                <span class="notif-count" id="notifCount">5</span>
+            </button>
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="offcanvas" data-bs-target="#menuUR"
+                    aria-label="Abrir menú">
+                <i class="bi bi-list"></i>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- ── OFFCANVAS ── -->
+<div class="offcanvas offcanvas-end offcanvas-custom" tabindex="-1" id="menuUR">
+    <div class="offcanvas-header">
+        <div class="d-flex align-items-center gap-2">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);
+                        display:flex;align-items:center;justify-content:center;">
+                <i class="bi bi-building-fill"></i>
+            </div>
+            <div>
+                <div style="font-weight:700;font-size:.9rem;">Hospital General</div>
+                <div style="font-size:.72rem;opacity:.7;">Unidad Receptora</div>
+            </div>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="navbar-nav gap-1">
+            <li><a class="nav-link" href="UR_dashboard-ur.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
+            <li><a class="nav-link active" href="UR_aprobaciones-ur.html"><i class="bi bi-people-fill"></i> Alumnos asignados <span class="menu-badge">4</span></a></li>
+            <li><a class="nav-link" href="UR_mensajes-ur.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge">2</span></a></li>
+            <li><a class="nav-link" href="UR_reportes-ur.html"><i class="bi bi-bar-chart-fill"></i> Reportes generales</a></li>
+            <li><a class="nav-link" href="UR_reporte-ur-direccion.html"><i class="bi bi-flag-fill"></i> Reportar a Dirección</a></li>
+            <li><a class="nav-link" href="UR_perfil-ur.html"><i class="bi bi-gear-fill"></i> Configuración</a></li>
+            <hr class="menu-divider">
+            <li><a class="nav-link danger" href="../index.html"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
+        </ul>
+    </div>
+</div>
+
+<!-- ── MAIN ── -->
+<main>
+
+    <!-- BOTÓN VOLVER -->
+    <a href="UR_dashboard-ur.html" class="btn-back">
+        <i class="bi bi-arrow-left"></i> Volver a alumnos
+    </a>
+
+    <!-- INFO DEL ALUMNO -->
+    <div class="info-card">
+        <div class="info-field">
+            <span class="info-label">Nombre</span>
+            <span class="info-value">Juan Pérez López</span>
+        </div>
+        <div class="info-field">
+            <span class="info-label">Número de cuenta</span>
+            <span class="info-value">2020123456</span>
+        </div>
+        <div class="info-field">
+            <span class="info-label">Programa</span>
+            <span class="badge-ss" style="margin-top:.2rem;">Servicio Social</span>
+        </div>
+        <div class="info-field">
+            <span class="info-label">Estado general</span>
+            <span class="badge-revision" style="margin-top:.2rem;">En revisión</span>
+        </div>
+        <div class="info-field ms-auto">
+            <span class="info-label">Avance global</span>
+            <div class="prog-wrap" style="margin-top:.35rem;">
+                <div class="prog-bar"><div class="prog-fill" style="width:67%;"></div></div>
+                <span style="font-size:.85rem;font-weight:800;color:var(--primario);">67%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- STAT CARDS -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon si-vino"><i class="bi bi-clock-fill"></i></div>
+                <div>
+                    <div class="stat-label">Horas realizadas</div>
+                    <div class="stat-value">320</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon si-dorado"><i class="bi bi-hourglass"></i></div>
+                <div>
+                    <div class="stat-label">Horas requeridas</div>
+                    <div class="stat-value">480</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon si-vino2"><i class="bi bi-graph-up-arrow"></i></div>
+                <div>
+                    <div class="stat-label">% de avance</div>
+                    <div class="stat-value">67%</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon si-warn"><i class="bi bi-exclamation-circle-fill"></i></div>
+                <div>
+                    <div class="stat-label">Pendientes</div>
+                    <div class="stat-value warn">3</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FILTROS + TABLA BITÁCORA -->
+    <div class="section-card">
+
+        <!-- Filtros -->
+        <div class="filtros-body">
+            <div class="row g-3 align-items-end">
+                <div class="col-6 col-md-3">
+                    <label class="form-label-sm">Vista</label>
+                    <select class="form-select-custom">
+                        <option>Por mes</option>
+                        <option>Por semana</option>
+                        <option>Por día</option>
+                    </select>
+                </div>
+                <div class="col-6 col-md-3">
+                    <label class="form-label-sm">Mes</label>
+                    <input type="month" class="form-control-custom" value="2026-02">
+                </div>
+                <div class="col-6 col-md-3">
+                    <button class="btn-primary-custom" style="margin-top:.1rem;">
+                        <i class="bi bi-funnel-fill"></i> Aplicar filtro
+                    </button>
+                </div>
+                <div class="col-6 col-md-3">
+                    <button class="btn-outline-custom">
+                        <i class="bi bi-file-earmark-pdf"></i> Exportar PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Header tabla -->
+        <div class="section-header">
+            <span class="title"><i class="bi bi-journal-text"></i> Registros de horas</span>
+            <span style="font-size:.78rem;color:var(--muted);font-weight:500;">10 registros · Febrero 2026</span>
+        </div>
+
+        <!-- Tabla -->
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Día</th>
+                        <th>Entrada</th>
+                        <th>Salida</th>
+                        <th>Total</th>
+                        <th>Actividad</th>
+                        <th>Estado</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr>
+                        <td style="font-weight:600;">2026-02-01</td>
+                        <td style="color:var(--muted);">Lunes</td>
+                        <td>08:00</td><td>14:00</td>
+                        <td style="font-weight:700;color:var(--primario);">06:00</td>
+                        <td>Apoyo administrativo</td>
+                        <td><span class="badge-pendiente">Pendiente</span></td>
+                        <td>
+                            <div style="display:flex;gap:.4rem;flex-wrap:wrap;">
+                                <button class="btn-aprobar" onclick="abrirAprobar(this)"><i class="bi bi-check-lg"></i> Aprobar</button>
+                                <button class="btn-rechazar" onclick="abrirRechazar(this)"><i class="bi bi-x-lg"></i> Rechazar</button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="font-weight:600;">2026-02-02</td>
+                        <td style="color:var(--muted);">Martes</td>
+                        <td>09:00</td><td>15:00</td>
+                        <td style="font-weight:700;color:var(--primario);">06:00</td>
+                        <td>Digitalización de documentos</td>
+                        <td><span class="badge-aprobado">Aprobado</span></td>
+                        <td><button class="btn-ver"><i class="bi bi-eye"></i> Ver</button></td>
+                    </tr>
+
+                    <tr>
+                        <td style="font-weight:600;">2026-02-03</td>
+                        <td style="color:var(--muted);">Miércoles</td>
+                        <td>08:30</td><td>13:30</td>
+                        <td style="font-weight:700;color:var(--primario);">05:00</td>
+                        <td>Atención a usuarios</td>
+                        <td><span class="badge-aprobado">Aprobado</span></td>
+                        <td><button class="btn-ver"><i class="bi bi-eye"></i> Ver</button></td>
+                    </tr>
+
+                    <tr>
+                        <td style="font-weight:600;">2026-02-04</td>
+                        <td style="color:var(--muted);">Jueves</td>
+                        <td>08:00</td><td>12:00</td>
+                        <td style="font-weight:700;color:var(--primario);">04:00</td>
+                        <td>Organización de archivo físico</td>
+                        <td><span class="badge-rechazado">Rechazado</span></td>
+                        <td>
+                            <div style="display:flex;gap:.4rem;">
+                                <button class="btn-aprobar" onclick="abrirAprobar(this)"><i class="bi bi-check-lg"></i> Aprobar</button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="font-weight:600;">2026-02-05</td>
+                        <td style="color:var(--muted);">Viernes</td>
+                        <td>10:00</td><td>16:00</td>
+                        <td style="font-weight:700;color:var(--primario);">06:00</td>
+                        <td>Actualización de base de datos</td>
+                        <td><span class="badge-aprobado">Aprobado</span></td>
+                        <td><button class="btn-ver"><i class="bi bi-eye"></i> Ver</button></td>
+                    </tr>
+
+                    <tr>
+                        <td style="font-weight:600;">2026-02-08</td>
+                        <td style="color:var(--muted);">Lunes</td>
+                        <td>08:00</td><td>14:00</td>
+                        <td style="font-weight:700;color:var(--primario);">06:00</td>
+                        <td>Elaboración de reportes mensuales</td>
+                        <td><span class="badge-pendiente">Pendiente</span></td>
+                        <td>
+                            <div style="display:flex;gap:.4rem;flex-wrap:wrap;">
+                                <button class="btn-aprobar" onclick="abrirAprobar(this)"><i class="bi bi-check-lg"></i> Aprobar</button>
+                                <button class="btn-rechazar" onclick="abrirRechazar(this)"><i class="bi bi-x-lg"></i> Rechazar</button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="font-weight:600;">2026-02-09</td>
+                        <td style="color:var(--muted);">Martes</td>
+                        <td>09:00</td><td>13:00</td>
+                        <td style="font-weight:700;color:var(--primario);">04:00</td>
+                        <td>Soporte técnico interno</td>
+                        <td><span class="badge-aprobado">Aprobado</span></td>
+                        <td><button class="btn-ver"><i class="bi bi-eye"></i> Ver</button></td>
+                    </tr>
+
+                    <tr>
+                        <td style="font-weight:600;">2026-02-10</td>
+                        <td style="color:var(--muted);">Miércoles</td>
+                        <td>08:00</td><td>15:00</td>
+                        <td style="font-weight:700;color:var(--primario);">07:00</td>
+                        <td>Capacitación interna</td>
+                        <td><span class="badge-aprobado">Aprobado</span></td>
+                        <td><button class="btn-ver"><i class="bi bi-eye"></i> Ver</button></td>
+                    </tr>
+
+                    <tr>
+                        <td style="font-weight:600;">2026-02-11</td>
+                        <td style="color:var(--muted);">Jueves</td>
+                        <td>08:00</td><td>12:30</td>
+                        <td style="font-weight:700;color:var(--primario);">04:30</td>
+                        <td>Revisión de expedientes</td>
+                        <td><span class="badge-pendiente">Pendiente</span></td>
+                        <td>
+                            <div style="display:flex;gap:.4rem;flex-wrap:wrap;">
+                                <button class="btn-aprobar" onclick="abrirAprobar(this)"><i class="bi bi-check-lg"></i> Aprobar</button>
+                                <button class="btn-rechazar" onclick="abrirRechazar(this)"><i class="bi bi-x-lg"></i> Rechazar</button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="font-weight:600;">2026-02-12</td>
+                        <td style="color:var(--muted);">Viernes</td>
+                        <td>09:00</td><td>14:00</td>
+                        <td style="font-weight:700;color:var(--primario);">05:00</td>
+                        <td>Apoyo en evento institucional</td>
+                        <td><span class="badge-aprobado">Aprobado</span></td>
+                        <td><button class="btn-ver"><i class="bi bi-eye"></i> Ver</button></td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer class="footer-custom">
+    © 2026 SIARHA · Uso exclusivo institucional · UAEH
+</footer>
+
+
+<!-- ══ PANEL NOTIFICACIONES ══ -->
+<div class="notif-overlay" id="notifOverlay" onclick="cerrarNotif()"></div>
+<div class="notif-panel" id="notifPanel">
+    <div class="notif-header">
+        <h6><i class="bi bi-bell-fill me-2"></i>Notificaciones</h6>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn-mark-all" onclick="marcarTodasLeidas()">Marcar leídas</button>
+            <button class="btn-close-notif" onclick="cerrarNotif()"><i class="bi bi-x-lg"></i></button>
+        </div>
+    </div>
+    <div class="notif-tabs">
+        <button class="notif-tab active" onclick="setNotifTab('todas',this)">Todas <span id="badgeTodas" style="background:#501013;color:#fff;border-radius:20px;font-size:.65rem;padding:.08rem .45rem;margin-left:.25rem;">5</span></button>
+        <button class="notif-tab" onclick="setNotifTab('ni-ap',this)">Registros</button>
+        <button class="notif-tab" onclick="setNotifTab('ni-msg',this)">Mensajes</button>
+        <button class="notif-tab" onclick="setNotifTab('ni-sis',this)">Sistema</button>
+    </div>
+    <div class="notif-list" id="notifList">
+        <div class="notif-item unread" data-tipo="ni-ap" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-ap"><i class="bi bi-hourglass-split"></i></div>
+            <div><div class="notif-title">4 registros pendientes</div><div class="notif-desc">Juan Pérez, Ana López y 2 más esperan aprobación</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 5 min</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-msg" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div>
+            <div><div class="notif-title">Nuevo mensaje de Juan Pérez</div><div class="notif-desc">¿Qué actividades tendré asignadas esta semana?</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 22 min</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-msg" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div>
+            <div><div class="notif-title">Nuevo mensaje de Ana López</div><div class="notif-desc">Solicitud de carta de término de prácticas</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 1 hora</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-sis" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-sis"><i class="bi bi-person-plus-fill"></i></div>
+            <div><div class="notif-title">Nuevo alumno asignado</div><div class="notif-desc">Sofía Mendoza Ruiz — Prácticas Profesionales</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 3 horas</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-sis" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-rec"><i class="bi bi-info-circle-fill"></i></div>
+            <div><div class="notif-title">Recordatorio Dirección SSPP</div><div class="notif-desc">Tienes registros sin revisar por más de 5 días</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer, 9:00 a.m.</div></div>
+        </div>
+        <div class="notif-item" data-tipo="ni-ap" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-ap"><i class="bi bi-check-circle-fill"></i></div>
+            <div><div class="notif-title">Registro corregido — Daniel Torres</div><div class="notif-desc">Reenvió el registro del 04 feb tras rechazo</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer, 3:45 p.m.</div></div>
+        </div>
+    </div>
+    <div class="notif-footer"><a href="UR_mensajes-ur.html">Ver mensajes →</a></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- ── MODAL APROBAR ── -->
+<div class="modal fade" id="modalAprobar" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius:18px;border:none;overflow:hidden;">
+            <div class="modal-header" style="background:#501013;border:none;padding:1rem 1.4rem;">
+                <h6 class="modal-title text-white fw-bold" style="margin:0;">
+                    <i class="bi bi-check-circle-fill me-2"></i>Confirmar aprobación
+                </h6>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" style="padding:1.4rem;">
+                <p style="font-size:.88rem;margin:0 0 .75rem;">¿Confirmas que las horas del registro <strong id="aprobFecha"></strong> son correctas y las apruebas?</p>
+                <div style="background:#F2F4F8;border-radius:10px;padding:.9rem 1rem;font-size:.83rem;color:#6b7280;">
+                    <i class="bi bi-info-circle me-1"></i>El alumno recibirá una notificación de aprobación.
+                </div>
+            </div>
+            <div class="modal-footer" style="border-color:#E5E7EB;padding:.9rem 1.4rem;gap:.6rem;">
+                <button type="button" class="btn-ver" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn-aprobar" onclick="confirmarAprobar()" style="padding:.45rem 1.1rem;">
+                    <i class="bi bi-check-lg"></i> Sí, aprobar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── MODAL RECHAZAR ── -->
+<div class="modal fade" id="modalRechazar" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius:18px;border:none;overflow:hidden;">
+            <div class="modal-header" style="background:#501013;border:none;padding:1rem 1.4rem;">
+                <h6 class="modal-title text-white fw-bold" style="margin:0;">
+                    <i class="bi bi-x-circle-fill me-2"></i>Rechazar registro
+                </h6>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" style="padding:1.4rem;">
+                <p style="font-size:.88rem;margin:0 0 1rem;">Estás rechazando el registro del <strong id="rechFecha"></strong>. Escribe el motivo para que el alumno pueda corregirlo.</p>
+                <label style="font-size:.75rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.35rem;display:block;">
+                    Motivo del rechazo <span style="color:#501013;">*</span>
+                </label>
+                <textarea id="motivoRechazo" rows="4"
+                    style="border:1.5px solid #E5E7EB;border-radius:10px;padding:.55rem .9rem;font-size:.88rem;font-family:inherit;width:100%;outline:none;resize:vertical;transition:border-color .2s;"
+                    onfocus="this.style.borderColor='#501013'"
+                    onblur="this.style.borderColor='#E5E7EB'"
+                    placeholder="Ej: El horario registrado no coincide con la asistencia del día. Por favor, corrige la hora de salida…"></textarea>
+                <div id="motivoError" style="font-size:.78rem;color:#991b1b;font-weight:600;margin-top:.4rem;display:none;">
+                    <i class="bi bi-exclamation-circle-fill me-1"></i>El motivo es obligatorio para rechazar un registro.
+                </div>
+            </div>
+            <div class="modal-footer" style="border-color:#E5E7EB;padding:.9rem 1.4rem;gap:.6rem;">
+                <button type="button" class="btn-ver" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn-rechazar" onclick="confirmarRechazar()" style="padding:.45rem 1.1rem;">
+                    <i class="bi bi-x-lg"></i> Rechazar registro
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div id="toastUR" style="position:fixed;bottom:1.5rem;right:1.5rem;background:#501013;color:#fff;border-radius:10px;padding:.9rem 1.3rem;display:flex;align-items:center;gap:.6rem;font-size:.85rem;font-weight:600;box-shadow:0 8px 24px rgba(80,16,19,.25);transform:translateY(80px);opacity:0;transition:transform .35s ease,opacity .35s ease;z-index:9999;">
+    <i class="bi bi-check-circle-fill" style="font-size:1.1rem;"></i><span id="toastURTxt"></span>
+</div>
+
+<script>
+    let filaActiva = null;
+
+    function abrirAprobar(btn) {
+        filaActiva = btn.closest('tr');
+        const fecha = filaActiva.querySelector('td:first-child').textContent.trim();
+        document.getElementById('aprobFecha').textContent = fecha;
+        new bootstrap.Modal(document.getElementById('modalAprobar')).show();
+    }
+
+    function confirmarAprobar() {
+        bootstrap.Modal.getInstance(document.getElementById('modalAprobar')).hide();
+        if (filaActiva) {
+            const badge = filaActiva.querySelector('.badge-pendiente, .badge-rechazado');
+            if (badge) {
+                badge.className = 'badge-aprobado';
+                badge.textContent = 'Aprobado';
+            }
+            const acciones = filaActiva.querySelector('td:last-child');
+            acciones.innerHTML = '<button class="btn-ver"><i class="bi bi-eye"></i> Ver</button>';
+        }
+        showToast('Registro aprobado correctamente.');
+    }
+
+    function abrirRechazar(btn) {
+        filaActiva = btn.closest('tr');
+        const fecha = filaActiva.querySelector('td:first-child').textContent.trim();
+        document.getElementById('rechFecha').textContent = fecha;
+        document.getElementById('motivoRechazo').value = '';
+        document.getElementById('motivoError').style.display = 'none';
+        new bootstrap.Modal(document.getElementById('modalRechazar')).show();
+    }
+
+    function confirmarRechazar() {
+        const motivo = document.getElementById('motivoRechazo').value.trim();
+        if (!motivo) {
+            document.getElementById('motivoError').style.display = 'block';
+            return;
+        }
+        bootstrap.Modal.getInstance(document.getElementById('modalRechazar')).hide();
+        if (filaActiva) {
+            const badge = filaActiva.querySelector('.badge-pendiente, .badge-aprobado');
+            if (badge) {
+                badge.className = 'badge-rechazado';
+                badge.textContent = 'Rechazado';
+            }
+            const acciones = filaActiva.querySelector('td:last-child');
+            acciones.innerHTML = '<div style="display:flex;gap:.4rem;flex-wrap:wrap;"><button class="btn-aprobar" onclick="abrirAprobar(this)"><i class="bi bi-check-lg"></i> Aprobar</button></div>';
+        }
+        showToast('Registro rechazado. El alumno fue notificado.');
+    }
+
+    function showToast(msg) {
+        document.getElementById('toastURTxt').textContent = msg;
+        const t = document.getElementById('toastUR');
+        t.classList.add('show');
+        setTimeout(() => { t.style.transform=''; t.style.opacity=''; t.classList.remove('show'); }, 3500);
+    }
+    // Añadir clase show al toast
+    const style = document.createElement('style');
+    style.textContent = '#toastUR.show { transform: translateY(0) !important; opacity: 1 !important; }';
+    document.head.appendChild(style);
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SIARHA | Registrar Horas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/siarha.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primario:     #501013;
+            --primario-dk:  #3a0b0e;
+            --primario-lt:  #f7eaea;
+            --primario-mid: #7a1820;
+            --dorado:       #C9A24D;
+            --dorado-lt:    #fdf6e3;
+            --bg:           #F2F4F8;
+            --card-bg:      #ffffff;
+            --text:         #1F2933;
+            --muted:        #6b7280;
+            --border:       #E5E7EB;
+            --radius-card:  18px;
+            --radius-sm:    10px;
+            --shadow:       0 2px 16px rgba(80,16,19,.08);
+            --shadow-hover: 0 6px 28px rgba(80,16,19,.15);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar-custom {
+            background: var(--primario);
+            padding: 0 1.5rem;
+            height: 70px;
+            box-shadow: 0 2px 16px rgba(0,0,0,.15);
+            position: sticky;
+            top: 0;
+            z-index: 1050;
+            display: flex;
+            align-items: center;
+        }
+        .brand-text { font-size: 1.5rem; font-weight: 800; letter-spacing: .04em; line-height: 1; }
+        .navbar-subtitle { font-size: .7rem; font-weight: 500; opacity: .85; letter-spacing: .02em; }
+        .navbar-toggler {
+            border: none; color: #fff; font-size: 1.25rem; padding: .4rem .6rem;
+            border-radius: var(--radius-sm); background: rgba(255,255,255,.12); transition: background .2s;
+        }
+        .navbar-toggler:hover { background: rgba(255,255,255,.22); }
+
+        /* ── OFFCANVAS ── */
+        .offcanvas-custom {
+            background: var(--primario-dk); color: #fff;
+            width: 280px !important;
+            border-radius: var(--radius-card) 0 0 var(--radius-card);
+        }
+        .offcanvas-custom .offcanvas-header { border-color: rgba(255,255,255,.12) !important; padding: 1.25rem 1.5rem; }
+        .offcanvas-custom .offcanvas-title { font-weight: 700; font-size: 1rem; }
+        .offcanvas-custom .nav-link {
+            color: rgba(255,255,255,.8); font-weight: 500; font-size: .9rem;
+            padding: .65rem 1rem; border-radius: var(--radius-sm);
+            display: flex; align-items: center; gap: .6rem;
+            transition: background .2s, color .2s;
+        }
+        .offcanvas-custom .nav-link:hover,
+        .offcanvas-custom .nav-link.active { background: rgba(255,255,255,.12); color: #fff; }
+        .offcanvas-custom .nav-link.active { font-weight: 700; }
+        .offcanvas-custom .nav-link.danger { color: #ff9090 !important; }
+        .offcanvas-custom .nav-link.danger:hover { background: rgba(255,80,80,.15); }
+        .menu-divider { border-color: rgba(255,255,255,.12); margin: .5rem 0; }
+
+        /* ── MAIN ── */
+        main { flex: 1; padding: 1.75rem 1.5rem; max-width: 860px; width: 100%; margin: 0 auto; }
+
+        /* ── BOTÓN VOLVER ── */
+        .btn-back {
+            display: inline-flex; align-items: center; gap: .4rem;
+            font-size: .83rem; font-weight: 600; color: var(--muted);
+            background: var(--card-bg); border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm); padding: .45rem .9rem;
+            text-decoration: none; margin-bottom: 1.4rem;
+            transition: border-color .2s, color .2s, background .2s;
+        }
+        .btn-back:hover { border-color: var(--primario); color: var(--primario); background: var(--primario-lt); }
+
+        /* ── PAGE HEADER ── */
+        .page-header { margin-bottom: 1.5rem; }
+        .page-header h4 { font-size: 1.3rem; font-weight: 800; margin: 0; }
+        .page-header p  { font-size: .8rem; color: var(--muted); margin: .25rem 0 0; }
+
+        /* ── SECTION CARD ── */
+        .section-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+        .section-header {
+            padding: 1rem 1.4rem;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: .5rem;
+        }
+        .section-header .title {
+            font-weight: 700; font-size: .95rem;
+            display: flex; align-items: center; gap: .5rem;
+            color: var(--primario);
+        }
+        .section-body { padding: 1.4rem; }
+
+        /* ── FORM ── */
+        .form-label-sm {
+            font-size: .76rem; font-weight: 700; color: var(--muted);
+            text-transform: uppercase; letter-spacing: .04em;
+            margin-bottom: .35rem; display: block;
+        }
+        .form-field {
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: .55rem .9rem;
+            font-size: .88rem;
+            font-family: inherit;
+            color: var(--text);
+            background: #fff;
+            width: 100%;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        .form-field:focus {
+            border-color: var(--primario);
+            box-shadow: 0 0 0 3px rgba(80,16,19,.1);
+        }
+        .form-field:disabled {
+            background: var(--bg);
+            color: var(--muted);
+            cursor: not-allowed;
+        }
+        textarea.form-field { resize: vertical; min-height: 90px; }
+
+        /* total calculado */
+        .total-display {
+            background: var(--primario-lt);
+            border: 1.5px solid rgba(80,16,19,.2);
+            border-radius: var(--radius-sm);
+            padding: .55rem .9rem;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--primario);
+            width: 100%;
+            text-align: center;
+            letter-spacing: .03em;
+        }
+
+        /* upload zona */
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-sm);
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color .2s, background .2s;
+            background: var(--bg);
+            position: relative;
+        }
+        .upload-zone:hover { border-color: var(--primario); background: var(--primario-lt); }
+        .upload-zone input[type="file"] {
+            position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+        }
+        .upload-zone i { font-size: 1.8rem; color: var(--muted); margin-bottom: .4rem; display: block; }
+        .upload-zone span { font-size: .82rem; color: var(--muted); font-weight: 500; }
+        .upload-zone .hint { font-size: .73rem; color: #9ca3af; margin-top: .25rem; display: block; }
+
+        /* aviso dias ── */
+        .aviso-info {
+            background: var(--dorado-lt);
+            border: 1px solid rgba(201,162,77,.35);
+            border-radius: var(--radius-sm);
+            padding: .75rem 1rem;
+            font-size: .82rem;
+            color: #7a5a00;
+            display: flex;
+            align-items: flex-start;
+            gap: .6rem;
+        }
+        .aviso-info i { font-size: 1rem; margin-top: .05rem; flex-shrink: 0; }
+
+        /* separator label */
+        .sep-label {
+            font-size: .72rem; font-weight: 700; color: var(--muted);
+            text-transform: uppercase; letter-spacing: .07em;
+            display: flex; align-items: center; gap: .6rem;
+            margin: 1.2rem 0 1rem;
+        }
+        .sep-label::before, .sep-label::after {
+            content: ''; flex: 1; height: 1px; background: var(--border);
+        }
+
+        /* ── BOTONES FORM ── */
+        .btn-submit {
+            background: var(--primario); color: #fff; border: none;
+            border-radius: var(--radius-sm); font-weight: 700;
+            font-size: .9rem; padding: .7rem 2rem;
+            display: inline-flex; align-items: center; gap: .5rem;
+            cursor: pointer; transition: background .2s, transform .15s;
+        }
+        .btn-submit:hover { background: var(--primario-dk); transform: translateY(-1px); }
+
+        .btn-cancel {
+            background: #fff; color: var(--muted);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm); font-weight: 600;
+            font-size: .9rem; padding: .7rem 1.5rem;
+            display: inline-flex; align-items: center; gap: .5rem;
+            cursor: pointer; transition: border-color .2s, color .2s;
+            text-decoration: none;
+        }
+        .btn-cancel:hover { border-color: var(--primario); color: var(--primario); }
+
+        /* ── HISTORIAL RECIENTE ── */
+        .registro-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: .8rem 1.4rem;
+            border-bottom: 1px solid var(--border);
+            gap: .75rem; flex-wrap: wrap;
+        }
+        .registro-item:last-child { border-bottom: none; }
+        .reg-fecha { font-weight: 700; font-size: .85rem; min-width: 90px; }
+        .reg-actividad { font-size: .83rem; color: var(--muted); flex: 1; }
+        .reg-horas { font-weight: 800; color: var(--primario); font-size: .9rem; min-width: 48px; text-align: right; }
+
+        .badge-pendiente  { background: #fff3cd; color: #856404; border-radius: 20px; font-size: .72rem; font-weight: 700; padding: .25rem .65rem; }
+        .badge-aprobado   { background: var(--dorado-lt); color: #7a5a00; border-radius: 20px; font-size: .72rem; font-weight: 700; padding: .25rem .65rem; border: 1px solid var(--dorado); }
+        .badge-rechazado  { background: #fee2e2; color: #991b1b; border-radius: 20px; font-size: .72rem; font-weight: 700; padding: .25rem .65rem; }
+
+        /* ── TOAST ── */
+        .toast-custom {
+            position: fixed; bottom: 1.5rem; right: 1.5rem;
+            background: var(--primario); color: #fff;
+            border-radius: var(--radius-sm); padding: .9rem 1.3rem;
+            display: flex; align-items: center; gap: .6rem;
+            font-size: .85rem; font-weight: 600;
+            box-shadow: 0 8px 24px rgba(80,16,19,.25);
+            transform: translateY(80px); opacity: 0;
+            transition: transform .35s ease, opacity .35s ease;
+            z-index: 9999;
+        }
+        .toast-custom.show { transform: translateY(0); opacity: 1; }
+
+        /* ── FOOTER ── */
+        .footer-custom {
+            background: var(--primario); color: rgba(255,255,255,.7);
+            text-align: center; padding: .75rem;
+            font-size: .75rem; letter-spacing: .02em;
+        }
+
+        @media (max-width: 767px) {
+            main { padding: 1.25rem 1rem; }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar-custom w-100">
+    <div class="container-fluid d-flex align-items-center" style="height:70px;">
+        <div class="d-flex align-items-center gap-2">
+            <a href="https://www.uaeh.edu.mx" target="_blank" rel="noopener noreferrer">
+                <img src="../assets/img/Logo_Login.svg" alt="Logo SIARHA" height="46">
+            </a>
+            <div class="d-flex flex-column">
+                <span class="brand-text text-white">SIARHA</span>
+                <span class="navbar-subtitle text-white d-none d-md-block">
+                    Dirección de Servicio Social y Prácticas Profesionales
+                </span>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-2 ms-auto">
+            <div class="d-none d-md-flex align-items-center gap-2 text-white"
+                 style="font-size:.83rem;font-weight:600;opacity:.9;">
+                <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);
+                            display:flex;align-items:center;justify-content:center;">
+                    <i class="bi bi-person-fill"></i>
+                </div>
+                <span>Juan Pérez</span>
+            </div>
+                        <button class="notif-btn" id="btnNotif" onclick="toggleNotif()" title="Notificaciones">
+                <i class="bi bi-bell-fill"></i>
+                <span class="notif-count" id="notifCount">4</span>
+            </button>
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="offcanvas" data-bs-target="#menuAlumno"
+                    aria-label="Abrir menú">
+                <i class="bi bi-list"></i>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- ── OFFCANVAS ── -->
+<div class="offcanvas offcanvas-end offcanvas-custom" tabindex="-1" id="menuAlumno">
+    <div class="offcanvas-header">
+        <div class="d-flex align-items-center gap-2">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);
+                        display:flex;align-items:center;justify-content:center;">
+                <i class="bi bi-person-fill"></i>
+            </div>
+            <div>
+                <div style="font-weight:700;font-size:.9rem;">Juan Pérez</div>
+                <div style="font-size:.72rem;opacity:.7;">Prácticas Profesionales</div>
+            </div>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="navbar-nav gap-1">
+            <li><a class="nav-link" href="ALU_dashboard-alumno.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
+            <li><a class="nav-link" href="ALU_perfil-alumno.html"><i class="bi bi-person-circle"></i> Mi perfil</a></li>
+            <li><a class="nav-link active" href="ALU_registro-horas.html"><i class="bi bi-journal-plus"></i> Registrar horas</a></li>
+            <li><a class="nav-link" href="ALU_contactar-ur.html"><i class="bi bi-building"></i> Chat con mi UR</a></li>
+            <li><a class="nav-link" href="ALU_contactar-direccion.html"><i class="bi bi-person-badge-fill"></i> Chat con mi Responsable</a></li>
+            <li><a class="nav-link" href="ALU_reportes-alumno.html"><i class="bi bi-flag-fill"></i> Reportar problema</a></li>
+            <hr class="menu-divider">
+            <li><a class="nav-link danger" href="../index.html"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
+        </ul>
+    </div>
+</div>
+
+<!-- ── MAIN ── -->
+<main>
+
+    <!-- VOLVER -->
+    <a href="ALU_dashboard-alumno.html" class="btn-back">
+        <i class="bi bi-arrow-left"></i> Volver al inicio
+    </a>
+
+    <!-- ENCABEZADO -->
+    <div class="page-header">
+        <h4>Registrar horas <span style="color:var(--primario);">📋</span></h4>
+        <p>Completa el formulario con los datos de tu jornada. El registro quedará en revisión hasta que tu Unidad Receptora lo apruebe.</p>
+    </div>
+
+    <!-- AVISO -->
+    <div class="aviso-info mb-4">
+        <i class="bi bi-info-circle-fill"></i>
+        <span>Solo puedes registrar <strong>un día a la vez</strong> y no puedes registrar fechas <strong>futuras</strong> ni días que ya hayas registrado.</span>
+    </div>
+
+    <!-- FORMULARIO PRINCIPAL -->
+    <div class="section-card">
+        <div class="section-header">
+            <span class="title"><i class="bi bi-calendar-plus"></i> Datos de la jornada</span>
+        </div>
+
+        <div class="section-body">
+            <form id="formRegistro" novalidate>
+
+                <!-- FILA 1: fecha + día -->
+                <div class="row g-3 mb-3">
+                    <div class="col-md-5">
+                        <label class="form-label-sm">Fecha <span style="color:var(--primario);">*</span></label>
+                        <input type="date" id="fechaInput" class="form-field" required
+                               max="" placeholder="dd/mm/aaaa">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label-sm">Día de la semana</label>
+                        <input type="text" id="diaSemana" class="form-field" disabled
+                               placeholder="Se calcula automáticamente">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label-sm">Semana del periodo</label>
+                        <input type="text" id="semanaNum" class="form-field" disabled
+                               placeholder="—">
+                    </div>
+                </div>
+
+                <div class="sep-label">Horario</div>
+
+                <!-- FILA 2: entrada + salida + total -->
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label-sm">Hora de entrada <span style="color:var(--primario);">*</span></label>
+                        <input type="time" id="horaEntrada" class="form-field" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label-sm">Hora de salida <span style="color:var(--primario);">*</span></label>
+                        <input type="time" id="horaSalida" class="form-field" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label-sm">Total de horas</label>
+                        <div class="total-display" id="totalHoras">— : —</div>
+                    </div>
+                </div>
+
+                <div class="sep-label">Actividad</div>
+
+                <!-- FILA 3: actividad -->
+                <div class="mb-3">
+                    <label class="form-label-sm">Descripción de actividades <span style="color:var(--primario);">*</span></label>
+                    <textarea id="actividad" class="form-field" required
+                              placeholder="Describe brevemente las actividades realizadas durante la jornada…"></textarea>
+                </div>
+
+                <!-- FILA 4: evidencia -->
+                <div class="mb-4">
+                    <label class="form-label-sm">Evidencia <span style="color:#9ca3af;">(opcional)</span></label>
+                    <div class="upload-zone" id="uploadZone">
+                        <input type="file" id="evidenciaFile"
+                               accept=".pdf,.jpg,.jpeg,.png"
+                               onchange="mostrarArchivo(this)">
+                        <i class="bi bi-cloud-arrow-up"></i>
+                        <span id="uploadLabel">Arrastra un archivo o haz clic para seleccionar</span>
+                        <span class="hint">PDF, JPG o PNG · Máximo 5 MB</span>
+                    </div>
+                </div>
+
+                <!-- ACCIONES -->
+                <div class="d-flex align-items-center gap-3 flex-wrap">
+                    <button type="submit" class="btn-submit">
+                        <i class="bi bi-send-fill"></i> Enviar registro
+                    </button>
+                    <a href="ALU_dashboard-alumno.html" class="btn-cancel">
+                        <i class="bi bi-x-circle"></i> Cancelar
+                    </a>
+                    <span id="errorMsg" style="font-size:.8rem;color:#991b1b;font-weight:600;display:none;">
+                        <i class="bi bi-exclamation-circle-fill"></i>
+                        <span id="errorTxt"></span>
+                    </span>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- HISTORIAL RECIENTE -->
+    <div class="section-card">
+        <div class="section-header">
+            <span class="title"><i class="bi bi-clock-history"></i> Últimos registros enviados</span>
+        </div>
+
+        <div class="registro-item">
+            <span class="reg-fecha">12 feb 2026</span>
+            <span class="reg-actividad">Apoyo en evento institucional</span>
+            <span class="reg-horas">05:00</span>
+            <span class="badge-aprobado">Aprobado</span>
+        </div>
+        <div class="registro-item">
+            <span class="reg-fecha">11 feb 2026</span>
+            <span class="reg-actividad">Revisión de expedientes</span>
+            <span class="reg-horas">04:30</span>
+            <span class="badge-pendiente">Pendiente</span>
+        </div>
+        <div class="registro-item">
+            <span class="reg-fecha">10 feb 2026</span>
+            <span class="reg-actividad">Capacitación interna</span>
+            <span class="reg-horas">07:00</span>
+            <span class="badge-aprobado">Aprobado</span>
+        </div>
+        <div class="registro-item">
+            <span class="reg-fecha">08 feb 2026</span>
+            <span class="reg-actividad">Elaboración de reportes mensuales</span>
+            <span class="reg-horas">06:00</span>
+            <span class="badge-pendiente">Pendiente</span>
+        </div>
+        <div class="registro-item">
+            <span class="reg-fecha">04 feb 2026</span>
+            <span class="reg-actividad">Organización de archivo físico</span>
+            <span class="reg-horas">04:00</span>
+            <span class="badge-rechazado">Rechazado</span>
+        </div>
+    </div>
+
+</main>
+
+<!-- ── TOAST ── -->
+<div class="toast-custom" id="toastOk">
+    <i class="bi bi-check-circle-fill" style="font-size:1.1rem;"></i>
+    Registro enviado correctamente. Quedará en revisión.
+</div>
+
+<!-- ── FOOTER ── -->
+<footer class="footer-custom">
+    © 2026 SIARHA · Uso exclusivo institucional · UAEH
+</footer>
+
+
+<!-- ══ PANEL NOTIFICACIONES ══ -->
+<div class="notif-overlay" id="notifOverlay" onclick="cerrarNotif()"></div>
+<div class="notif-panel" id="notifPanel">
+    <div class="notif-header">
+        <h6><i class="bi bi-bell-fill me-2"></i>Notificaciones</h6>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn-mark-all" onclick="marcarTodasLeidas()">Marcar leídas</button>
+            <button class="btn-close-notif" onclick="cerrarNotif()"><i class="bi bi-x-lg"></i></button>
+        </div>
+    </div>
+    <div class="notif-tabs">
+        <button class="notif-tab active" onclick="setNotifTab('todas',this)">Todas <span id="badgeTodas" style="background:#501013;color:#fff;border-radius:20px;font-size:.65rem;padding:.08rem .45rem;margin-left:.25rem;">4</span></button>
+        <button class="notif-tab" onclick="setNotifTab('ni-ap',this)">Horas</button>
+        <button class="notif-tab" onclick="setNotifTab('ni-msg',this)">Mensajes</button>
+        <button class="notif-tab" onclick="setNotifTab('ni-sis',this)">Sistema</button>
+    </div>
+    <div class="notif-list" id="notifList">
+        <div class="notif-item unread" data-tipo="ni-ap" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-ap"><i class="bi bi-check-circle-fill"></i></div>
+            <div><div class="notif-title">Registro aprobado ✓</div><div class="notif-desc">Jornada del 03 feb aprobada por Hospital General</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 20 min</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-ap" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-re"><i class="bi bi-x-circle-fill"></i></div>
+            <div><div class="notif-title">Registro rechazado</div><div class="notif-desc">Jornada del 04 feb — Revisa el motivo y corrígelo</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 1 hora</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-msg" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div>
+            <div><div class="notif-title">Respuesta de tu UR</div><div class="notif-desc">Dr. Martínez respondió tu mensaje sobre actividades</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 3 horas</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-sis" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-rec"><i class="bi bi-exclamation-circle-fill"></i></div>
+            <div><div class="notif-title">Recordatorio de registro</div><div class="notif-desc">Llevas 3 días sin registrar horas — ¿Todo bien?</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hoy, 9:00 a.m.</div></div>
+        </div>
+        <div class="notif-item" data-tipo="ni-sis" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-sis"><i class="bi bi-info-circle-fill"></i></div>
+            <div><div class="notif-title">Avance del 10% alcanzado</div><div class="notif-desc">¡Buen inicio! Llevas 24 de 240 horas</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer</div></div>
+        </div>
+    </div>
+    <div class="notif-footer"><a href="ALU_dashboard-alumno.html">Ver todo →</a></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const dias = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+
+    // Bloquear fechas futuras
+    const hoy = new Date().toISOString().split('T')[0];
+    document.getElementById('fechaInput').setAttribute('max', hoy);
+
+    // Calcular día y semana al seleccionar fecha
+    document.getElementById('fechaInput').addEventListener('change', function () {
+        if (!this.value) return;
+        const [y, m, d] = this.value.split('-').map(Number);
+        const fecha = new Date(y, m - 1, d);
+        document.getElementById('diaSemana').value = dias[fecha.getDay()];
+
+        // semana del año aproximada
+        const inicio = new Date(y, 0, 1);
+        const semana = Math.ceil(((fecha - inicio) / 86400000 + inicio.getDay() + 1) / 7);
+        document.getElementById('semanaNum').value = `Semana ${semana}`;
+    });
+
+    // Calcular total de horas
+    function calcularTotal() {
+        const e = document.getElementById('horaEntrada').value;
+        const s = document.getElementById('horaSalida').value;
+        const el = document.getElementById('totalHoras');
+
+        if (!e || !s) { el.textContent = '— : —'; return; }
+
+        const [eh, em] = e.split(':').map(Number);
+        const [sh, sm] = s.split(':').map(Number);
+        let mins = (sh * 60 + sm) - (eh * 60 + em);
+
+        if (mins <= 0) {
+            el.textContent = '⚠ Revisa el horario';
+            el.style.color = '#991b1b';
+            return;
+        }
+        el.style.color = 'var(--primario)';
+        const h = Math.floor(mins / 60);
+        const m2 = mins % 60;
+        el.textContent = `${String(h).padStart(2,'0')}:${String(m2).padStart(2,'0')} hrs`;
+    }
+
+    document.getElementById('horaEntrada').addEventListener('change', calcularTotal);
+    document.getElementById('horaSalida').addEventListener('change', calcularTotal);
+
+    // Mostrar nombre de archivo subido
+    function mostrarArchivo(input) {
+        const label = document.getElementById('uploadLabel');
+        if (input.files && input.files[0]) {
+            const f = input.files[0];
+            const kb = (f.size / 1024).toFixed(0);
+            label.innerHTML = `<strong style="color:var(--primario);">${f.name}</strong> · ${kb} KB`;
+            document.getElementById('uploadZone').style.borderColor = 'var(--primario)';
+            document.getElementById('uploadZone').style.background = 'var(--primario-lt)';
+        }
+    }
+
+    // Validación y envío
+    document.getElementById('formRegistro').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const fecha    = document.getElementById('fechaInput').value;
+        const entrada  = document.getElementById('horaEntrada').value;
+        const salida   = document.getElementById('horaSalida').value;
+        const actividad = document.getElementById('actividad').value.trim();
+        const errMsg   = document.getElementById('errorMsg');
+        const errTxt   = document.getElementById('errorTxt');
+
+        errMsg.style.display = 'none';
+
+        if (!fecha) {
+            errTxt.textContent = 'Selecciona una fecha válida.';
+            errMsg.style.display = 'inline-flex'; return;
+        }
+        if (!entrada || !salida) {
+            errTxt.textContent = 'Indica la hora de entrada y salida.';
+            errMsg.style.display = 'inline-flex'; return;
+        }
+        const [eh, em] = entrada.split(':').map(Number);
+        const [sh, sm] = salida.split(':').map(Number);
+        if ((sh * 60 + sm) - (eh * 60 + em) <= 0) {
+            errTxt.textContent = 'La hora de salida debe ser mayor a la entrada.';
+            errMsg.style.display = 'inline-flex'; return;
+        }
+        if (!actividad) {
+            errTxt.textContent = 'Describe la actividad realizada.';
+            errMsg.style.display = 'inline-flex'; return;
+        }
+
+        // Simular envío
+        const toast = document.getElementById('toastOk');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3500);
+
+        // Reset
+        this.reset();
+        document.getElementById('totalHoras').textContent = '— : —';
+        document.getElementById('diaSemana').value = '';
+        document.getElementById('semanaNum').value = '';
+        document.getElementById('uploadLabel').textContent = 'Arrastra un archivo o haz clic para seleccionar';
+        document.getElementById('uploadZone').style.borderColor = '';
+        document.getElementById('uploadZone').style.background = '';
+    });
+
+    // ══ NOTIFICACIONES ══════════════════════════════════════════════
+    let _nOpen=false;
+    function toggleNotif(){_nOpen?cerrarNotif():abrirNotif();}
+    function abrirNotif(){document.getElementById('notifPanel').classList.add('open');document.getElementById('notifOverlay').classList.add('open');_nOpen=true;}
+    function cerrarNotif(){document.getElementById('notifPanel').classList.remove('open');document.getElementById('notifOverlay').classList.remove('open');_nOpen=false;}
+    function marcarLeida(item){if(!item.classList.contains('unread'))return;item.classList.remove('unread');_badge();}
+    function marcarTodasLeidas(){document.querySelectorAll('.notif-item.unread').forEach(i=>i.classList.remove('unread'));_badge();}
+    function _badge(){const n=document.querySelectorAll('.notif-item.unread').length;const b=document.getElementById('notifCount');if(b){b.textContent=n;b.style.display=n>0?'flex':'none';}const bt=document.getElementById('badgeTodas');if(bt)bt.textContent=n;}
+    function setNotifTab(tipo,btn){document.querySelectorAll('.notif-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.notif-item').forEach(i=>{i.style.display=(tipo==='todas'||i.dataset.tipo===tipo)?'':'none';});}
+    // ════════════════════════════════════════════════════════════════
+
+</script>
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SIARHA | Chat con mi Responsable</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root{--verde:#501013;--verde-dark:#3a0b0e;--verde-light:#f7eaea;--verde-mid:#7a1820;--accent:#C9A24D;--accent-lt:#fdf6e3;--bg:#F2F4F8;--card-bg:#fff;--text:#1F2933;--muted:#6b7280;--border:#E5E7EB;--radius-card:18px;--radius-sm:10px;--shadow:0 2px 16px rgba(80,16,19,.08);}
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+        .navbar-custom{background:var(--verde);padding:0 1.5rem;height:70px;box-shadow:0 2px 16px rgba(0,0,0,.12);position:sticky;top:0;z-index:1050;display:flex;align-items:center;}
+        .brand-text{font-size:1.5rem;font-weight:800;letter-spacing:.04em;}
+        .navbar-subtitle{font-size:.7rem;font-weight:500;opacity:.85;}
+        .navbar-toggler{border:none;color:#fff;font-size:1.25rem;padding:.4rem .6rem;border-radius:var(--radius-sm);background:rgba(255,255,255,.12);transition:background .2s;}
+        .navbar-toggler:hover{background:rgba(255,255,255,.22);}
+        .offcanvas-custom{background:var(--verde-dark);color:#fff;width:280px!important;border-radius:var(--radius-card) 0 0 var(--radius-card);}
+        .offcanvas-custom .offcanvas-header{border-color:rgba(255,255,255,.12)!important;padding:1.25rem 1.5rem;}
+        .offcanvas-custom .nav-link{color:rgba(255,255,255,.8);font-weight:500;font-size:.9rem;padding:.65rem 1rem;border-radius:var(--radius-sm);display:flex;align-items:center;gap:.6rem;transition:background .2s,color .2s;}
+        .offcanvas-custom .nav-link:hover,.offcanvas-custom .nav-link.active{background:rgba(255,255,255,.12);color:#fff;}
+        .offcanvas-custom .nav-link.active{font-weight:700;}
+        .offcanvas-custom .nav-link.danger{color:#ff9090!important;}
+        .offcanvas-custom .nav-link.danger:hover{background:rgba(255,80,80,.15);}
+        .menu-divider{border-color:rgba(255,255,255,.12);margin:.5rem 0;}
+
+        /* NOTIFICACIONES */
+        .notif-btn{position:relative;background:rgba(255,255,255,.12);border:none;color:#fff;width:40px;height:40px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;transition:background .2s;flex-shrink:0;}
+        .notif-btn:hover{background:rgba(255,255,255,.22);}
+        .notif-count{position:absolute;top:4px;right:4px;background:var(--accent);color:#fff;font-size:.58rem;font-weight:800;border-radius:20px;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0 .25rem;border:1.5px solid var(--verde);}
+        .notif-panel{position:fixed;top:70px;right:0;width:360px;max-height:calc(100vh - 80px);background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-card) 0 0 var(--radius-card);box-shadow:-4px 8px 32px rgba(80,16,19,.18);z-index:1049;display:flex;flex-direction:column;transform:translateX(110%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow:hidden;}
+        .notif-panel.open{transform:translateX(0);}
+        .notif-header{padding:1rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--verde);color:#fff;flex-shrink:0;}
+        .notif-header h6{font-size:.92rem;font-weight:800;margin:0;}
+        .btn-mark-all{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.8);background:rgba(255,255,255,.12);border:none;border-radius:20px;padding:.2rem .7rem;cursor:pointer;}
+        .btn-mark-all:hover{background:rgba(255,255,255,.22);}
+        .btn-close-notif{background:none;border:none;color:rgba(255,255,255,.7);font-size:1rem;cursor:pointer;padding:.2rem;display:flex;align-items:center;border-radius:6px;}
+        .btn-close-notif:hover{color:#fff;}
+        .notif-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;}
+        .notif-tab{flex:1;padding:.6rem;font-size:.8rem;font-weight:700;color:var(--muted);border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;text-align:center;}
+        .notif-tab.active{color:var(--verde);border-bottom-color:var(--verde);}
+        .notif-list{overflow-y:auto;flex:1;}
+        .notif-item{padding:.9rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:.75rem;cursor:pointer;transition:background .15s;position:relative;}
+        .notif-item:hover{background:var(--bg);}
+        .notif-item.unread{background:var(--verde-light);}
+        .notif-item.unread::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--verde);}
+        .notif-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+        .ni-ap{background:#d1fae5;color:#065f46;}.ni-re{background:#fee2e2;color:#991b1b;}.ni-msg{background:#dbeafe;color:#1e40af;}.ni-sis{background:var(--verde-light);color:var(--verde);}.ni-rec{background:var(--accent-lt);color:#7a5a00;}
+        .notif-title{font-size:.83rem;font-weight:700;color:var(--text);margin-bottom:.15rem;}
+        .notif-item.unread .notif-title{color:var(--verde);}
+        .notif-desc{font-size:.76rem;color:var(--muted);line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .notif-time{font-size:.68rem;color:var(--muted);margin-top:.3rem;font-weight:500;}
+        .notif-footer{padding:.75rem 1.2rem;border-top:1px solid var(--border);text-align:center;flex-shrink:0;}
+        .notif-footer a{font-size:.8rem;font-weight:700;color:var(--verde);text-decoration:none;}
+        .notif-overlay{display:none;position:fixed;inset:0;z-index:1048;}
+        .notif-overlay.open{display:block;}
+
+        main{flex:1;padding:1.75rem 1.5rem;max-width:960px;width:100%;margin:0 auto;display:flex;flex-direction:column;}
+
+        /* INFO RESPONSABLE — fondo dorado para diferenciarlo de la UR */
+        .resp-strip{background:var(--accent-lt);border:1px solid rgba(201,162,77,.25);border-radius:var(--radius-card);padding:1rem 1.4rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem;}
+        .resp-av{width:44px;height:44px;border-radius:12px;background:var(--verde);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+        .resp-name{font-size:.92rem;font-weight:800;}
+        .resp-sub{font-size:.76rem;color:var(--muted);}
+        .resp-meta{display:flex;gap:1rem;flex-wrap:wrap;margin-top:.2rem;}
+        .resp-meta span{font-size:.74rem;color:var(--muted);display:flex;align-items:center;gap:.3rem;}
+        .badge-area{background:var(--accent-lt);color:#7a5a00;border-radius:20px;font-size:.76rem;font-weight:700;padding:.28rem .85rem;border:1px solid rgba(201,162,77,.35);}
+
+        /* CHAT */
+        .chat-wrap{flex:1;background:var(--card-bg);border-radius:var(--radius-card);box-shadow:var(--shadow);border:1px solid var(--border);display:flex;flex-direction:column;height:calc(100vh - 280px);min-height:400px;overflow:hidden;}
+        .chat-hdr{padding:.85rem 1.4rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.75rem;background:#fff;flex-shrink:0;}
+        .ch-av{width:36px;height:36px;border-radius:50%;background:var(--verde);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;}
+        .ch-name{font-weight:800;font-size:.88rem;}
+        .ch-sub{font-size:.72rem;color:var(--muted);}
+        .chip-row{display:flex;flex-wrap:wrap;gap:.4rem;padding:.65rem 1.2rem;border-bottom:1px solid var(--border);background:var(--bg);flex-shrink:0;align-items:center;}
+        .chip-lbl{font-size:.72rem;color:var(--muted);font-weight:600;white-space:nowrap;}
+        .chip{border:1.5px solid var(--border);background:#fff;color:var(--muted);border-radius:20px;font-size:.75rem;font-weight:600;padding:.22rem .7rem;cursor:pointer;transition:all .2s;white-space:nowrap;}
+        .chip:hover{border-color:var(--verde);background:var(--verde-light);color:var(--verde);}
+        .chat-thread{flex:1;overflow-y:auto;padding:1.2rem 1.4rem;display:flex;flex-direction:column;gap:.85rem;background:var(--bg);}
+        .date-sep{text-align:center;font-size:.72rem;color:var(--muted);font-weight:600;display:flex;align-items:center;gap:.6rem;}
+        .date-sep::before,.date-sep::after{content:'';flex:1;height:1px;background:var(--border);}
+        .msg-bubble{max-width:72%;padding:.75rem 1rem;border-radius:14px;font-size:.84rem;line-height:1.55;}
+        .msg-bubble.recv{background:#fff;border:1px solid var(--border);align-self:flex-start;border-bottom-left-radius:4px;}
+        .msg-bubble.sent{background:var(--verde);color:#fff;align-self:flex-end;border-bottom-right-radius:4px;}
+        .msg-meta{font-size:.68rem;margin-top:.3rem;opacity:.65;}
+        .msg-bubble.recv .msg-meta{color:var(--muted);}
+        .msg-bubble.sent .msg-meta{color:rgba(255,255,255,.8);}
+        .chat-compose{border-top:1px solid var(--border);padding:.85rem 1.2rem;background:#fff;flex-shrink:0;}
+        .compose-inner{display:flex;gap:.55rem;align-items:flex-end;}
+        .compose-ta{flex:1;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.55rem .85rem;font-size:.84rem;font-family:inherit;resize:none;outline:none;min-height:44px;max-height:120px;transition:border-color .2s;line-height:1.5;}
+        .compose-ta:focus{border-color:var(--verde);box-shadow:0 0 0 3px rgba(80,16,19,.08);}
+        .btn-send-msg{background:var(--verde);color:#fff;border:none;border-radius:var(--radius-sm);width:42px;height:42px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;transition:background .2s;flex-shrink:0;}
+        .btn-send-msg:hover{background:var(--verde-dark);}
+        .btn-att{border:1.5px solid var(--border);background:#fff;color:var(--muted);border-radius:var(--radius-sm);width:42px;height:42px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;transition:all .2s;flex-shrink:0;}
+        .btn-att:hover{border-color:var(--verde);color:var(--verde);}
+        .compose-hint{font-size:.72rem;color:var(--muted);margin-top:.35rem;}
+        .compose-hint a{color:var(--verde);font-weight:700;}
+
+        .toast-custom{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--verde);color:#fff;border-radius:var(--radius-sm);padding:.9rem 1.3rem;display:flex;align-items:center;gap:.6rem;font-size:.85rem;font-weight:600;box-shadow:0 8px 24px rgba(80,16,19,.25);transform:translateY(80px);opacity:0;transition:transform .35s,opacity .35s;z-index:9999;}
+        .toast-custom.show{transform:translateY(0);opacity:1;}
+        .footer-custom{background:var(--verde);color:rgba(255,255,255,.75);text-align:center;padding:.75rem;font-size:.75rem;}
+        @media(max-width:767px){main{padding:1rem;}.chat-wrap{height:calc(100vh - 240px);}.resp-strip{flex-direction:column;}}
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar-custom w-100">
+    <div class="container-fluid d-flex align-items-center" style="height:70px;">
+        <div class="d-flex align-items-center gap-2">
+            <a href="https://www.uaeh.edu.mx" target="_blank" rel="noopener noreferrer"><img src="../assets/img/Logo_Login.svg" alt="Logo" height="46"></a>
+            <div class="d-flex flex-column">
+                <span class="brand-text text-white">SIARHA</span>
+                <span class="navbar-subtitle text-white d-none d-md-block">Dirección de Servicio Social y Prácticas Profesionales</span>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-2 ms-auto">
+            <div class="d-none d-md-flex align-items-center gap-2 text-white" style="font-size:.83rem;font-weight:600;opacity:.9;">
+                <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;"><i class="bi bi-person-fill"></i></div>
+                <span>Juan Pérez</span>
+            </div>
+            <button class="notif-btn" id="btnNotif" onclick="toggleNotif()" title="Notificaciones">
+                <i class="bi bi-bell-fill"></i>
+                <span class="notif-count" id="notifCount">4</span>
+            </button>
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuAlumno"><i class="bi bi-list"></i></button>
+        </div>
+    </div>
+</nav>
+
+<!-- OFFCANVAS -->
+<div class="offcanvas offcanvas-end offcanvas-custom" tabindex="-1" id="menuAlumno">
+    <div class="offcanvas-header">
+        <div class="d-flex align-items-center gap-2">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;"><i class="bi bi-person-fill"></i></div>
+            <div><div style="font-weight:700;font-size:.9rem;">Juan Pérez</div><div style="font-size:.72rem;opacity:.7;">Prácticas Profesionales</div></div>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="navbar-nav gap-1">
+            <li><a class="nav-link"        href="ALU_dashboard-alumno.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
+            <li><a class="nav-link"        href="ALU_perfil-alumno.html"><i class="bi bi-person-circle"></i> Mi perfil</a></li>
+            <li><a class="nav-link"        href="ALU_registro-horas.html"><i class="bi bi-journal-plus"></i> Registrar horas</a></li>
+            <li><a class="nav-link"        href="ALU_contactar-ur.html"><i class="bi bi-building"></i> Chat con mi UR</a></li>
+            <li><a class="nav-link active" href="ALU_contactar-direccion.html"><i class="bi bi-person-badge-fill"></i> Chat con mi Responsable</a></li>
+            <li><a class="nav-link"        href="ALU_reportes-alumno.html"><i class="bi bi-flag-fill"></i> Reportar problema</a></li>
+            <hr class="menu-divider">
+            <li><a class="nav-link danger" href="../index.html"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
+        </ul>
+    </div>
+</div>
+
+<main>
+    <!-- INFO RESPONSABLE -->
+    <div class="resp-strip">
+        <div class="resp-av"><i class="bi bi-person-badge-fill"></i></div>
+        <div style="flex:1;">
+            <div class="resp-name">Lic. Rosa Alvarado García</div>
+            <div class="resp-sub">Responsable de Área · Dirección de Servicio Social y PP</div>
+            <div class="resp-meta">
+                <span><i class="bi bi-envelope-fill"></i> r.alvarado@uaeh.edu.mx</span>
+                <span><i class="bi bi-geo-alt-fill"></i> Edificio Central, Piso 2</span>
+                <span><i class="bi bi-clock-fill"></i> Lun–Vie · 9:00–15:00</span>
+            </div>
+        </div>
+        <span class="badge-area"><i class="bi bi-mortarboard-fill me-1"></i>Instituto de Ciencias de la Salud</span>
+    </div>
+
+    <!-- CHAT -->
+    <div class="chat-wrap">
+        <div class="chat-hdr">
+            <div class="ch-av">RA</div>
+            <div style="flex:1;">
+                <div class="ch-name">Lic. Rosa Alvarado García</div>
+                <div class="ch-sub">Responsable de Área · ICSA · Dirección SSPP</div>
+            </div>
+            <div style="width:8px;height:8px;border-radius:50%;background:#f59e0b;" title="Responde en el día"></div>
+            <span style="font-size:.72rem;color:var(--muted);margin-left:.3rem;">Responde en el día</span>
+        </div>
+
+        <div class="chip-row">
+            <span class="chip-lbl"><i class="bi bi-lightning-fill me-1"></i>Temas frecuentes:</span>
+            <span class="chip" onclick="usarChip('Consulta sobre mi expediente: ')">Mi expediente</span>
+            <span class="chip" onclick="usarChip('Consulta sobre mis horas registradas: ')">Mis horas</span>
+            <span class="chip" onclick="usarChip('Solicitud de prórroga: ')">Prórroga</span>
+            <span class="chip" onclick="usarChip('Solicitud de cambio de Unidad Receptora: ')">Cambio de UR</span>
+            <span class="chip" onclick="usarChip('Problema con mi acceso al sistema: ')">Problema de acceso</span>
+            <span class="chip" onclick="usarChip('Solicitud de documentación: ')">Documentación</span>
+        </div>
+
+        <div class="chat-thread" id="chatThread">
+            <div class="date-sep">15 ene 2026</div>
+            <div class="msg-bubble recv">Bienvenido al sistema SIARHA, Juan. Soy tu responsable de área. Cualquier duda administrativa escríbeme aquí.<div class="msg-meta">Lic. Alvarado · 15 ene · 9:10 a.m.</div></div>
+            <div class="msg-bubble sent">Muchas gracias Lic. Alvarado. Tengo una pregunta sobre los documentos que debo entregar al inicio del programa.<div class="msg-meta">Tú · 15 ene · 10:30 a.m.</div></div>
+            <div class="msg-bubble recv">Claro Juan. Necesitas: carta de presentación firmada, seguro médico vigente y el formato de inicio. Puedes traerlos de lunes a viernes de 9 a 14 hrs.<div class="msg-meta">Lic. Alvarado · 15 ene · 11:05 a.m.</div></div>
+            <div class="date-sep">10 feb 2026</div>
+            <div class="msg-bubble sent">Lic. Alvarado, ¿es posible solicitar una prórroga de 2 semanas? Tuve un problema de salud que me impidió asistir.<div class="msg-meta">Tú · 10 feb · 3:20 p.m.</div></div>
+            <div class="msg-bubble recv">Sí Juan, puedo tramitar la prórroga. Necesito el justificante médico. Una vez que lo reciba, lo proceso en el sistema.<div class="msg-meta">Lic. Alvarado · 11 feb · 9:40 a.m.</div></div>
+            <div class="date-sep">Hoy</div>
+            <div class="msg-bubble recv">Juan, ¿ya pudiste entregar el justificante en la oficina? Necesito procesarlo esta semana.<div class="msg-meta">Lic. Alvarado · hoy · 10:15 a.m.</div></div>
+        </div>
+
+        <div class="chat-compose">
+            <div class="compose-inner">
+                <button class="btn-att" onclick="showToast('Selecciona un archivo para adjuntar.')" title="Adjuntar"><i class="bi bi-paperclip"></i></button>
+                <textarea id="composeInput" class="compose-ta" placeholder="Escribe tu mensaje…" rows="1"
+                    onkeydown="if(event.ctrlKey&&event.key==='Enter')enviar()" oninput="autoResize(this)"></textarea>
+                <button class="btn-send-msg" onclick="enviar()" title="Enviar (Ctrl+Enter)"><i class="bi bi-send-fill"></i></button>
+            </div>
+            <div class="compose-hint">
+                <i class="bi bi-info-circle me-1"></i>Ctrl+Enter para enviar ·
+                Para problemas graves usa <a href="ALU_reportes-alumno.html">Reportar problema</a>.
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- PANEL NOTIFICACIONES -->
+<div class="notif-overlay" id="notifOverlay" onclick="cerrarNotif()"></div>
+<div class="notif-panel" id="notifPanel">
+    <div class="notif-header">
+        <h6><i class="bi bi-bell-fill me-2"></i>Notificaciones</h6>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn-mark-all" onclick="marcarTodasLeidas()">Marcar leídas</button>
+            <button class="btn-close-notif" onclick="cerrarNotif()"><i class="bi bi-x-lg"></i></button>
+        </div>
+    </div>
+    <div class="notif-tabs">
+        <button class="notif-tab active" onclick="setNotifTab('todas',this)">Todas <span id="badgeTodas" style="background:var(--verde);color:#fff;border-radius:20px;font-size:.65rem;padding:.08rem .45rem;margin-left:.25rem;">4</span></button>
+        <button class="notif-tab" onclick="setNotifTab('ni-ap',this)">Horas</button>
+        <button class="notif-tab" onclick="setNotifTab('ni-msg',this)">Mensajes</button>
+        <button class="notif-tab" onclick="setNotifTab('ni-sis',this)">Sistema</button>
+    </div>
+    <div class="notif-list" id="notifList">
+        <div class="notif-item unread" data-tipo="ni-ap" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-ap"><i class="bi bi-check-circle-fill"></i></div>
+            <div><div class="notif-title">Registro aprobado ✓</div><div class="notif-desc">Jornada del 03 feb aprobada por Hospital General</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 20 min</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-ap" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-re"><i class="bi bi-x-circle-fill"></i></div>
+            <div><div class="notif-title">Registro rechazado</div><div class="notif-desc">Jornada del 04 feb — Revisa el motivo y corrígelo</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 1 hora</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-msg" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div>
+            <div><div class="notif-title">Mensaje de Lic. Alvarado</div><div class="notif-desc">¿Ya pudiste entregar el justificante esta semana?</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 2 horas</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-sis" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-rec"><i class="bi bi-exclamation-circle-fill"></i></div>
+            <div><div class="notif-title">Recordatorio de registro</div><div class="notif-desc">Llevas 3 días sin registrar horas — ¿Todo bien?</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hoy, 9:00 a.m.</div></div>
+        </div>
+        <div class="notif-item" data-tipo="ni-sis" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-sis"><i class="bi bi-info-circle-fill"></i></div>
+            <div><div class="notif-title">Avance del 10% alcanzado</div><div class="notif-desc">¡Buen inicio! Llevas 24 de 240 horas</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer</div></div>
+        </div>
+    </div>
+    <div class="notif-footer"><a href="ALU_dashboard-alumno.html">Ver todo →</a></div>
+</div>
+
+<div class="toast-custom" id="toastMsg"><i class="bi bi-check-circle-fill" style="font-size:1.1rem;"></i><span id="toastTxt">Mensaje enviado.</span></div>
+<footer class="footer-custom">© 2026 SIARHA · Uso exclusivo institucional · UAEH</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function enviar(){const i=document.getElementById('composeInput');const t=i.value.trim();if(!t)return;const th=document.getElementById('chatThread');const b=document.createElement('div');b.className='msg-bubble sent';b.innerHTML=`${t}<div class="msg-meta">Tú · ahora</div>`;th.appendChild(b);th.scrollTop=99999;i.value='';i.style.height='';showToast('Mensaje enviado.');}
+    function usarChip(txt){const i=document.getElementById('composeInput');i.value=txt;i.focus();}
+    function autoResize(el){el.style.height='';el.style.height=Math.min(el.scrollHeight,120)+'px';}
+    document.getElementById('chatThread').scrollTop=99999;
+    let _nOpen=false;
+    function toggleNotif(){_nOpen?cerrarNotif():abrirNotif();}
+    function abrirNotif(){document.getElementById('notifPanel').classList.add('open');document.getElementById('notifOverlay').classList.add('open');_nOpen=true;}
+    function cerrarNotif(){document.getElementById('notifPanel').classList.remove('open');document.getElementById('notifOverlay').classList.remove('open');_nOpen=false;}
+    function marcarLeida(item){if(!item.classList.contains('unread'))return;item.classList.remove('unread');_badge();}
+    function marcarTodasLeidas(){document.querySelectorAll('.notif-item.unread').forEach(i=>i.classList.remove('unread'));_badge();}
+    function _badge(){const n=document.querySelectorAll('.notif-item.unread').length;const b=document.getElementById('notifCount');if(b){b.textContent=n;b.style.display=n>0?'flex':'none';}const bt=document.getElementById('badgeTodas');if(bt)bt.textContent=n;}
+    function setNotifTab(tipo,btn){document.querySelectorAll('.notif-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.notif-item').forEach(i=>{i.style.display=(tipo==='todas'||i.dataset.tipo===tipo)?'':'none';});}
+    function showToast(msg){document.getElementById('toastTxt').textContent=msg;const t=document.getElementById('toastMsg');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+</script>
+</body>
+</html>

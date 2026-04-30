@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SIARHA | Aprobaciones Pendientes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/siarha.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primario:     #501013;
+            --primario-dk:  #3a0b0e;
+            --primario-lt:  #f7eaea;
+            --primario-mid: #7a1820;
+            --dorado:       #C9A24D;
+            --dorado-lt:    #fdf6e3;
+            --bg:           #F2F4F8;
+            --card-bg:      #ffffff;
+            --text:         #1F2933;
+            --muted:        #6b7280;
+            --border:       #E5E7EB;
+            --radius-card:  18px;
+            --radius-sm:    10px;
+            --shadow:       0 2px 16px rgba(80,16,19,.08);
+            --shadow-hover: 0 6px 28px rgba(80,16,19,.15);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar-custom {
+            background: var(--primario);
+            padding: 0 1.5rem;
+            height: 70px;
+            box-shadow: 0 2px 16px rgba(0,0,0,.15);
+            position: sticky;
+            top: 0;
+            z-index: 1050;
+            display: flex;
+            align-items: center;
+        }
+        .brand-text { font-size: 1.5rem; font-weight: 800; letter-spacing: .04em; line-height: 1; }
+        .navbar-subtitle { font-size: .7rem; font-weight: 500; opacity: .85; }
+        .navbar-toggler { border: none; color: #fff; font-size: 1.25rem; padding: .4rem .6rem; border-radius: var(--radius-sm); background: rgba(255,255,255,.12); transition: background .2s; }
+        .navbar-toggler:hover { background: rgba(255,255,255,.22); }
+
+        /* badge contador navbar */
+        .nav-badge {
+            background: var(--dorado);
+            color: #fff;
+            font-size: .65rem;
+            font-weight: 800;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: .25rem;
+            vertical-align: middle;
+        }
+
+        /* ── OFFCANVAS ── */
+        .offcanvas-custom { background: var(--primario-dk); color: #fff; width: 280px !important; border-radius: var(--radius-card) 0 0 var(--radius-card); }
+        .offcanvas-custom .offcanvas-header { border-color: rgba(255,255,255,.12) !important; padding: 1.25rem 1.5rem; }
+        .offcanvas-custom .nav-link { color: rgba(255,255,255,.8); font-weight: 500; font-size: .9rem; padding: .65rem 1rem; border-radius: var(--radius-sm); display: flex; align-items: center; gap: .6rem; transition: background .2s, color .2s; }
+        .offcanvas-custom .nav-link:hover,
+        .offcanvas-custom .nav-link.active { background: rgba(255,255,255,.12); color: #fff; }
+        .offcanvas-custom .nav-link.active { font-weight: 700; }
+        .offcanvas-custom .nav-link.danger { color: #ff9090 !important; }
+        .offcanvas-custom .nav-link.danger:hover { background: rgba(255,80,80,.15); }
+        .menu-divider { border-color: rgba(255,255,255,.12); margin: .5rem 0; }
+
+        /* badge dentro del menú */
+        .menu-badge {
+            margin-left: auto;
+            background: var(--dorado);
+            color: #fff;
+            font-size: .68rem;
+            font-weight: 800;
+            border-radius: 20px;
+            padding: .1rem .55rem;
+        }
+
+        /* ── MAIN ── */
+        main { flex: 1; padding: 1.75rem 1.5rem; max-width: 1200px; width: 100%; margin: 0 auto; }
+
+        /* ── HEADER ── */
+        .page-header { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: .75rem; margin-bottom: 1.5rem; }
+        .page-header h4 { font-size: 1.3rem; font-weight: 800; margin: 0; }
+        .page-header p { font-size: .8rem; color: var(--muted); margin: .25rem 0 0; }
+
+        /* ── STAT CARDS ── */
+        .stat-card { background: var(--card-bg); border-radius: var(--radius-card); box-shadow: var(--shadow); padding: 1.1rem 1.3rem; display: flex; align-items: center; gap: .9rem; border: 1px solid var(--border); transition: box-shadow .25s, transform .25s; }
+        .stat-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+        .stat-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
+        .si-warn  { background: #fff3cd; color: #856404; }
+        .si-v     { background: var(--primario-lt); color: var(--primario); }
+        .si-d     { background: var(--dorado-lt); color: #8a6820; }
+        .si-r     { background: #fee2e2; color: #991b1b; }
+        .stat-label { font-size: .72rem; font-weight: 500; color: var(--muted); margin-bottom: .18rem; }
+        .stat-value { font-size: 1.3rem; font-weight: 800; line-height: 1; }
+
+        /* ── SECTION CARD ── */
+        .section-card { background: var(--card-bg); border-radius: var(--radius-card); box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden; margin-bottom: 1.4rem; }
+        .section-header { padding: 1rem 1.4rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem; }
+        .section-header .title { font-weight: 700; font-size: .95rem; display: flex; align-items: center; gap: .5rem; color: var(--primario); }
+
+        /* ── FILTROS ── */
+        .filtros-body { padding: 1rem 1.4rem; background: var(--bg); border-bottom: 1px solid var(--border); }
+        .form-field { border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: .48rem .85rem; font-size: .83rem; font-family: inherit; color: var(--text); background: #fff; width: 100%; outline: none; transition: border-color .2s; }
+        .form-field:focus { border-color: var(--primario); box-shadow: 0 0 0 3px rgba(80,16,19,.1); }
+        .form-label-sm { font-size: .75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin-bottom: .3rem; display: block; }
+
+        /* ── TABLA ── */
+        .table-responsive { overflow-x: auto; }
+        table { margin: 0; font-size: .83rem; width: 100%; border-collapse: collapse; }
+        table thead th { background: var(--primario); color: #fff; font-weight: 700; font-size: .73rem; text-transform: uppercase; letter-spacing: .05em; padding: .8rem 1rem; border: none; white-space: nowrap; }
+        table tbody td { padding: .75rem 1rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        table tbody tr:last-child td { border-bottom: none; }
+        table tbody tr:hover { background: var(--primario-lt); }
+
+        /* ── ALUMNO CELL ── */
+        .alumno-avatar {
+            width: 34px; height: 34px; border-radius: 50%;
+            background: var(--primario); color: #fff;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: .75rem; font-weight: 800; flex-shrink: 0;
+        }
+        .alumno-nombre { font-weight: 700; font-size: .85rem; }
+        .alumno-sub { font-size: .72rem; color: var(--muted); }
+
+        /* ── BADGES ── */
+        .badge-ss  { background: var(--primario-lt); color: var(--primario); border-radius: 20px; font-size: .71rem; font-weight: 700; padding: .22rem .6rem; border: 1px solid rgba(80,16,19,.18); }
+        .badge-pp  { background: var(--dorado-lt); color: #7a5a00; border-radius: 20px; font-size: .71rem; font-weight: 700; padding: .22rem .6rem; border: 1px solid rgba(201,162,77,.35); }
+        .badge-pendiente { background: #fff3cd; color: #856404; border-radius: 20px; font-size: .72rem; font-weight: 700; padding: .25rem .65rem; }
+        .badge-aprobado  { background: var(--dorado-lt); color: #7a5a00; border-radius: 20px; font-size: .72rem; font-weight: 700; padding: .25rem .65rem; border: 1px solid var(--dorado); }
+        .badge-rechazado { background: #fee2e2; color: #991b1b; border-radius: 20px; font-size: .72rem; font-weight: 700; padding: .25rem .65rem; }
+
+        /* ── BOTONES ACCIÓN ── */
+        .btn-aprobar {
+            background: #d1fae5; color: #065f46; border: 1.5px solid #6ee7b7;
+            border-radius: var(--radius-sm); font-weight: 700; font-size: .76rem;
+            padding: .32rem .8rem; display: inline-flex; align-items: center; gap: .3rem;
+            cursor: pointer; transition: background .2s; white-space: nowrap;
+        }
+        .btn-aprobar:hover { background: #a7f3d0; }
+
+        .btn-rechazar {
+            background: #fee2e2; color: #991b1b; border: 1.5px solid #fca5a5;
+            border-radius: var(--radius-sm); font-weight: 700; font-size: .76rem;
+            padding: .32rem .8rem; display: inline-flex; align-items: center; gap: .3rem;
+            cursor: pointer; transition: background .2s; white-space: nowrap;
+        }
+        .btn-rechazar:hover { background: #fecaca; }
+
+        .btn-ver {
+            border: 1.5px solid var(--border); background: #fff; color: var(--muted);
+            border-radius: var(--radius-sm); font-weight: 600; font-size: .76rem;
+            padding: .32rem .8rem; display: inline-flex; align-items: center; gap: .3rem;
+            cursor: pointer; transition: border-color .2s, color .2s; white-space: nowrap;
+            text-decoration: none;
+        }
+        .btn-ver:hover { border-color: var(--primario); color: var(--primario); background: var(--primario-lt); }
+
+        .btn-primary-custom { background: var(--primario); color: #fff; border: none; border-radius: var(--radius-sm); font-weight: 700; font-size: .83rem; padding: .5rem 1rem; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; transition: background .2s; width: 100%; justify-content: center; }
+        .btn-primary-custom:hover { background: var(--primario-dk); }
+
+        .btn-outline-custom { border: 1.5px solid var(--border); background: #fff; color: var(--muted); border-radius: var(--radius-sm); font-weight: 600; font-size: .8rem; padding: .4rem .85rem; display: inline-flex; align-items: center; gap: .35rem; cursor: pointer; transition: border-color .2s, color .2s, background .2s; white-space: nowrap; }
+        .btn-outline-custom:hover { border-color: var(--primario); color: var(--primario); background: var(--primario-lt); }
+
+        /* ── TABS ── */
+        .tab-nav { display: flex; gap: 0; border-bottom: 2px solid var(--border); }
+        .tab-btn { padding: .7rem 1.3rem; font-size: .86rem; font-weight: 700; color: var(--muted); border: none; background: transparent; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: color .2s, border-color .2s; display: flex; align-items: center; gap: .4rem; }
+        .tab-btn:hover { color: var(--primario); }
+        .tab-btn.active { color: var(--primario); border-bottom-color: var(--primario); }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* ── RESUMEN STRIP ── */
+        .resumen-strip { display: flex; border-bottom: 1px solid var(--border); }
+        .resumen-item { flex: 1; text-align: center; padding: .8rem .5rem; border-right: 1px solid var(--border); }
+        .resumen-item:last-child { border-right: none; }
+        .r-val { font-size: 1.05rem; font-weight: 800; }
+        .r-lab { font-size: .68rem; color: var(--muted); font-weight: 500; margin-top: .1rem; }
+
+        /* ── PAGINACIÓN ── */
+        .pag-wrap { display: flex; align-items: center; justify-content: space-between; padding: .85rem 1.4rem; border-top: 1px solid var(--border); flex-wrap: wrap; gap: .5rem; }
+        .pag-info { font-size: .78rem; color: var(--muted); font-weight: 500; }
+        .pag-btns { display: flex; gap: .35rem; }
+        .pag-btn { width: 32px; height: 32px; border-radius: 8px; border: 1.5px solid var(--border); background: #fff; color: var(--muted); font-size: .82rem; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all .2s; }
+        .pag-btn:hover { border-color: var(--primario); color: var(--primario); background: var(--primario-lt); }
+        .pag-btn.active { background: var(--primario); color: #fff; border-color: var(--primario); }
+
+        /* ── AVANCE ── */
+        .avance-wrap { display: flex; align-items: center; gap: .5rem; min-width: 90px; }
+        .avance-bar  { flex: 1; height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+        .avance-fill { height: 100%; border-radius: 99px; }
+        .af-low  { background: #e57373; }
+        .af-mid  { background: var(--dorado); }
+        .af-high { background: var(--primario-mid); }
+        .af-done { background: var(--primario); }
+        .avance-pct { font-size: .78rem; font-weight: 800; color: var(--text); min-width: 32px; text-align: right; }
+
+        /* ── EMPTY STATE ── */
+        .empty-state { text-align: center; padding: 3rem 1.5rem; color: var(--muted); }
+        .empty-state i { font-size: 2.5rem; display: block; margin-bottom: .75rem; opacity: .4; }
+        .empty-state p { font-size: .88rem; font-weight: 500; }
+
+        /* ── TOAST ── */
+        .toast-custom { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--primario); color: #fff; border-radius: var(--radius-sm); padding: .9rem 1.3rem; display: flex; align-items: center; gap: .6rem; font-size: .85rem; font-weight: 600; box-shadow: 0 8px 24px rgba(80,16,19,.25); transform: translateY(80px); opacity: 0; transition: transform .35s ease, opacity .35s ease; z-index: 9999; }
+        .toast-custom.show { transform: translateY(0); opacity: 1; }
+
+        /* ── FOOTER ── */
+        .footer-custom { background: var(--primario); color: rgba(255,255,255,.7); text-align: center; padding: .75rem; font-size: .75rem; }
+
+        @media (max-width: 767px) {
+            main { padding: 1.25rem 1rem; }
+            .resumen-strip { flex-wrap: wrap; }
+            .resumen-item { min-width: 50%; }
+        }
+    
+        /* ══ NOTIFICACIONES ══ */
+        .notif-btn {
+            position: relative;
+            background: rgba(255,255,255,.12);
+            border: none;
+            color: #fff;
+            width: 40px; height: 40px;
+            border-radius: var(--radius-sm);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background .2s;
+            flex-shrink: 0;
+        }
+        .notif-btn:hover { background: rgba(255,255,255,.22); }
+        .notif-dot {
+            position: absolute;
+            top: 6px; right: 6px;
+            width: 8px; height: 8px;
+            background: var(--dorado);
+            border-radius: 50%;
+            border: 2px solid var(--primario);
+        }
+        .notif-count {
+            position: absolute;
+            top: 4px; right: 4px;
+            background: var(--dorado);
+            color: #fff;
+            font-size: .58rem;
+            font-weight: 800;
+            border-radius: 20px;
+            min-width: 16px;
+            height: 16px;
+            display: flex; align-items: center; justify-content: center;
+            padding: 0 .25rem;
+            border: 1.5px solid var(--primario);
+        }
+
+        /* Panel de notificaciones */
+        .notif-panel {
+            position: fixed;
+            top: 70px; right: 0;
+            width: 360px;
+            max-height: calc(100vh - 80px);
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-card) 0 0 var(--radius-card);
+            box-shadow: -4px 8px 32px rgba(80,16,19,.18);
+            z-index: 1049;
+            display: flex; flex-direction: column;
+            transform: translateX(110%);
+            transition: transform .3s cubic-bezier(.4,0,.2,1);
+            overflow: hidden;
+        }
+        .notif-panel.open { transform: translateX(0); }
+
+        .notif-header {
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            background: var(--primario);
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .notif-header h6 { font-size: .92rem; font-weight: 800; margin: 0; }
+        .notif-header-right { display: flex; align-items: center; gap: .5rem; }
+        .btn-mark-all {
+            font-size: .72rem; font-weight: 700; color: rgba(255,255,255,.8);
+            background: rgba(255,255,255,.12); border: none;
+            border-radius: 20px; padding: .2rem .7rem; cursor: pointer;
+            transition: background .2s;
+        }
+        .btn-mark-all:hover { background: rgba(255,255,255,.22); }
+        .btn-close-notif {
+            background: none; border: none; color: rgba(255,255,255,.7);
+            font-size: 1rem; cursor: pointer; padding: .2rem;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 6px; transition: color .2s;
+        }
+        .btn-close-notif:hover { color: #fff; }
+
+        .notif-tabs {
+            display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0;
+        }
+        .notif-tab {
+            flex: 1; padding: .6rem; font-size: .8rem; font-weight: 700;
+            color: var(--muted); border: none; background: transparent;
+            cursor: pointer; border-bottom: 2px solid transparent;
+            transition: color .2s, border-color .2s; text-align: center;
+        }
+        .notif-tab.active { color: var(--primario); border-bottom-color: var(--primario); }
+
+        .notif-list { overflow-y: auto; flex: 1; }
+
+        .notif-item {
+            padding: .9rem 1.2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: flex-start; gap: .75rem;
+            cursor: pointer;
+            transition: background .15s;
+            position: relative;
+        }
+        .notif-item:hover { background: var(--bg); }
+        .notif-item.unread { background: var(--primario-lt); }
+        .notif-item.unread::before {
+            content: '';
+            position: absolute; left: 0; top: 0; bottom: 0;
+            width: 3px; background: var(--primario);
+        }
+
+        .notif-icon {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: .85rem; flex-shrink: 0;
+        }
+        .ni-pendiente  { background: #fff3cd; color: #856404; }
+        .ni-mensaje    { background: #dbeafe; color: #1e40af; }
+        .ni-aprobado   { background: #d1fae5; color: #065f46; }
+        .ni-rechazado  { background: #fee2e2; color: #991b1b; }
+        .ni-alumno     { background: var(--primario-lt); color: var(--primario); }
+        .ni-sistema    { background: var(--dorado-lt); color: #7a5a00; }
+
+        .notif-content { flex: 1; min-width: 0; }
+        .notif-title { font-size: .83rem; font-weight: 700; color: var(--text); margin-bottom: .15rem; }
+        .notif-item.unread .notif-title { color: var(--primario); }
+        .notif-desc { font-size: .76rem; color: var(--muted); line-height: 1.45;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .notif-time { font-size: .68rem; color: var(--muted); margin-top: .3rem; font-weight: 500; }
+
+        .notif-empty {
+            text-align: center; padding: 2.5rem 1rem; color: var(--muted);
+        }
+        .notif-empty i { font-size: 2rem; display: block; margin-bottom: .5rem; opacity: .35; }
+        .notif-empty p { font-size: .82rem; font-weight: 500; }
+
+        .notif-footer {
+            padding: .75rem 1.2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .notif-footer a {
+            font-size: .8rem; font-weight: 700; color: var(--primario); text-decoration: none;
+        }
+        .notif-footer a:hover { text-decoration: underline; }
+
+        /* overlay */
+        .notif-overlay {
+            display: none; position: fixed; inset: 0; z-index: 1048;
+        }
+        .notif-overlay.open { display: block; }
+
+        /* badge menú */
+        .menu-badge {
+            margin-left: auto;
+            background: var(--dorado);
+            color: #fff;
+            font-size: .68rem;
+            font-weight: 800;
+            border-radius: 20px;
+            padding: .1rem .55rem;
+        }
+
+        @media (max-width: 480px) {
+            .notif-panel { width: 100%; border-radius: 0; }
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar-custom w-100">
+    <div class="container-fluid d-flex align-items-center" style="height:70px;">
+        <div class="d-flex align-items-center gap-2">
+            <a href="https://www.uaeh.edu.mx" target="_blank" rel="noopener noreferrer">
+                <img src="../assets/img/Logo_Login.svg" alt="Logo SIARHA" height="46">
+            </a>
+            <div class="d-flex flex-column">
+                <span class="brand-text text-white">SIARHA</span>
+                <span class="navbar-subtitle text-white d-none d-md-block">Dirección de Servicio Social y Prácticas Profesionales</span>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-2 ms-auto">
+            <div class="d-none d-md-flex align-items-center gap-2 text-white" style="font-size:.83rem;font-weight:600;opacity:.9;">
+                <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;">
+                    <i class="bi bi-building-fill"></i>
+                </div>
+                <span>Hospital General</span>
+            </div>
+                        <button class="notif-btn" id="btnNotif" onclick="toggleNotif()" title="Notificaciones">
+                <i class="bi bi-bell-fill"></i>
+                <span class="notif-count" id="notifCount">5</span>
+            </button>
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuUR" aria-label="Abrir menú">
+                <i class="bi bi-list"></i>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- ── OFFCANVAS ── -->
+<div class="offcanvas offcanvas-end offcanvas-custom" tabindex="-1" id="menuUR">
+    <div class="offcanvas-header">
+        <div class="d-flex align-items-center gap-2">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;">
+                <i class="bi bi-building-fill"></i>
+            </div>
+            <div>
+                <div style="font-weight:700;font-size:.9rem;">Hospital General</div>
+                <div style="font-size:.72rem;opacity:.7;">Unidad Receptora</div>
+            </div>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="navbar-nav gap-1">
+            <li><a class="nav-link" href="UR_dashboard-ur.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
+            <li><a class="nav-link active" href="UR_aprobaciones-ur.html"><i class="bi bi-people-fill"></i> Alumnos asignados <span class="menu-badge">4</span></a></li>
+            <li><a class="nav-link" href="UR_mensajes-ur.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge">2</span></a></li>
+            <li><a class="nav-link" href="UR_reportes-ur.html"><i class="bi bi-bar-chart-fill"></i> Reportes generales</a></li>
+            <li><a class="nav-link" href="UR_reporte-ur-direccion.html"><i class="bi bi-flag-fill"></i> Reportar a Dirección</a></li>
+            <li><a class="nav-link" href="UR_perfil-ur.html"><i class="bi bi-gear-fill"></i> Configuración</a></li>
+            <hr class="menu-divider">
+            <li><a class="nav-link danger" href="../index.html"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
+        </ul>
+    </div>
+</div>
+
+<!-- ── MAIN ── -->
+<main>
+
+    <!-- ENCABEZADO -->
+    <div class="page-header">
+        <div>
+            <h4>Alumnos asignados</h4>
+            <p>Hospital General · Periodo Enero – Junio 2026 · <strong style="color:var(--primario);">4 registros pendientes de revisión</strong></p>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+            <button class="btn-outline-custom" onclick="showToast('Exportando lista…')"><i class="bi bi-file-earmark-excel"></i> Exportar</button>
+        </div>
+    </div>
+
+    <!-- STAT CARDS -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon si-warn"><i class="bi bi-hourglass-split"></i></div>
+                <div>
+                    <div class="stat-label">Pendientes de revisar</div>
+                    <div class="stat-value" style="color:#a16207;">4</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon si-v"><i class="bi bi-people-fill"></i></div>
+                <div>
+                    <div class="stat-label">Total alumnos</div>
+                    <div class="stat-value">12</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon si-d"><i class="bi bi-check-circle-fill"></i></div>
+                <div>
+                    <div class="stat-label">Aprobados hoy</div>
+                    <div class="stat-value" style="color:#7a5a00;">6</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon si-r"><i class="bi bi-x-circle-fill"></i></div>
+                <div>
+                    <div class="stat-label">Rechazados este mes</div>
+                    <div class="stat-value" style="color:#991b1b;">2</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tab-nav mb-0" style="margin-bottom:0 !important;">
+        <button class="tab-btn active" onclick="setTab('pendientes', this)">
+            <i class="bi bi-hourglass-split"></i> Pendientes
+            <span style="background:var(--primario);color:#fff;border-radius:20px;font-size:.68rem;font-weight:700;padding:.12rem .5rem;">4</span>
+        </button>
+        <button class="tab-btn" onclick="setTab('todos', this)">
+            <i class="bi bi-people-fill"></i> Todos los alumnos
+        </button>
+    </div>
+
+    <!-- ══════ PANEL PENDIENTES ══════ -->
+    <div class="tab-panel active" id="panelPendientes">
+        <div class="section-card" style="border-radius: 0 var(--radius-card) var(--radius-card) var(--radius-card);">
+
+            <!-- Filtros -->
+            <div class="filtros-body">
+                <div class="row g-2 align-items-end">
+                    <div class="col-6 col-md-3">
+                        <label class="form-label-sm">Alumno</label>
+                        <input type="text" class="form-field" placeholder="Buscar por nombre…" oninput="filtrarPendientes(this.value)">
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <label class="form-label-sm">Programa</label>
+                        <select class="form-field">
+                            <option>Todos</option>
+                            <option>Servicio Social</option>
+                            <option>Prácticas Prof.</option>
+                        </select>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <label class="form-label-sm">Mes</label>
+                        <input type="month" class="form-field" value="2026-02">
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <label class="form-label-sm">Ordenar por</label>
+                        <select class="form-field">
+                            <option>Fecha (más antigua)</option>
+                            <option>Fecha (más reciente)</option>
+                            <option>Alumno A–Z</option>
+                        </select>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <button class="btn-primary-custom"><i class="bi bi-funnel-fill"></i> Filtrar</button>
+                    </div>
+                    <div class="col-6 col-md-1 d-flex align-items-end">
+                        <button class="btn-outline-custom w-100" style="justify-content:center;" title="Aprobar todos los visibles" onclick="aprobarTodos()">
+                            <i class="bi bi-check-all"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabla pendientes -->
+            <div class="table-responsive">
+                <table id="tablaPendientes">
+                    <thead>
+                        <tr>
+                            <th style="width:28px;"><input type="checkbox" id="checkAll" onchange="toggleAll(this)" style="accent-color:var(--dorado);width:14px;height:14px;"></th>
+                            <th>Alumno</th>
+                            <th>Programa</th>
+                            <th>Fecha registro</th>
+                            <th>Horario</th>
+                            <th>Total</th>
+                            <th>Actividad</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyPendientes">
+
+                        <tr data-nombre="juan pérez">
+                            <td><input type="checkbox" class="row-check" style="accent-color:var(--dorado);width:14px;height:14px;"></td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="alumno-avatar">JP</div>
+                                    <div>
+                                        <div class="alumno-nombre">Juan Pérez García</div>
+                                        <div class="alumno-sub">2020123456</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="badge-ss">Serv. Social</span></td>
+                            <td style="font-weight:600;font-size:.82rem;">01 feb 2026</td>
+                            <td style="font-size:.82rem;color:var(--muted);">08:00 – 14:00</td>
+                            <td style="font-weight:800;color:var(--primario);">06:00</td>
+                            <td style="font-size:.82rem;max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Apoyo administrativo</td>
+                            <td>
+                                <div class="d-flex gap-1 flex-wrap">
+                                    <button class="btn-aprobar" onclick="aprobarRegistro(this, 'Juan Pérez', '01 feb')"><i class="bi bi-check-lg"></i> Aprobar</button>
+                                    <button class="btn-rechazar" onclick="abrirRechazar(this, 'Juan Pérez', '01 feb')"><i class="bi bi-x-lg"></i> Rechazar</button>
+                                    <a href="UR_ur-bitacora-alumno.html" class="btn-ver"><i class="bi bi-eye"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr data-nombre="juan pérez">
+                            <td><input type="checkbox" class="row-check" style="accent-color:var(--dorado);width:14px;height:14px;"></td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="alumno-avatar">JP</div>
+                                    <div>
+                                        <div class="alumno-nombre">Juan Pérez García</div>
+                                        <div class="alumno-sub">2020123456</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="badge-ss">Serv. Social</span></td>
+                            <td style="font-weight:600;font-size:.82rem;">08 feb 2026</td>
+                            <td style="font-size:.82rem;color:var(--muted);">08:00 – 14:00</td>
+                            <td style="font-weight:800;color:var(--primario);">06:00</td>
+                            <td style="font-size:.82rem;max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Elaboración de reportes mensuales</td>
+                            <td>
+                                <div class="d-flex gap-1 flex-wrap">
+                                    <button class="btn-aprobar" onclick="aprobarRegistro(this, 'Juan Pérez', '08 feb')"><i class="bi bi-check-lg"></i> Aprobar</button>
+                                    <button class="btn-rechazar" onclick="abrirRechazar(this, 'Juan Pérez', '08 feb')"><i class="bi bi-x-lg"></i> Rechazar</button>
+                                    <a href="UR_ur-bitacora-alumno.html" class="btn-ver"><i class="bi bi-eye"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr data-nombre="ana lópez">
+                            <td><input type="checkbox" class="row-check" style="accent-color:var(--dorado);width:14px;height:14px;"></td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="alumno-avatar">AL</div>
+                                    <div>
+                                        <div class="alumno-nombre">Ana López Ramírez</div>
+                                        <div class="alumno-sub">2022233445</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="badge-pp">Prácticas Prof.</span></td>
+                            <td style="font-weight:600;font-size:.82rem;">10 feb 2026</td>
+                            <td style="font-size:.82rem;color:var(--muted);">09:00 – 15:00</td>
+                            <td style="font-weight:800;color:var(--primario);">06:00</td>
+                            <td style="font-size:.82rem;max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Revisión de expedientes</td>
+                            <td>
+                                <div class="d-flex gap-1 flex-wrap">
+                                    <button class="btn-aprobar" onclick="aprobarRegistro(this, 'Ana López', '10 feb')"><i class="bi bi-check-lg"></i> Aprobar</button>
+                                    <button class="btn-rechazar" onclick="abrirRechazar(this, 'Ana López', '10 feb')"><i class="bi bi-x-lg"></i> Rechazar</button>
+                                    <a href="UR_ur-bitacora-alumno.html" class="btn-ver"><i class="bi bi-eye"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr data-nombre="daniel torres">
+                            <td><input type="checkbox" class="row-check" style="accent-color:var(--dorado);width:14px;height:14px;"></td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="alumno-avatar">DT</div>
+                                    <div>
+                                        <div class="alumno-nombre">Daniel Torres Vega</div>
+                                        <div class="alumno-sub">2021345678</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="badge-ss">Serv. Social</span></td>
+                            <td style="font-weight:600;font-size:.82rem;">11 feb 2026</td>
+                            <td style="font-size:.82rem;color:var(--muted);">08:00 – 12:30</td>
+                            <td style="font-weight:800;color:var(--primario);">04:30</td>
+                            <td style="font-size:.82rem;max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Apoyo en evento institucional</td>
+                            <td>
+                                <div class="d-flex gap-1 flex-wrap">
+                                    <button class="btn-aprobar" onclick="aprobarRegistro(this, 'Daniel Torres', '11 feb')"><i class="bi bi-check-lg"></i> Aprobar</button>
+                                    <button class="btn-rechazar" onclick="abrirRechazar(this, 'Daniel Torres', '11 feb')"><i class="bi bi-x-lg"></i> Rechazar</button>
+                                    <a href="UR_ur-bitacora-alumno.html" class="btn-ver"><i class="bi bi-eye"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Empty state (oculto por defecto) -->
+            <div class="empty-state" id="emptyPendientes" style="display:none;">
+                <i class="bi bi-check-circle-fill" style="color:var(--dorado);opacity:1;font-size:2.5rem;"></i>
+                <p style="font-weight:700;margin-top:.5rem;">¡Todo al día!</p>
+                <p style="font-size:.82rem;">No hay registros pendientes de revisión.</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ══════ PANEL TODOS LOS ALUMNOS ══════ -->
+    <div class="tab-panel" id="panelTodos">
+        <div class="section-card" style="border-radius: 0 var(--radius-card) var(--radius-card) var(--radius-card);">
+
+            <!-- Filtros -->
+            <div class="filtros-body">
+                <div class="row g-2 align-items-end">
+                    <div class="col-6 col-md-4">
+                        <label class="form-label-sm">Buscar alumno</label>
+                        <input type="text" class="form-field" placeholder="Nombre o número de cuenta…">
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <label class="form-label-sm">Programa</label>
+                        <select class="form-field">
+                            <option>Todos</option>
+                            <option>Servicio Social</option>
+                            <option>Prácticas Prof.</option>
+                        </select>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <label class="form-label-sm">Estado</label>
+                        <select class="form-field">
+                            <option>Todos</option>
+                            <option>Activo</option>
+                            <option>En revisión</option>
+                            <option>Finalizado</option>
+                            <option>Con observaciones</option>
+                        </select>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <button class="btn-primary-custom"><i class="bi bi-funnel-fill"></i> Filtrar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resumen -->
+            <div class="resumen-strip">
+                <div class="resumen-item"><div class="r-val">12</div><div class="r-lab">Total alumnos</div></div>
+                <div class="resumen-item"><div class="r-val" style="color:var(--primario);">7</div><div class="r-lab">Serv. Social</div></div>
+                <div class="resumen-item"><div class="r-val" style="color:#7a5a00;">5</div><div class="r-lab">Prácticas Prof.</div></div>
+                <div class="resumen-item"><div class="r-val" style="color:#a16207;">4</div><div class="r-lab">Con pendientes</div></div>
+                <div class="resumen-item"><div class="r-val" style="color:#065f46;">1</div><div class="r-lab">Finalizados</div></div>
+            </div>
+
+            <!-- Tabla todos -->
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Alumno</th>
+                            <th>Programa</th>
+                            <th>Horas realizadas</th>
+                            <th>Avance</th>
+                            <th>Pendientes</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="alumno-avatar">JP</div>
+                                    <div>
+                                        <div class="alumno-nombre">Juan Pérez García</div>
+                                        <div class="alumno-sub">2020123456</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="badge-ss">Serv. Social</span></td>
+                            <td style="font-weight:700;color:var(--primario);">320 / 480 hrs</td>
+                            <td>
+                                <div class="avance-wrap">
+                                    <div class="avance-bar"><div class="avance-fill af-high" style="width:80%;"></div></div>
+                                    <span class="avance-pct">80%</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span style="background:#fff3cd;color:#856404;border-radius:20px;font-size:.72rem;font-weight:700;padding:.22rem .65rem;">2 pendientes</span>
+                            </td>
+                            <td><span style="background:var(--primario-lt);color:var(--primario);border-radius:20px;font-size:.72rem;font-weight:700;padding:.22rem .65rem;">En revisión</span></td>
+                            <td>
+                                <div class="d-flex gap-1">
+                                    <a href="UR_ur-bitacora-alumno.html" class="btn-ver"><i class="bi bi-journal-text"></i> Bitácora</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="alumno-avatar">MG</div>
+                                    <div>
+                                        <div class="alumno-nombre">María González López</div>
+                                        <div class="alumno-sub">2021123478</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="badge-pp">Prácticas Prof.</span></td>
+                            <td style="font-weight:700;color:var(--primario);">180 / 240 hrs</td>
+                            <td>
+                                <div class="avance-wrap">
+                                    <div class="avance-bar"><div class="avance-fill af-mid" style="width:45%;"></div></div>
+                                    <span class="avance-pct">45%</span>
+                                </div>
+                            </td>
+                            <td><span style="font-size:.82rem;color:var(--muted);">— Sin pendientes</span></td>
+                            <td><span style="background:var(--dorado-lt);color:#7a5a00;border-radius:20px;font-size:.72rem;font-weight:700;padding:.22rem .65rem;border:1px solid var(--dorado);">Activo</span></td>
+                            <td><a href="UR_ur-bitacora-alumno.html" class="btn-ver"><i class="bi bi-journal-text"></i> Bitácora</a></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="alumno-avatar">CR</div>
+                                    <div>
+                                        <div class="alumno-nombre">Carlos Ramírez Soto</div>
+                                        <div class="alumno-sub">2020987654</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="badge-ss">Serv. Social</span></td>
+                            <td style="font-weight:700;color:var(--primario);">480 / 480 hrs</td>
+                            <td>
+                                <div class="avance-wrap">
+                                    <div class="avance-bar"><div class="avance-fill af-done" style="width:100%;"></div></div>
+                                    <span class="avance-pct" style="color:#065f46;">100%</span>
+                                </div>
+                            </td>
+                            <td><span style="font-size:.82rem;color:var(--muted);">— Sin pendientes</span></td>
+                            <td><span style="background:#d1fae5;color:#065f46;border-radius:20px;font-size:.72rem;font-weight:700;padding:.22rem .65rem;">Finalizado</span></td>
+                            <td><a href="UR_ur-bitacora-alumno.html" class="btn-ver"><i class="bi bi-journal-text"></i> Bitácora</a></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="alumno-avatar">AL</div>
+                                    <div>
+                                        <div class="alumno-nombre">Ana López Ramírez</div>
+                                        <div class="alumno-sub">2022233445</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="badge-pp">Prácticas Prof.</span></td>
+                            <td style="font-weight:700;color:var(--primario);">150 / 240 hrs</td>
+                            <td>
+                                <div class="avance-wrap">
+                                    <div class="avance-bar"><div class="avance-fill af-mid" style="width:62%;"></div></div>
+                                    <span class="avance-pct">62%</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span style="background:#fff3cd;color:#856404;border-radius:20px;font-size:.72rem;font-weight:700;padding:.22rem .65rem;">1 pendiente</span>
+                            </td>
+                            <td><span style="background:var(--primario-lt);color:var(--primario);border-radius:20px;font-size:.72rem;font-weight:700;padding:.22rem .65rem;">En revisión</span></td>
+                            <td><a href="UR_ur-bitacora-alumno.html" class="btn-ver"><i class="bi bi-journal-text"></i> Bitácora</a></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="alumno-avatar">DT</div>
+                                    <div>
+                                        <div class="alumno-nombre">Daniel Torres Vega</div>
+                                        <div class="alumno-sub">2021345678</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="badge-ss">Serv. Social</span></td>
+                            <td style="font-weight:700;color:var(--primario);">120 / 480 hrs</td>
+                            <td>
+                                <div class="avance-wrap">
+                                    <div class="avance-bar"><div class="avance-fill af-low" style="width:25%;"></div></div>
+                                    <span class="avance-pct">25%</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span style="background:#fff3cd;color:#856404;border-radius:20px;font-size:.72rem;font-weight:700;padding:.22rem .65rem;">1 pendiente</span>
+                            </td>
+                            <td><span style="background:var(--dorado-lt);color:#7a5a00;border-radius:20px;font-size:.72rem;font-weight:700;padding:.22rem .65rem;border:1px solid var(--dorado);">Activo</span></td>
+                            <td><a href="UR_ur-bitacora-alumno.html" class="btn-ver"><i class="bi bi-journal-text"></i> Bitácora</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pag-wrap">
+                <span class="pag-info">Mostrando 1–5 de 12 alumnos</span>
+                <div class="pag-btns">
+                    <button class="pag-btn" disabled><i class="bi bi-chevron-left"></i></button>
+                    <button class="pag-btn active">1</button>
+                    <button class="pag-btn">2</button>
+                    <button class="pag-btn">3</button>
+                    <button class="pag-btn"><i class="bi bi-chevron-right"></i></button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</main>
+
+<!-- ── MODAL RECHAZAR ── -->
+<div class="modal fade" id="modalRechazar" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius:var(--radius-card);border:none;overflow:hidden;">
+            <div class="modal-header" style="background:var(--primario);border:none;padding:1rem 1.4rem;">
+                <h6 class="modal-title text-white fw-bold" style="margin:0;">
+                    <i class="bi bi-x-circle-fill me-2"></i>Rechazar registro
+                </h6>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" style="padding:1.4rem;">
+                <p style="font-size:.88rem;margin:0 0 1rem;">
+                    Estás rechazando el registro del <strong id="rechInfo"></strong>. Escribe el motivo para que el alumno pueda corregirlo.
+                </p>
+                <label style="font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.35rem;display:block;">Motivo del rechazo <span style="color:var(--primario);">*</span></label>
+                <textarea id="motivoRechazo" rows="4"
+                    style="border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.55rem .9rem;font-size:.88rem;font-family:inherit;width:100%;outline:none;resize:vertical;transition:border-color .2s;"
+                    onfocus="this.style.borderColor='var(--primario)'"
+                    onblur="this.style.borderColor='var(--border)'"
+                    placeholder="Ej: El horario registrado no coincide con la asistencia del día…"></textarea>
+                <div id="motivoError" style="font-size:.78rem;color:#991b1b;font-weight:600;margin-top:.4rem;display:none;">
+                    <i class="bi bi-exclamation-circle-fill me-1"></i>El motivo es obligatorio.
+                </div>
+            </div>
+            <div class="modal-footer" style="border-color:var(--border);padding:.9rem 1.4rem;gap:.6rem;">
+                <button type="button" class="btn-ver" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn-rechazar" onclick="confirmarRechazar()" style="padding:.45rem 1.1rem;">
+                    <i class="bi bi-x-lg"></i> Rechazar registro
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── MODAL APROBAR TODOS ── -->
+<div class="modal fade" id="modalAprobarTodos" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius:var(--radius-card);border:none;overflow:hidden;">
+            <div class="modal-header" style="background:var(--primario);border:none;padding:1rem 1.4rem;">
+                <h6 class="modal-title text-white fw-bold" style="margin:0;">
+                    <i class="bi bi-check-all me-2"></i>Aprobar seleccionados
+                </h6>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" style="padding:1.4rem;">
+                <p style="font-size:.88rem;margin:0;" id="textoAprobarTodos">
+                    ¿Confirmas que deseas aprobar los registros seleccionados?
+                </p>
+                <div style="background:var(--bg);border-radius:var(--radius-sm);padding:.9rem 1rem;font-size:.83rem;color:var(--muted);margin-top:.75rem;">
+                    <i class="bi bi-info-circle me-1"></i>Los alumnos recibirán notificación de aprobación.
+                </div>
+            </div>
+            <div class="modal-footer" style="border-color:var(--border);padding:.9rem 1.4rem;gap:.6rem;">
+                <button type="button" class="btn-ver" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn-aprobar" onclick="confirmarAprobarTodos()" style="padding:.45rem 1.1rem;">
+                    <i class="bi bi-check-all"></i> Sí, aprobar todos
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast-custom" id="toastMsg">
+    <i class="bi bi-check-circle-fill" style="font-size:1.1rem;"></i>
+    <span id="toastTxt"></span>
+</div>
+
+<footer class="footer-custom">© 2026 SIARHA · Uso exclusivo institucional · UAEH</footer>
+
+
+<!-- ══ PANEL NOTIFICACIONES ══ -->
+<div class="notif-overlay" id="notifOverlay" onclick="cerrarNotif()"></div>
+<div class="notif-panel" id="notifPanel">
+    <div class="notif-header">
+        <h6><i class="bi bi-bell-fill me-2"></i>Notificaciones</h6>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn-mark-all" onclick="marcarTodasLeidas()">Marcar leídas</button>
+            <button class="btn-close-notif" onclick="cerrarNotif()"><i class="bi bi-x-lg"></i></button>
+        </div>
+    </div>
+    <div class="notif-tabs">
+        <button class="notif-tab active" onclick="setNotifTab('todas',this)">Todas <span id="badgeTodas" style="background:#501013;color:#fff;border-radius:20px;font-size:.65rem;padding:.08rem .45rem;margin-left:.25rem;">5</span></button>
+        <button class="notif-tab" onclick="setNotifTab('ni-ap',this)">Registros</button>
+        <button class="notif-tab" onclick="setNotifTab('ni-msg',this)">Mensajes</button>
+        <button class="notif-tab" onclick="setNotifTab('ni-sis',this)">Sistema</button>
+    </div>
+    <div class="notif-list" id="notifList">
+        <div class="notif-item unread" data-tipo="ni-ap" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-ap"><i class="bi bi-hourglass-split"></i></div>
+            <div><div class="notif-title">4 registros pendientes</div><div class="notif-desc">Juan Pérez, Ana López y 2 más esperan aprobación</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 5 min</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-msg" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div>
+            <div><div class="notif-title">Nuevo mensaje de Juan Pérez</div><div class="notif-desc">¿Qué actividades tendré asignadas esta semana?</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 22 min</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-msg" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div>
+            <div><div class="notif-title">Nuevo mensaje de Ana López</div><div class="notif-desc">Solicitud de carta de término de prácticas</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 1 hora</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-sis" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-sis"><i class="bi bi-person-plus-fill"></i></div>
+            <div><div class="notif-title">Nuevo alumno asignado</div><div class="notif-desc">Sofía Mendoza Ruiz — Prácticas Profesionales</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 3 horas</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-sis" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-rec"><i class="bi bi-info-circle-fill"></i></div>
+            <div><div class="notif-title">Recordatorio Dirección SSPP</div><div class="notif-desc">Tienes registros sin revisar por más de 5 días</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer, 9:00 a.m.</div></div>
+        </div>
+        <div class="notif-item" data-tipo="ni-ap" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-ap"><i class="bi bi-check-circle-fill"></i></div>
+            <div><div class="notif-title">Registro corregido — Daniel Torres</div><div class="notif-desc">Reenvió el registro del 04 feb tras rechazo</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer, 3:45 p.m.</div></div>
+        </div>
+    </div>
+    <div class="notif-footer"><a href="UR_mensajes-ur.html">Ver mensajes →</a></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // ── TABS ─────────────────────────────────────────────────────────
+    function setTab(nombre, btn) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('panel' + nombre.charAt(0).toUpperCase() + nombre.slice(1)).classList.add('active');
+    }
+
+    // ── FILTRO PENDIENTES ─────────────────────────────────────────────
+    function filtrarPendientes(q) {
+        const rows = document.querySelectorAll('#bodyPendientes tr');
+        q = q.toLowerCase();
+        rows.forEach(r => {
+            r.style.display = r.dataset.nombre.includes(q) ? '' : 'none';
+        });
+    }
+
+    // ── APROBAR INDIVIDUAL ────────────────────────────────────────────
+    function aprobarRegistro(btn, alumno, fecha) {
+        const fila = btn.closest('tr');
+        fila.style.transition = 'opacity .3s';
+        fila.style.opacity = '0';
+        setTimeout(() => {
+            fila.remove();
+            actualizarContadorPendientes();
+        }, 300);
+        showToast(`Registro del ${fecha} de ${alumno} aprobado.`);
+    }
+
+    // ── RECHAZAR ─────────────────────────────────────────────────────
+    let filaRechazando = null;
+    function abrirRechazar(btn, alumno, fecha) {
+        filaRechazando = btn.closest('tr');
+        document.getElementById('rechInfo').textContent = `${fecha} · ${alumno}`;
+        document.getElementById('motivoRechazo').value = '';
+        document.getElementById('motivoError').style.display = 'none';
+        new bootstrap.Modal(document.getElementById('modalRechazar')).show();
+    }
+    function confirmarRechazar() {
+        const motivo = document.getElementById('motivoRechazo').value.trim();
+        if (!motivo) { document.getElementById('motivoError').style.display = 'block'; return; }
+        bootstrap.Modal.getInstance(document.getElementById('modalRechazar')).hide();
+        if (filaRechazando) {
+            filaRechazando.style.transition = 'opacity .3s';
+            filaRechazando.style.opacity = '0';
+            setTimeout(() => { filaRechazando.remove(); actualizarContadorPendientes(); }, 300);
+        }
+        showToast('Registro rechazado. El alumno fue notificado.');
+    }
+
+    // ── APROBAR TODOS (seleccionados) ──────────────────────────────────
+    function toggleAll(master) {
+        document.querySelectorAll('.row-check').forEach(cb => cb.checked = master.checked);
+    }
+    function aprobarTodos() {
+        const seleccionados = document.querySelectorAll('.row-check:checked').length;
+        const total = document.querySelectorAll('.row-check').length;
+        const n = seleccionados > 0 ? seleccionados : total;
+        document.getElementById('textoAprobarTodos').innerHTML =
+            `¿Confirmas que deseas aprobar <strong>${n} registro(s)</strong> seleccionados?`;
+        new bootstrap.Modal(document.getElementById('modalAprobarTodos')).show();
+    }
+    function confirmarAprobarTodos() {
+        bootstrap.Modal.getInstance(document.getElementById('modalAprobarTodos')).hide();
+        const checks = document.querySelectorAll('.row-check:checked');
+        const filas = checks.length > 0
+            ? [...checks].map(cb => cb.closest('tr'))
+            : [...document.querySelectorAll('#bodyPendientes tr')];
+        filas.forEach(f => {
+            f.style.transition = 'opacity .3s';
+            f.style.opacity = '0';
+            setTimeout(() => f.remove(), 300);
+        });
+        setTimeout(actualizarContadorPendientes, 400);
+        showToast(`${filas.length} registro(s) aprobados correctamente.`);
+        document.getElementById('checkAll').checked = false;
+    }
+
+    // ── ACTUALIZAR CONTADOR ────────────────────────────────────────────
+    function actualizarContadorPendientes() {
+        const restantes = document.querySelectorAll('#bodyPendientes tr').length;
+        const empty = document.getElementById('emptyPendientes');
+        empty.style.display = restantes === 0 ? 'block' : 'none';
+        // actualizar badges (en una app real vendría del backend)
+        document.querySelectorAll('.menu-badge').forEach((b, i) => {
+            if (i === 0) b.textContent = restantes;
+        });
+    }
+
+    // ── TOAST ─────────────────────────────────────────────────────────
+    function showToast(msg) {
+        document.getElementById('toastTxt').textContent = msg;
+        const t = document.getElementById('toastMsg');
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3200);
+    }════
+
+</script>
+<script>
+    // ══ NOTIFICACIONES ══════════════════════════════════════════════
+    let _nOpen = false;
+    function toggleNotif() { _nOpen ? cerrarNotif() : abrirNotif(); }
+    function abrirNotif() {
+        document.getElementById('notifPanel').classList.add('open');
+        document.getElementById('notifOverlay').classList.add('open');
+        _nOpen = true;
+    }
+    function cerrarNotif() {
+        document.getElementById('notifPanel').classList.remove('open');
+        document.getElementById('notifOverlay').classList.remove('open');
+        _nOpen = false;
+    }
+    function marcarLeida(item) {
+        if (!item.classList.contains('unread')) return;
+        item.classList.remove('unread');
+        _badge();
+    }
+    function marcarTodasLeidas() {
+        document.querySelectorAll('.notif-item.unread').forEach(i => i.classList.remove('unread'));
+        _badge();
+    }
+    function _badge() {
+        const n = document.querySelectorAll('.notif-item.unread').length;
+        const b = document.getElementById('notifCount');
+        if (b) { b.textContent = n; b.style.display = n > 0 ? 'flex' : 'none'; }
+        const bt = document.getElementById('badgeTodas');
+        if (bt) bt.textContent = n;
+    }
+    function setNotifTab(tipo, btn) {
+        document.querySelectorAll('.notif-tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.notif-item').forEach(i => {
+            i.style.display = (tipo === 'todas' || i.dataset.tipo === tipo) ? '' : 'none';
+        });
+    }
+    // ════════════════════════════════════════════════════════════════
+</script>
+</body>
+</html>

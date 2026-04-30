@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SIARHA | Perfil Unidad Receptora</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/siarha.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root { --primario:#501013;--primario-dk:#3a0b0e;--primario-lt:#f7eaea;--primario-mid:#7a1820;--dorado:#C9A24D;--dorado-lt:#fdf6e3;--bg:#F2F4F8;--card-bg:#ffffff;--text:#1F2933;--muted:#6b7280;--border:#E5E7EB;--radius-card:18px;--radius-sm:10px;--shadow:0 2px 16px rgba(80,16,19,.08);--shadow-hover:0 6px 28px rgba(80,16,19,.15); }
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+        .navbar-custom{background:var(--primario);padding:0 1.5rem;height:70px;box-shadow:0 2px 16px rgba(0,0,0,.15);position:sticky;top:0;z-index:1050;display:flex;align-items:center;}
+        .brand-text{font-size:1.5rem;font-weight:800;letter-spacing:.04em;line-height:1;}
+        .navbar-subtitle{font-size:.7rem;font-weight:500;opacity:.85;}
+        .navbar-toggler{border:none;color:#fff;font-size:1.25rem;padding:.4rem .6rem;border-radius:var(--radius-sm);background:rgba(255,255,255,.12);transition:background .2s;}
+        .navbar-toggler:hover{background:rgba(255,255,255,.22);}
+        .offcanvas-custom{background:var(--primario-dk);color:#fff;width:280px!important;border-radius:var(--radius-card) 0 0 var(--radius-card);}
+        .offcanvas-custom .offcanvas-header{border-color:rgba(255,255,255,.12)!important;padding:1.25rem 1.5rem;}
+        .offcanvas-custom .nav-link{color:rgba(255,255,255,.8);font-weight:500;font-size:.9rem;padding:.65rem 1rem;border-radius:var(--radius-sm);display:flex;align-items:center;gap:.6rem;transition:background .2s,color .2s;}
+        .offcanvas-custom .nav-link:hover,.offcanvas-custom .nav-link.active{background:rgba(255,255,255,.12);color:#fff;}
+        .offcanvas-custom .nav-link.active{font-weight:700;}
+        .offcanvas-custom .nav-link.danger{color:#ff9090!important;}
+        .offcanvas-custom .nav-link.danger:hover{background:rgba(255,80,80,.15);}
+        .menu-divider{border-color:rgba(255,255,255,.12);margin:.5rem 0;}
+        main{flex:1;padding:1.75rem 1.5rem;max-width:860px;width:100%;margin:0 auto;}
+        .btn-back{display:inline-flex;align-items:center;gap:.4rem;font-size:.83rem;font-weight:600;color:var(--muted);background:var(--card-bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.45rem .9rem;text-decoration:none;margin-bottom:1.4rem;transition:border-color .2s,color .2s,background .2s;}
+        .btn-back:hover{border-color:var(--primario);color:var(--primario);background:var(--primario-lt);}
+        .section-card{background:var(--card-bg);border-radius:var(--radius-card);box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden;margin-bottom:1.4rem;}
+        .section-header{padding:1rem 1.4rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+        .section-header .title{font-weight:700;font-size:.95rem;display:flex;align-items:center;gap:.5rem;color:var(--primario);}
+        .section-body{padding:1.4rem;}
+        .form-label-sm{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.35rem;display:block;}
+        .form-field{border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.55rem .9rem;font-size:.88rem;font-family:inherit;color:var(--text);background:#fff;width:100%;outline:none;transition:border-color .2s,box-shadow .2s;}
+        .form-field:focus{border-color:var(--primario);box-shadow:0 0 0 3px rgba(80,16,19,.1);}
+        .form-field:disabled{background:var(--bg);color:var(--muted);}
+        .sep-label{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;display:flex;align-items:center;gap:.6rem;margin:1.2rem 0 1rem;}
+        .sep-label::before,.sep-label::after{content:'';flex:1;height:1px;background:var(--border);}
+        .btn-save{background:var(--primario);color:#fff;border:none;border-radius:var(--radius-sm);font-weight:700;font-size:.9rem;padding:.65rem 1.4rem;display:inline-flex;align-items:center;gap:.45rem;cursor:pointer;transition:background .2s,transform .15s;box-shadow:0 4px 14px rgba(80,16,19,.2);}
+        .btn-save:hover{background:var(--primario-dk);transform:translateY(-1px);}
+        .btn-cancel-sm{background:#fff;color:var(--muted);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-weight:600;font-size:.9rem;padding:.6rem 1.1rem;display:inline-flex;align-items:center;gap:.4rem;cursor:pointer;transition:border-color .2s,color .2s;}
+        .btn-cancel-sm:hover{border-color:var(--primario);color:var(--primario);}
+        /* hero */
+        .hero-ur{background:var(--card-bg);border-radius:var(--radius-card);box-shadow:var(--shadow);border:1px solid var(--border);padding:1.4rem 1.5rem;display:flex;align-items:center;gap:1.3rem;flex-wrap:wrap;margin-bottom:1.4rem;}
+        .ur-icon{width:64px;height:64px;border-radius:16px;background:var(--primario);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.7rem;flex-shrink:0;box-shadow:0 4px 14px rgba(80,16,19,.22);}
+        .ur-name{font-size:1.15rem;font-weight:800;}
+        .ur-sub{font-size:.8rem;color:var(--muted);margin-top:.15rem;}
+        .badge-activa{background:var(--dorado-lt);color:#7a5a00;border-radius:20px;font-size:.74rem;font-weight:700;padding:.28rem .75rem;border:1px solid var(--dorado);display:inline-flex;align-items:center;gap:.35rem;margin-top:.45rem;}
+        /* stat mini */
+        .mini-stat{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.7rem .9rem;text-align:center;}
+        .mini-stat .ms-val{font-size:1.2rem;font-weight:800;color:var(--primario);}
+        .mini-stat .ms-lab{font-size:.72rem;color:var(--muted);font-weight:500;}
+        /* toast */
+        .toast-custom{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--primario);color:#fff;border-radius:var(--radius-sm);padding:.9rem 1.3rem;display:flex;align-items:center;gap:.6rem;font-size:.85rem;font-weight:600;box-shadow:0 8px 24px rgba(80,16,19,.25);transform:translateY(80px);opacity:0;transition:transform .35s ease,opacity .35s ease;z-index:9999;}
+        .toast-custom.show{transform:translateY(0);opacity:1;}
+        .footer-custom{background:var(--primario);color:rgba(255,255,255,.7);text-align:center;padding:.75rem;font-size:.75rem;}
+        @media(max-width:767px){main{padding:1.25rem 1rem;}.hero-ur{flex-direction:column;}}
+    
+        /* ══ NOTIFICACIONES ══ */
+        .notif-btn{position:relative;background:rgba(255,255,255,.12);border:none;color:#fff;width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;transition:background .2s;flex-shrink:0;}
+        .notif-btn:hover{background:rgba(255,255,255,.22);}
+        .notif-count{position:absolute;top:4px;right:4px;background:#C9A24D;color:#fff;font-size:.58rem;font-weight:800;border-radius:20px;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0 .25rem;border:1.5px solid #501013;}
+        .notif-panel{position:fixed;top:70px;right:0;width:360px;max-height:calc(100vh - 80px);background:#fff;border:1px solid #E5E7EB;border-radius:18px 0 0 18px;box-shadow:-4px 8px 32px rgba(80,16,19,.18);z-index:1049;display:flex;flex-direction:column;transform:translateX(110%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow:hidden;}
+        .notif-panel.open{transform:translateX(0);}
+        .notif-header{padding:1rem 1.2rem;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;justify-content:space-between;background:#501013;color:#fff;flex-shrink:0;}
+        .notif-header h6{font-size:.92rem;font-weight:800;margin:0;}
+        .btn-mark-all{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.8);background:rgba(255,255,255,.12);border:none;border-radius:20px;padding:.2rem .7rem;cursor:pointer;}
+        .btn-mark-all:hover{background:rgba(255,255,255,.22);}
+        .btn-close-notif{background:none;border:none;color:rgba(255,255,255,.7);font-size:1rem;cursor:pointer;padding:.2rem;display:flex;align-items:center;border-radius:6px;}
+        .btn-close-notif:hover{color:#fff;}
+        .notif-tabs{display:flex;border-bottom:1px solid #E5E7EB;flex-shrink:0;}
+        .notif-tab{flex:1;padding:.6rem;font-size:.8rem;font-weight:700;color:#6b7280;border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;text-align:center;}
+        .notif-tab.active{color:#501013;border-bottom-color:#501013;}
+        .notif-list{overflow-y:auto;flex:1;}
+        .notif-item{padding:.9rem 1.2rem;border-bottom:1px solid #E5E7EB;display:flex;align-items:flex-start;gap:.75rem;cursor:pointer;transition:background .15s;position:relative;}
+        .notif-item:hover{background:#F2F4F8;}
+        .notif-item.unread{background:#f7eaea;}
+        .notif-item.unread::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#501013;}
+        .notif-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+        .ni-ap{background:#d1fae5;color:#065f46;} .ni-re{background:#fee2e2;color:#991b1b;} .ni-msg{background:#dbeafe;color:#1e40af;} .ni-sis{background:#f7eaea;color:#501013;} .ni-rec{background:#fdf6e3;color:#7a5a00;}
+        .notif-title{font-size:.83rem;font-weight:700;color:#1F2933;margin-bottom:.15rem;}
+        .notif-item.unread .notif-title{color:#501013;}
+        .notif-desc{font-size:.76rem;color:#6b7280;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .notif-time{font-size:.68rem;color:#6b7280;margin-top:.3rem;font-weight:500;}
+        .notif-footer{padding:.75rem 1.2rem;border-top:1px solid #E5E7EB;text-align:center;flex-shrink:0;}
+        .notif-footer a{font-size:.8rem;font-weight:700;color:#501013;text-decoration:none;}
+        .notif-overlay{display:none;position:fixed;inset:0;z-index:1048;}
+        .notif-overlay.open{display:block;}
+        .menu-badge{margin-left:auto;background:#C9A24D;color:#fff;font-size:.68rem;font-weight:800;border-radius:20px;padding:.1rem .55rem;}
+        @media(max-width:480px){.notif-panel{width:100%;border-radius:0;}}
+
+    </style>
+</head>
+<body>
+
+<nav class="navbar-custom w-100">
+    <div class="container-fluid d-flex align-items-center" style="height:70px;">
+        <div class="d-flex align-items-center gap-2">
+            <a href="https://www.uaeh.edu.mx" target="_blank" rel="noopener noreferrer"><img src="../assets/img/Logo_Login.svg" alt="Logo" height="46"></a>
+            <div class="d-flex flex-column">
+                <span class="brand-text text-white">SIARHA</span>
+                <span class="navbar-subtitle text-white d-none d-md-block">Dirección de Servicio Social y Prácticas Profesionales</span>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-2 ms-auto">
+            <div class="d-none d-md-flex align-items-center gap-2 text-white" style="font-size:.83rem;font-weight:600;opacity:.9;">
+                <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;"><i class="bi bi-building-fill"></i></div>
+                <span>Hospital General</span>
+            </div>
+                        <button class="notif-btn" id="btnNotif" onclick="toggleNotif()" title="Notificaciones">
+                <i class="bi bi-bell-fill"></i>
+                <span class="notif-count" id="notifCount">5</span>
+            </button>
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuUR"><i class="bi bi-list"></i></button>
+        </div>
+    </div>
+</nav>
+
+<div class="offcanvas offcanvas-end offcanvas-custom" tabindex="-1" id="menuUR">
+    <div class="offcanvas-header">
+        <div class="d-flex align-items-center gap-2">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;"><i class="bi bi-building-fill"></i></div>
+            <div><div style="font-weight:700;font-size:.9rem;">Hospital General</div><div style="font-size:.72rem;opacity:.7;">Unidad Receptora</div></div>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="navbar-nav gap-1">
+            <li><a class="nav-link" href="UR_dashboard-ur.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
+            <li><a class="nav-link" href="UR_aprobaciones-ur.html"><i class="bi bi-people-fill"></i> Alumnos asignados <span class="menu-badge">4</span></a></li>
+            <li><a class="nav-link" href="UR_mensajes-ur.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge">2</span></a></li>
+            <li><a class="nav-link" href="UR_reportes-ur.html"><i class="bi bi-bar-chart-fill"></i> Reportes generales</a></li>
+            <li><a class="nav-link" href="UR_reporte-ur-direccion.html"><i class="bi bi-flag-fill"></i> Reportar a Dirección</a></li>
+            <li><a class="nav-link active" href="UR_perfil-ur.html"><i class="bi bi-gear-fill"></i> Configuración</a></li>
+            <hr class="menu-divider">
+            <li><a class="nav-link danger" href="../index.html"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
+        </ul>
+    </div>
+</div>
+
+<main>
+    <a href="UR_dashboard-ur.html" class="btn-back"><i class="bi bi-arrow-left"></i> Volver al dashboard</a>
+
+    <!-- HERO -->
+    <div class="hero-ur">
+        <div class="ur-icon"><i class="bi bi-building-fill"></i></div>
+        <div style="flex:1;">
+            <div class="ur-name">Hospital General</div>
+            <div class="ur-sub">Salud · Pachuca, Hidalgo · ID: UR-0014</div>
+            <span class="badge-activa"><i class="bi bi-circle-fill" style="font-size:.45rem;"></i> Activa · Convenio vigente</span>
+        </div>
+        <div class="row g-2 d-none d-md-flex" style="min-width:220px;">
+            <div class="col-6"><div class="mini-stat"><div class="ms-val">12</div><div class="ms-lab">Alumnos activos</div></div></div>
+            <div class="col-6"><div class="mini-stat"><div class="ms-val">15</div><div class="ms-lab">Cupo máximo</div></div></div>
+            <div class="col-6"><div class="mini-stat"><div class="ms-val">3</div><div class="ms-lab">Pendientes</div></div></div>
+            <div class="col-6"><div class="mini-stat"><div class="ms-val">Dic 26</div><div class="ms-lab">Convenio hasta</div></div></div>
+        </div>
+    </div>
+
+    <!-- DATOS DE CONTACTO (editables) -->
+    <div class="section-card">
+        <div class="section-header">
+            <span class="title"><i class="bi bi-pencil-fill"></i> Datos de contacto</span>
+            <span style="font-size:.75rem;color:var(--muted);">Puedes actualizar estos campos</span>
+        </div>
+        <div class="section-body">
+            <form id="formPerfil" novalidate>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-8">
+                        <label class="form-label-sm">Nombre de la institución</label>
+                        <input type="text" class="form-field" value="Hospital General" disabled>
+                        <span style="font-size:.72rem;color:var(--muted);margin-top:.25rem;display:block;">Para cambiar el nombre contacta a la Dirección SSPP.</span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label-sm">Sector</label>
+                        <input type="text" class="form-field" value="Salud" disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label-sm">Correo institucional <span style="color:var(--primario);">*</span></label>
+                        <input type="email" class="form-field" value="hospital@institucion.mx">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label-sm">Teléfono</label>
+                        <input type="tel" class="form-field" value="771 200 0000">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label-sm">Extensión</label>
+                        <input type="text" class="form-field" placeholder="Ext.">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label-sm">Horario de atención a alumnos</label>
+                        <input type="text" class="form-field" value="Lun – Vie · 8:00 – 15:00">
+                    </div>
+                </div>
+
+                <div class="sep-label">Responsable / Enlace</div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label-sm">Nombre del responsable <span style="color:var(--primario);">*</span></label>
+                        <input type="text" class="form-field" value="Dr. Roberto Martínez">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label-sm">Cargo</label>
+                        <input type="text" class="form-field" value="Director de Recursos Humanos">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label-sm">Correo del responsable</label>
+                        <input type="email" class="form-field" value="rmartinez@hospital.mx">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label-sm">Teléfono directo</label>
+                        <input type="tel" class="form-field" placeholder="771 000 0000">
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3 flex-wrap">
+                    <button type="submit" class="btn-save"><i class="bi bi-floppy-fill"></i> Guardar cambios</button>
+                    <button type="button" class="btn-cancel-sm" onclick="this.form.reset()"><i class="bi bi-x-circle"></i> Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- CAMBIAR CONTRASEÑA -->
+    <div class="section-card">
+        <div class="section-header">
+            <span class="title"><i class="bi bi-lock-fill"></i> Cambiar contraseña</span>
+        </div>
+        <div class="section-body">
+            <form id="formPass" novalidate>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label-sm">Contraseña actual <span style="color:var(--primario);">*</span></label>
+                        <input type="password" class="form-field" placeholder="••••••••">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label-sm">Nueva contraseña <span style="color:var(--primario);">*</span></label>
+                        <input type="password" id="newPass" class="form-field" placeholder="••••••••">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label-sm">Confirmar nueva contraseña <span style="color:var(--primario);">*</span></label>
+                        <input type="password" id="confPass" class="form-field" placeholder="••••••••">
+                    </div>
+                </div>
+                <div id="passError" style="font-size:.8rem;color:#991b1b;font-weight:600;margin-bottom:.75rem;display:none;">
+                    <i class="bi bi-exclamation-circle-fill me-1"></i><span id="passErrorTxt"></span>
+                </div>
+                <button type="submit" class="btn-save"><i class="bi bi-shield-lock-fill"></i> Actualizar contraseña</button>
+            </form>
+        </div>
+    </div>
+</main>
+
+<div class="toast-custom" id="toastOk"><i class="bi bi-check-circle-fill" style="font-size:1.1rem;"></i><span id="toastMsg">Cambios guardados.</span></div>
+<footer class="footer-custom">© 2026 SIARHA · Uso exclusivo institucional · UAEH</footer>
+
+<!-- ══ PANEL NOTIFICACIONES ══ -->
+<div class="notif-overlay" id="notifOverlay" onclick="cerrarNotif()"></div>
+<div class="notif-panel" id="notifPanel">
+    <div class="notif-header">
+        <h6><i class="bi bi-bell-fill me-2"></i>Notificaciones</h6>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn-mark-all" onclick="marcarTodasLeidas()">Marcar leídas</button>
+            <button class="btn-close-notif" onclick="cerrarNotif()"><i class="bi bi-x-lg"></i></button>
+        </div>
+    </div>
+    <div class="notif-tabs">
+        <button class="notif-tab active" onclick="setNotifTab('todas',this)">Todas <span id="badgeTodas" style="background:#501013;color:#fff;border-radius:20px;font-size:.65rem;padding:.08rem .45rem;margin-left:.25rem;">5</span></button>
+        <button class="notif-tab" onclick="setNotifTab('ni-ap',this)">Registros</button>
+        <button class="notif-tab" onclick="setNotifTab('ni-msg',this)">Mensajes</button>
+        <button class="notif-tab" onclick="setNotifTab('ni-sis',this)">Sistema</button>
+    </div>
+    <div class="notif-list" id="notifList">
+        <div class="notif-item unread" data-tipo="ni-ap" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-ap"><i class="bi bi-hourglass-split"></i></div>
+            <div><div class="notif-title">4 registros pendientes</div><div class="notif-desc">Juan Pérez, Ana López y 2 más esperan aprobación</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 5 min</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-msg" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div>
+            <div><div class="notif-title">Nuevo mensaje de Juan Pérez</div><div class="notif-desc">¿Qué actividades tendré asignadas esta semana?</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 22 min</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-msg" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div>
+            <div><div class="notif-title">Nuevo mensaje de Ana López</div><div class="notif-desc">Solicitud de carta de término de prácticas</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 1 hora</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-sis" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-sis"><i class="bi bi-person-plus-fill"></i></div>
+            <div><div class="notif-title">Nuevo alumno asignado</div><div class="notif-desc">Sofía Mendoza Ruiz — Prácticas Profesionales</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 3 horas</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-sis" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-rec"><i class="bi bi-info-circle-fill"></i></div>
+            <div><div class="notif-title">Recordatorio Dirección SSPP</div><div class="notif-desc">Tienes registros sin revisar por más de 5 días</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer, 9:00 a.m.</div></div>
+        </div>
+        <div class="notif-item" data-tipo="ni-ap" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-ap"><i class="bi bi-check-circle-fill"></i></div>
+            <div><div class="notif-title">Registro corregido — Daniel Torres</div><div class="notif-desc">Reenvió el registro del 04 feb tras rechazo</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer, 3:45 p.m.</div></div>
+        </div>
+    </div>
+    <div class="notif-footer"><a href="UR_mensajes-ur.html">Ver mensajes →</a></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function showToast(msg){const t=document.getElementById('toastOk');document.getElementById('toastMsg').textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200);}
+    document.getElementById('formPerfil').addEventListener('submit',e=>{e.preventDefault();showToast('Datos de contacto actualizados.');});
+    document.getElementById('formPass').addEventListener('submit',e=>{
+        e.preventDefault();
+        const np=document.getElementById('newPass').value,cp=document.getElementById('confPass').value;
+        const err=document.getElementById('passError'),errTxt=document.getElementById('passErrorTxt');
+        err.style.display='none';
+        if(np.length<8){errTxt.textContent='La contraseña debe tener al menos 8 caracteres.';err.style.display='block';return;}
+        if(np!==cp){errTxt.textContent='Las contraseñas no coinciden.';err.style.display='block';return;}
+        showToast('Contraseña actualizada correctamente.');
+        document.getElementById('formPass').reset();
+    });
+
+</script>
+<script>
+    // ══ NOTIFICACIONES ══════════════════════════════════════════════
+    let _nOpen = false;
+    function toggleNotif() { _nOpen ? cerrarNotif() : abrirNotif(); }
+    function abrirNotif() {
+        document.getElementById('notifPanel').classList.add('open');
+        document.getElementById('notifOverlay').classList.add('open');
+        _nOpen = true;
+    }
+    function cerrarNotif() {
+        document.getElementById('notifPanel').classList.remove('open');
+        document.getElementById('notifOverlay').classList.remove('open');
+        _nOpen = false;
+    }
+    function marcarLeida(item) {
+        if (!item.classList.contains('unread')) return;
+        item.classList.remove('unread');
+        _badge();
+    }
+    function marcarTodasLeidas() {
+        document.querySelectorAll('.notif-item.unread').forEach(i => i.classList.remove('unread'));
+        _badge();
+    }
+    function _badge() {
+        const n = document.querySelectorAll('.notif-item.unread').length;
+        const b = document.getElementById('notifCount');
+        if (b) { b.textContent = n; b.style.display = n > 0 ? 'flex' : 'none'; }
+        const bt = document.getElementById('badgeTodas');
+        if (bt) bt.textContent = n;
+    }
+    function setNotifTab(tipo, btn) {
+        document.querySelectorAll('.notif-tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.notif-item').forEach(i => {
+            i.style.display = (tipo === 'todas' || i.dataset.tipo === tipo) ? '' : 'none';
+        });
+    }
+    // ════════════════════════════════════════════════════════════════
+</script>
+</body>
+</html>

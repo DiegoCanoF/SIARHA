@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SIARHA | Detalle Alumno</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/siarha.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primario:     #501013;
+            --primario-dk:  #3a0b0e;
+            --primario-lt:  #f7eaea;
+            --primario-mid: #7a1820;
+            --dorado:       #C9A24D;
+            --dorado-lt:    #fdf6e3;
+            --bg:           #F2F4F8;
+            --card-bg:      #ffffff;
+            --text:         #1F2933;
+            --muted:        #6b7280;
+            --border:       #E5E7EB;
+            --radius-card:  18px;
+            --radius-sm:    10px;
+            --shadow:       0 2px 16px rgba(80,16,19,.08);
+            --shadow-hover: 0 6px 28px rgba(80,16,19,.15);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+
+        /* ── NAVBAR ── */
+        .navbar-custom { background: var(--primario); padding: 0 1.5rem; height: 70px; box-shadow: 0 2px 16px rgba(0,0,0,.15); position: sticky; top: 0; z-index: 1050; display: flex; align-items: center; }
+        .brand-text { font-size: 1.5rem; font-weight: 800; letter-spacing: .04em; line-height: 1; }
+        .navbar-subtitle { font-size: .7rem; font-weight: 500; opacity: .85; }
+        .navbar-toggler { border: none; color: #fff; font-size: 1.25rem; padding: .4rem .6rem; border-radius: var(--radius-sm); background: rgba(255,255,255,.12); transition: background .2s; }
+        .navbar-toggler:hover { background: rgba(255,255,255,.22); }
+
+        /* ── OFFCANVAS ── */
+        .offcanvas-custom { background: var(--primario-dk); color: #fff; width: 280px !important; border-radius: var(--radius-card) 0 0 var(--radius-card); }
+        .offcanvas-custom .offcanvas-header { border-color: rgba(255,255,255,.12) !important; padding: 1.25rem 1.5rem; }
+        .offcanvas-custom .nav-link { color: rgba(255,255,255,.8); font-weight: 500; font-size: .9rem; padding: .65rem 1rem; border-radius: var(--radius-sm); display: flex; align-items: center; gap: .6rem; transition: background .2s, color .2s; }
+        .offcanvas-custom .nav-link:hover, .offcanvas-custom .nav-link.active { background: rgba(255,255,255,.12); color: #fff; }
+        .offcanvas-custom .nav-link.active { font-weight: 700; }
+        .offcanvas-custom .nav-link.danger { color: #ff9090 !important; }
+        .offcanvas-custom .nav-link.danger:hover { background: rgba(255,80,80,.15); }
+        .menu-divider { border-color: rgba(255,255,255,.12); margin: .5rem 0; }
+
+        /* ── MAIN ── */
+        main { flex: 1; padding: 1.75rem 1.5rem; max-width: 1100px; width: 100%; margin: 0 auto; }
+
+        .btn-back { display: inline-flex; align-items: center; gap: .4rem; font-size: .83rem; font-weight: 600; color: var(--muted); background: var(--card-bg); border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: .45rem .9rem; text-decoration: none; margin-bottom: 1.4rem; transition: border-color .2s, color .2s, background .2s; }
+        .btn-back:hover { border-color: var(--primario); color: var(--primario); background: var(--primario-lt); }
+
+        /* ── HERO ALUMNO ── */
+        .hero-card { background: var(--card-bg); border-radius: var(--radius-card); box-shadow: var(--shadow); border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 1.4rem; display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+        .avatar-circle { width: 68px; height: 68px; border-radius: 50%; background: var(--primario); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 800; color: #fff; flex-shrink: 0; box-shadow: 0 4px 14px rgba(80,16,19,.25); }
+        .hero-name { font-size: 1.2rem; font-weight: 800; margin-bottom: .15rem; }
+        .hero-sub { font-size: .8rem; color: var(--muted); }
+        .hero-badges { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .5rem; }
+        .badge-prog { background: var(--primario-lt); color: var(--primario); border-radius: 20px; font-size: .74rem; font-weight: 700; padding: .28rem .75rem; border: 1px solid rgba(80,16,19,.18); }
+        .badge-estado-act { background: var(--dorado-lt); color: #7a5a00; border-radius: 20px; font-size: .74rem; font-weight: 700; padding: .28rem .75rem; border: 1px solid var(--dorado); }
+
+        /* ── STAT CARDS ── */
+        .stat-card { background: var(--card-bg); border-radius: var(--radius-card); box-shadow: var(--shadow); padding: 1.1rem 1.3rem; display: flex; align-items: center; gap: .9rem; border: 1px solid var(--border); transition: box-shadow .25s, transform .25s; }
+        .stat-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+        .stat-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
+        .si-v  { background: var(--primario-lt); color: var(--primario); }
+        .si-d  { background: var(--dorado-lt); color: #8a6820; }
+        .si-v2 { background: var(--primario-lt); color: var(--primario-mid); }
+        .si-w  { background: #fff3cd; color: #856404; }
+        .stat-label { font-size: .72rem; font-weight: 500; color: var(--muted); margin-bottom: .18rem; }
+        .stat-value { font-size: 1.3rem; font-weight: 800; line-height: 1; }
+
+        /* ── SECTION CARD ── */
+        .section-card { background: var(--card-bg); border-radius: var(--radius-card); box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden; margin-bottom: 1.4rem; }
+        .section-header { padding: 1rem 1.4rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem; }
+        .section-header .title { font-weight: 700; font-size: .95rem; display: flex; align-items: center; gap: .5rem; color: var(--primario); }
+        .section-body { padding: 1.4rem; }
+
+        /* ── DATO GRID ── */
+        .dato-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 1.1rem; padding: 1.4rem; }
+        .dato-item { display: flex; flex-direction: column; gap: .2rem; }
+        .dato-label { font-size: .71rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+        .dato-value { font-size: .9rem; font-weight: 700; color: var(--text); }
+        .dato-value.accent { color: var(--primario); }
+
+        /* ── PROG BAR ── */
+        .prog-wrap { display: flex; align-items: center; gap: .6rem; }
+        .prog-bar { flex: 1; height: 8px; background: var(--border); border-radius: 99px; overflow: hidden; }
+        .prog-fill { height: 100%; background: linear-gradient(90deg, var(--primario-mid), var(--primario)); border-radius: 99px; }
+
+        /* ── AVANCE INLINE ── */
+        .avance-wrap { display: flex; align-items: center; gap: .5rem; min-width: 100px; }
+        .avance-bar  { flex: 1; height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+        .avance-fill { height: 100%; border-radius: 99px; }
+        .avance-fill.low  { background: #e57373; }
+        .avance-fill.mid  { background: var(--dorado); }
+        .avance-fill.high { background: var(--primario-mid); }
+        .avance-fill.done { background: var(--primario); }
+        .avance-pct { font-size: .78rem; font-weight: 800; color: var(--text); min-width: 34px; text-align: right; }
+
+        /* ── FILTROS ── */
+        .filtros-body { padding: 1rem 1.4rem; background: var(--bg); border-bottom: 1px solid var(--border); }
+        .form-label-sm { font-size: .75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin-bottom: .3rem; display: block; }
+        .form-field { border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: .48rem .85rem; font-size: .83rem; font-family: inherit; color: var(--text); background: #fff; width: 100%; outline: none; transition: border-color .2s; }
+        .form-field:focus { border-color: var(--primario); box-shadow: 0 0 0 3px rgba(80,16,19,.1); }
+
+        /* ── TABLE ── */
+        .table-responsive { overflow-x: auto; }
+        table { margin: 0; font-size: .83rem; width: 100%; border-collapse: collapse; }
+        table thead th { background: var(--primario); color: #fff; font-weight: 700; font-size: .74rem; text-transform: uppercase; letter-spacing: .05em; padding: .8rem 1rem; border: none; white-space: nowrap; }
+        table tbody td { padding: .7rem 1rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        table tbody tr:last-child td { border-bottom: none; }
+        table tbody tr:hover { background: var(--primario-lt); }
+
+        /* badges */
+        .badge-pendiente  { background: #fff3cd; color: #856404; border-radius: 20px; font-size: .73rem; font-weight: 700; padding: .25rem .65rem; }
+        .badge-aprobado   { background: var(--dorado-lt); color: #7a5a00; border-radius: 20px; font-size: .73rem; font-weight: 700; padding: .25rem .65rem; border: 1px solid var(--dorado); }
+        .badge-rechazado  { background: #fee2e2; color: #991b1b; border-radius: 20px; font-size: .73rem; font-weight: 700; padding: .25rem .65rem; }
+        .badge-revision   { background: var(--primario-lt); color: var(--primario); border-radius: 20px; font-size: .73rem; font-weight: 700; padding: .25rem .65rem; }
+        .badge-finalizado { background: #d1fae5; color: #065f46; border-radius: 20px; font-size: .73rem; font-weight: 700; padding: .25rem .65rem; }
+
+        /* ── BOTONES ── */
+        .btn-primary-custom { background: var(--primario); color: #fff; border: none; border-radius: var(--radius-sm); font-weight: 700; font-size: .83rem; padding: .5rem 1.1rem; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; transition: background .2s; width: 100%; justify-content: center; }
+        .btn-primary-custom:hover { background: var(--primario-dk); }
+        .btn-outline-custom { border: 1.5px solid var(--border); background: #fff; color: var(--muted); border-radius: var(--radius-sm); font-weight: 600; font-size: .8rem; padding: .38rem .8rem; display: inline-flex; align-items: center; gap: .35rem; cursor: pointer; transition: border-color .2s, color .2s, background .2s; text-decoration: none; white-space: nowrap; }
+        .btn-outline-custom:hover { border-color: var(--primario); color: var(--primario); background: var(--primario-lt); }
+        .btn-danger-outline { border: 1.5px solid #fca5a5; background: #fff; color: #991b1b; border-radius: var(--radius-sm); font-weight: 600; font-size: .8rem; padding: .38rem .8rem; display: inline-flex; align-items: center; gap: .35rem; cursor: pointer; transition: background .2s; }
+        .btn-danger-outline:hover { background: #fee2e2; }
+
+        /* ── NOTA ADMIN ── */
+        .nota-admin { background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 1rem; }
+        .nota-admin textarea { width: 100%; border: none; background: transparent; font-family: inherit; font-size: .85rem; color: var(--text); outline: none; resize: vertical; min-height: 80px; }
+
+        /* ── FOOTER ── */
+        .footer-custom { background: var(--primario); color: rgba(255,255,255,.7); text-align: center; padding: .75rem; font-size: .75rem; }
+
+        /* TOAST */
+        .toast-custom { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--primario); color: #fff; border-radius: var(--radius-sm); padding: .9rem 1.3rem; display: flex; align-items: center; gap: .6rem; font-size: .85rem; font-weight: 600; box-shadow: 0 8px 24px rgba(80,16,19,.25); transform: translateY(80px); opacity: 0; transition: transform .35s ease, opacity .35s ease; z-index: 9999; }
+        .toast-custom.show { transform: translateY(0); opacity: 1; }
+
+        @media (max-width: 767px) { main { padding: 1.25rem 1rem; } .hero-card { flex-direction: column; } }
+    
+        /* ══ NOTIFICACIONES ══ */
+        .notif-btn{position:relative;background:rgba(255,255,255,.12);border:none;color:#fff;width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;transition:background .2s;flex-shrink:0;}
+        .notif-btn:hover{background:rgba(255,255,255,.22);}
+        .notif-count{position:absolute;top:4px;right:4px;background:#C9A24D;color:#fff;font-size:.58rem;font-weight:800;border-radius:20px;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0 .25rem;border:1.5px solid #501013;}
+        .notif-panel{position:fixed;top:70px;right:0;width:360px;max-height:calc(100vh - 80px);background:#fff;border:1px solid #E5E7EB;border-radius:18px 0 0 18px;box-shadow:-4px 8px 32px rgba(80,16,19,.18);z-index:1049;display:flex;flex-direction:column;transform:translateX(110%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow:hidden;}
+        .notif-panel.open{transform:translateX(0);}
+        .notif-header{padding:1rem 1.2rem;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;justify-content:space-between;background:#501013;color:#fff;flex-shrink:0;}
+        .notif-header h6{font-size:.92rem;font-weight:800;margin:0;}
+        .btn-mark-all{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.8);background:rgba(255,255,255,.12);border:none;border-radius:20px;padding:.2rem .7rem;cursor:pointer;}
+        .btn-mark-all:hover{background:rgba(255,255,255,.22);}
+        .btn-close-notif{background:none;border:none;color:rgba(255,255,255,.7);font-size:1rem;cursor:pointer;padding:.2rem;display:flex;align-items:center;border-radius:6px;}
+        .btn-close-notif:hover{color:#fff;}
+        .notif-tabs{display:flex;border-bottom:1px solid #E5E7EB;flex-shrink:0;}
+        .notif-tab{flex:1;padding:.6rem;font-size:.8rem;font-weight:700;color:#6b7280;border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;text-align:center;}
+        .notif-tab.active{color:#501013;border-bottom-color:#501013;}
+        .notif-list{overflow-y:auto;flex:1;}
+        .notif-item{padding:.9rem 1.2rem;border-bottom:1px solid #E5E7EB;display:flex;align-items:flex-start;gap:.75rem;cursor:pointer;transition:background .15s;position:relative;}
+        .notif-item:hover{background:#F2F4F8;}
+        .notif-item.unread{background:#f7eaea;}
+        .notif-item.unread::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#501013;}
+        .notif-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+        .ni-ap{background:#d1fae5;color:#065f46;} .ni-re{background:#fee2e2;color:#991b1b;} .ni-msg{background:#dbeafe;color:#1e40af;} .ni-sis{background:#f7eaea;color:#501013;} .ni-rec{background:#fdf6e3;color:#7a5a00;}
+        .notif-title{font-size:.83rem;font-weight:700;color:#1F2933;margin-bottom:.15rem;}
+        .notif-item.unread .notif-title{color:#501013;}
+        .notif-desc{font-size:.76rem;color:#6b7280;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .notif-time{font-size:.68rem;color:#6b7280;margin-top:.3rem;font-weight:500;}
+        .notif-footer{padding:.75rem 1.2rem;border-top:1px solid #E5E7EB;text-align:center;flex-shrink:0;}
+        .notif-footer a{font-size:.8rem;font-weight:700;color:#501013;text-decoration:none;}
+        .notif-overlay{display:none;position:fixed;inset:0;z-index:1048;}
+        .notif-overlay.open{display:block;}
+        .menu-badge{margin-left:auto;background:#C9A24D;color:#fff;font-size:.68rem;font-weight:800;border-radius:20px;padding:.1rem .55rem;}
+        @media(max-width:480px){.notif-panel{width:100%;border-radius:0;}}
+
+    </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar-custom w-100">
+    <div class="container-fluid d-flex align-items-center" style="height:70px;">
+        <div class="d-flex align-items-center gap-2">
+            <a href="https://www.uaeh.edu.mx" target="_blank" rel="noopener noreferrer">
+                <img src="../assets/img/Logo_Login.svg" alt="Logo SIARHA" height="46">
+            </a>
+            <div class="d-flex flex-column">
+                <span class="brand-text text-white">SIARHA</span>
+                <span class="navbar-subtitle text-white d-none d-md-block">Dirección de Servicio Social y Prácticas Profesionales</span>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-2 ms-auto">
+            <div class="d-none d-md-flex align-items-center gap-2 text-white" style="font-size:.83rem;font-weight:600;opacity:.9;">
+                <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;"><i class="bi bi-shield-fill"></i></div>
+                <span>Administrador</span>
+            </div>
+            <button class="notif-btn" id="btnNotif" onclick="toggleNotif()" title="Notificaciones"><i class="bi bi-bell-fill"></i><span class="notif-count" id="notifCount">4</span></button>
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuAdmin"><i class="bi bi-list"></i></button>
+        </div>
+    </div>
+</nav>
+
+<!-- ── OFFCANVAS ── -->
+<div class="offcanvas offcanvas-end offcanvas-custom" tabindex="-1" id="menuAdmin">
+    <div class="offcanvas-header">
+        <div class="d-flex align-items-center gap-2">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;"><i class="bi bi-shield-fill"></i></div>
+            <div><div style="font-weight:700;font-size:.9rem;">Administrador</div><div style="font-size:.72rem;opacity:.7;">Panel de control</div></div>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="navbar-nav gap-1">
+            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
+            <li><a class="nav-link active" href="ADMIN_dashboard-servicio.html"><i class="bi bi-people-fill"></i> Alumnos</a></li>
+            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html"><i class="bi bi-building"></i> Unidades Receptoras</a></li>
+            <li><a class="nav-link" href="ADMIN_gestion-administradores.html"><i class="bi bi-person-gear"></i> Administradores</a></li>
+            <li><a class="nav-link" href="ADMIN_reportes-globales.html"><i class="bi bi-bar-chart-fill"></i> Reportes Globales</a></li>
+            <li><a class="nav-link" href="ADMIN_mensajes-admin.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge">3</span></a></li>
+            <hr class="menu-divider">
+            <li><a class="nav-link danger" href="../index.html"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
+        </ul>
+    </div>
+</div>
+
+<!-- ── MAIN ── -->
+<main>
+
+    <a href="ADMIN_dashboard-servicio.html" class="btn-back"><i class="bi bi-arrow-left"></i> Volver a alumnos</a>
+
+    <!-- HERO -->
+    <div class="hero-card">
+        <div class="avatar-circle">JP</div>
+        <div style="flex:1;">
+            <div class="hero-name">Juan Pérez García</div>
+            <div class="hero-sub">No. cuenta: 2020123456 · jp2020123456@uaeh.edu.mx</div>
+            <div class="hero-badges">
+                <span class="badge-prog"><i class="bi bi-journal-check me-1"></i>Servicio Social</span>
+                <span class="badge-estado-act"><i class="bi bi-circle-fill me-1" style="font-size:.45rem;"></i>Activo</span>
+            </div>
+        </div>
+        <div class="d-none d-md-flex flex-column align-items-end gap-1">
+            <div style="font-size:.72rem;color:var(--muted);font-weight:600;">Avance global</div>
+            <div style="font-size:1.4rem;font-weight:800;color:var(--primario);">80%</div>
+            <div class="prog-wrap" style="width:160px;">
+                <div class="prog-bar"><div class="prog-fill" style="width:80%;"></div></div>
+            </div>
+            <div style="font-size:.72rem;color:var(--muted);">320 / 480 horas</div>
+        </div>
+    </div>
+
+    <!-- STAT CARDS -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon si-v"><i class="bi bi-clock-fill"></i></div>
+                <div><div class="stat-label">Horas realizadas</div><div class="stat-value">320</div></div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon si-d"><i class="bi bi-hourglass-split"></i></div>
+                <div><div class="stat-label">Horas requeridas</div><div class="stat-value">480</div></div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon si-v2"><i class="bi bi-calendar3"></i></div>
+                <div><div class="stat-label">Días registrados</div><div class="stat-value">52</div></div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon si-w"><i class="bi bi-exclamation-circle-fill"></i></div>
+                <div><div class="stat-label">Pendientes</div><div class="stat-value" style="color:#a16207;">3</div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+
+        <!-- COLUMNA IZQUIERDA -->
+        <div class="col-lg-4">
+
+            <!-- DATOS ACADÉMICOS -->
+            <div class="section-card">
+                <div class="section-header">
+                    <span class="title"><i class="bi bi-mortarboard-fill"></i> Datos académicos</span>
+                </div>
+                <div class="dato-grid" style="grid-template-columns:1fr;">
+                    <div class="dato-item"><span class="dato-label">Nombre completo</span><span class="dato-value">Juan Pérez García</span></div>
+                    <div class="dato-item"><span class="dato-label">No. de cuenta</span><span class="dato-value accent">2020123456</span></div>
+                    <div class="dato-item"><span class="dato-label">Programa</span><span class="dato-value">Servicio Social</span></div>
+                    <div class="dato-item"><span class="dato-label">Carrera</span><span class="dato-value">Ing. en Computación</span></div>
+                    <div class="dato-item"><span class="dato-label">Instituto</span><span class="dato-value">ICBI</span></div>
+                    <div class="dato-item"><span class="dato-label">Periodo</span><span class="dato-value">Enero – Junio 2026</span></div>
+                    <div class="dato-item"><span class="dato-label">Unidad Receptora</span><span class="dato-value">Hospital General</span></div>
+                    <div class="dato-item"><span class="dato-label">Responsable UR</span><span class="dato-value">Dr. Martínez</span></div>
+                    <div class="dato-item"><span class="dato-label">Correo</span><span class="dato-value" style="font-size:.82rem;">jp2020123456@uaeh.edu.mx</span></div>
+                    <div class="dato-item"><span class="dato-label">Teléfono</span><span class="dato-value">771 234 5678</span></div>
+                </div>
+            </div>
+
+            <!-- ACCIONES ADMIN -->
+            <div class="section-card">
+                <div class="section-header">
+                    <span class="title"><i class="bi bi-tools"></i> Acciones administrativas</span>
+                </div>
+                <div class="section-body d-flex flex-column gap-2">
+                    <button class="btn-outline-custom w-100" style="justify-content:flex-start;" onclick="showToast('Correo de recordatorio enviado.')">
+                        <i class="bi bi-envelope-fill"></i> Enviar recordatorio al alumno
+                    </button>
+                    <button class="btn-outline-custom w-100" style="justify-content:flex-start;" onclick="showToast('Correo enviado a la UR.')">
+                        <i class="bi bi-building"></i> Notificar a la Unidad Receptora
+                    </button>
+                    <a href="ADMIN_gestion-ur.html" class="btn-outline-custom w-100" style="justify-content:flex-start;">
+                        <i class="bi bi-arrow-repeat"></i> Cambiar Unidad Receptora
+                    </a>
+                    <button class="btn-outline-custom w-100" style="justify-content:flex-start;" onclick="showToast('Reporte exportado.')">
+                        <i class="bi bi-file-earmark-pdf"></i> Exportar expediente PDF
+                    </button>
+                    <hr style="border-color:var(--border);margin:.25rem 0;">
+                    <button class="btn-danger-outline w-100" style="justify-content:flex-start;" onclick="bootstrap.Modal.getOrCreateInstance(document.getElementById('modalBaja')).show()">
+                        <i class="bi bi-x-circle-fill"></i> Dar de baja del programa
+                    </button>
+                </div>
+            </div>
+
+            <!-- NOTAS INTERNAS -->
+            <div class="section-card">
+                <div class="section-header">
+                    <span class="title"><i class="bi bi-sticky-fill"></i> Notas internas</span>
+                    <span style="font-size:.73rem;color:var(--muted);">Solo visibles para admins</span>
+                </div>
+                <div class="section-body">
+                    <div class="nota-admin mb-2">
+                        <textarea placeholder="Escribe una nota sobre este alumno…">Alumno con buen avance. Pendiente validar 3 registros de febrero.</textarea>
+                    </div>
+                    <button class="btn-primary-custom" onclick="showToast('Nota guardada.')"><i class="bi bi-floppy-fill"></i> Guardar nota</button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- COLUMNA DERECHA: BITÁCORA -->
+        <div class="col-lg-8">
+            <div class="section-card">
+
+                <!-- Header -->
+                <div class="section-header">
+                    <span class="title"><i class="bi bi-journal-text"></i> Bitácora de horas</span>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button class="btn-outline-custom" onclick="showToast('Exportando Excel…')"><i class="bi bi-file-earmark-excel"></i> Excel</button>
+                        <button class="btn-outline-custom" onclick="showToast('Exportando PDF…')"><i class="bi bi-file-earmark-pdf"></i> PDF</button>
+                    </div>
+                </div>
+
+                <!-- Filtros -->
+                <div class="filtros-body">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-6 col-md-3">
+                            <label class="form-label-sm">Vista</label>
+                            <select class="form-field">
+                                <option>Por mes</option>
+                                <option>Por semana</option>
+                                <option>Todos</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label-sm">Mes</label>
+                            <input type="month" class="form-field" value="2026-02">
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label-sm">Estado</label>
+                            <select class="form-field">
+                                <option>Todos</option>
+                                <option>Pendiente</option>
+                                <option>Aprobado</option>
+                                <option>Rechazado</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <button class="btn-primary-custom"><i class="bi bi-funnel-fill"></i> Filtrar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resumen periodo -->
+                <div style="display:flex;border-bottom:1px solid var(--border);">
+                    <div style="flex:1;text-align:center;padding:.9rem .75rem;border-right:1px solid var(--border);">
+                        <div style="font-size:.72rem;color:var(--muted);font-weight:500;">Horas del periodo</div>
+                        <div style="font-size:1.1rem;font-weight:800;">48:00</div>
+                    </div>
+                    <div style="flex:1;text-align:center;padding:.9rem .75rem;border-right:1px solid var(--border);">
+                        <div style="font-size:.72rem;color:var(--muted);font-weight:500;">Días registrados</div>
+                        <div style="font-size:1.1rem;font-weight:800;">9</div>
+                    </div>
+                    <div style="flex:1;text-align:center;padding:.9rem .75rem;border-right:1px solid var(--border);">
+                        <div style="font-size:.72rem;color:var(--muted);font-weight:500;">Aprobados</div>
+                        <div style="font-size:1.1rem;font-weight:800;color:#7a5a00;">6</div>
+                    </div>
+                    <div style="flex:1;text-align:center;padding:.9rem .75rem;">
+                        <div style="font-size:.72rem;color:var(--muted);font-weight:500;">Pendientes</div>
+                        <div style="font-size:1.1rem;font-weight:800;color:#a16207;">3</div>
+                    </div>
+                </div>
+
+                <!-- Tabla -->
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Día</th>
+                                <th>Entrada</th>
+                                <th>Salida</th>
+                                <th>Total</th>
+                                <th>Actividad</th>
+                                <th>Estado</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight:600;">2026-02-01</td>
+                                <td style="color:var(--muted);">Lunes</td>
+                                <td>08:00</td><td>14:00</td>
+                                <td style="font-weight:800;color:var(--primario);">06:00</td>
+                                <td>Apoyo administrativo</td>
+                                <td><span class="badge-pendiente">Pendiente</span></td>
+                                <td>
+                                    <div style="display:flex;gap:.35rem;">
+                                        <button class="btn-outline-custom" style="padding:.28rem .6rem;" onclick="showToast('Registro aprobado.')" title="Aprobar"><i class="bi bi-check-lg" style="color:#22c55e;"></i></button>
+                                        <button class="btn-outline-custom" style="padding:.28rem .6rem;" onclick="showToast('Registro rechazado.')" title="Rechazar"><i class="bi bi-x-lg" style="color:#ef4444;"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:600;">2026-02-02</td>
+                                <td style="color:var(--muted);">Martes</td>
+                                <td>09:00</td><td>15:00</td>
+                                <td style="font-weight:800;color:var(--primario);">06:00</td>
+                                <td>Digitalización de documentos</td>
+                                <td><span class="badge-aprobado">Aprobado</span></td>
+                                <td><button class="btn-outline-custom" style="padding:.28rem .6rem;" title="Ver"><i class="bi bi-eye"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:600;">2026-02-03</td>
+                                <td style="color:var(--muted);">Miércoles</td>
+                                <td>08:30</td><td>13:30</td>
+                                <td style="font-weight:800;color:var(--primario);">05:00</td>
+                                <td>Atención a usuarios</td>
+                                <td><span class="badge-aprobado">Aprobado</span></td>
+                                <td><button class="btn-outline-custom" style="padding:.28rem .6rem;" title="Ver"><i class="bi bi-eye"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:600;">2026-02-04</td>
+                                <td style="color:var(--muted);">Jueves</td>
+                                <td>08:00</td><td>12:00</td>
+                                <td style="font-weight:800;color:var(--primario);">04:00</td>
+                                <td>Organización de archivo físico</td>
+                                <td><span class="badge-rechazado">Rechazado</span></td>
+                                <td>
+                                    <div style="display:flex;gap:.35rem;">
+                                        <button class="btn-outline-custom" style="padding:.28rem .6rem;" onclick="showToast('Registro aprobado.')" title="Aprobar"><i class="bi bi-check-lg" style="color:#22c55e;"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:600;">2026-02-05</td>
+                                <td style="color:var(--muted);">Viernes</td>
+                                <td>10:00</td><td>16:00</td>
+                                <td style="font-weight:800;color:var(--primario);">06:00</td>
+                                <td>Actualización de base de datos</td>
+                                <td><span class="badge-aprobado">Aprobado</span></td>
+                                <td><button class="btn-outline-custom" style="padding:.28rem .6rem;" title="Ver"><i class="bi bi-eye"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:600;">2026-02-08</td>
+                                <td style="color:var(--muted);">Lunes</td>
+                                <td>08:00</td><td>14:00</td>
+                                <td style="font-weight:800;color:var(--primario);">06:00</td>
+                                <td>Elaboración de reportes mensuales</td>
+                                <td><span class="badge-pendiente">Pendiente</span></td>
+                                <td>
+                                    <div style="display:flex;gap:.35rem;">
+                                        <button class="btn-outline-custom" style="padding:.28rem .6rem;" onclick="showToast('Registro aprobado.')" title="Aprobar"><i class="bi bi-check-lg" style="color:#22c55e;"></i></button>
+                                        <button class="btn-outline-custom" style="padding:.28rem .6rem;" onclick="showToast('Registro rechazado.')" title="Rechazar"><i class="bi bi-x-lg" style="color:#ef4444;"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:600;">2026-02-09</td>
+                                <td style="color:var(--muted);">Martes</td>
+                                <td>09:00</td><td>13:00</td>
+                                <td style="font-weight:800;color:var(--primario);">04:00</td>
+                                <td>Soporte técnico interno</td>
+                                <td><span class="badge-aprobado">Aprobado</span></td>
+                                <td><button class="btn-outline-custom" style="padding:.28rem .6rem;" title="Ver"><i class="bi bi-eye"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:600;">2026-02-10</td>
+                                <td style="color:var(--muted);">Miércoles</td>
+                                <td>08:00</td><td>15:00</td>
+                                <td style="font-weight:800;color:var(--primario);">07:00</td>
+                                <td>Capacitación interna</td>
+                                <td><span class="badge-aprobado">Aprobado</span></td>
+                                <td><button class="btn-outline-custom" style="padding:.28rem .6rem;" title="Ver"><i class="bi bi-eye"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:600;">2026-02-11</td>
+                                <td style="color:var(--muted);">Jueves</td>
+                                <td>08:00</td><td>12:30</td>
+                                <td style="font-weight:800;color:var(--primario);">04:00</td>
+                                <td>Revisión de expedientes</td>
+                                <td><span class="badge-pendiente">Pendiente</span></td>
+                                <td>
+                                    <div style="display:flex;gap:.35rem;">
+                                        <button class="btn-outline-custom" style="padding:.28rem .6rem;" onclick="showToast('Registro aprobado.')" title="Aprobar"><i class="bi bi-check-lg" style="color:#22c55e;"></i></button>
+                                        <button class="btn-outline-custom" style="padding:.28rem .6rem;" onclick="showToast('Registro rechazado.')" title="Rechazar"><i class="bi bi-x-lg" style="color:#ef4444;"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- MODAL BAJA -->
+<div class="modal fade" id="modalBaja" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius:var(--radius-card);border:none;overflow:hidden;">
+            <div class="modal-header" style="background:var(--primario);border:none;padding:1rem 1.4rem;">
+                <h6 class="modal-title text-white fw-bold" style="margin:0;"><i class="bi bi-exclamation-triangle-fill me-2"></i>Confirmar baja del programa</h6>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" style="padding:1.4rem;">
+                <p style="font-size:.88rem;color:var(--text);margin:0 0 1rem;">Esta acción dará de baja a <strong>Juan Pérez García</strong> del programa. Escribe el motivo:</p>
+                <textarea class="form-field" rows="3" placeholder="Motivo de la baja…"></textarea>
+            </div>
+            <div class="modal-footer" style="border-color:var(--border);padding:.9rem 1.4rem;gap:.6rem;">
+                <button type="button" class="btn-outline-custom" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn-danger-outline" onclick="bootstrap.Modal.getInstance(document.getElementById('modalBaja')).hide();showToast('Alumno dado de baja del programa.')">
+                    <i class="bi bi-x-circle-fill"></i> Confirmar baja
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast-custom" id="toastMsg"><i class="bi bi-check-circle-fill" style="font-size:1.1rem;"></i><span id="toastTxt"></span></div>
+
+<footer class="footer-custom">© 2026 SIARHA · Uso exclusivo institucional · UAEH</footer>
+
+<!-- ══ PANEL NOTIFICACIONES ══ -->
+<div class="notif-overlay" id="notifOverlay" onclick="cerrarNotif()"></div>
+<div class="notif-panel" id="notifPanel">
+    <div class="notif-header">
+        <h6><i class="bi bi-bell-fill me-2"></i>Notificaciones</h6>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn-mark-all" onclick="marcarTodasLeidas()">Marcar leídas</button>
+            <button class="btn-close-notif" onclick="cerrarNotif()"><i class="bi bi-x-lg"></i></button>
+        </div>
+    </div>
+    <div class="notif-tabs">
+        <button class="notif-tab active" onclick="setNotifTab('todas',this)">Todas <span id="badgeTodas" style="background:#501013;color:#fff;border-radius:20px;font-size:.65rem;padding:.08rem .45rem;margin-left:.25rem;">4</span></button>
+        <button class="notif-tab" onclick="setNotifTab('ni-msg',this)">Mensajes</button>
+        <button class="notif-tab" onclick="setNotifTab('ni-rec',this)">Reportes</button>
+        <button class="notif-tab" onclick="setNotifTab('ni-sis',this)">Sistema</button>
+    </div>
+    <div class="notif-list" id="notifList">
+        <div class="notif-item unread" data-tipo="ni-msg" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div>
+            <div><div class="notif-title">Mensaje de Juan Pérez García</div><div class="notif-desc">Solicitud de prórroga de 2 semanas</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 15 min</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-msg" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div>
+            <div><div class="notif-title">2 mensajes de Ana López</div><div class="notif-desc">Problema con acceso al sistema</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 30 min</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-rec" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-rec"><i class="bi bi-flag-fill"></i></div>
+            <div><div class="notif-title">Reporte escalado #RPT-0042</div><div class="notif-desc">El coordinador te escaló un reporte</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 2 horas</div></div>
+        </div>
+        <div class="notif-item" data-tipo="ni-sis" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-sis"><i class="bi bi-person-plus-fill"></i></div>
+            <div><div class="notif-title">Nuevo alumno dado de alta</div><div class="notif-desc">María González — Prácticas Profesionales</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer, 4:00 p.m.</div></div>
+        </div>
+        <div class="notif-item" data-tipo="ni-sis" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-sis"><i class="bi bi-building-fill"></i></div>
+            <div><div class="notif-title">Nueva UR registrada</div><div class="notif-desc">IMSS Pachuca fue agregada al sistema</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer, 10:00 a.m.</div></div>
+        </div>
+    </div>
+    <div class="notif-footer"><a href="ADMIN_mensajes-admin.html">Ver todo →</a></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function showToast(msg) {
+        document.getElementById('toastTxt').textContent = msg;
+        const t = document.getElementById('toastMsg');
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // ══ NOTIFICACIONES ══════════════════════════════════════════════
+        function abrirNotif(){document.getElementById('notifPanel').classList.add('open');document.getElementById('notifOverlay').classList.add('open');_nOpen=true;}
+    function cerrarNotif(){document.getElementById('notifPanel').classList.remove('open');document.getElementById('notifOverlay').classList.remove('open');_nOpen=false;}
+    function marcarLeida(item){if(!item.classList.contains('unread'))return;item.classList.remove('unread');_badge();}
+    function marcarTodasLeidas(){document.querySelectorAll('.notif-item.unread').forEach(i=>i.classList.remove('unread'));_badge();}
+    function _badge(){const n=document.querySelectorAll('.notif-item.unread').length;const b=document.getElementById('notifCount');if(b){b.textContent=n;b.style.display=n>0?'flex':'none';}const bt=document.getElementById('badgeTodas');if(bt)bt.textContent=n;}
+    function setNotifTab(tipo,btn){document.querySelectorAll('.notif-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.notif-item').forEach(i=>{i.style.display=(tipo==='todas'||i.dataset.tipo===tipo)?'':'none';});}
+    // ════════════════════════════════════════════════════════════════
+
+</script>
+
+<script>
+    let _nOpen = false;
+    function toggleNotif() { _nOpen ? cerrarNotif() : abrirNotif(); }
+    function abrirNotif()  { document.getElementById('notifPanel').classList.add('open');    document.getElementById('notifOverlay').classList.add('open');    _nOpen = true;  }
+    function cerrarNotif() { document.getElementById('notifPanel').classList.remove('open'); document.getElementById('notifOverlay').classList.remove('open'); _nOpen = false; }
+    function marcarLeida(item) { if (!item.classList.contains('unread')) return; item.classList.remove('unread'); _badge(); }
+    function marcarTodasLeidas() { document.querySelectorAll('.notif-item.unread').forEach(i => i.classList.remove('unread')); _badge(); }
+    function _badge() {
+        const n = document.querySelectorAll('.notif-item.unread').length;
+        const b = document.getElementById('notifCount');  if (b)  { b.textContent = n; b.style.display = n > 0 ? 'flex' : 'none'; }
+        const bt = document.getElementById('badgeTodas'); if (bt) bt.textContent = n;
+    }
+    function setNotifTab(tipo, btn) {
+        document.querySelectorAll('.notif-tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.notif-item').forEach(i => {
+            i.style.display = (tipo === 'todas' || i.dataset.tipo === tipo) ? '' : 'none';
+        });
+    }
+</script>
+</body>
+</html>

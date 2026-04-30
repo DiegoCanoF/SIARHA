@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SIARHA | Recuperar acceso</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/siarha.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primario:    #501013;
+            --primario-dk: #3a0b0e;
+            --primario-lt: #f7eaea;
+            --dorado:      #C9A24D;
+            --dorado-lt:   #fdf6e3;
+            --bg:          #F2F4F8;
+            --card-bg:     #ffffff;
+            --text:        #1F2933;
+            --muted:       #6b7280;
+            --border:      #E5E7EB;
+            --radius-card: 18px;
+            --radius-sm:   10px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            display: flex; flex-direction: column;
+            background-image: url("assets/img/Fondo_Login2.jpg");
+            background-size: cover; background-position: center;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar-custom { background: var(--primario); padding: 0 1.5rem; height: 70px; box-shadow: 0 2px 16px rgba(0,0,0,.2); display: flex; align-items: center; }
+        .brand-text { font-size: 1.5rem; font-weight: 800; letter-spacing: .04em; line-height: 1; }
+        .navbar-subtitle { font-size: .68rem; font-weight: 500; opacity: .85; }
+
+        /* ── MAIN ── */
+        main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem 1rem; }
+
+        /* ── STEPS ── */
+        .step { display: none; }
+        .step.active { display: block; }
+
+        /* ── CARD ── */
+        .recover-card {
+            width: 100%; max-width: 460px;
+            background: rgba(255,255,255,.96);
+            backdrop-filter: blur(12px);
+            border-radius: var(--radius-card);
+            box-shadow: 0 8px 40px rgba(0,0,0,.18);
+            overflow: hidden;
+        }
+
+        /* TOP COLORED BAR */
+        .card-top { background: var(--primario); padding: 1.5rem 1.8rem; text-align: center; }
+        .card-top .step-icon { width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,.15); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: #fff; margin: 0 auto .75rem; }
+        .card-top h2 { font-size: 1.2rem; font-weight: 800; color: #fff; margin: 0; }
+        .card-top p { font-size: .78rem; color: rgba(255,255,255,.75); margin-top: .3rem; line-height: 1.5; }
+
+        /* BODY */
+        .card-body-inner { padding: 1.75rem 1.8rem; }
+
+        /* ROL CHIPS */
+        .rol-chips { display: flex; gap: .5rem; margin-bottom: 1.2rem; }
+        .rol-chip { flex: 1; border: 1.5px solid var(--border); background: #fff; border-radius: var(--radius-sm); padding: .55rem .5rem; text-align: center; cursor: pointer; transition: all .2s; font-size: .8rem; font-weight: 600; color: var(--muted); }
+        .rol-chip:hover { border-color: var(--primario); background: var(--primario-lt); color: var(--primario); }
+        .rol-chip.selected { border-color: var(--primario); background: var(--primario-lt); color: var(--primario); }
+        .rol-chip i { display: block; font-size: 1.1rem; margin-bottom: .2rem; }
+
+        /* FORM */
+        .form-label-sm { font-size: .75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin-bottom: .35rem; display: block; }
+        .form-field { border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: .6rem .95rem; font-size: .9rem; font-family: inherit; color: var(--text); background: #fff; width: 100%; outline: none; transition: border-color .2s, box-shadow .2s; }
+        .form-field:focus { border-color: var(--primario); box-shadow: 0 0 0 3px rgba(80,16,19,.1); }
+
+        /* PASS CON OJO */
+        .pass-wrap { position: relative; }
+        .pass-toggle { position: absolute; right: .75rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--muted); cursor: pointer; font-size: .95rem; padding: 0; }
+
+        /* INDICADOR FORTALEZA */
+        .pass-strength { margin-top: .4rem; }
+        .strength-bar { display: flex; gap: .25rem; margin-bottom: .2rem; }
+        .s-seg { flex: 1; height: 4px; border-radius: 99px; background: var(--border); transition: background .3s; }
+        .s-seg.weak   { background: #ef4444; }
+        .s-seg.medium { background: #f59e0b; }
+        .s-seg.strong { background: #22c55e; }
+        .strength-label { font-size: .72rem; color: var(--muted); }
+
+        /* PASO A PASO */
+        .steps-indicator { display: flex; align-items: center; justify-content: center; gap: .5rem; margin-bottom: 1.4rem; }
+        .step-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); transition: background .3s; }
+        .step-dot.active { background: var(--primario); }
+        .step-dot.done { background: var(--dorado); }
+
+        /* BOTONES */
+        .btn-primary-r { background: var(--primario); color: #fff; border: none; border-radius: var(--radius-sm); font-weight: 800; font-size: .95rem; padding: .7rem; width: 100%; display: flex; align-items: center; justify-content: center; gap: .5rem; cursor: pointer; transition: background .2s, transform .15s; box-shadow: 0 4px 16px rgba(80,16,19,.25); margin-top: 1rem; }
+        .btn-primary-r:hover { background: var(--primario-dk); transform: translateY(-1px); }
+        .btn-primary-r:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+        .btn-secondary-r { background: var(--bg); color: var(--muted); border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-weight: 600; font-size: .88rem; padding: .6rem; width: 100%; display: flex; align-items: center; justify-content: center; gap: .5rem; cursor: pointer; margin-top: .6rem; transition: border-color .2s, color .2s; text-decoration: none; }
+        .btn-secondary-r:hover { border-color: var(--primario); color: var(--primario); }
+
+        /* ÉXITO */
+        .success-icon { width: 64px; height: 64px; border-radius: 50%; background: rgba(255,255,255,.15); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto .75rem; }
+        .info-box { background: var(--dorado-lt); border: 1px solid rgba(201,162,77,.3); border-radius: var(--radius-sm); padding: .8rem 1rem; font-size: .82rem; color: #7a5a00; display: flex; align-items: flex-start; gap: .55rem; margin-bottom: 1rem; }
+        .error-box { background: #fee2e2; border: 1px solid #fca5a5; border-radius: var(--radius-sm); padding: .65rem .9rem; font-size: .82rem; color: #991b1b; font-weight: 600; display: none; align-items: center; gap: .45rem; margin-top: .6rem; }
+        .error-box.show { display: flex; }
+
+        /* ── FOOTER ── */
+        .footer-login { background: #fff; border-top: 1px solid var(--border); padding: .6rem; text-align: center; }
+        .footer-login small { font-size: .75rem; color: var(--muted); }
+
+        @media (max-width: 480px) { .card-body-inner { padding: 1.4rem 1.2rem; } }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar-custom">
+    <div class="container-fluid d-flex align-items-center gap-2">
+        <a href="https://www.uaeh.edu.mx" target="_blank" rel="noopener noreferrer">
+            <img src="assets/img/Logo_Login.svg" alt="Logo UAEH" height="46">
+        </a>
+        <div class="d-flex flex-column">
+            <span class="brand-text text-white">SIARHA</span>
+            <span class="navbar-subtitle text-white d-none d-md-block">Dirección de Servicio Social y Prácticas Profesionales</span>
+        </div>
+    </div>
+</nav>
+
+<main>
+    <div class="recover-card">
+
+        <!-- ── PASO 1: IDENTIFICACIÓN ── -->
+        <div id="paso1" class="step active">
+            <div class="card-top">
+                <div class="step-icon"><i class="bi bi-shield-lock-fill"></i></div>
+                <h2>Recuperar acceso</h2>
+                <p>Selecciona tu rol y proporciona tu identificador para enviarte las instrucciones.</p>
+            </div>
+            <div class="card-body-inner">
+                <!-- INDICADOR -->
+                <div class="steps-indicator">
+                    <div class="step-dot active" id="dot1"></div>
+                    <div style="width:24px;height:2px;background:var(--border);border-radius:99px;"></div>
+                    <div class="step-dot" id="dot2"></div>
+                    <div style="width:24px;height:2px;background:var(--border);border-radius:99px;"></div>
+                    <div class="step-dot" id="dot3"></div>
+                </div>
+
+                <!-- ROL -->
+                <label class="form-label-sm">¿Cuál es tu rol?</label>
+                <div class="rol-chips" id="rolChips">
+                    <div class="rol-chip selected" data-rol="alumno" onclick="selRol(this)">
+                        <i class="bi bi-mortarboard-fill"></i>Alumno
+                    </div>
+                    <div class="rol-chip" data-rol="ur" onclick="selRol(this)">
+                        <i class="bi bi-building-fill"></i>Unidad Receptora
+                    </div>
+                    <div class="rol-chip" data-rol="admin" onclick="selRol(this)">
+                        <i class="bi bi-shield-fill"></i>Administrador
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label-sm" id="labelId">Número de cuenta</label>
+                    <input type="text" id="idInput" class="form-field" placeholder="Ej. 220012345">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label-sm">Correo institucional registrado</label>
+                    <input type="email" id="emailInput" class="form-field" placeholder="tu@uaeh.edu.mx">
+                </div>
+
+                <div class="error-box" id="error1">
+                    <i class="bi bi-exclamation-circle-fill"></i><span id="error1Txt"></span>
+                </div>
+
+                <button class="btn-primary-r" onclick="irPaso2()">
+                    <i class="bi bi-send-fill"></i> Enviar instrucciones
+                </button>
+                <a href="../index.html" class="btn-secondary-r">
+                    <i class="bi bi-arrow-left"></i> Volver al inicio de sesión
+                </a>
+            </div>
+        </div>
+
+        <!-- ── PASO 2: CÓDIGO DE VERIFICACIÓN ── -->
+        <div id="paso2" class="step">
+            <div class="card-top">
+                <div class="step-icon"><i class="bi bi-envelope-check-fill"></i></div>
+                <h2>Código de verificación</h2>
+                <p>Ingresa el código de 6 dígitos que enviamos a tu correo institucional.</p>
+            </div>
+            <div class="card-body-inner">
+                <div class="steps-indicator">
+                    <div class="step-dot done" id="dot1b"></div>
+                    <div style="width:24px;height:2px;background:var(--dorado);border-radius:99px;"></div>
+                    <div class="step-dot active" id="dot2b"></div>
+                    <div style="width:24px;height:2px;background:var(--border);border-radius:99px;"></div>
+                    <div class="step-dot" id="dot3b"></div>
+                </div>
+
+                <div class="info-box">
+                    <i class="bi bi-info-circle-fill" style="flex-shrink:0;margin-top:.05rem;"></i>
+                    <span>Se envió un código de verificación a <strong id="emailMask">tu@uaeh.edu.mx</strong>. Revisa también tu carpeta de spam.</span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label-sm">Código de 6 dígitos</label>
+                    <input type="text" id="codigoInput" class="form-field" placeholder="000000" maxlength="6" style="letter-spacing:.3em;font-size:1.3rem;text-align:center;font-weight:800;">
+                </div>
+
+                <div style="text-align:center;margin-bottom:1rem;">
+                    <span style="font-size:.78rem;color:var(--muted);">¿No llegó el correo? </span>
+                    <button type="button" onclick="reenviarCodigo()" style="border:none;background:none;font-size:.78rem;font-weight:700;color:var(--primario);cursor:pointer;">Reenviar código</button>
+                    <span id="countdownWrap" style="display:none;font-size:.75rem;color:var(--muted);"> (espera <span id="countdown">30</span>s)</span>
+                </div>
+
+                <div class="error-box" id="error2">
+                    <i class="bi bi-exclamation-circle-fill"></i><span id="error2Txt">Código incorrecto o expirado.</span>
+                </div>
+
+                <button class="btn-primary-r" onclick="irPaso3()">
+                    <i class="bi bi-check-circle-fill"></i> Verificar código
+                </button>
+                <button class="btn-secondary-r" onclick="irPaso1()">
+                    <i class="bi bi-arrow-left"></i> Volver
+                </button>
+            </div>
+        </div>
+
+        <!-- ── PASO 3: NUEVA CONTRASEÑA ── -->
+        <div id="paso3" class="step">
+            <div class="card-top">
+                <div class="step-icon"><i class="bi bi-key-fill"></i></div>
+                <h2>Nueva contraseña</h2>
+                <p>Crea una contraseña segura para tu cuenta SIARHA.</p>
+            </div>
+            <div class="card-body-inner">
+                <div class="steps-indicator">
+                    <div class="step-dot done"></div>
+                    <div style="width:24px;height:2px;background:var(--dorado);border-radius:99px;"></div>
+                    <div class="step-dot done"></div>
+                    <div style="width:24px;height:2px;background:var(--dorado);border-radius:99px;"></div>
+                    <div class="step-dot active"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label-sm">Nueva contraseña <span style="color:var(--primario);">*</span></label>
+                    <div class="pass-wrap">
+                        <input type="password" id="pass1" class="form-field" placeholder="••••••••" oninput="checkStrength()" autocomplete="new-password">
+                        <button type="button" class="pass-toggle" onclick="togglePass('pass1','eye1')"><i class="bi bi-eye-fill" id="eye1"></i></button>
+                    </div>
+                    <div class="pass-strength" id="strengthWrap" style="display:none;">
+                        <div class="strength-bar">
+                            <div class="s-seg" id="s1"></div>
+                            <div class="s-seg" id="s2"></div>
+                            <div class="s-seg" id="s3"></div>
+                            <div class="s-seg" id="s4"></div>
+                        </div>
+                        <span class="strength-label" id="strengthLabel"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label-sm">Confirmar contraseña <span style="color:var(--primario);">*</span></label>
+                    <div class="pass-wrap">
+                        <input type="password" id="pass2" class="form-field" placeholder="••••••••" autocomplete="new-password">
+                        <button type="button" class="pass-toggle" onclick="togglePass('pass2','eye2')"><i class="bi bi-eye-fill" id="eye2"></i></button>
+                    </div>
+                </div>
+
+                <div style="background:var(--bg);border-radius:var(--radius-sm);padding:.7rem .9rem;font-size:.78rem;color:var(--muted);margin-bottom:.6rem;">
+                    <div style="font-weight:700;margin-bottom:.35rem;">Requisitos:</div>
+                    <div id="req-len"  style="display:flex;align-items:center;gap:.4rem;"><i class="bi bi-circle" style="font-size:.6rem;"></i> Mínimo 8 caracteres</div>
+                    <div id="req-may"  style="display:flex;align-items:center;gap:.4rem;margin-top:.2rem;"><i class="bi bi-circle" style="font-size:.6rem;"></i> Al menos una mayúscula</div>
+                    <div id="req-num"  style="display:flex;align-items:center;gap:.4rem;margin-top:.2rem;"><i class="bi bi-circle" style="font-size:.6rem;"></i> Al menos un número</div>
+                </div>
+
+                <div class="error-box" id="error3">
+                    <i class="bi bi-exclamation-circle-fill"></i><span id="error3Txt"></span>
+                </div>
+
+                <button class="btn-primary-r" onclick="guardarContrasena()">
+                    <i class="bi bi-shield-lock-fill"></i> Guardar contraseña
+                </button>
+            </div>
+        </div>
+
+        <!-- ── PASO 4: ÉXITO ── -->
+        <div id="paso4" class="step">
+            <div class="card-top" style="background:var(--primario-dk);">
+                <div class="success-icon"><i class="bi bi-check-circle-fill"></i></div>
+                <h2>¡Acceso recuperado!</h2>
+                <p>Tu contraseña fue actualizada correctamente. Ya puedes iniciar sesión.</p>
+            </div>
+            <div class="card-body-inner" style="text-align:center;">
+                <div style="margin:1rem 0 1.5rem;">
+                    <div style="font-size:.85rem;color:var(--muted);line-height:1.6;">
+                        Por seguridad, cierra todas las sesiones abiertas desde otros dispositivos si no fuiste tú quien solicitó este cambio.
+                    </div>
+                </div>
+                <a href="index.html" class="btn-primary-r" style="text-decoration:none;justify-content:center;">
+                    <i class="bi bi-box-arrow-in-right"></i> Ir al inicio de sesión
+                </a>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<footer class="footer-login">
+    <small>© <span id="year"></span> SIARHA · Universidad Autónoma del Estado de Hidalgo · Uso exclusivo institucional</small>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    let rolActual = 'alumno';
+    const labels = { alumno:'Número de cuenta', ur:'Correo o usuario asignado', admin:'Correo institucional' };
+    const placeholders = { alumno:'Ej. 220012345', ur:'ur@institucion.mx', admin:'admin@uaeh.edu.mx' };
+
+    function selRol(el) {
+        document.querySelectorAll('.rol-chip').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+        rolActual = el.dataset.rol;
+        document.getElementById('labelId').textContent = labels[rolActual];
+        document.getElementById('idInput').placeholder = placeholders[rolActual];
+        document.getElementById('idInput').value = '';
+    }
+
+    function irPaso2() {
+        const id    = document.getElementById('idInput').value.trim();
+        const email = document.getElementById('emailInput').value.trim();
+        const err   = document.getElementById('error1');
+        const errTxt= document.getElementById('error1Txt');
+        err.classList.remove('show');
+        if (!id)    { errTxt.textContent = 'Ingresa tu identificador.'; err.classList.add('show'); return; }
+        if (!email || !email.includes('@')) { errTxt.textContent = 'Ingresa un correo válido.'; err.classList.add('show'); return; }
+        // Enmascarar correo
+        const parts = email.split('@');
+        const masked = parts[0].slice(0,2) + '****@' + parts[1];
+        document.getElementById('emailMask').textContent = masked;
+        showStep('paso2');
+    }
+
+    function irPaso3() {
+        const cod = document.getElementById('codigoInput').value.trim();
+        const err = document.getElementById('error2');
+        err.classList.remove('show');
+        if (cod.length !== 6 || !/^\d+$/.test(cod)) {
+            document.getElementById('error2Txt').textContent = 'El código debe ser de 6 dígitos.';
+            err.classList.add('show'); return;
+        }
+        // Simulamos código correcto = 123456
+        if (cod !== '123456') {
+            document.getElementById('error2Txt').textContent = 'Código incorrecto. Intenta de nuevo.';
+            err.classList.add('show'); return;
+        }
+        showStep('paso3');
+    }
+
+    function irPaso1() { showStep('paso1'); }
+
+    function guardarContrasena() {
+        const p1  = document.getElementById('pass1').value;
+        const p2  = document.getElementById('pass2').value;
+        const err = document.getElementById('error3');
+        const errTxt = document.getElementById('error3Txt');
+        err.classList.remove('show');
+        if (p1.length < 8) { errTxt.textContent = 'La contraseña debe tener al menos 8 caracteres.'; err.classList.add('show'); return; }
+        if (!/[A-Z]/.test(p1)) { errTxt.textContent = 'Incluye al menos una letra mayúscula.'; err.classList.add('show'); return; }
+        if (!/[0-9]/.test(p1)) { errTxt.textContent = 'Incluye al menos un número.'; err.classList.add('show'); return; }
+        if (p1 !== p2) { errTxt.textContent = 'Las contraseñas no coinciden.'; err.classList.add('show'); return; }
+        showStep('paso4');
+    }
+
+    function showStep(id) {
+        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    function togglePass(id, eyeId) {
+        const i = document.getElementById(id), e = document.getElementById(eyeId);
+        if (i.type === 'password') { i.type = 'text'; e.className = 'bi bi-eye-slash-fill'; }
+        else { i.type = 'password'; e.className = 'bi bi-eye-fill'; }
+    }
+
+    function checkStrength() {
+        const p = document.getElementById('pass1').value;
+        const wrap = document.getElementById('strengthWrap');
+        if (!p) { wrap.style.display = 'none'; return; }
+        wrap.style.display = 'block';
+        const segs = [document.getElementById('s1'), document.getElementById('s2'), document.getElementById('s3'), document.getElementById('s4')];
+        segs.forEach(s => { s.className = 's-seg'; });
+        let score = 0;
+        if (p.length >= 8)       score++;
+        if (/[A-Z]/.test(p))     score++;
+        if (/[0-9]/.test(p))     score++;
+        if (/[^A-Za-z0-9]/.test(p)) score++;
+        const cls = score <= 1 ? 'weak' : score <= 2 ? 'medium' : 'strong';
+        const labels = ['', 'Débil', 'Moderada', 'Buena', 'Fuerte'];
+        for (let i = 0; i < score; i++) segs[i].classList.add(cls);
+        document.getElementById('strengthLabel').textContent = labels[score] || '';
+        // Requisitos
+        const reqLen = document.getElementById('req-len');
+        const reqMay = document.getElementById('req-may');
+        const reqNum = document.getElementById('req-num');
+        const ok = '<i class="bi bi-check-circle-fill" style="color:#22c55e;font-size:.6rem;"></i>';
+        const no = '<i class="bi bi-circle" style="font-size:.6rem;"></i>';
+        reqLen.innerHTML = (p.length >= 8 ? ok : no) + ' Mínimo 8 caracteres';
+        reqMay.innerHTML = (/[A-Z]/.test(p) ? ok : no) + ' Al menos una mayúscula';
+        reqNum.innerHTML = (/[0-9]/.test(p) ? ok : no) + ' Al menos un número';
+    }
+
+    let cdInterval;
+    function reenviarCodigo() {
+        const wrap = document.getElementById('countdownWrap');
+        const cdEl = document.getElementById('countdown');
+        wrap.style.display = 'inline';
+        let secs = 30;
+        cdEl.textContent = secs;
+        clearInterval(cdInterval);
+        cdInterval = setInterval(() => {
+            secs--;
+            cdEl.textContent = secs;
+            if (secs <= 0) { clearInterval(cdInterval); wrap.style.display = 'none'; }
+        }, 1000);
+    }
+</script>
+</body>
+</html>

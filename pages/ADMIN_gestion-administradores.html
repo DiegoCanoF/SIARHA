@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SIARHA | Gestión de Administradores</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/siarha.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root{--primario:#501013;--primario-dk:#3a0b0e;--primario-lt:#f7eaea;--primario-mid:#7a1820;--dorado:#C9A24D;--dorado-lt:#fdf6e3;--bg:#F2F4F8;--card-bg:#fff;--text:#1F2933;--muted:#6b7280;--border:#E5E7EB;--radius-card:18px;--radius-sm:10px;--shadow:0 2px 16px rgba(80,16,19,.08);--shadow-hover:0 6px 28px rgba(80,16,19,.15);}
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+        .navbar-custom{background:var(--primario);padding:0 1.5rem;height:70px;box-shadow:0 2px 16px rgba(0,0,0,.15);position:sticky;top:0;z-index:1050;display:flex;align-items:center;}
+        .brand-text{font-size:1.5rem;font-weight:800;letter-spacing:.04em;line-height:1;}
+        .navbar-subtitle{font-size:.7rem;font-weight:500;opacity:.85;}
+        .navbar-toggler{border:none;color:#fff;font-size:1.25rem;padding:.4rem .6rem;border-radius:var(--radius-sm);background:rgba(255,255,255,.12);transition:background .2s;}
+        .navbar-toggler:hover{background:rgba(255,255,255,.22);}
+        .offcanvas-custom{background:var(--primario-dk);color:#fff;width:280px!important;border-radius:var(--radius-card) 0 0 var(--radius-card);}
+        .offcanvas-custom .offcanvas-header{border-color:rgba(255,255,255,.12)!important;padding:1.25rem 1.5rem;}
+        .offcanvas-custom .nav-link{color:rgba(255,255,255,.8);font-weight:500;font-size:.9rem;padding:.65rem 1rem;border-radius:var(--radius-sm);display:flex;align-items:center;gap:.6rem;transition:background .2s,color .2s;}
+        .offcanvas-custom .nav-link:hover,.offcanvas-custom .nav-link.active{background:rgba(255,255,255,.12);color:#fff;}
+        .offcanvas-custom .nav-link.active{font-weight:700;}
+        .offcanvas-custom .nav-link.danger{color:#ff9090!important;}
+        .offcanvas-custom .nav-link.danger:hover{background:rgba(255,80,80,.15);}
+        .menu-divider{border-color:rgba(255,255,255,.12);margin:.5rem 0;}
+        main{flex:1;padding:1.75rem 1.5rem;max-width:1100px;width:100%;margin:0 auto;}
+        .btn-back{display:inline-flex;align-items:center;gap:.4rem;font-size:.83rem;font-weight:600;color:var(--muted);background:var(--card-bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.45rem .9rem;text-decoration:none;margin-bottom:1.4rem;transition:border-color .2s,color .2s,background .2s;}
+        .btn-back:hover{border-color:var(--primario);color:var(--primario);background:var(--primario-lt);}
+        .section-card{background:var(--card-bg);border-radius:var(--radius-card);box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden;margin-bottom:1.4rem;}
+        .section-header{padding:1rem 1.4rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+        .section-header .title{font-weight:700;font-size:.95rem;display:flex;align-items:center;gap:.5rem;color:var(--primario);}
+        .section-body{padding:1.4rem;}
+        .form-label-sm{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.35rem;display:block;}
+        .form-field{border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.55rem .9rem;font-size:.88rem;font-family:inherit;color:var(--text);background:#fff;width:100%;outline:none;transition:border-color .2s,box-shadow .2s;}
+        .form-field:focus{border-color:var(--primario);box-shadow:0 0 0 3px rgba(80,16,19,.1);}
+        .sep-label{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;display:flex;align-items:center;gap:.6rem;margin:1.2rem 0 .9rem;}
+        .sep-label::before,.sep-label::after{content:'';flex:1;height:1px;background:var(--border);}
+        .rol-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin-top:.4rem;}
+        .rol-card{border:2px solid var(--border);border-radius:var(--radius-sm);padding:.9rem .75rem;text-align:center;cursor:pointer;transition:all .22s;background:#fff;position:relative;}
+        .rol-card:hover{border-color:var(--primario-mid);}
+        .rol-card.selected{border-color:var(--primario);background:var(--primario-lt);box-shadow:0 0 0 3px rgba(80,16,19,.1);}
+        .rol-card .check{position:absolute;top:.4rem;right:.5rem;width:16px;height:16px;background:var(--primario);border-radius:50%;display:none;align-items:center;justify-content:center;}
+        .rol-card.selected .check{display:flex;}
+        .rol-card .ri{font-size:1.3rem;margin-bottom:.35rem;display:block;}
+        .rol-card .rn{font-size:.8rem;font-weight:700;color:var(--text);line-height:1.2;}
+        .rol-card .rs{font-size:.68rem;color:var(--muted);margin-top:.2rem;}
+        .rol-area.selected{border-color:var(--dorado);background:var(--dorado-lt);}
+        .rol-area.selected .check{background:var(--dorado);}
+        .rol-reportes.selected{border-color:#059669;background:#f0fdf4;}
+        .rol-reportes.selected .check{background:#059669;}
+        .inst-section{margin-top:.6rem;display:none;}
+        .inst-section.show{display:block;}
+        .inst-group-title{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem;margin-top:.8rem;}
+        .inst-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.4rem;}
+        .inst-check-item{display:flex;align-items:center;gap:.5rem;padding:.4rem .6rem;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:#fff;cursor:pointer;transition:all .2s;font-size:.82rem;font-weight:500;color:var(--text);}
+        .inst-check-item:hover{border-color:var(--primario);background:var(--primario-lt);}
+        .inst-check-item input[type=checkbox]{accent-color:var(--primario);width:14px;height:14px;flex-shrink:0;cursor:pointer;}
+        .inst-check-item.checked{border-color:var(--primario);background:var(--primario-lt);}
+        .inst-pills{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem;}
+        .inst-pill{background:var(--primario-lt);color:var(--primario);border:1px solid rgba(80,16,19,.2);border-radius:20px;font-size:.73rem;font-weight:700;padding:.22rem .65rem;display:flex;align-items:center;gap:.35rem;}
+        .inst-pill button{border:none;background:none;color:var(--primario);cursor:pointer;font-size:.75rem;line-height:1;padding:0;}
+        .admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1rem;padding:1.4rem;}
+        .admin-card{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:1rem 1.1rem;display:flex;align-items:flex-start;gap:.9rem;transition:box-shadow .2s,border-color .2s;}
+        .admin-card:hover{box-shadow:var(--shadow-hover);border-color:rgba(80,16,19,.18);}
+        .admin-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;flex-shrink:0;}
+        .av-superadmin{background:var(--primario);color:#fff;}
+        .av-area{background:var(--dorado);color:#fff;}
+        .av-reportes{background:#059669;color:#fff;}
+        .av-inactive{background:#d1d5db;color:#6b7280;}
+        .admin-name{font-size:.88rem;font-weight:700;color:var(--text);}
+        .admin-email{font-size:.74rem;color:var(--muted);margin-top:.1rem;}
+        .admin-meta{margin-top:.35rem;display:flex;flex-wrap:wrap;gap:.3rem;}
+        .badge-superadmin{background:var(--primario-lt);color:var(--primario);border-radius:20px;font-size:.69rem;font-weight:700;padding:.2rem .55rem;border:1px solid rgba(80,16,19,.2);}
+        .badge-area{background:var(--dorado-lt);color:#7a5a00;border-radius:20px;font-size:.69rem;font-weight:700;padding:.2rem .55rem;border:1px solid rgba(201,162,77,.4);}
+        .badge-reportes{background:#f0fdf4;color:#065f46;border-radius:20px;font-size:.69rem;font-weight:700;padding:.2rem .55rem;border:1px solid rgba(34,197,94,.3);}
+        .badge-inactivo{background:#f3f4f6;color:#6b7280;border-radius:20px;font-size:.69rem;font-weight:700;padding:.2rem .55rem;}
+        .badge-activo-g{background:#d1fae5;color:#065f46;border-radius:20px;font-size:.69rem;font-weight:700;padding:.2rem .55rem;}
+        .admin-actions{margin-left:auto;display:flex;gap:.35rem;flex-shrink:0;}
+        .btn-icon{width:32px;height:32px;border-radius:8px;border:1.5px solid var(--border);background:#fff;color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.85rem;transition:all .2s;}
+        .btn-icon:hover{border-color:var(--primario);color:var(--primario);background:var(--primario-lt);}
+        .btn-icon.danger:hover{border-color:#fca5a5;color:#991b1b;background:#fee2e2;}
+        .btn-save{background:var(--primario);color:#fff;border:none;border-radius:var(--radius-sm);font-weight:700;font-size:.9rem;padding:.65rem 1.4rem;display:inline-flex;align-items:center;gap:.45rem;cursor:pointer;transition:background .2s,transform .15s;box-shadow:0 4px 14px rgba(80,16,19,.2);}
+        .btn-save:hover{background:var(--primario-dk);transform:translateY(-1px);}
+        .btn-cancel-sm{background:#fff;color:var(--muted);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-weight:600;font-size:.88rem;padding:.6rem 1.1rem;display:inline-flex;align-items:center;gap:.4rem;cursor:pointer;transition:border-color .2s,color .2s;}
+        .btn-cancel-sm:hover{border-color:var(--primario);color:var(--primario);}
+        .btn-add{background:var(--primario);color:#fff;border:none;border-radius:var(--radius-sm);font-weight:700;font-size:.85rem;padding:.5rem 1.1rem;display:inline-flex;align-items:center;gap:.4rem;cursor:pointer;transition:background .2s;}
+        .btn-add:hover{background:var(--primario-dk);}
+        .pass-wrap{position:relative;}
+        .pass-toggle{position:absolute;right:.75rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:.95rem;padding:0;}
+        .aviso-info{border-radius:var(--radius-sm);padding:.7rem 1rem;font-size:.82rem;display:flex;align-items:flex-start;gap:.55rem;margin-bottom:.9rem;}
+        .aviso-area{background:var(--dorado-lt);border:1px solid rgba(201,162,77,.3);color:#7a5a00;}
+        .aviso-reportes{background:#f0fdf4;border:1px solid rgba(34,197,94,.3);color:#065f46;}
+        .toast-custom{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--primario);color:#fff;border-radius:var(--radius-sm);padding:.9rem 1.3rem;display:flex;align-items:center;gap:.6rem;font-size:.85rem;font-weight:600;box-shadow:0 8px 24px rgba(80,16,19,.25);transform:translateY(80px);opacity:0;transition:transform .35s ease,opacity .35s ease;z-index:9999;}
+        .toast-custom.show{transform:translateY(0);opacity:1;}
+        .footer-custom{background:var(--primario);color:rgba(255,255,255,.7);text-align:center;padding:.75rem;font-size:.75rem;}
+        @media(max-width:767px){main{padding:1.25rem 1rem;}.rol-grid{grid-template-columns:1fr 1fr;}.admin-grid{grid-template-columns:1fr;}}
+    
+        /* ══ NOTIFICACIONES ══ */
+        .notif-btn{position:relative;background:rgba(255,255,255,.12);border:none;color:#fff;width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;transition:background .2s;flex-shrink:0;}
+        .notif-btn:hover{background:rgba(255,255,255,.22);}
+        .notif-count{position:absolute;top:4px;right:4px;background:#C9A24D;color:#fff;font-size:.58rem;font-weight:800;border-radius:20px;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0 .25rem;border:1.5px solid #501013;}
+        .notif-panel{position:fixed;top:70px;right:0;width:360px;max-height:calc(100vh - 80px);background:#fff;border:1px solid #E5E7EB;border-radius:18px 0 0 18px;box-shadow:-4px 8px 32px rgba(80,16,19,.18);z-index:1049;display:flex;flex-direction:column;transform:translateX(110%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow:hidden;}
+        .notif-panel.open{transform:translateX(0);}
+        .notif-header{padding:1rem 1.2rem;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;justify-content:space-between;background:#501013;color:#fff;flex-shrink:0;}
+        .notif-header h6{font-size:.92rem;font-weight:800;margin:0;}
+        .btn-mark-all{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.8);background:rgba(255,255,255,.12);border:none;border-radius:20px;padding:.2rem .7rem;cursor:pointer;}
+        .btn-mark-all:hover{background:rgba(255,255,255,.22);}
+        .btn-close-notif{background:none;border:none;color:rgba(255,255,255,.7);font-size:1rem;cursor:pointer;padding:.2rem;display:flex;align-items:center;border-radius:6px;}
+        .btn-close-notif:hover{color:#fff;}
+        .notif-tabs{display:flex;border-bottom:1px solid #E5E7EB;flex-shrink:0;}
+        .notif-tab{flex:1;padding:.6rem;font-size:.8rem;font-weight:700;color:#6b7280;border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;text-align:center;}
+        .notif-tab.active{color:#501013;border-bottom-color:#501013;}
+        .notif-list{overflow-y:auto;flex:1;}
+        .notif-item{padding:.9rem 1.2rem;border-bottom:1px solid #E5E7EB;display:flex;align-items:flex-start;gap:.75rem;cursor:pointer;transition:background .15s;position:relative;}
+        .notif-item:hover{background:#F2F4F8;}
+        .notif-item.unread{background:#f7eaea;}
+        .notif-item.unread::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#501013;}
+        .notif-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+        .ni-ap{background:#d1fae5;color:#065f46;} .ni-re{background:#fee2e2;color:#991b1b;} .ni-msg{background:#dbeafe;color:#1e40af;} .ni-sis{background:#f7eaea;color:#501013;} .ni-rec{background:#fdf6e3;color:#7a5a00;}
+        .notif-title{font-size:.83rem;font-weight:700;color:#1F2933;margin-bottom:.15rem;}
+        .notif-item.unread .notif-title{color:#501013;}
+        .notif-desc{font-size:.76rem;color:#6b7280;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .notif-time{font-size:.68rem;color:#6b7280;margin-top:.3rem;font-weight:500;}
+        .notif-footer{padding:.75rem 1.2rem;border-top:1px solid #E5E7EB;text-align:center;flex-shrink:0;}
+        .notif-footer a{font-size:.8rem;font-weight:700;color:#501013;text-decoration:none;}
+        .notif-overlay{display:none;position:fixed;inset:0;z-index:1048;}
+        .notif-overlay.open{display:block;}
+        .menu-badge{margin-left:auto;background:#C9A24D;color:#fff;font-size:.68rem;font-weight:800;border-radius:20px;padding:.1rem .55rem;}
+        @media(max-width:480px){.notif-panel{width:100%;border-radius:0;}}
+
+    </style>
+</head>
+<body>
+<nav class="navbar-custom w-100">
+    <div class="container-fluid d-flex align-items-center" style="height:70px;">
+        <div class="d-flex align-items-center gap-2">
+            <a href="https://www.uaeh.edu.mx" target="_blank" rel="noopener noreferrer"><img src="../assets/img/Logo_Login.svg" alt="Logo" height="46"></a>
+            <div class="d-flex flex-column">
+                <span class="brand-text text-white">SIARHA</span>
+                <span class="navbar-subtitle text-white d-none d-md-block">Dirección de Servicio Social y Prácticas Profesionales</span>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-2 ms-auto">
+            <div class="d-none d-md-flex align-items-center gap-2 text-white" style="font-size:.83rem;font-weight:600;opacity:.9;">
+                <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;"><i class="bi bi-shield-fill"></i></div>
+                <span>Superadministrador</span>
+            </div>
+            <button class="notif-btn" id="btnNotif" onclick="toggleNotif()" title="Notificaciones"><i class="bi bi-bell-fill"></i><span class="notif-count" id="notifCount">4</span></button>
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuAdmin"><i class="bi bi-list"></i></button>
+        </div>
+    </div>
+</nav>
+<div class="offcanvas offcanvas-end offcanvas-custom" tabindex="-1" id="menuAdmin">
+    <div class="offcanvas-header">
+        <div class="d-flex align-items-center gap-2">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;"><i class="bi bi-shield-fill"></i></div>
+            <div><div style="font-weight:700;font-size:.9rem;">Superadministrador</div><div style="font-size:.72rem;opacity:.7;">Panel de control</div></div>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="navbar-nav gap-1">
+            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
+            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html"><i class="bi bi-people-fill"></i> Alumnos</a></li>
+            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html"><i class="bi bi-building"></i> Unidades Receptoras</a></li>
+            <li><a class="nav-link active" href="ADMIN_gestion-administradores.html"><i class="bi bi-person-gear"></i> Administradores</a></li>
+            <li><a class="nav-link" href="ADMIN_reportes-globales.html"><i class="bi bi-bar-chart-fill"></i> Reportes Globales</a></li>
+            <li><a class="nav-link" href="ADMIN_mensajes-admin.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge">3</span></a></li>
+            <hr class="menu-divider">
+            <li><a class="nav-link danger" href="../index.html"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
+        </ul>
+    </div>
+</div>
+
+<main>
+    <a href="ADMIN_dashboard-servicio.html" class="btn-back"><i class="bi bi-arrow-left"></i> Volver al panel</a>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.75rem;margin-bottom:1.5rem;">
+        <div>
+            <h4 style="font-size:1.3rem;font-weight:800;margin:0;">Gestión de Administradores</h4>
+            <p style="font-size:.8rem;color:var(--muted);margin-top:.25rem;">Cuentas de acceso al sistema. Solo los superadministradores pueden crear y gestionar usuarios.</p>
+        </div>
+        <button class="btn-add" onclick="abrirFormNuevo()"><i class="bi bi-person-plus-fill"></i> Nuevo administrador</button>
+    </div>
+
+    <!-- FORMULARIO -->
+    <div class="section-card" id="formCard" style="display:none;">
+        <div class="section-header">
+            <span class="title" id="formTitle"><i class="bi bi-person-plus-fill"></i> Nuevo administrador</span>
+            <button class="btn-icon" onclick="cerrarForm()" title="Cerrar"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="section-body">
+            <form id="formAdmin" novalidate>
+                <div class="sep-label">Datos de la cuenta</div>
+                <div class="row g-3 mb-2">
+                    <div class="col-md-6">
+                        <label class="form-label-sm">Nombre completo *</label>
+                        <input type="text" id="aNombre" class="form-field" placeholder="Nombre completo">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label-sm">Correo institucional *</label>
+                        <input type="email" id="aEmail" class="form-field" placeholder="nombre@uaeh.edu.mx">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label-sm">Contraseña temporal *</label>
+                        <div class="pass-wrap">
+                            <input type="password" id="aPass" class="form-field" placeholder="Mínimo 8 caracteres">
+                            <button type="button" class="pass-toggle" onclick="togglePass()"><i class="bi bi-eye-fill" id="eyeP"></i></button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label-sm">Estado</label>
+                        <select id="aEstado" class="form-field"><option value="activo">Activo</option><option value="inactivo">Inactivo</option></select>
+                    </div>
+                </div>
+
+                <div class="sep-label">Tipo de rol *</div>
+                <div class="rol-grid" id="rolGrid">
+                    <div class="rol-card rol-superadmin" data-rol="superadmin" onclick="selRol(this)">
+                        <span class="check"><i class="bi bi-check-lg" style="color:#fff;font-size:.6rem;"></i></span>
+                        <span class="ri"><i class="bi bi-shield-fill" style="color:var(--primario);"></i></span>
+                        <div class="rn">Superadministrador</div>
+                        <div class="rs">Acceso total. Puede crear URs y otros admins.</div>
+                    </div>
+                    <div class="rol-card rol-area" data-rol="area" onclick="selRol(this)">
+                        <span class="check"><i class="bi bi-check-lg" style="color:#fff;font-size:.6rem;"></i></span>
+                        <span class="ri"><i class="bi bi-building-fill" style="color:var(--dorado);"></i></span>
+                        <div class="rn">Admin de área</div>
+                        <div class="rs">Gestiona alumnos de sus institutos asignados.</div>
+                    </div>
+                    <div class="rol-card rol-reportes" data-rol="reportes" onclick="selRol(this)">
+                        <span class="check"><i class="bi bi-check-lg" style="color:#fff;font-size:.6rem;"></i></span>
+                        <span class="ri"><i class="bi bi-flag-fill" style="color:#059669;"></i></span>
+                        <div class="rn">Coordinador de reportes</div>
+                        <div class="rs">Atiende reportes. No ve alumnos ni bitácoras.</div>
+                    </div>
+                </div>
+                <input type="hidden" id="aRol" value="">
+
+                <!-- INSTITUTOS — solo admin de área -->
+                <div class="inst-section" id="secInstitutos">
+                    <div class="sep-label">Institutos/Escuelas asignados *</div>
+                    <div class="aviso-info aviso-area">
+                        <i class="bi bi-info-circle-fill" style="flex-shrink:0;margin-top:.05rem;"></i>
+                        <span>Selecciona uno o varios. Si solo tiene <strong>un campus</strong>, el sistema lo asignará automáticamente sin mostrárselo en su interfaz.</span>
+                    </div>
+                    <div class="inst-group-title">Institutos</div>
+                    <div class="inst-grid">
+                        <label class="inst-check-item"><input type="checkbox" value="IDA" onchange="actualizarPills()"> Instituto de Artes</label>
+                        <label class="inst-check-item"><input type="checkbox" value="ICAP" onchange="actualizarPills()"> Instituto de Ciencias Agropecuarias</label>
+                        <label class="inst-check-item"><input type="checkbox" value="ICBI" onchange="actualizarPills()"> Inst. Ciencias Básicas e Ingeniería</label>
+                        <label class="inst-check-item"><input type="checkbox" value="ICSa" onchange="actualizarPills()"> Instituto de Ciencias de la Salud</label>
+                        <label class="inst-check-item"><input type="checkbox" value="ICEA" onchange="actualizarPills()"> Inst. Ciencias Económico Administrativas</label>
+                        <label class="inst-check-item"><input type="checkbox" value="ICSHu" onchange="actualizarPills()"> Inst. Ciencias Sociales y Humanidades</label>
+                    </div>
+                    <div class="inst-group-title">Escuelas Superiores</div>
+                    <div class="inst-grid">
+                        <label class="inst-check-item"><input type="checkbox" value="ES-ACT" onchange="actualizarPills()"> ES Actopan</label>
+                        <label class="inst-check-item"><input type="checkbox" value="ES-APA" onchange="actualizarPills()"> ES Apan</label>
+                        <label class="inst-check-item"><input type="checkbox" value="ES-ATO" onchange="actualizarPills()"> ES Atotonilco de Tula</label>
+                        <label class="inst-check-item"><input type="checkbox" value="ES-SAH" onchange="actualizarPills()"> ES Ciudad Sahagún</label>
+                        <label class="inst-check-item"><input type="checkbox" value="ES-HUE" onchange="actualizarPills()"> ES Huejutla</label>
+                        <label class="inst-check-item"><input type="checkbox" value="ES-TEP" onchange="actualizarPills()"> ES Tepeji del Río</label>
+                        <label class="inst-check-item"><input type="checkbox" value="ES-TIZ" onchange="actualizarPills()"> ES Tizayuca</label>
+                        <label class="inst-check-item"><input type="checkbox" value="ES-TLA" onchange="actualizarPills()"> ES Tlahuelilpan</label>
+                        <label class="inst-check-item"><input type="checkbox" value="ES-ZIM" onchange="actualizarPills()"> ES Zimapán</label>
+                    </div>
+                    <div style="margin-top:.75rem;">
+                        <label class="form-label-sm">Seleccionados</label>
+                        <div class="inst-pills" id="pillsContainer"><span style="font-size:.78rem;color:var(--muted);font-style:italic;">Ninguno</span></div>
+                    </div>
+                </div>
+
+                <!-- PERMISOS COORDINADOR -->
+                <div class="inst-section" id="secReportes">
+                    <div class="sep-label">Permisos del coordinador</div>
+                    <div class="aviso-info aviso-reportes">
+                        <i class="bi bi-info-circle-fill" style="flex-shrink:0;margin-top:.05rem;"></i>
+                        <span>No tiene acceso a alumnos ni bitácoras. Gestiona reportes y puede enviar mensajes internos a otros administradores.</span>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-md-4"><label class="inst-check-item"><input type="checkbox" checked> Ver reportes de alumnos</label></div>
+                        <div class="col-md-4"><label class="inst-check-item"><input type="checkbox" checked> Ver reportes de URs</label></div>
+                        <div class="col-md-4"><label class="inst-check-item"><input type="checkbox" checked> Responder y cerrar reportes</label></div>
+                        <div class="col-md-4"><label class="inst-check-item"><input type="checkbox" checked> Mensajería interna (admins)</label></div>
+                        <div class="col-md-4"><label class="inst-check-item"><input type="checkbox"> Escalar a superadministrador</label></div>
+                    </div>
+                </div>
+
+                <div id="adminError" style="font-size:.8rem;color:#991b1b;font-weight:600;margin-top:.75rem;margin-bottom:.5rem;display:none;">
+                    <i class="bi bi-exclamation-circle-fill me-1"></i><span id="adminErrorTxt"></span>
+                </div>
+                <div class="d-flex gap-3 flex-wrap" style="margin-top:1.2rem;">
+                    <button type="submit" class="btn-save"><i class="bi bi-floppy-fill"></i> Guardar</button>
+                    <button type="button" class="btn-cancel-sm" onclick="cerrarForm()"><i class="bi bi-x-circle"></i> Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- SUPERADMINS -->
+    <div class="section-card">
+        <div class="section-header">
+            <span class="title"><i class="bi bi-shield-fill"></i> Superadministradores</span>
+            <span style="font-size:.78rem;color:var(--muted);">2 cuentas</span>
+        </div>
+        <div class="admin-grid">
+            <div class="admin-card">
+                <div class="admin-avatar av-superadmin">RA</div>
+                <div style="flex:1;min-width:0;">
+                    <div class="admin-name">Rosa Alvarado García</div>
+                    <div class="admin-email">r.alvarado@uaeh.edu.mx</div>
+                    <div class="admin-meta">
+                        <span class="badge-superadmin"><i class="bi bi-shield-fill me-1" style="font-size:.6rem;"></i>Superadmin</span>
+                        <span class="badge-activo-g">Activo</span>
+                    </div>
+                </div>
+                <div class="admin-actions">
+                    <button class="btn-icon" onclick="abrirEditar('Rosa Alvarado García','r.alvarado@uaeh.edu.mx','superadmin',[])"><i class="bi bi-pencil-fill"></i></button>
+                    <button class="btn-icon danger" onclick="showToast('No puedes desactivar tu propia cuenta.')"><i class="bi bi-slash-circle-fill"></i></button>
+                </div>
+            </div>
+            <div class="admin-card">
+                <div class="admin-avatar av-superadmin">MH</div>
+                <div style="flex:1;min-width:0;">
+                    <div class="admin-name">Mario Hernández López</div>
+                    <div class="admin-email">m.hernandez@uaeh.edu.mx</div>
+                    <div class="admin-meta">
+                        <span class="badge-superadmin"><i class="bi bi-shield-fill me-1" style="font-size:.6rem;"></i>Superadmin</span>
+                        <span class="badge-activo-g">Activo</span>
+                    </div>
+                </div>
+                <div class="admin-actions">
+                    <button class="btn-icon" onclick="abrirEditar('Mario Hernández López','m.hernandez@uaeh.edu.mx','superadmin',[])"><i class="bi bi-pencil-fill"></i></button>
+                    <button class="btn-icon danger" onclick="showToast('Cuenta desactivada.')"><i class="bi bi-slash-circle-fill"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMINS DE ÁREA -->
+    <div class="section-card">
+        <div class="section-header">
+            <span class="title"><i class="bi bi-building-fill" style="color:var(--dorado);"></i> Administradores de área</span>
+            <span style="font-size:.78rem;color:var(--muted);">3 cuentas</span>
+        </div>
+        <div class="admin-grid">
+            <div class="admin-card">
+                <div class="admin-avatar av-area">LT</div>
+                <div style="flex:1;min-width:0;">
+                    <div class="admin-name">Laura Torres Ramos</div>
+                    <div class="admin-email">l.torres@uaeh.edu.mx</div>
+                    <div class="admin-meta">
+                        <span class="badge-area">Admin área</span>
+                        <span style="background:var(--primario-lt);color:var(--primario);border-radius:20px;font-size:.69rem;font-weight:700;padding:.2rem .55rem;border:1px solid rgba(80,16,19,.2);">ICBI · ICSa</span>
+                        <span class="badge-activo-g">Activo</span>
+                    </div>
+                </div>
+                <div class="admin-actions">
+                    <button class="btn-icon" onclick="abrirEditar('Laura Torres Ramos','l.torres@uaeh.edu.mx','area',['ICBI','ICSa'])"><i class="bi bi-pencil-fill"></i></button>
+                    <button class="btn-icon danger" onclick="showToast('Cuenta desactivada.')"><i class="bi bi-slash-circle-fill"></i></button>
+                </div>
+            </div>
+            <div class="admin-card">
+                <div class="admin-avatar av-area">JC</div>
+                <div style="flex:1;min-width:0;">
+                    <div class="admin-name">Jorge Castro Soto</div>
+                    <div class="admin-email">j.castro@uaeh.edu.mx</div>
+                    <div class="admin-meta">
+                        <span class="badge-area">Admin área</span>
+                        <span style="background:var(--primario-lt);color:var(--primario);border-radius:20px;font-size:.69rem;font-weight:700;padding:.2rem .55rem;border:1px solid rgba(80,16,19,.2);">ES-ACT · ES-APA · ES-TIZ</span>
+                        <span class="badge-activo-g">Activo</span>
+                    </div>
+                </div>
+                <div class="admin-actions">
+                    <button class="btn-icon" onclick="abrirEditar('Jorge Castro Soto','j.castro@uaeh.edu.mx','area',['ES-ACT','ES-APA','ES-TIZ'])"><i class="bi bi-pencil-fill"></i></button>
+                    <button class="btn-icon danger" onclick="showToast('Cuenta desactivada.')"><i class="bi bi-slash-circle-fill"></i></button>
+                </div>
+            </div>
+            <div class="admin-card" style="opacity:.6;">
+                <div class="admin-avatar av-inactive">PM</div>
+                <div style="flex:1;min-width:0;">
+                    <div class="admin-name">Patricia Mora Vega</div>
+                    <div class="admin-email">p.mora@uaeh.edu.mx</div>
+                    <div class="admin-meta">
+                        <span class="badge-area">Admin área</span>
+                        <span style="background:var(--primario-lt);color:var(--primario);border-radius:20px;font-size:.69rem;font-weight:700;padding:.2rem .55rem;border:1px solid rgba(80,16,19,.2);">ICEA</span>
+                        <span class="badge-inactivo">Inactivo</span>
+                    </div>
+                </div>
+                <div class="admin-actions">
+                    <button class="btn-icon" onclick="showToast('Cuenta reactivada.')"><i class="bi bi-arrow-repeat"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- COORDINADORES -->
+    <div class="section-card">
+        <div class="section-header">
+            <span class="title"><i class="bi bi-flag-fill" style="color:#059669;"></i> Coordinadores de reportes</span>
+            <span style="font-size:.78rem;color:var(--muted);">1 cuenta</span>
+        </div>
+        <div class="admin-grid">
+            <div class="admin-card">
+                <div class="admin-avatar av-reportes">CR</div>
+                <div style="flex:1;min-width:0;">
+                    <div class="admin-name">Carlos Reyes Ortega</div>
+                    <div class="admin-email">c.reyes@uaeh.edu.mx</div>
+                    <div class="admin-meta">
+                        <span class="badge-reportes"><i class="bi bi-flag-fill me-1" style="font-size:.6rem;"></i>Coordinador reportes</span>
+                        <span class="badge-activo-g">Activo</span>
+                    </div>
+                </div>
+                <div class="admin-actions">
+                    <button class="btn-icon" onclick="abrirEditar('Carlos Reyes Ortega','c.reyes@uaeh.edu.mx','reportes',[])"><i class="bi bi-pencil-fill"></i></button>
+                    <button class="btn-icon danger" onclick="showToast('Cuenta desactivada.')"><i class="bi bi-slash-circle-fill"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="toast-custom" id="toastMsg"><i class="bi bi-check-circle-fill" style="font-size:1.1rem;"></i><span id="toastTxt"></span></div>
+<footer class="footer-custom">© 2026 SIARHA · Uso exclusivo institucional · UAEH</footer>
+
+<!-- ══ PANEL NOTIFICACIONES ══ -->
+<div class="notif-overlay" id="notifOverlay" onclick="cerrarNotif()"></div>
+<div class="notif-panel" id="notifPanel">
+    <div class="notif-header">
+        <h6><i class="bi bi-bell-fill me-2"></i>Notificaciones</h6>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn-mark-all" onclick="marcarTodasLeidas()">Marcar leídas</button>
+            <button class="btn-close-notif" onclick="cerrarNotif()"><i class="bi bi-x-lg"></i></button>
+        </div>
+    </div>
+    <div class="notif-tabs">
+        <button class="notif-tab active" onclick="setNotifTab('todas',this)">Todas <span id="badgeTodas" style="background:#501013;color:#fff;border-radius:20px;font-size:.65rem;padding:.08rem .45rem;margin-left:.25rem;">4</span></button>
+        <button class="notif-tab" onclick="setNotifTab('ni-msg',this)">Mensajes</button>
+        <button class="notif-tab" onclick="setNotifTab('ni-rec',this)">Reportes</button>
+        <button class="notif-tab" onclick="setNotifTab('ni-sis',this)">Sistema</button>
+    </div>
+    <div class="notif-list" id="notifList">
+        <div class="notif-item unread" data-tipo="ni-msg" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div>
+            <div><div class="notif-title">Mensaje de Juan Pérez García</div><div class="notif-desc">Solicitud de prórroga de 2 semanas</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 15 min</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-msg" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div>
+            <div><div class="notif-title">2 mensajes de Ana López</div><div class="notif-desc">Problema con acceso al sistema</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 30 min</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-rec" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-rec"><i class="bi bi-flag-fill"></i></div>
+            <div><div class="notif-title">Reporte escalado #RPT-0042</div><div class="notif-desc">El coordinador te escaló un reporte</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 2 horas</div></div>
+        </div>
+        <div class="notif-item" data-tipo="ni-sis" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-sis"><i class="bi bi-person-plus-fill"></i></div>
+            <div><div class="notif-title">Nuevo alumno dado de alta</div><div class="notif-desc">María González — Prácticas Profesionales</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer, 4:00 p.m.</div></div>
+        </div>
+        <div class="notif-item" data-tipo="ni-sis" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-sis"><i class="bi bi-building-fill"></i></div>
+            <div><div class="notif-title">Nueva UR registrada</div><div class="notif-desc">IMSS Pachuca fue agregada al sistema</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer, 10:00 a.m.</div></div>
+        </div>
+    </div>
+    <div class="notif-footer"><a href="ADMIN_mensajes-admin.html">Ver todo →</a></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const NOMBRES={IDA:'Instituto de Artes',ICAP:'Instituto de Ciencias Agropecuarias',ICBI:'ICBI',ICSa:'ICSa',ICEA:'ICEA',ICSHu:'ICSHu','ES-ACT':'ES Actopan','ES-APA':'ES Apan','ES-ATO':'ES Atotonilco','ES-SAH':'ES Cd. Sahagún','ES-HUE':'ES Huejutla','ES-TEP':'ES Tepeji','ES-TIZ':'ES Tizayuca','ES-TLA':'ES Tlahuelilpan','ES-ZIM':'ES Zimapán'};
+let rolActual='';
+function selRol(card){document.querySelectorAll('.rol-card').forEach(c=>c.classList.remove('selected'));card.classList.add('selected');rolActual=card.dataset.rol;document.getElementById('aRol').value=rolActual;document.getElementById('secInstitutos').classList.toggle('show',rolActual==='area');document.getElementById('secReportes').classList.toggle('show',rolActual==='reportes');}
+function actualizarPills(){const checks=document.querySelectorAll('#secInstitutos input[type=checkbox]:checked');const pills=document.getElementById('pillsContainer');document.querySelectorAll('.inst-check-item').forEach(l=>l.classList.toggle('checked',l.querySelector('input').checked));if(checks.length===0){pills.innerHTML='<span style="font-size:.78rem;color:var(--muted);font-style:italic;">Ninguno</span>';return;}pills.innerHTML='';checks.forEach(cb=>{const pill=document.createElement('span');pill.className='inst-pill';pill.innerHTML=(NOMBRES[cb.value]||cb.value)+`<button onclick="quitarInst('${cb.value}')">✕</button>`;pills.appendChild(pill);});}
+function quitarInst(val){const cb=document.querySelector(`#secInstitutos input[value="${val}"]`);if(cb){cb.checked=false;cb.closest('.inst-check-item').classList.remove('checked');}actualizarPills();}
+function abrirFormNuevo(){document.getElementById('formTitle').innerHTML='<i class="bi bi-person-plus-fill"></i> Nuevo administrador';document.getElementById('formAdmin').reset();document.querySelectorAll('.rol-card').forEach(c=>c.classList.remove('selected'));document.getElementById('aRol').value='';rolActual='';document.getElementById('secInstitutos').classList.remove('show');document.getElementById('secReportes').classList.remove('show');document.querySelectorAll('.inst-check-item').forEach(l=>l.classList.remove('checked'));document.getElementById('pillsContainer').innerHTML='<span style="font-size:.78rem;color:var(--muted);font-style:italic;">Ninguno</span>';document.getElementById('adminError').style.display='none';document.getElementById('formCard').style.display='block';document.getElementById('formCard').scrollIntoView({behavior:'smooth'});}
+function abrirEditar(nombre,email,rol,institutos){document.getElementById('formTitle').innerHTML='<i class="bi bi-pencil-fill"></i> Editar administrador';document.getElementById('aNombre').value=nombre;document.getElementById('aEmail').value=email;document.getElementById('aPass').value='';document.getElementById('aRol').value=rol;rolActual=rol;document.querySelectorAll('.rol-card').forEach(c=>c.classList.toggle('selected',c.dataset.rol===rol));document.getElementById('secInstitutos').classList.toggle('show',rol==='area');document.getElementById('secReportes').classList.toggle('show',rol==='reportes');document.querySelectorAll('#secInstitutos input[type=checkbox]').forEach(cb=>{cb.checked=institutos.includes(cb.value);cb.closest('.inst-check-item').classList.toggle('checked',cb.checked);});actualizarPills();document.getElementById('adminError').style.display='none';document.getElementById('formCard').style.display='block';document.getElementById('formCard').scrollIntoView({behavior:'smooth'});}
+function cerrarForm(){document.getElementById('formCard').style.display='none';}
+function togglePass(){const i=document.getElementById('aPass'),e=document.getElementById('eyeP');if(i.type==='password'){i.type='text';e.className='bi bi-eye-slash-fill';}else{i.type='password';e.className='bi bi-eye-fill';}}
+document.getElementById('formAdmin').addEventListener('submit',e=>{e.preventDefault();const n=document.getElementById('aNombre').value.trim(),em=document.getElementById('aEmail').value.trim(),p=document.getElementById('aPass').value,rol=document.getElementById('aRol').value,err=document.getElementById('adminError'),errTxt=document.getElementById('adminErrorTxt');err.style.display='none';if(!n){errTxt.textContent='El nombre es requerido.';err.style.display='block';return;}if(!em||!em.includes('@')){errTxt.textContent='Ingresa un correo válido.';err.style.display='block';return;}if(p&&p.length<8){errTxt.textContent='La contraseña debe tener al menos 8 caracteres.';err.style.display='block';return;}if(!rol){errTxt.textContent='Selecciona un tipo de rol.';err.style.display='block';return;}if(rol==='area'){const checks=document.querySelectorAll('#secInstitutos input[type=checkbox]:checked');if(checks.length===0){errTxt.textContent='Asigna al menos un instituto o escuela.';err.style.display='block';return;}}cerrarForm();showToast('Administrador guardado. Se enviará correo de bienvenida.');});
+function showToast(msg){document.getElementById('toastTxt').textContent=msg;const t=document.getElementById('toastMsg');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200);}
+
+    // ══ NOTIFICACIONES ══════════════════════════════════════════════
+        function abrirNotif(){document.getElementById('notifPanel').classList.add('open');document.getElementById('notifOverlay').classList.add('open');_nOpen=true;}
+    function cerrarNotif(){document.getElementById('notifPanel').classList.remove('open');document.getElementById('notifOverlay').classList.remove('open');_nOpen=false;}
+    function marcarLeida(item){if(!item.classList.contains('unread'))return;item.classList.remove('unread');_badge();}
+    function marcarTodasLeidas(){document.querySelectorAll('.notif-item.unread').forEach(i=>i.classList.remove('unread'));_badge();}
+    function _badge(){const n=document.querySelectorAll('.notif-item.unread').length;const b=document.getElementById('notifCount');if(b){b.textContent=n;b.style.display=n>0?'flex':'none';}const bt=document.getElementById('badgeTodas');if(bt)bt.textContent=n;}
+    function setNotifTab(tipo,btn){document.querySelectorAll('.notif-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.notif-item').forEach(i=>{i.style.display=(tipo==='todas'||i.dataset.tipo===tipo)?'':'none';});}
+    // ════════════════════════════════════════════════════════════════
+
+</script>
+
+<script>
+    let _nOpen = false;
+    function toggleNotif() { _nOpen ? cerrarNotif() : abrirNotif(); }
+    function abrirNotif()  { document.getElementById('notifPanel').classList.add('open');    document.getElementById('notifOverlay').classList.add('open');    _nOpen = true;  }
+    function cerrarNotif() { document.getElementById('notifPanel').classList.remove('open'); document.getElementById('notifOverlay').classList.remove('open'); _nOpen = false; }
+    function marcarLeida(item) { if (!item.classList.contains('unread')) return; item.classList.remove('unread'); _badge(); }
+    function marcarTodasLeidas() { document.querySelectorAll('.notif-item.unread').forEach(i => i.classList.remove('unread')); _badge(); }
+    function _badge() {
+        const n = document.querySelectorAll('.notif-item.unread').length;
+        const b = document.getElementById('notifCount');  if (b)  { b.textContent = n; b.style.display = n > 0 ? 'flex' : 'none'; }
+        const bt = document.getElementById('badgeTodas'); if (bt) bt.textContent = n;
+    }
+    function setNotifTab(tipo, btn) {
+        document.querySelectorAll('.notif-tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.notif-item').forEach(i => {
+            i.style.display = (tipo === 'todas' || i.dataset.tipo === tipo) ? '' : 'none';
+        });
+    }
+</script>
+</body>
+</html>

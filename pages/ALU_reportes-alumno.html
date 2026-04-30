@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SIARHA | Reportar Problema</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/siarha.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root{--primario:#501013;--primario-dk:#3a0b0e;--primario-lt:#f7eaea;--primario-mid:#7a1820;--dorado:#C9A24D;--dorado-lt:#fdf6e3;--bg:#F2F4F8;--card-bg:#ffffff;--text:#1F2933;--muted:#6b7280;--border:#E5E7EB;--radius-card:18px;--radius-sm:10px;--shadow:0 2px 16px rgba(80,16,19,.08);--shadow-hover:0 6px 28px rgba(80,16,19,.15);}
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+        .navbar-custom{background:var(--primario);padding:0 1.5rem;height:70px;box-shadow:0 2px 16px rgba(0,0,0,.15);position:sticky;top:0;z-index:1050;display:flex;align-items:center;}
+        .brand-text{font-size:1.5rem;font-weight:800;letter-spacing:.04em;line-height:1;}
+        .navbar-subtitle{font-size:.7rem;font-weight:500;opacity:.85;}
+        .navbar-toggler{border:none;color:#fff;font-size:1.25rem;padding:.4rem .6rem;border-radius:var(--radius-sm);background:rgba(255,255,255,.12);transition:background .2s;}
+        .navbar-toggler:hover{background:rgba(255,255,255,.22);}
+        .offcanvas-custom{background:var(--primario-dk);color:#fff;width:280px!important;border-radius:var(--radius-card) 0 0 var(--radius-card);}
+        .offcanvas-custom .offcanvas-header{border-color:rgba(255,255,255,.12)!important;padding:1.25rem 1.5rem;}
+        .offcanvas-custom .nav-link{color:rgba(255,255,255,.8);font-weight:500;font-size:.9rem;padding:.65rem 1rem;border-radius:var(--radius-sm);display:flex;align-items:center;gap:.6rem;transition:background .2s,color .2s;}
+        .offcanvas-custom .nav-link:hover,.offcanvas-custom .nav-link.active{background:rgba(255,255,255,.12);color:#fff;}
+        .offcanvas-custom .nav-link.active{font-weight:700;}
+        .offcanvas-custom .nav-link.danger{color:#ff9090!important;}
+        .offcanvas-custom .nav-link.danger:hover{background:rgba(255,80,80,.15);}
+        .menu-divider{border-color:rgba(255,255,255,.12);margin:.5rem 0;}
+        main{flex:1;padding:1.75rem 1.5rem;max-width:820px;width:100%;margin:0 auto;}
+        .btn-back{display:inline-flex;align-items:center;gap:.4rem;font-size:.83rem;font-weight:600;color:var(--muted);background:var(--card-bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.45rem .9rem;text-decoration:none;margin-bottom:1.4rem;transition:border-color .2s,color .2s,background .2s;}
+        .btn-back:hover{border-color:var(--primario);color:var(--primario);background:var(--primario-lt);}
+        .section-card{background:var(--card-bg);border-radius:var(--radius-card);box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden;margin-bottom:1.4rem;}
+        .section-header{padding:1rem 1.4rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+        .section-header .title{font-weight:700;font-size:.95rem;display:flex;align-items:center;gap:.5rem;color:var(--primario);}
+        .section-body{padding:1.4rem;}
+        .form-label-sm{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.35rem;display:block;}
+        .form-field{border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.55rem .9rem;font-size:.88rem;font-family:inherit;color:var(--text);background:#fff;width:100%;outline:none;transition:border-color .2s,box-shadow .2s;}
+        .form-field:focus{border-color:var(--primario);box-shadow:0 0 0 3px rgba(80,16,19,.1);}
+        textarea.form-field{resize:vertical;min-height:120px;}
+        .form-field:disabled{background:var(--bg);color:var(--muted);}
+
+        
+        .dest-btn .d-title{font-size:.86rem;font-weight:700;color:var(--text);margin-bottom:.15rem;}
+        .dest-btn .d-sub{font-size:.74rem;color:var(--muted);}
+
+        /* SEVERIDAD */
+        .sev-wrap{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.4rem;}
+        .sev-btn{border:1.5px solid var(--border);background:#fff;border-radius:20px;font-size:.8rem;font-weight:600;padding:.32rem .85rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.35rem;}
+        .sev-btn:hover{border-color:var(--primario);}
+        .sev-btn.baja.selected{border-color:#22c55e;background:#f0fdf4;color:#15803d;}
+        .sev-btn.media.selected{border-color:#f59e0b;background:#fffbeb;color:#b45309;}
+        .sev-btn.alta.selected{border-color:#ef4444;background:#fef2f2;color:#991b1b;}
+
+        /* UPLOAD */
+        .upload-zone{border:2px dashed var(--border);border-radius:var(--radius-sm);padding:1.2rem;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;background:var(--bg);position:relative;}
+        .upload-zone:hover{border-color:var(--primario);background:var(--primario-lt);}
+        .upload-zone input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+        .upload-zone i{font-size:1.6rem;color:var(--muted);margin-bottom:.35rem;display:block;}
+        .upload-zone span{font-size:.8rem;color:var(--muted);font-weight:500;}
+
+        /* HISTORIAL */
+        .rep-item{padding:.9rem 1.4rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:.85rem;}
+        .rep-item:last-child{border-bottom:none;}
+        .rep-icon{width:36px;height:36px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.95rem;}
+        .rep-icon.dir{background:var(--primario-lt);color:var(--primario);}
+        .rep-icon.ur {background:var(--dorado-lt);color:#7a5a00;}
+        .rep-asunto{font-size:.85rem;font-weight:700;color:var(--text);}
+        .rep-meta{font-size:.75rem;color:var(--muted);margin-top:.1rem;}
+        .rep-preview{font-size:.8rem;color:var(--muted);margin-top:.25rem;line-height:1.5;}
+        .badge-proceso{background:var(--primario-lt);color:var(--primario);border-radius:20px;font-size:.71rem;font-weight:700;padding:.2rem .6rem;}
+        .badge-resuelto{background:var(--dorado-lt);color:#7a5a00;border-radius:20px;font-size:.71rem;font-weight:700;padding:.2rem .6rem;border:1px solid var(--dorado);}
+        .badge-alta-sev{background:#fee2e2;color:#991b1b;border-radius:20px;font-size:.71rem;font-weight:700;padding:.2rem .6rem;}
+        .badge-media-sev{background:#fffbeb;color:#b45309;border-radius:20px;font-size:.71rem;font-weight:700;padding:.2rem .6rem;}
+
+        /* AVISO */
+        .aviso-box{background:var(--dorado-lt);border:1px solid rgba(201,162,77,.3);border-radius:var(--radius-sm);padding:.8rem 1rem;font-size:.82rem;color:#7a5a00;display:flex;align-items:flex-start;gap:.6rem;margin-bottom:1.4rem;}
+
+        .btn-send{background:var(--primario);color:#fff;border:none;border-radius:var(--radius-sm);font-weight:700;font-size:.9rem;padding:.65rem 1.5rem;display:inline-flex;align-items:center;gap:.45rem;cursor:pointer;transition:background .2s,transform .15s;box-shadow:0 4px 14px rgba(80,16,19,.2);}
+        .btn-send:hover{background:var(--primario-dk);transform:translateY(-1px);}
+        .toast-custom{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--primario);color:#fff;border-radius:var(--radius-sm);padding:.9rem 1.3rem;display:flex;align-items:center;gap:.6rem;font-size:.85rem;font-weight:600;box-shadow:0 8px 24px rgba(80,16,19,.25);transform:translateY(80px);opacity:0;transition:transform .35s ease,opacity .35s ease;z-index:9999;}
+        .toast-custom.show{transform:translateY(0);opacity:1;}
+        .footer-custom{background:var(--primario);color:rgba(255,255,255,.7);text-align:center;padding:.75rem;font-size:.75rem;}
+        @media(max-width:767px){main{padding:1.25rem 1rem;}.dest-toggle{flex-direction:column;}}
+
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar-custom w-100">
+    <div class="container-fluid d-flex align-items-center" style="height:70px;">
+        <div class="d-flex align-items-center gap-2">
+            <a href="https://www.uaeh.edu.mx" target="_blank" rel="noopener noreferrer"><img src="../assets/img/Logo_Login.svg" alt="Logo" height="46"></a>
+            <div class="d-flex flex-column">
+                <span class="brand-text text-white">SIARHA</span>
+                <span class="navbar-subtitle text-white d-none d-md-block">Dirección de Servicio Social y Prácticas Profesionales</span>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-2 ms-auto">
+            <div class="d-none d-md-flex align-items-center gap-2 text-white" style="font-size:.83rem;font-weight:600;opacity:.9;">
+                <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;"><i class="bi bi-person-fill"></i></div>
+                <span>Juan Pérez</span>
+            </div>
+                        <button class="notif-btn" id="btnNotif" onclick="toggleNotif()" title="Notificaciones">
+                <i class="bi bi-bell-fill"></i>
+                <span class="notif-count" id="notifCount">4</span>
+            </button>
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuAlumno"><i class="bi bi-list"></i></button>
+        </div>
+    </div>
+</nav>
+
+<div class="offcanvas offcanvas-end offcanvas-custom" tabindex="-1" id="menuAlumno">
+    <div class="offcanvas-header">
+        <div class="d-flex align-items-center gap-2">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;"><i class="bi bi-person-fill"></i></div>
+            <div><div style="font-weight:700;font-size:.9rem;">Juan Pérez</div><div style="font-size:.72rem;opacity:.7;">Prácticas Profesionales</div></div>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="navbar-nav gap-1">
+            <li><a class="nav-link" href="ALU_dashboard-alumno.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
+            <li><a class="nav-link" href="ALU_perfil-alumno.html"><i class="bi bi-person-circle"></i> Mi perfil</a></li>
+            <li><a class="nav-link" href="ALU_registro-horas.html"><i class="bi bi-journal-plus"></i> Registrar horas</a></li>
+            <li><a class="nav-link" href="ALU_contactar-ur.html"><i class="bi bi-building"></i> Chat con mi UR</a></li>
+            <li><a class="nav-link" href="ALU_contactar-direccion.html"><i class="bi bi-person-badge-fill"></i> Chat con mi Responsable</a></li>
+            <li><a class="nav-link active" href="ALU_reportes-alumno.html"><i class="bi bi-flag-fill"></i> Reportar problema</a></li>
+            <hr class="menu-divider">
+            <li><a class="nav-link danger" href="../index.html"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
+        </ul>
+    </div>
+</div>
+
+<main>
+    <a href="ALU_dashboard-alumno.html" class="btn-back"><i class="bi bi-arrow-left"></i> Volver al inicio</a>
+
+    <div style="margin-bottom:1.4rem;">
+        <h4 style="font-size:1.3rem;font-weight:800;margin:0;">Reportar un problema</h4>
+        <p style="font-size:.8rem;color:var(--muted);margin-top:.25rem;">Reporta cualquier incidencia relacionada con tu programa. Tu reporte llegará al destinatario que elijas.</p>
+    </div>
+
+    <div class="aviso-box">
+        <i class="bi bi-info-circle-fill" style="flex-shrink:0;margin-top:.05rem;"></i>
+        <span>Los reportes son <strong>confidenciales</strong>. Solo el destinatario y la administración del sistema tendrán acceso a tu reporte.</span>
+    </div>
+
+    <!-- FORMULARIO -->
+    <div class="section-card">
+        <div class="section-header">
+            <span class="title"><i class="bi bi-flag-fill"></i> Nuevo reporte</span>
+        </div>
+        <div class="section-body">
+            <form id="formReporte" novalidate>
+
+                
+                <!-- DESTINATARIO: fijo a Dirección, no se elige -->
+                <div class="mb-4">
+                    <label class="form-label-sm">Destinatario</label>
+                    <div style="background:var(--primario-lt);border:1px solid rgba(80,16,19,.15);border-radius:var(--radius-card);padding:1rem 1.2rem;display:flex;align-items:flex-start;gap:.9rem;">
+                        <div style="width:44px;height:44px;border-radius:12px;background:var(--primario);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;"><i class="bi bi-bank2"></i></div>
+                        <div>
+                            <div style="font-size:.9rem;font-weight:800;color:var(--text);margin-bottom:.2rem;">Coordinación de Reportes · Dirección SSPP</div>
+                            <div style="font-size:.78rem;color:var(--muted);line-height:1.5;">Tu reporte es confidencial y será atendido por el Coordinador de Reportes. Para dudas del día a día usa el <a href="ALU_contactar-ur.html" style="color:var(--primario);font-weight:700;">chat con tu UR</a> o el <a href="ALU_contactar-direccion.html" style="color:var(--primario);font-weight:700;">chat con tu Responsable de Área</a>.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="hidden" id="destinatario" value="dir">
+
+                <!-- TIPO -->
+                <div class="mb-3">
+                    <label class="form-label-sm">Tipo de problema <span style="color:var(--primario);">*</span></label>
+                    <select id="tipoProblema" class="form-field">
+                        <option value="">Selecciona un tipo…</option>
+                        <optgroup label="— Problemas administrativos">
+                            <option>Error en mis horas registradas en el sistema</option>
+                            <option>Problema con mi cuenta o acceso al sistema</option>
+                            <option>Documentación incompleta o incorrecta</option>
+                            <option>Solicitud de cambio de Unidad Receptora</option>
+                            <option>Problema no resuelto por mi Responsable de Área</option>
+                        </optgroup>
+                        <optgroup label="— Problemas graves con la UR">
+                            <option>Trato inadecuado o acoso por parte de la UR</option>
+                            <option>Actividades no relacionadas al programa</option>
+                            <option>Ambiente de trabajo inadecuado o inseguro</option>
+                            <option>La UR no valida mis registros de horas</option>
+                            <option>Incumplimiento grave del convenio institucional</option>
+                        </optgroup>
+                        <optgroup label="— Otros">
+                            <option>Falla técnica del sistema SIARHA</option>
+                            <option>Otro problema no listado</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <!-- SEVERIDAD -->
+                <div class="mb-3">
+                    <label class="form-label-sm">Severidad</label>
+                    <div class="sev-wrap">
+                        <button type="button" class="sev-btn baja" onclick="selSev(this,'baja')">
+                            <i class="bi bi-circle-fill" style="font-size:.55rem;color:#22c55e;"></i> Baja
+                        </button>
+                        <button type="button" class="sev-btn media" onclick="selSev(this,'media')">
+                            <i class="bi bi-circle-fill" style="font-size:.55rem;color:#f59e0b;"></i> Media
+                        </button>
+                        <button type="button" class="sev-btn alta" onclick="selSev(this,'alta')">
+                            <i class="bi bi-circle-fill" style="font-size:.55rem;color:#ef4444;"></i> Alta — requiere atención urgente
+                        </button>
+                    </div>
+                    <input type="hidden" id="severidad">
+                </div>
+
+                <!-- DESCRIPCIÓN -->
+                <div class="mb-3">
+                    <label class="form-label-sm">Descripción del problema <span style="color:var(--primario);">*</span></label>
+                    <textarea id="descripcion" class="form-field" placeholder="Describe el problema con el mayor detalle posible: qué ocurrió, cuándo, quién estuvo involucrado y cómo te afecta…"></textarea>
+                </div>
+
+                <!-- EVIDENCIA -->
+                <div class="mb-4">
+                    <label class="form-label-sm">Evidencia <span style="color:#9ca3af;">(opcional)</span></label>
+                    <div class="upload-zone" id="uploadZone">
+                        <input type="file" accept=".pdf,.jpg,.jpeg,.png,.mp4" onchange="mostrarArchivo(this)">
+                        <i class="bi bi-cloud-arrow-up"></i>
+                        <span id="uploadLabel">Arrastra un archivo o haz clic para seleccionar</span>
+                        <div style="font-size:.72rem;color:#9ca3af;margin-top:.2rem;">PDF, JPG, PNG o video · Máx. 10 MB</div>
+                    </div>
+                </div>
+
+                <div id="errorMsg" style="font-size:.8rem;color:#991b1b;font-weight:600;margin-bottom:.75rem;display:none;">
+                    <i class="bi bi-exclamation-circle-fill me-1"></i><span id="errorTxt"></span>
+                </div>
+                <button type="submit" class="btn-send"><i class="bi bi-flag-fill"></i> Enviar reporte</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- HISTORIAL REPORTES -->
+    <div class="section-card">
+        <div class="section-header">
+            <span class="title"><i class="bi bi-clock-history"></i> Mis reportes anteriores</span>
+        </div>
+
+        <div class="rep-item">
+            <div class="rep-icon dir"><i class="bi bi-bank2"></i></div>
+            <div style="flex:1;">
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <span class="rep-asunto">Error en mis horas registradas</span>
+                    <span class="badge-proceso">En proceso</span>
+                    <span class="badge-media-sev">Severidad media</span>
+                </div>
+                <div class="rep-meta">Hacia: Dirección SSPP · 20 feb 2026</div>
+                <div class="rep-preview">Mis horas del 10 de febrero no aparecen en mi bitácora a pesar de haberlas registrado correctamente…</div>
+            </div>
+        </div>
+
+        <div class="rep-item">
+            <div class="rep-icon dir"><i class="bi bi-bank2"></i></div>
+            <div style="flex:1;">
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <span class="rep-asunto">Actividades no relacionadas al programa</span>
+                    <span class="badge-resuelto">Resuelto</span>
+                    <span class="badge-alta-sev">Severidad alta</span>
+                </div>
+                <div class="rep-meta">Hacia: Dirección SSPP · 05 ene 2026</div>
+                <div class="rep-preview">Me fueron asignadas actividades de limpieza que no corresponden a mi perfil de prácticas profesionales…</div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="toast-custom" id="toastOk"><i class="bi bi-check-circle-fill" style="font-size:1.1rem;"></i> Reporte enviado. Recibirás una notificación con la respuesta.</div>
+
+<footer class="footer-custom">© 2026 SIARHA · Uso exclusivo institucional · UAEH</footer>
+
+<!-- ══ PANEL NOTIFICACIONES ══ -->
+<div class="notif-overlay" id="notifOverlay" onclick="cerrarNotif()"></div>
+<div class="notif-panel" id="notifPanel">
+    <div class="notif-header">
+        <h6><i class="bi bi-bell-fill me-2"></i>Notificaciones</h6>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn-mark-all" onclick="marcarTodasLeidas()">Marcar leídas</button>
+            <button class="btn-close-notif" onclick="cerrarNotif()"><i class="bi bi-x-lg"></i></button>
+        </div>
+    </div>
+    <div class="notif-tabs">
+        <button class="notif-tab active" onclick="setNotifTab('todas',this)">Todas <span id="badgeTodas" style="background:#501013;color:#fff;border-radius:20px;font-size:.65rem;padding:.08rem .45rem;margin-left:.25rem;">4</span></button>
+        <button class="notif-tab" onclick="setNotifTab('ni-ap',this)">Horas</button>
+        <button class="notif-tab" onclick="setNotifTab('ni-msg',this)">Mensajes</button>
+        <button class="notif-tab" onclick="setNotifTab('ni-sis',this)">Sistema</button>
+    </div>
+    <div class="notif-list" id="notifList">
+        <div class="notif-item unread" data-tipo="ni-ap" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-ap"><i class="bi bi-check-circle-fill"></i></div>
+            <div><div class="notif-title">Registro aprobado ✓</div><div class="notif-desc">Jornada del 03 feb aprobada por Hospital General</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 20 min</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-ap" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-re"><i class="bi bi-x-circle-fill"></i></div>
+            <div><div class="notif-title">Registro rechazado</div><div class="notif-desc">Jornada del 04 feb — Revisa el motivo y corrígelo</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 1 hora</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-msg" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div>
+            <div><div class="notif-title">Respuesta de tu UR</div><div class="notif-desc">Dr. Martínez respondió tu mensaje sobre actividades</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 3 horas</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-sis" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-rec"><i class="bi bi-exclamation-circle-fill"></i></div>
+            <div><div class="notif-title">Recordatorio de registro</div><div class="notif-desc">Llevas 3 días sin registrar horas — ¿Todo bien?</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hoy, 9:00 a.m.</div></div>
+        </div>
+        <div class="notif-item" data-tipo="ni-sis" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-sis"><i class="bi bi-info-circle-fill"></i></div>
+            <div><div class="notif-title">Avance del 10% alcanzado</div><div class="notif-desc">¡Buen inicio! Llevas 24 de 240 horas</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer</div></div>
+        </div>
+    </div>
+    <div class="notif-footer"><a href="ALU_dashboard-alumno.html">Ver todo →</a></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function selDest(el, tipo) {
+        document.querySelectorAll('.dest-btn').forEach(b=>b.classList.remove('selected'));
+        el.classList.add('selected');
+        document.getElementById('destinatario').value = tipo;
+    }
+    function selSev(el, nivel) {
+        document.querySelectorAll('.sev-btn').forEach(b=>b.classList.remove('selected'));
+        el.classList.add('selected');
+        document.getElementById('severidad').value = nivel;
+    }
+    function mostrarArchivo(input) {
+        if(input.files && input.files[0]){
+            const f=input.files[0], kb=(f.size/1024).toFixed(0);
+            document.getElementById('uploadLabel').innerHTML=`<strong style="color:var(--primario);">${f.name}</strong> · ${kb} KB`;
+            document.getElementById('uploadZone').style.borderColor='var(--primario)';
+            document.getElementById('uploadZone').style.background='var(--primario-lt)';
+        }
+    }
+    document.getElementById('formReporte').addEventListener('submit', e => {
+        e.preventDefault();
+        const dest  = document.getElementById('destinatario').value;
+        const tipo  = document.getElementById('tipoProblema').value;
+        const desc  = document.getElementById('descripcion').value.trim();
+        const err   = document.getElementById('errorMsg');
+        const errTxt= document.getElementById('errorTxt');
+        err.style.display='none';
+        // destinatario fijo: siempre va a dirección
+        if(!tipo){ errTxt.textContent='Selecciona el tipo de problema.'; err.style.display='block'; return; }
+        if(desc.length<20){ errTxt.textContent='La descripción debe tener al menos 20 caracteres.'; err.style.display='block'; return; }
+        const t=document.getElementById('toastOk');
+        t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3800);
+        document.getElementById('formReporte').reset();
+        document.querySelectorAll('.dest-btn,.sev-btn').forEach(b=>b.classList.remove('selected'));
+        document.getElementById('uploadLabel').textContent='Arrastra un archivo o haz clic para seleccionar';
+        document.getElementById('uploadZone').style.borderColor='';
+        document.getElementById('uploadZone').style.background='';
+    });
+
+    // ══ NOTIFICACIONES ══════════════════════════════════════════════
+    let _nOpen=false;
+    function toggleNotif(){_nOpen?cerrarNotif():abrirNotif();}
+    function abrirNotif(){document.getElementById('notifPanel').classList.add('open');document.getElementById('notifOverlay').classList.add('open');_nOpen=true;}
+    function cerrarNotif(){document.getElementById('notifPanel').classList.remove('open');document.getElementById('notifOverlay').classList.remove('open');_nOpen=false;}
+    function marcarLeida(item){if(!item.classList.contains('unread'))return;item.classList.remove('unread');_badge();}
+    function marcarTodasLeidas(){document.querySelectorAll('.notif-item.unread').forEach(i=>i.classList.remove('unread'));_badge();}
+    function _badge(){const n=document.querySelectorAll('.notif-item.unread').length;const b=document.getElementById('notifCount');if(b){b.textContent=n;b.style.display=n>0?'flex':'none';}const bt=document.getElementById('badgeTodas');if(bt)bt.textContent=n;}
+    function setNotifTab(tipo,btn){document.querySelectorAll('.notif-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.notif-item').forEach(i=>{i.style.display=(tipo==='todas'||i.dataset.tipo===tipo)?'':'none';});}
+    // ════════════════════════════════════════════════════════════════
+
+</script>
+</body>
+</html>

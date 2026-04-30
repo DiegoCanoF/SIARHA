@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SIARHA | Mensajes – Unidad Receptora</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/siarha.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primario:     #501013;
+            --primario-dk:  #3a0b0e;
+            --primario-lt:  #f7eaea;
+            --primario-mid: #7a1820;
+            --dorado:       #C9A24D;
+            --dorado-lt:    #fdf6e3;
+            --bg:           #F2F4F8;
+            --card-bg:      #ffffff;
+            --text:         #1F2933;
+            --muted:        #6b7280;
+            --border:       #E5E7EB;
+            --radius-card:  18px;
+            --radius-sm:    10px;
+            --shadow:       0 2px 16px rgba(80,16,19,.08);
+            --shadow-hover: 0 6px 28px rgba(80,16,19,.15);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar-custom { background: var(--primario); padding: 0 1.5rem; height: 70px; box-shadow: 0 2px 16px rgba(0,0,0,.15); position: sticky; top: 0; z-index: 1050; display: flex; align-items: center; }
+        .brand-text { font-size: 1.5rem; font-weight: 800; letter-spacing: .04em; line-height: 1; }
+        .navbar-subtitle { font-size: .7rem; font-weight: 500; opacity: .85; }
+        .navbar-toggler { border: none; color: #fff; font-size: 1.25rem; padding: .4rem .6rem; border-radius: var(--radius-sm); background: rgba(255,255,255,.12); transition: background .2s; }
+        .navbar-toggler:hover { background: rgba(255,255,255,.22); }
+
+        /* ── OFFCANVAS ── */
+        .offcanvas-custom { background: var(--primario-dk); color: #fff; width: 280px !important; border-radius: var(--radius-card) 0 0 var(--radius-card); }
+        .offcanvas-custom .offcanvas-header { border-color: rgba(255,255,255,.12) !important; padding: 1.25rem 1.5rem; }
+        .offcanvas-custom .nav-link { color: rgba(255,255,255,.8); font-weight: 500; font-size: .9rem; padding: .65rem 1rem; border-radius: var(--radius-sm); display: flex; align-items: center; gap: .6rem; transition: background .2s, color .2s; }
+        .offcanvas-custom .nav-link:hover,
+        .offcanvas-custom .nav-link.active { background: rgba(255,255,255,.12); color: #fff; }
+        .offcanvas-custom .nav-link.active { font-weight: 700; }
+        .offcanvas-custom .nav-link.danger { color: #ff9090 !important; }
+        .offcanvas-custom .nav-link.danger:hover { background: rgba(255,80,80,.15); }
+        .menu-divider { border-color: rgba(255,255,255,.12); margin: .5rem 0; }
+        .menu-badge { margin-left: auto; background: var(--dorado); color: #fff; font-size: .68rem; font-weight: 800; border-radius: 20px; padding: .1rem .55rem; }
+
+        /* ── MAIN ── */
+        main { flex: 1; padding: 1.75rem 1.5rem; max-width: 1200px; width: 100%; margin: 0 auto; }
+
+        /* ── LAYOUT CHAT ── */
+        .chat-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 0;
+            background: var(--card-bg);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            height: calc(100vh - 200px);
+            min-height: 520px;
+        }
+
+        /* ── SIDEBAR ── */
+        .chat-sidebar {
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .sidebar-header {
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg);
+            flex-shrink: 0;
+        }
+        .sidebar-header h6 { font-size: .9rem; font-weight: 800; margin: 0 0 .6rem; color: var(--text); }
+        .search-input {
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: .45rem .8rem;
+            font-size: .82rem;
+            font-family: inherit;
+            color: var(--text);
+            background: #fff;
+            width: 100%;
+            outline: none;
+            transition: border-color .2s;
+        }
+        .search-input:focus { border-color: var(--primario); }
+
+        .contact-list { overflow-y: auto; flex: 1; }
+
+        .contact-item {
+            padding: .85rem 1.2rem;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: flex-start;
+            gap: .75rem;
+            transition: background .15s;
+            position: relative;
+        }
+        .contact-item:hover { background: var(--bg); }
+        .contact-item.active { background: var(--primario-lt); }
+        .contact-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 3px;
+            background: var(--primario);
+        }
+
+        .contact-avatar {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--primario); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: .8rem; font-weight: 800; flex-shrink: 0;
+        }
+        .contact-avatar.unread { background: var(--primario-mid); box-shadow: 0 0 0 3px var(--primario-lt); }
+
+        .contact-name { font-size: .84rem; font-weight: 700; color: var(--text); }
+        .contact-preview { font-size: .75rem; color: var(--muted); margin-top: .1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 170px; }
+        .contact-time { font-size: .7rem; color: var(--muted); white-space: nowrap; }
+        .unread-badge { background: var(--primario); color: #fff; border-radius: 50%; width: 18px; height: 18px; font-size: .65rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+        /* ── PANEL CHAT ── */
+        .chat-main {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: .9rem 1.4rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: .85rem;
+            background: #fff;
+            flex-shrink: 0;
+        }
+        .chat-header-avatar {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--primario); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: .85rem; font-weight: 800; flex-shrink: 0;
+        }
+        .chat-header-name { font-weight: 800; font-size: .92rem; }
+        .chat-header-sub { font-size: .74rem; color: var(--muted); }
+
+        /* badge programa en header */
+        .badge-ss-sm { background: var(--primario-lt); color: var(--primario); border-radius: 20px; font-size: .68rem; font-weight: 700; padding: .15rem .5rem; border: 1px solid rgba(80,16,19,.15); }
+        .badge-pp-sm { background: var(--dorado-lt); color: #7a5a00; border-radius: 20px; font-size: .68rem; font-weight: 700; padding: .15rem .5rem; border: 1px solid rgba(201,162,77,.3); }
+
+        /* ── HILO MENSAJES ── */
+        .chat-thread {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.25rem 1.4rem;
+            display: flex;
+            flex-direction: column;
+            gap: .9rem;
+            background: var(--bg);
+        }
+
+        /* separador de fecha */
+        .date-sep {
+            text-align: center;
+            font-size: .72rem;
+            color: var(--muted);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+        }
+        .date-sep::before, .date-sep::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+        .msg-bubble {
+            max-width: 70%;
+            padding: .75rem 1rem;
+            border-radius: 14px;
+            font-size: .84rem;
+            line-height: 1.55;
+            position: relative;
+        }
+        .msg-bubble.recv {
+            background: #fff;
+            border: 1px solid var(--border);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        .msg-bubble.sent {
+            background: var(--primario);
+            color: #fff;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        .msg-meta {
+            font-size: .68rem;
+            margin-top: .3rem;
+            opacity: .65;
+        }
+        .msg-bubble.recv .msg-meta { color: var(--muted); }
+        .msg-bubble.sent .msg-meta { color: rgba(255,255,255,.8); }
+
+        /* archivo adjunto en burbuja */
+        .msg-attachment {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            background: rgba(0,0,0,.06);
+            border-radius: 8px;
+            padding: .45rem .7rem;
+            margin-top: .5rem;
+            font-size: .78rem;
+        }
+        .msg-bubble.sent .msg-attachment { background: rgba(255,255,255,.15); color: rgba(255,255,255,.9); }
+
+        /* ── COMPOSE ── */
+        .chat-compose {
+            border-top: 1px solid var(--border);
+            padding: .9rem 1.2rem;
+            background: #fff;
+            flex-shrink: 0;
+        }
+        .compose-inner {
+            display: flex;
+            gap: .6rem;
+            align-items: flex-end;
+        }
+        .compose-textarea {
+            flex: 1;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: .55rem .85rem;
+            font-size: .84rem;
+            font-family: inherit;
+            resize: none;
+            outline: none;
+            min-height: 44px;
+            max-height: 120px;
+            transition: border-color .2s;
+            line-height: 1.5;
+        }
+        .compose-textarea:focus { border-color: var(--primario); box-shadow: 0 0 0 3px rgba(80,16,19,.08); }
+
+        .btn-send-msg {
+            background: var(--primario);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: background .2s;
+            font-size: 1rem;
+        }
+        .btn-send-msg:hover { background: var(--primario-dk); }
+
+        .btn-attach {
+            border: 1.5px solid var(--border);
+            background: #fff;
+            color: var(--muted);
+            border-radius: var(--radius-sm);
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: border-color .2s, color .2s;
+            font-size: 1rem;
+        }
+        .btn-attach:hover { border-color: var(--primario); color: var(--primario); }
+
+        .compose-hint { font-size: .72rem; color: var(--muted); margin-top: .4rem; }
+
+        /* ── EMPTY CHAT ── */
+        .chat-empty {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            background: var(--bg);
+            gap: .5rem;
+        }
+        .chat-empty i { font-size: 2.5rem; opacity: .3; }
+        .chat-empty p { font-size: .85rem; font-weight: 500; }
+
+        /* ── TOAST ── */
+        .toast-custom { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--primario); color: #fff; border-radius: var(--radius-sm); padding: .9rem 1.3rem; display: flex; align-items: center; gap: .6rem; font-size: .85rem; font-weight: 600; box-shadow: 0 8px 24px rgba(80,16,19,.25); transform: translateY(80px); opacity: 0; transition: transform .35s ease, opacity .35s ease; z-index: 9999; }
+        .toast-custom.show { transform: translateY(0); opacity: 1; }
+
+        /* ── FOOTER ── */
+        .footer-custom { background: var(--primario); color: rgba(255,255,255,.7); text-align: center; padding: .75rem; font-size: .75rem; }
+
+        @media (max-width: 767px) {
+            main { padding: 1rem; }
+            .chat-layout { grid-template-columns: 1fr; height: auto; min-height: unset; }
+            .chat-sidebar { height: 260px; border-right: none; border-bottom: 1px solid var(--border); }
+            .chat-main { height: 460px; }
+        }
+    
+        /* ══ NOTIFICACIONES ══ */
+        .notif-btn{position:relative;background:rgba(255,255,255,.12);border:none;color:#fff;width:40px;height:40px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;transition:background .2s;flex-shrink:0;}
+        .notif-btn:hover{background:rgba(255,255,255,.22);}
+        .notif-count{position:absolute;top:4px;right:4px;background:var(--dorado);color:#fff;font-size:.58rem;font-weight:800;border-radius:20px;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0 .25rem;border:1.5px solid var(--primario);}
+        .notif-panel{position:fixed;top:70px;right:0;width:360px;max-height:calc(100vh - 80px);background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-card) 0 0 var(--radius-card);box-shadow:-4px 8px 32px rgba(80,16,19,.18);z-index:1049;display:flex;flex-direction:column;transform:translateX(110%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow:hidden;}
+        .notif-panel.open{transform:translateX(0);}
+        .notif-header{padding:1rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--primario);color:#fff;flex-shrink:0;}
+        .notif-header h6{font-size:.92rem;font-weight:800;margin:0;}
+        .btn-mark-all{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.8);background:rgba(255,255,255,.12);border:none;border-radius:20px;padding:.2rem .7rem;cursor:pointer;transition:background .2s;}
+        .btn-mark-all:hover{background:rgba(255,255,255,.22);}
+        .btn-close-notif{background:none;border:none;color:rgba(255,255,255,.7);font-size:1rem;cursor:pointer;padding:.2rem;display:flex;align-items:center;justify-content:center;border-radius:6px;transition:color .2s;}
+        .btn-close-notif:hover{color:#fff;}
+        .notif-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;}
+        .notif-tab{flex:1;padding:.6rem;font-size:.8rem;font-weight:700;color:var(--muted);border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;text-align:center;}
+        .notif-tab.active{color:var(--primario);border-bottom-color:var(--primario);}
+        .notif-list{overflow-y:auto;flex:1;}
+        .notif-item{padding:.9rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:.75rem;cursor:pointer;transition:background .15s;position:relative;}
+        .notif-item:hover{background:var(--bg);}
+        .notif-item.unread{background:var(--primario-lt);}
+        .notif-item.unread::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--primario);}
+        .notif-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+        .ni-ap{background:#d1fae5;color:#065f46;} .ni-re{background:#fee2e2;color:#991b1b;} .ni-msg{background:#dbeafe;color:#1e40af;} .ni-sis{background:var(--primario-lt);color:var(--primario);} .ni-rec{background:var(--dorado-lt);color:#7a5a00;}
+        .notif-title{font-size:.83rem;font-weight:700;color:var(--text);margin-bottom:.15rem;}
+        .notif-item.unread .notif-title{color:var(--primario);}
+        .notif-desc{font-size:.76rem;color:var(--muted);line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .notif-time{font-size:.68rem;color:var(--muted);margin-top:.3rem;font-weight:500;}
+        .notif-footer{padding:.75rem 1.2rem;border-top:1px solid var(--border);text-align:center;flex-shrink:0;}
+        .notif-footer a{font-size:.8rem;font-weight:700;color:var(--primario);text-decoration:none;}
+        .notif-footer a:hover{text-decoration:underline;}
+        .notif-overlay{display:none;position:fixed;inset:0;z-index:1048;}
+        .notif-overlay.open{display:block;}
+        @media(max-width:480px){.notif-panel{width:100%;border-radius:0;}}
+
+    </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar-custom w-100">
+    <div class="container-fluid d-flex align-items-center" style="height:70px;">
+        <div class="d-flex align-items-center gap-2">
+            <a href="https://www.uaeh.edu.mx" target="_blank" rel="noopener noreferrer">
+                <img src="../assets/img/Logo_Login.svg" alt="Logo SIARHA" height="46">
+            </a>
+            <div class="d-flex flex-column">
+                <span class="brand-text text-white">SIARHA</span>
+                <span class="navbar-subtitle text-white d-none d-md-block">Dirección de Servicio Social y Prácticas Profesionales</span>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-2 ms-auto">
+            <div class="d-none d-md-flex align-items-center gap-2 text-white" style="font-size:.83rem;font-weight:600;opacity:.9;">
+                <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;">
+                    <i class="bi bi-building-fill"></i>
+                </div>
+                <span>Hospital General</span>
+            </div>
+                        <button class="notif-btn" id="btnNotif" onclick="toggleNotif()" title="Notificaciones">
+                <i class="bi bi-bell-fill"></i>
+                <span class="notif-count" id="notifCount">5</span>
+            </button>
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuUR" aria-label="Abrir menú">
+                <i class="bi bi-list"></i>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- ── OFFCANVAS ── -->
+<div class="offcanvas offcanvas-end offcanvas-custom" tabindex="-1" id="menuUR">
+    <div class="offcanvas-header">
+        <div class="d-flex align-items-center gap-2">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;">
+                <i class="bi bi-building-fill"></i>
+            </div>
+            <div>
+                <div style="font-weight:700;font-size:.9rem;">Hospital General</div>
+                <div style="font-size:.72rem;opacity:.7;">Unidad Receptora</div>
+            </div>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="navbar-nav gap-1">
+            <li><a class="nav-link" href="UR_dashboard-ur.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
+            <li><a class="nav-link" href="UR_aprobaciones-ur.html"><i class="bi bi-people-fill"></i> Alumnos asignados <span class="menu-badge">4</span></a></li>
+            <li><a class="nav-link active" href="UR_mensajes-ur.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge">2</span></a></li>
+            <li><a class="nav-link" href="UR_reportes-ur.html"><i class="bi bi-bar-chart-fill"></i> Reportes generales</a></li>
+            <li><a class="nav-link" href="UR_reporte-ur-direccion.html"><i class="bi bi-flag-fill"></i> Reportar a Dirección</a></li>
+            <li><a class="nav-link" href="UR_perfil-ur.html"><i class="bi bi-gear-fill"></i> Configuración</a></li>
+            <hr class="menu-divider">
+            <li><a class="nav-link danger" href="../index.html"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
+        </ul>
+    </div>
+</div>
+
+<!-- ── MAIN ── -->
+<main>
+
+    <div style="margin-bottom:1.25rem;">
+        <h4 style="font-size:1.3rem;font-weight:800;margin:0;">Mensajes de alumnos</h4>
+        <p style="font-size:.8rem;color:var(--muted);margin-top:.25rem;">Bandeja de entrada · <strong style="color:var(--primario);">2 sin leer</strong></p>
+    </div>
+
+    <div class="chat-layout">
+
+        <!-- ── SIDEBAR CONTACTOS ── -->
+        <div class="chat-sidebar">
+            <div class="sidebar-header">
+                <h6>Conversaciones</h6>
+                <input type="text" class="search-input" placeholder="Buscar alumno…" oninput="filtrarContactos(this.value)">
+            </div>
+
+            <div class="contact-list" id="contactList">
+
+                <!-- Sin leer -->
+                <div class="contact-item active" onclick="abrirChat(this,'Juan Pérez García','JP','2020123456','Serv. Social','ss')">
+                    <div class="contact-avatar unread">JP</div>
+                    <div style="flex:1;min-width:0;">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="contact-name" style="color:var(--primario);">Juan Pérez García</span>
+                            <span class="contact-time">10:32</span>
+                        </div>
+                        <div class="contact-preview" style="color:var(--text);font-weight:600;">¿Qué actividades tendré asignadas…</div>
+                        <div style="margin-top:.3rem;"><span class="badge-ss-sm">Serv. Social</span></div>
+                    </div>
+                    <span class="unread-badge ms-1">1</span>
+                </div>
+
+                <div class="contact-item" onclick="abrirChat(this,'Ana López Ramírez','AL','2022233445','Prácticas Prof.','pp')">
+                    <div class="contact-avatar unread">AL</div>
+                    <div style="flex:1;min-width:0;">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="contact-name" style="color:var(--primario);">Ana López Ramírez</span>
+                            <span class="contact-time">09:15</span>
+                        </div>
+                        <div class="contact-preview" style="color:var(--text);font-weight:600;">Solicitud de carta de término</div>
+                        <div style="margin-top:.3rem;"><span class="badge-pp-sm">Prácticas Prof.</span></div>
+                    </div>
+                    <span class="unread-badge ms-1">1</span>
+                </div>
+
+                <!-- Leídos -->
+                <div class="contact-item" onclick="abrirChat(this,'María González López','MG','2021123478','Prácticas Prof.','pp')">
+                    <div class="contact-avatar">MG</div>
+                    <div style="flex:1;min-width:0;">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="contact-name">María González López</span>
+                            <span class="contact-time">Ayer</span>
+                        </div>
+                        <div class="contact-preview">Gracias, nos vemos el lunes puntual…</div>
+                        <div style="margin-top:.3rem;"><span class="badge-pp-sm">Prácticas Prof.</span></div>
+                    </div>
+                </div>
+
+                <div class="contact-item" onclick="abrirChat(this,'Carlos Ramírez Soto','CR','2020987654','Serv. Social','ss')">
+                    <div class="contact-avatar">CR</div>
+                    <div style="flex:1;min-width:0;">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="contact-name">Carlos Ramírez Soto</span>
+                            <span class="contact-time">20 feb</span>
+                        </div>
+                        <div class="contact-preview">Justificación de inasistencia recibida</div>
+                        <div style="margin-top:.3rem;"><span class="badge-ss-sm">Serv. Social</span></div>
+                    </div>
+                </div>
+
+                <div class="contact-item" onclick="abrirChat(this,'Daniel Torres Vega','DT','2021345678','Serv. Social','ss')">
+                    <div class="contact-avatar">DT</div>
+                    <div style="flex:1;min-width:0;">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="contact-name">Daniel Torres Vega</span>
+                            <span class="contact-time">18 feb</span>
+                        </div>
+                        <div class="contact-preview">Solicitud de cambio de horario</div>
+                        <div style="margin-top:.3rem;"><span class="badge-ss-sm">Serv. Social</span></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ── CHAT PRINCIPAL ── -->
+        <div class="chat-main">
+
+            <!-- Header del chat -->
+            <div class="chat-header" id="chatHeader">
+                <div class="chat-header-avatar" id="chatAvatar">JP</div>
+                <div style="flex:1;">
+                    <div class="chat-header-name" id="chatNombre">Juan Pérez García</div>
+                    <div class="d-flex align-items-center gap-2 mt-1">
+                        <span class="chat-header-sub" id="chatCuenta">No. cuenta: 2020123456</span>
+                        <span class="badge-ss-sm" id="chatPrograma">Serv. Social</span>
+                    </div>
+                </div>
+                <a href="UR_ur-bitacora-alumno.html" style="border:1.5px solid var(--border);background:#fff;color:var(--muted);border-radius:var(--radius-sm);font-size:.78rem;font-weight:600;padding:.35rem .8rem;text-decoration:none;display:flex;align-items:center;gap:.35rem;transition:border-color .2s,color .2s;" onmouseover="this.style.borderColor='var(--primario)';this.style.color='var(--primario)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">
+                    <i class="bi bi-journal-text"></i> Ver bitácora
+                </a>
+            </div>
+
+            <!-- Hilo de mensajes -->
+            <div class="chat-thread" id="chatThread">
+
+                <div class="date-sep">19 feb 2026</div>
+
+                <div class="msg-bubble recv">
+                    Buen día, quisiera saber qué actividades tendré asignadas la próxima semana para prepararme con anticipación.
+                    <div class="msg-meta">Juan Pérez · 19 feb · 4:35 p.m.</div>
+                </div>
+
+                <div class="msg-bubble sent">
+                    Buenos días Juan. La próxima semana continuarás con el apoyo en archivo y digitalización de documentos del área de admisiones. Por favor llega puntual a las 8:00.
+                    <div class="msg-meta">Tú · 20 feb · 11:20 a.m.</div>
+                </div>
+
+                <div class="date-sep">Hoy</div>
+
+                <div class="msg-bubble recv">
+                    ¿Qué actividades tendré asignadas esta semana? Quiero prepararme bien.
+                    <div class="msg-attachment">
+                        <i class="bi bi-paperclip"></i> cronograma_feb.pdf · 128 KB
+                    </div>
+                    <div class="msg-meta">Juan Pérez · hoy · 10:32 a.m.</div>
+                </div>
+
+            </div>
+
+            <!-- Compose -->
+            <div class="chat-compose">
+                <div class="compose-inner">
+                    <button class="btn-attach" title="Adjuntar archivo" onclick="showToast('Selecciona un archivo para adjuntar.')">
+                        <i class="bi bi-paperclip"></i>
+                    </button>
+                    <textarea
+                        id="composeInput"
+                        class="compose-textarea"
+                        placeholder="Escribe tu respuesta…"
+                        rows="1"
+                        onkeydown="if(event.ctrlKey && event.key==='Enter') enviarMensaje()"
+                        oninput="autoResize(this)"
+                    ></textarea>
+                    <button class="btn-send-msg" onclick="enviarMensaje()" title="Enviar (Ctrl + Enter)">
+                        <i class="bi bi-send-fill"></i>
+                    </button>
+                </div>
+                <div class="compose-hint"><i class="bi bi-info-circle me-1"></i>Ctrl + Enter para enviar</div>
+            </div>
+
+        </div>
+    </div>
+
+</main>
+
+<div class="toast-custom" id="toastMsg">
+    <i class="bi bi-check-circle-fill" style="font-size:1.1rem;"></i>
+    <span id="toastTxt"></span>
+</div>
+
+<footer class="footer-custom">© 2026 SIARHA · Uso exclusivo institucional · UAEH</footer>
+
+
+<!-- ══ PANEL NOTIFICACIONES ══ -->
+<div class="notif-overlay" id="notifOverlay" onclick="cerrarNotif()"></div>
+<div class="notif-panel" id="notifPanel">
+    <div class="notif-header">
+        <h6><i class="bi bi-bell-fill me-2"></i>Notificaciones</h6>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn-mark-all" onclick="marcarTodasLeidas()">Marcar leídas</button>
+            <button class="btn-close-notif" onclick="cerrarNotif()"><i class="bi bi-x-lg"></i></button>
+        </div>
+    </div>
+    <div class="notif-tabs">
+        <button class="notif-tab active" onclick="setNotifTab('todas',this)">Todas <span id="badgeTodas" style="background:#501013;color:#fff;border-radius:20px;font-size:.65rem;padding:.08rem .45rem;margin-left:.25rem;">5</span></button>
+        <button class="notif-tab" onclick="setNotifTab('ni-ap',this)">Registros</button>
+        <button class="notif-tab" onclick="setNotifTab('ni-msg',this)">Mensajes</button>
+        <button class="notif-tab" onclick="setNotifTab('ni-sis',this)">Sistema</button>
+    </div>
+    <div class="notif-list" id="notifList">
+        <div class="notif-item unread" data-tipo="ni-ap" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-ap"><i class="bi bi-hourglass-split"></i></div>
+            <div><div class="notif-title">4 registros pendientes</div><div class="notif-desc">Juan Pérez, Ana López y 2 más esperan aprobación</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 5 min</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-msg" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div>
+            <div><div class="notif-title">Nuevo mensaje de Juan Pérez</div><div class="notif-desc">¿Qué actividades tendré asignadas esta semana?</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 22 min</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-msg" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div>
+            <div><div class="notif-title">Nuevo mensaje de Ana López</div><div class="notif-desc">Solicitud de carta de término de prácticas</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 1 hora</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-sis" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-sis"><i class="bi bi-person-plus-fill"></i></div>
+            <div><div class="notif-title">Nuevo alumno asignado</div><div class="notif-desc">Sofía Mendoza Ruiz — Prácticas Profesionales</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 3 horas</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-sis" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-rec"><i class="bi bi-info-circle-fill"></i></div>
+            <div><div class="notif-title">Recordatorio Dirección SSPP</div><div class="notif-desc">Tienes registros sin revisar por más de 5 días</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer, 9:00 a.m.</div></div>
+        </div>
+        <div class="notif-item" data-tipo="ni-ap" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-ap"><i class="bi bi-check-circle-fill"></i></div>
+            <div><div class="notif-title">Registro corregido — Daniel Torres</div><div class="notif-desc">Reenvió el registro del 04 feb tras rechazo</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer, 3:45 p.m.</div></div>
+        </div>
+    </div>
+    <div class="notif-footer"><a href="UR_mensajes-ur.html">Ver mensajes →</a></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+    // ── CONVERSACIONES ────────────────────────────────────────────────
+    const conversaciones = {
+        'Juan Pérez García': [
+            { tipo: 'sep', texto: '19 feb 2026' },
+            { tipo: 'recv', texto: 'Buen día, quisiera saber qué actividades tendré asignadas la próxima semana para prepararme con anticipación.', meta: 'Juan Pérez · 19 feb · 4:35 p.m.' },
+            { tipo: 'sent', texto: 'Buenos días Juan. La próxima semana continuarás con el apoyo en archivo y digitalización. Por favor llega puntual a las 8:00.', meta: 'Tú · 20 feb · 11:20 a.m.' },
+            { tipo: 'sep', texto: 'Hoy' },
+            { tipo: 'recv', texto: '¿Qué actividades tendré asignadas esta semana? Quiero prepararme bien.', adjunto: 'cronograma_feb.pdf · 128 KB', meta: 'Juan Pérez · hoy · 10:32 a.m.' },
+        ],
+        'Ana López Ramírez': [
+            { tipo: 'sep', texto: 'Hoy' },
+            { tipo: 'recv', texto: 'Buenos días, me gustaría solicitar mi carta de término de prácticas profesionales, ya que estoy por completar mis horas requeridas.', meta: 'Ana López · hoy · 9:15 a.m.' },
+        ],
+        'María González López': [
+            { tipo: 'sep', texto: '20 feb 2026' },
+            { tipo: 'recv', texto: '¿Podría confirmarme si el próximo lunes hay actividades?', meta: 'María González · 20 feb · 3:10 p.m.' },
+            { tipo: 'sent', texto: 'Sí María, el lunes hay actividades normales. Nos vemos a las 9:00 en el área de recursos humanos.', meta: 'Tú · 20 feb · 4:00 p.m.' },
+            { tipo: 'recv', texto: 'Gracias, nos vemos el lunes puntual.', meta: 'María González · 20 feb · 4:05 p.m.' },
+        ],
+        'Carlos Ramírez Soto': [
+            { tipo: 'sep', texto: '18 feb 2026' },
+            { tipo: 'recv', texto: 'Buen día, le envío mi justificación de inasistencia del día 15 por cita médica de urgencia.', adjunto: 'justificacion_15feb.pdf · 342 KB', meta: 'Carlos Ramírez · 18 feb · 9:00 a.m.' },
+            { tipo: 'sent', texto: 'Justificación recibida y registrada. No habrá problema, nos vemos el próximo lunes.', meta: 'Tú · 18 feb · 10:05 a.m.' },
+        ],
+        'Daniel Torres Vega': [
+            { tipo: 'sep', texto: '18 feb 2026' },
+            { tipo: 'recv', texto: 'Estimado(a) responsable, quisiera solicitar un cambio de horario a partir de la próxima semana. Por mis clases en la universidad me es difícil llegar a las 8:00.', meta: 'Daniel Torres · 18 feb · 8:30 a.m.' },
+            { tipo: 'sent', texto: 'Hola Daniel, podemos ajustarlo a las 9:00. Confirma si te funciona ese horario.', meta: 'Tú · 18 feb · 11:00 a.m.' },
+            { tipo: 'recv', texto: 'Perfecto, muchas gracias. Confirmo que sí me funciona.', meta: 'Daniel Torres · 18 feb · 11:15 a.m.' },
+        ],
+    };
+
+    function abrirChat(item, nombre, iniciales, cuenta, programa, tipo) {
+        // Quitar activo de todos y poner en el seleccionado
+        document.querySelectorAll('.contact-item').forEach(c => c.classList.remove('active'));
+        item.classList.add('active');
+
+        // Quitar badge de no leídos
+        const badge = item.querySelector('.unread-badge');
+        if (badge) badge.remove();
+        const av = item.querySelector('.contact-avatar');
+        if (av) av.classList.remove('unread');
+        const name = item.querySelector('.contact-name');
+        if (name) name.style.color = '';
+        const preview = item.querySelector('.contact-preview');
+        if (preview) { preview.style.fontWeight = ''; preview.style.color = ''; }
+
+        // Actualizar header
+        document.getElementById('chatAvatar').textContent = iniciales;
+        document.getElementById('chatNombre').textContent = nombre;
+        document.getElementById('chatCuenta').textContent = `No. cuenta: ${cuenta}`;
+        const progBadge = document.getElementById('chatPrograma');
+        progBadge.textContent = programa;
+        progBadge.className = tipo === 'ss' ? 'badge-ss-sm' : 'badge-pp-sm';
+
+        // Renderizar mensajes
+        const thread = document.getElementById('chatThread');
+        const msgs = conversaciones[nombre] || [];
+        thread.innerHTML = msgs.map(m => {
+            if (m.tipo === 'sep') return `<div class="date-sep">${m.texto}</div>`;
+            const adjunto = m.adjunto
+                ? `<div class="msg-attachment"><i class="bi bi-paperclip"></i> ${m.adjunto}</div>`
+                : '';
+            return `<div class="msg-bubble ${m.tipo}">${m.texto}${adjunto}<div class="msg-meta">${m.meta}</div></div>`;
+        }).join('');
+        thread.scrollTop = thread.scrollHeight;
+
+        document.getElementById('composeInput').focus();
+    }
+
+    // ── ENVIAR MENSAJE ────────────────────────────────────────────────
+    function enviarMensaje() {
+        const input = document.getElementById('composeInput');
+        const txt = input.value.trim();
+        if (!txt) return;
+
+        const thread = document.getElementById('chatThread');
+        const burbuja = document.createElement('div');
+        burbuja.className = 'msg-bubble sent';
+        burbuja.innerHTML = `${txt}<div class="msg-meta">Tú · ahora</div>`;
+        thread.appendChild(burbuja);
+        thread.scrollTop = thread.scrollHeight;
+        input.value = '';
+        input.style.height = '';
+    }
+
+    // ── FILTRAR CONTACTOS ─────────────────────────────────────────────
+    function filtrarContactos(q) {
+        q = q.toLowerCase();
+        document.querySelectorAll('.contact-item').forEach(item => {
+            const nombre = item.querySelector('.contact-name').textContent.toLowerCase();
+            item.style.display = nombre.includes(q) ? '' : 'none';
+        });
+    }
+
+    // ── AUTO RESIZE TEXTAREA ──────────────────────────────────────────
+    function autoResize(el) {
+        el.style.height = '';
+        el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+    }
+
+    // ── TOAST ─────────────────────────────────────────────────────────
+    function showToast(msg) {
+        document.getElementById('toastTxt').textContent = msg;
+        const t = document.getElementById('toastMsg');
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3200);
+    }
+
+</script>
+<script>
+    // ══ NOTIFICACIONES ══════════════════════════════════════════════
+    let _nOpen = false;
+    function toggleNotif() { _nOpen ? cerrarNotif() : abrirNotif(); }
+    function abrirNotif() {
+        document.getElementById('notifPanel').classList.add('open');
+        document.getElementById('notifOverlay').classList.add('open');
+        _nOpen = true;
+    }
+    function cerrarNotif() {
+        document.getElementById('notifPanel').classList.remove('open');
+        document.getElementById('notifOverlay').classList.remove('open');
+        _nOpen = false;
+    }
+    function marcarLeida(item) {
+        if (!item.classList.contains('unread')) return;
+        item.classList.remove('unread');
+        _badge();
+    }
+    function marcarTodasLeidas() {
+        document.querySelectorAll('.notif-item.unread').forEach(i => i.classList.remove('unread'));
+        _badge();
+    }
+    function _badge() {
+        const n = document.querySelectorAll('.notif-item.unread').length;
+        const b = document.getElementById('notifCount');
+        if (b) { b.textContent = n; b.style.display = n > 0 ? 'flex' : 'none'; }
+        const bt = document.getElementById('badgeTodas');
+        if (bt) bt.textContent = n;
+    }
+    function setNotifTab(tipo, btn) {
+        document.querySelectorAll('.notif-tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.notif-item').forEach(i => {
+            i.style.display = (tipo === 'todas' || i.dataset.tipo === tipo) ? '' : 'none';
+        });
+    }
+    // ════════════════════════════════════════════════════════════════
+</script>
+</body>
+</html>

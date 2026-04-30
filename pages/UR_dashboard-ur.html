@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SIARHA | Dashboard Unidad Receptora</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/siarha.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primario:     #501013;
+            --primario-dk:  #3a0b0e;
+            --primario-lt:  #f7eaea;
+            --primario-mid: #7a1820;
+            --dorado:       #C9A24D;
+            --dorado-lt:    #fdf6e3;
+            --bg:           #F2F4F8;
+            --card-bg:      #ffffff;
+            --text:         #1F2933;
+            --muted:        #6b7280;
+            --border:       #E5E7EB;
+            --radius-card:  18px;
+            --radius-sm:    10px;
+            --shadow:       0 2px 16px rgba(80,16,19,.08);
+            --shadow-hover: 0 6px 28px rgba(80,16,19,.15);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar-custom {
+            background: var(--primario);
+            padding: 0 1.5rem;
+            height: 70px;
+            box-shadow: 0 2px 16px rgba(0,0,0,.15);
+            position: sticky;
+            top: 0;
+            z-index: 1050;
+            display: flex;
+            align-items: center;
+        }
+
+        .brand-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: .04em;
+            line-height: 1;
+        }
+
+        .navbar-subtitle {
+            font-size: .7rem;
+            font-weight: 500;
+            opacity: .85;
+            letter-spacing: .02em;
+        }
+
+        .navbar-toggler {
+            border: none;
+            color: #fff;
+            font-size: 1.25rem;
+            padding: .4rem .6rem;
+            border-radius: var(--radius-sm);
+            background: rgba(255,255,255,.12);
+            transition: background .2s;
+        }
+        .navbar-toggler:hover { background: rgba(255,255,255,.22); }
+
+        /* ── OFFCANVAS ── */
+        .offcanvas-custom {
+            background: var(--primario-dk);
+            color: #fff;
+            width: 280px !important;
+            border-radius: var(--radius-card) 0 0 var(--radius-card);
+        }
+        .offcanvas-custom .offcanvas-header {
+            border-color: rgba(255,255,255,.12) !important;
+            padding: 1.25rem 1.5rem;
+        }
+        .offcanvas-custom .offcanvas-title { font-weight: 700; font-size: 1rem; }
+        .offcanvas-custom .nav-link {
+            color: rgba(255,255,255,.8);
+            font-weight: 500;
+            font-size: .9rem;
+            padding: .65rem 1rem;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            transition: background .2s, color .2s;
+        }
+        .offcanvas-custom .nav-link:hover,
+        .offcanvas-custom .nav-link.active {
+            background: rgba(255,255,255,.12);
+            color: #fff;
+        }
+        .offcanvas-custom .nav-link.active { font-weight: 700; }
+        .offcanvas-custom .nav-link.danger { color: #ff9090 !important; }
+        .offcanvas-custom .nav-link.danger:hover { background: rgba(255,80,80,.15); }
+        .menu-divider { border-color: rgba(255,255,255,.12); margin: .5rem 0; }
+
+        /* ── MAIN ── */
+        main { flex: 1; padding: 1.75rem 1.5rem; max-width: 1200px; width: 100%; margin: 0 auto; }
+
+        /* ── ENCABEZADO ── */
+        .page-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: .75rem;
+            margin-bottom: 1.75rem;
+        }
+        .page-header h4 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin: 0;
+        }
+        .page-header h4 span { color: var(--primario); }
+        .page-header p {
+            font-size: .8rem;
+            color: var(--muted);
+            margin: .25rem 0 0;
+        }
+        .badge-ur {
+            background: var(--dorado-lt);
+            color: #7a5a00;
+            font-weight: 700;
+            font-size: .78rem;
+            padding: .35rem .85rem;
+            border-radius: 20px;
+            border: 1px solid var(--dorado);
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+            white-space: nowrap;
+        }
+
+        /* ── STAT CARDS ── */
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow);
+            padding: 1.25rem 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: box-shadow .25s, transform .25s;
+            border: 1px solid var(--border);
+        }
+        .stat-card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+        .stat-icon {
+            width: 48px; height: 48px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+        .si-vino   { background: var(--primario-lt); color: var(--primario); }
+        .si-dorado { background: var(--dorado-lt);   color: #8a6820; }
+        .si-vino2  { background: var(--primario-lt); color: var(--primario-mid); }
+        .si-warn   { background: #fff3cd;            color: #856404; }
+
+        .stat-label { font-size: .73rem; font-weight: 500; color: var(--muted); margin-bottom: .2rem; }
+        .stat-value { font-size: 1.4rem; font-weight: 800; color: var(--text); line-height: 1; }
+        .stat-value.warn { color: #a16207; }
+
+        /* ── SECTION CARDS ── */
+        .section-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+        .section-header {
+            padding: 1rem 1.4rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: .6rem;
+        }
+        .section-header .title {
+            font-weight: 700;
+            font-size: .95rem;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            color: var(--primario);
+        }
+
+        /* ── FILTROS ── */
+        .filtros-body {
+            padding: 1.1rem 1.4rem;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+        }
+        .form-label-sm { font-size: .76rem; font-weight: 600; color: var(--muted); margin-bottom: .3rem; display: block; }
+        .form-control-custom, .form-select-custom {
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: .48rem .85rem;
+            font-size: .83rem;
+            font-family: inherit;
+            color: var(--text);
+            background: #fff;
+            width: 100%;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        .form-control-custom:focus, .form-select-custom:focus {
+            border-color: var(--primario);
+            box-shadow: 0 0 0 3px rgba(80,16,19,.1);
+        }
+
+        /* ── BOTONES ── */
+        .btn-primary-custom {
+            background: var(--primario);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: .83rem;
+            padding: .5rem 1.1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            cursor: pointer;
+            transition: background .2s, transform .15s;
+            width: 100%;
+            justify-content: center;
+        }
+        .btn-primary-custom:hover { background: var(--primario-dk); transform: translateY(-1px); }
+
+        .btn-outline-custom {
+            border: 1.5px solid var(--border);
+            background: #fff;
+            color: var(--muted);
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: .8rem;
+            padding: .4rem .85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            cursor: pointer;
+            transition: border-color .2s, color .2s, background .2s;
+            white-space: nowrap;
+        }
+        .btn-outline-custom:hover { border-color: var(--primario); color: var(--primario); background: var(--primario-lt); }
+
+        /* ── TABLE ── */
+        .table-responsive { overflow-x: auto; }
+        table { margin: 0; font-size: .83rem; width: 100%; border-collapse: collapse; }
+        table thead th {
+            background: var(--primario);
+            color: #fff;
+            font-weight: 700;
+            font-size: .74rem;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            padding: .8rem 1rem;
+            border: none;
+            white-space: nowrap;
+        }
+        table tbody td {
+            padding: .72rem 1rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+        table tbody tr:last-child td { border-bottom: none; }
+        table tbody tr:hover { background: var(--primario-lt); }
+
+        /* avance bar */
+        .avance-wrap { display: flex; align-items: center; gap: .5rem; min-width: 100px; }
+        .avance-bar  { flex: 1; height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+        .avance-fill { height: 100%; border-radius: 99px; }
+        .avance-fill.low    { background: #e57373; }
+        .avance-fill.mid    { background: var(--dorado); }
+        .avance-fill.high   { background: var(--primario-mid); }
+        .avance-fill.done   { background: var(--primario); }
+        .avance-pct  { font-size: .78rem; font-weight: 700; color: var(--text); min-width: 34px; text-align: right; }
+
+        /* badges programa */
+        .badge-ss  { background: var(--primario-lt); color: var(--primario); border-radius: 20px; font-size: .72rem; font-weight: 700; padding: .25rem .65rem; border: 1px solid rgba(80,16,19,.18); }
+        .badge-pp  { background: var(--dorado-lt);  color: #7a5a00;         border-radius: 20px; font-size: .72rem; font-weight: 700; padding: .25rem .65rem; border: 1px solid rgba(201,162,77,.4); }
+
+        /* badges estado */
+        .badge-revision      { background: var(--primario-lt); color: var(--primario);  border-radius: 20px; font-size: .73rem; font-weight: 700; padding: .28rem .7rem; }
+        .badge-aprobado      { background: var(--dorado-lt);   color: #7a5a00;          border-radius: 20px; font-size: .73rem; font-weight: 700; padding: .28rem .7rem; border: 1px solid var(--dorado); }
+        .badge-finalizado    { background: #d1fae5;            color: #065f46;          border-radius: 20px; font-size: .73rem; font-weight: 700; padding: .28rem .7rem; }
+        .badge-observaciones { background: #fee2e2;            color: #991b1b;          border-radius: 20px; font-size: .73rem; font-weight: 700; padding: .28rem .7rem; }
+        .badge-pendiente     { background: #fff3cd;            color: #856404;          border-radius: 20px; font-size: .73rem; font-weight: 700; padding: .28rem .7rem; }
+
+        /* ── FOOTER ── */
+        .footer-custom {
+            background: var(--primario);
+            color: rgba(255,255,255,.7);
+            text-align: center;
+            padding: .75rem;
+            font-size: .75rem;
+            letter-spacing: .02em;
+        }
+
+
+        /* ── PAGINACIÓN ── */
+        .pag-wrap { display:flex; align-items:center; justify-content:space-between; padding:.85rem 1.4rem; border-top:1px solid var(--border); flex-wrap:wrap; gap:.5rem; }
+        .pag-info { font-size:.78rem; color:var(--muted); font-weight:500; }
+        .pag-btns { display:flex; gap:.35rem; }
+        .pag-btn { width:32px; height:32px; border-radius:8px; border:1.5px solid var(--border); background:#fff; color:var(--muted); font-size:.82rem; font-weight:600; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; }
+        .pag-btn:hover { border-color:var(--primario); color:var(--primario); background:var(--primario-lt); }
+        .pag-btn.active { background:var(--primario); color:#fff; border-color:var(--primario); }
+        .pag-btn:disabled { opacity:.4; cursor:not-allowed; }
+        @media (max-width: 767px) {
+            main { padding: 1.25rem 1rem; }
+        }
+    
+        /* ══ NOTIFICACIONES ══ */
+        .notif-btn{position:relative;background:rgba(255,255,255,.12);border:none;color:#fff;width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;transition:background .2s;flex-shrink:0;}
+        .notif-btn:hover{background:rgba(255,255,255,.22);}
+        .notif-count{position:absolute;top:4px;right:4px;background:#C9A24D;color:#fff;font-size:.58rem;font-weight:800;border-radius:20px;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0 .25rem;border:1.5px solid #501013;}
+        .notif-panel{position:fixed;top:70px;right:0;width:360px;max-height:calc(100vh - 80px);background:#fff;border:1px solid #E5E7EB;border-radius:18px 0 0 18px;box-shadow:-4px 8px 32px rgba(80,16,19,.18);z-index:1049;display:flex;flex-direction:column;transform:translateX(110%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow:hidden;}
+        .notif-panel.open{transform:translateX(0);}
+        .notif-header{padding:1rem 1.2rem;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;justify-content:space-between;background:#501013;color:#fff;flex-shrink:0;}
+        .notif-header h6{font-size:.92rem;font-weight:800;margin:0;}
+        .btn-mark-all{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.8);background:rgba(255,255,255,.12);border:none;border-radius:20px;padding:.2rem .7rem;cursor:pointer;}
+        .btn-mark-all:hover{background:rgba(255,255,255,.22);}
+        .btn-close-notif{background:none;border:none;color:rgba(255,255,255,.7);font-size:1rem;cursor:pointer;padding:.2rem;display:flex;align-items:center;border-radius:6px;}
+        .btn-close-notif:hover{color:#fff;}
+        .notif-tabs{display:flex;border-bottom:1px solid #E5E7EB;flex-shrink:0;}
+        .notif-tab{flex:1;padding:.6rem;font-size:.8rem;font-weight:700;color:#6b7280;border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;text-align:center;}
+        .notif-tab.active{color:#501013;border-bottom-color:#501013;}
+        .notif-list{overflow-y:auto;flex:1;}
+        .notif-item{padding:.9rem 1.2rem;border-bottom:1px solid #E5E7EB;display:flex;align-items:flex-start;gap:.75rem;cursor:pointer;transition:background .15s;position:relative;}
+        .notif-item:hover{background:#F2F4F8;}
+        .notif-item.unread{background:#f7eaea;}
+        .notif-item.unread::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#501013;}
+        .notif-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+        .ni-ap{background:#d1fae5;color:#065f46;} .ni-re{background:#fee2e2;color:#991b1b;} .ni-msg{background:#dbeafe;color:#1e40af;} .ni-sis{background:#f7eaea;color:#501013;} .ni-rec{background:#fdf6e3;color:#7a5a00;}
+        .notif-title{font-size:.83rem;font-weight:700;color:#1F2933;margin-bottom:.15rem;}
+        .notif-item.unread .notif-title{color:#501013;}
+        .notif-desc{font-size:.76rem;color:#6b7280;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .notif-time{font-size:.68rem;color:#6b7280;margin-top:.3rem;font-weight:500;}
+        .notif-footer{padding:.75rem 1.2rem;border-top:1px solid #E5E7EB;text-align:center;flex-shrink:0;}
+        .notif-footer a{font-size:.8rem;font-weight:700;color:#501013;text-decoration:none;}
+        .notif-overlay{display:none;position:fixed;inset:0;z-index:1048;}
+        .notif-overlay.open{display:block;}
+        .menu-badge{margin-left:auto;background:#C9A24D;color:#fff;font-size:.68rem;font-weight:800;border-radius:20px;padding:.1rem .55rem;}
+        @media(max-width:480px){.notif-panel{width:100%;border-radius:0;}}
+
+    </style>
+</head>
+
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar-custom w-100">
+    <div class="container-fluid d-flex align-items-center" style="height:70px;">
+
+        <div class="d-flex align-items-center gap-2">
+            <a href="https://www.uaeh.edu.mx" target="_blank" rel="noopener noreferrer">
+                <img src="../assets/img/Logo_Login.svg" alt="Logo SIARHA" height="46">
+            </a>
+            <div class="d-flex flex-column">
+                <span class="brand-text text-white">SIARHA</span>
+                <span class="navbar-subtitle text-white d-none d-md-block">
+                    Dirección de Servicio Social y Prácticas Profesionales
+                </span>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 ms-auto">
+            <div class="d-none d-md-flex align-items-center gap-2 text-white"
+                 style="font-size:.83rem;font-weight:600;opacity:.9;">
+                <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);
+                            display:flex;align-items:center;justify-content:center;">
+                    <i class="bi bi-building-fill"></i>
+                </div>
+                <span id="nombreURNav">Hospital General</span>
+            </div>
+                        <button class="notif-btn" id="btnNotif" onclick="toggleNotif()" title="Notificaciones">
+                <i class="bi bi-bell-fill"></i>
+                <span class="notif-count" id="notifCount">5</span>
+            </button>
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="offcanvas" data-bs-target="#menuUR"
+                    aria-label="Abrir menú">
+                <i class="bi bi-list"></i>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- ── OFFCANVAS ── -->
+<div class="offcanvas offcanvas-end offcanvas-custom" tabindex="-1"
+     id="menuUR" aria-labelledby="menuURLabel">
+    <div class="offcanvas-header">
+        <div class="d-flex align-items-center gap-2">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);
+                        display:flex;align-items:center;justify-content:center;">
+                <i class="bi bi-building-fill"></i>
+            </div>
+            <div>
+                <div style="font-weight:700;font-size:.9rem;" id="nombreURMenu">Hospital General</div>
+                <div style="font-size:.72rem;opacity:.7;">Unidad Receptora</div>
+            </div>
+        </div>
+        <button type="button" class="btn-close btn-close-white"
+                data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="navbar-nav gap-1">
+            <li><a class="nav-link active" href="UR_dashboard-ur.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
+            <li><a class="nav-link" href="UR_aprobaciones-ur.html"><i class="bi bi-people-fill"></i> Alumnos asignados <span class="menu-badge">4</span></a></li>
+            <li><a class="nav-link" href="UR_mensajes-ur.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge">2</span></a></li>
+            <li><a class="nav-link" href="UR_reportes-ur.html"><i class="bi bi-bar-chart-fill"></i> Reportes generales</a></li>
+            <li><a class="nav-link" href="UR_reporte-ur-direccion.html"><i class="bi bi-flag-fill"></i> Reportar a Dirección</a></li>
+            <li><a class="nav-link" href="UR_perfil-ur.html"><i class="bi bi-gear-fill"></i> Configuración</a></li>
+            <hr class="menu-divider">
+            <li><a class="nav-link danger" href="../index.html"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
+        </ul>
+    </div>
+</div>
+
+<!-- ── MAIN ── -->
+<main>
+
+    <!-- ENCABEZADO -->
+    <div class="page-header">
+        <div>
+            <h4>Unidad Receptora: <span id="nombreUR">Hospital General</span></h4>
+            <p>Gestión de alumnos de Servicio Social y Prácticas Profesionales · Periodo Enero – Junio 2026</p>
+        </div>
+        <span class="badge-ur">
+            <i class="bi bi-building-fill"></i> Unidad Receptora
+        </span>
+    </div>
+
+    <!-- STAT CARDS -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon si-vino"><i class="bi bi-people-fill"></i></div>
+                <div>
+                    <div class="stat-label">Total alumnos</div>
+                    <div class="stat-value">12</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon si-vino2"><i class="bi bi-journal-check"></i></div>
+                <div>
+                    <div class="stat-label">Servicio Social</div>
+                    <div class="stat-value">7</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon si-dorado"><i class="bi bi-briefcase-fill"></i></div>
+                <div>
+                    <div class="stat-label">Prácticas Prof.</div>
+                    <div class="stat-value">5</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon si-warn"><i class="bi bi-hourglass-split"></i></div>
+                <div>
+                    <div class="stat-label">Registros pendientes</div>
+                    <div class="stat-value warn">4</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="section-card">
+        <div class="filtros-body">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label-sm">Programa</label>
+                    <select class="form-select-custom">
+                        <option>Todos los programas</option>
+                        <option>Servicio Social</option>
+                        <option>Prácticas Profesionales</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label-sm">Buscar alumno</label>
+                    <input type="text" class="form-control-custom" placeholder="Nombre o número de cuenta…">
+                </div>
+                <div class="col-md-2">
+                    <button class="btn-primary-custom" style="margin-top:.1rem;">
+                        <i class="bi bi-funnel-fill"></i> Filtrar
+                    </button>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn-outline-custom w-100" style="justify-content:center;padding:.5rem;">
+                        <i class="bi bi-file-earmark-excel"></i> Exportar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABLA ALUMNOS -->
+    <div class="section-card">
+        <div class="section-header">
+            <span class="title"><i class="bi bi-people-fill"></i> Alumnos asignados</span>
+            <span style="font-size:.78rem;color:var(--muted);font-weight:500;">5 registros</span>
+        </div>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>No. Cuenta</th>
+                        <th>Programa</th>
+                        <th>Horas realizadas</th>
+                        <th>Avance</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr>
+                        <td style="font-weight:600;">Juan Pérez</td>
+                        <td style="color:var(--muted);">2020123456</td>
+                        <td><span class="badge-ss">Servicio Social</span></td>
+                        <td style="font-weight:700;color:var(--primario);">320 hrs</td>
+                        <td>
+                            <div class="avance-wrap">
+                                <div class="avance-bar"><div class="avance-fill high" style="width:80%;"></div></div>
+                                <span class="avance-pct">80%</span>
+                            </div>
+                        </td>
+                        <td><span class="badge-revision">En revisión</span></td>
+                        <td><a href="UR_ur-bitacora-alumno.html" class="btn-outline-custom"><i class="bi bi-journal-text"></i> Ver bitácora</a></td>
+                    </tr>
+
+                    <tr>
+                        <td style="font-weight:600;">María González</td>
+                        <td style="color:var(--muted);">2021123478</td>
+                        <td><span class="badge-pp">Prácticas Prof.</span></td>
+                        <td style="font-weight:700;color:var(--primario);">180 hrs</td>
+                        <td>
+                            <div class="avance-wrap">
+                                <div class="avance-bar"><div class="avance-fill mid" style="width:45%;"></div></div>
+                                <span class="avance-pct">45%</span>
+                            </div>
+                        </td>
+                        <td><span class="badge-aprobado">Aprobado</span></td>
+                        <td><a href="UR_ur-bitacora-alumno.html" class="btn-outline-custom"><i class="bi bi-journal-text"></i> Ver bitácora</a></td>
+                    </tr>
+
+                    <tr>
+                        <td style="font-weight:600;">Carlos Ramírez</td>
+                        <td style="color:var(--muted);">2020987654</td>
+                        <td><span class="badge-ss">Servicio Social</span></td>
+                        <td style="font-weight:700;color:var(--primario);">400 hrs</td>
+                        <td>
+                            <div class="avance-wrap">
+                                <div class="avance-bar"><div class="avance-fill done" style="width:100%;"></div></div>
+                                <span class="avance-pct">100%</span>
+                            </div>
+                        </td>
+                        <td><span class="badge-finalizado">Finalizado</span></td>
+                        <td><a href="UR_ur-bitacora-alumno.html" class="btn-outline-custom"><i class="bi bi-journal-text"></i> Ver bitácora</a></td>
+                    </tr>
+
+                    <tr>
+                        <td style="font-weight:600;">Ana López</td>
+                        <td style="color:var(--muted);">2022233445</td>
+                        <td><span class="badge-pp">Prácticas Prof.</span></td>
+                        <td style="font-weight:700;color:var(--primario);">250 hrs</td>
+                        <td>
+                            <div class="avance-wrap">
+                                <div class="avance-bar"><div class="avance-fill mid" style="width:62%;"></div></div>
+                                <span class="avance-pct">62%</span>
+                            </div>
+                        </td>
+                        <td><span class="badge-revision">En revisión</span></td>
+                        <td><a href="UR_ur-bitacora-alumno.html" class="btn-outline-custom"><i class="bi bi-journal-text"></i> Ver bitácora</a></td>
+                    </tr>
+
+                    <tr>
+                        <td style="font-weight:600;">Daniel Torres</td>
+                        <td style="color:var(--muted);">2021345678</td>
+                        <td><span class="badge-ss">Servicio Social</span></td>
+                        <td style="font-weight:700;color:var(--primario);">120 hrs</td>
+                        <td>
+                            <div class="avance-wrap">
+                                <div class="avance-bar"><div class="avance-fill low" style="width:30%;"></div></div>
+                                <span class="avance-pct">30%</span>
+                            </div>
+                        </td>
+                        <td><span class="badge-observaciones">Observaciones</span></td>
+                        <td><a href="UR_ur-bitacora-alumno.html" class="btn-outline-custom"><i class="bi bi-journal-text"></i> Ver bitácora</a></td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+            <!-- Paginación alumnos UR -->
+            <div class="pag-wrap">
+                <span class="pag-info">Mostrando 1–5 de 12 alumnos asignados</span>
+                <div class="pag-btns">
+                    <button class="pag-btn" disabled><i class="bi bi-chevron-left"></i></button>
+                    <button class="pag-btn active">1</button>
+                    <button class="pag-btn">2</button>
+                    <button class="pag-btn">3</button>
+                    <button class="pag-btn"><i class="bi bi-chevron-right"></i></button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer class="footer-custom">
+    © 2026 SIARHA · Uso exclusivo institucional · UAEH
+</footer>
+
+
+<!-- ══ PANEL NOTIFICACIONES ══ -->
+<div class="notif-overlay" id="notifOverlay" onclick="cerrarNotif()"></div>
+<div class="notif-panel" id="notifPanel">
+    <div class="notif-header">
+        <h6><i class="bi bi-bell-fill me-2"></i>Notificaciones</h6>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn-mark-all" onclick="marcarTodasLeidas()">Marcar leídas</button>
+            <button class="btn-close-notif" onclick="cerrarNotif()"><i class="bi bi-x-lg"></i></button>
+        </div>
+    </div>
+    <div class="notif-tabs">
+        <button class="notif-tab active" onclick="setNotifTab('todas',this)">Todas <span id="badgeTodas" style="background:#501013;color:#fff;border-radius:20px;font-size:.65rem;padding:.08rem .45rem;margin-left:.25rem;">5</span></button>
+        <button class="notif-tab" onclick="setNotifTab('ni-ap',this)">Registros</button>
+        <button class="notif-tab" onclick="setNotifTab('ni-msg',this)">Mensajes</button>
+        <button class="notif-tab" onclick="setNotifTab('ni-sis',this)">Sistema</button>
+    </div>
+    <div class="notif-list" id="notifList">
+        <div class="notif-item unread" data-tipo="ni-ap" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-ap"><i class="bi bi-hourglass-split"></i></div>
+            <div><div class="notif-title">4 registros pendientes</div><div class="notif-desc">Juan Pérez, Ana López y 2 más esperan aprobación</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 5 min</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-msg" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div>
+            <div><div class="notif-title">Nuevo mensaje de Juan Pérez</div><div class="notif-desc">¿Qué actividades tendré asignadas esta semana?</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 22 min</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-msg" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div>
+            <div><div class="notif-title">Nuevo mensaje de Ana López</div><div class="notif-desc">Solicitud de carta de término de prácticas</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 1 hora</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-sis" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-sis"><i class="bi bi-person-plus-fill"></i></div>
+            <div><div class="notif-title">Nuevo alumno asignado</div><div class="notif-desc">Sofía Mendoza Ruiz — Prácticas Profesionales</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 3 horas</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-sis" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-rec"><i class="bi bi-info-circle-fill"></i></div>
+            <div><div class="notif-title">Recordatorio Dirección SSPP</div><div class="notif-desc">Tienes registros sin revisar por más de 5 días</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer, 9:00 a.m.</div></div>
+        </div>
+        <div class="notif-item" data-tipo="ni-ap" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-ap"><i class="bi bi-check-circle-fill"></i></div>
+            <div><div class="notif-title">Registro corregido — Daniel Torres</div><div class="notif-desc">Reenvió el registro del 04 feb tras rechazo</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer, 3:45 p.m.</div></div>
+        </div>
+    </div>
+    <div class="notif-footer"><a href="UR_mensajes-ur.html">Ver mensajes →</a></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // ══ NOTIFICACIONES ══════════════════════════════════════════════
+    let _nOpen = false;
+    function toggleNotif() { _nOpen ? cerrarNotif() : abrirNotif(); }
+    function abrirNotif() {
+        document.getElementById('notifPanel').classList.add('open');
+        document.getElementById('notifOverlay').classList.add('open');
+        _nOpen = true;
+    }
+    function cerrarNotif() {
+        document.getElementById('notifPanel').classList.remove('open');
+        document.getElementById('notifOverlay').classList.remove('open');
+        _nOpen = false;
+    }
+    function marcarLeida(item) {
+        if (!item.classList.contains('unread')) return;
+        item.classList.remove('unread');
+        _badge();
+    }
+    function marcarTodasLeidas() {
+        document.querySelectorAll('.notif-item.unread').forEach(i => i.classList.remove('unread'));
+        _badge();
+    }
+    function _badge() {
+        const n = document.querySelectorAll('.notif-item.unread').length;
+        const b = document.getElementById('notifCount');
+        if (b) { b.textContent = n; b.style.display = n > 0 ? 'flex' : 'none'; }
+        const bt = document.getElementById('badgeTodas');
+        if (bt) bt.textContent = n;
+    }
+    function setNotifTab(tipo, btn) {
+        document.querySelectorAll('.notif-tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.notif-item').forEach(i => {
+            i.style.display = (tipo === 'todas' || i.dataset.tipo === tipo) ? '' : 'none';
+        });
+    }
+    // ════════════════════════════════════════════════════════════════
+</script>
+</body>
+</html>

@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SIARHA | Coordinador de Reportes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/siarha.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root{--primario:#501013;--primario-dk:#3a0b0e;--primario-lt:#f7eaea;--primario-mid:#7a1820;--dorado:#C9A24D;--dorado-lt:#fdf6e3;--verde:#059669;--verde-lt:#f0fdf4;--bg:#F2F4F8;--card-bg:#fff;--text:#1F2933;--muted:#6b7280;--border:#E5E7EB;--radius-card:18px;--radius-sm:10px;--shadow:0 2px 16px rgba(80,16,19,.08);--shadow-hover:0 6px 28px rgba(80,16,19,.15);}
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+        .navbar-custom{background:var(--primario);padding:0 1.5rem;height:70px;box-shadow:0 2px 16px rgba(0,0,0,.15);position:sticky;top:0;z-index:1050;display:flex;align-items:center;}
+        .brand-text{font-size:1.5rem;font-weight:800;letter-spacing:.04em;line-height:1;}
+        .navbar-subtitle{font-size:.7rem;font-weight:500;opacity:.85;}
+        .navbar-toggler{border:none;color:#fff;font-size:1.25rem;padding:.4rem .6rem;border-radius:var(--radius-sm);background:rgba(255,255,255,.12);transition:background .2s;}
+        .navbar-toggler:hover{background:rgba(255,255,255,.22);}
+        .offcanvas-custom{background:var(--primario-dk);color:#fff;width:280px!important;border-radius:var(--radius-card) 0 0 var(--radius-card);}
+        .offcanvas-custom .offcanvas-header{border-color:rgba(255,255,255,.12)!important;padding:1.25rem 1.5rem;}
+        .offcanvas-custom .nav-link{color:rgba(255,255,255,.8);font-weight:500;font-size:.9rem;padding:.65rem 1rem;border-radius:var(--radius-sm);display:flex;align-items:center;gap:.6rem;transition:background .2s,color .2s;}
+        .offcanvas-custom .nav-link:hover,.offcanvas-custom .nav-link.active{background:rgba(255,255,255,.12);color:#fff;}
+        .offcanvas-custom .nav-link.active{font-weight:700;}
+        .offcanvas-custom .nav-link.danger{color:#ff9090!important;}
+        .offcanvas-custom .nav-link.danger:hover{background:rgba(255,80,80,.15);}
+        .menu-divider{border-color:rgba(255,255,255,.12);margin:.5rem 0;}
+        main{flex:1;padding:1.75rem 1.5rem;max-width:1200px;width:100%;margin:0 auto;}
+
+        /* TABS */
+        .tab-nav{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:1.5rem;}
+        .tab-nav-btn{padding:.7rem 1.4rem;font-size:.88rem;font-weight:700;color:var(--muted);border:none;background:transparent;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .2s,border-color .2s;display:flex;align-items:center;gap:.45rem;}
+        .tab-nav-btn:hover{color:var(--primario);}
+        .tab-nav-btn.active{color:var(--primario);border-bottom-color:var(--primario);}
+        .tab-panel{display:none;}.tab-panel.active{display:block;}
+
+        /* STAT CARDS */
+        .stat-card{background:var(--card-bg);border-radius:var(--radius-card);box-shadow:var(--shadow);padding:1.1rem 1.3rem;display:flex;align-items:center;gap:.9rem;border:1px solid var(--border);transition:box-shadow .25s,transform .25s;}
+        .stat-card:hover{box-shadow:var(--shadow-hover);transform:translateY(-2px);}
+        .stat-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex-shrink:0;}
+        .si-v{background:var(--primario-lt);color:var(--primario);}
+        .si-w{background:#fff3cd;color:#856404;}
+        .si-g{background:var(--verde-lt);color:var(--verde);}
+        .si-r{background:#fee2e2;color:#991b1b;}
+        .stat-label{font-size:.72rem;font-weight:500;color:var(--muted);margin-bottom:.18rem;}
+        .stat-value{font-size:1.3rem;font-weight:800;line-height:1;}
+
+        /* SECTION CARD */
+        .section-card{background:var(--card-bg);border-radius:var(--radius-card);box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden;margin-bottom:1.4rem;}
+        .section-header{padding:1rem 1.4rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+        .section-header .title{font-weight:700;font-size:.95rem;display:flex;align-items:center;gap:.5rem;color:var(--primario);}
+
+        /* FILTROS */
+        .filtros-body{padding:.9rem 1.4rem;background:var(--bg);border-bottom:1px solid var(--border);}
+        .form-field{border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.44rem .8rem;font-size:.82rem;font-family:inherit;color:var(--text);background:#fff;width:100%;outline:none;transition:border-color .2s;}
+        .form-field:focus{border-color:var(--primario);box-shadow:0 0 0 3px rgba(80,16,19,.1);}
+        textarea.form-field{resize:vertical;min-height:90px;}
+
+        /* TABLE */
+        .table-responsive{overflow-x:auto;}
+        table{margin:0;font-size:.83rem;width:100%;border-collapse:collapse;}
+        table thead th{background:var(--primario);color:#fff;font-weight:700;font-size:.73rem;text-transform:uppercase;letter-spacing:.05em;padding:.8rem 1rem;border:none;white-space:nowrap;}
+        table tbody td{padding:.7rem 1rem;border-bottom:1px solid var(--border);vertical-align:middle;}
+        table tbody tr:last-child td{border-bottom:none;}
+        table tbody tr:hover{background:var(--primario-lt);}
+
+        /* BADGES */
+        .badge-proceso{background:var(--primario-lt);color:var(--primario);border-radius:20px;font-size:.72rem;font-weight:700;padding:.25rem .65rem;}
+        .badge-resuelto{background:var(--verde-lt);color:var(--verde);border-radius:20px;font-size:.72rem;font-weight:700;padding:.25rem .65rem;border:1px solid rgba(5,150,105,.3);}
+        .badge-cerrado{background:#f3f4f6;color:var(--muted);border-radius:20px;font-size:.72rem;font-weight:700;padding:.25rem .65rem;}
+        .badge-alta{background:#fee2e2;color:#991b1b;border-radius:20px;font-size:.72rem;font-weight:700;padding:.25rem .65rem;}
+        .badge-media{background:#fff3cd;color:#856404;border-radius:20px;font-size:.72rem;font-weight:700;padding:.25rem .65rem;}
+        .badge-baja{background:var(--verde-lt);color:var(--verde);border-radius:20px;font-size:.72rem;font-weight:700;padding:.25rem .65rem;}
+        .badge-dir{background:var(--primario-lt);color:var(--primario);border-radius:20px;font-size:.71rem;font-weight:700;padding:.2rem .6rem;}
+        .badge-ur{background:var(--dorado-lt);color:#7a5a00;border-radius:20px;font-size:.71rem;font-weight:700;padding:.2rem .6rem;}
+
+        /* PAGINACIÓN */
+        .pag-wrap{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.4rem;border-top:1px solid var(--border);flex-wrap:wrap;gap:.5rem;}
+        .pag-info{font-size:.78rem;color:var(--muted);font-weight:500;}
+        .pag-btns{display:flex;gap:.35rem;}
+        .pag-btn{width:32px;height:32px;border-radius:8px;border:1.5px solid var(--border);background:#fff;color:var(--muted);font-size:.82rem;font-weight:600;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;}
+        .pag-btn:hover{border-color:var(--primario);color:var(--primario);background:var(--primario-lt);}
+        .pag-btn.active{background:var(--primario);color:#fff;border-color:var(--primario);}
+
+        /* BOTONES */
+        .btn-primary-custom{background:var(--primario);color:#fff;border:none;border-radius:var(--radius-sm);font-weight:700;font-size:.82rem;padding:.44rem .9rem;display:inline-flex;align-items:center;gap:.4rem;cursor:pointer;transition:background .2s;}
+        .btn-primary-custom:hover{background:var(--primario-dk);}
+        .btn-outline-custom{border:1.5px solid var(--border);background:#fff;color:var(--muted);border-radius:var(--radius-sm);font-weight:600;font-size:.8rem;padding:.38rem .8rem;display:inline-flex;align-items:center;gap:.35rem;cursor:pointer;transition:border-color .2s,color .2s,background .2s;text-decoration:none;white-space:nowrap;}
+        .btn-outline-custom:hover{border-color:var(--primario);color:var(--primario);background:var(--primario-lt);}
+        .btn-resolver{background:var(--verde-lt);color:var(--verde);border:1.5px solid rgba(5,150,105,.3);border-radius:var(--radius-sm);font-weight:700;font-size:.78rem;padding:.3rem .75rem;display:inline-flex;align-items:center;gap:.3rem;cursor:pointer;transition:background .2s;}
+        .btn-resolver:hover{background:#d1fae5;}
+        .btn-cerrar{background:#f3f4f6;color:var(--muted);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-weight:700;font-size:.78rem;padding:.3rem .75rem;display:inline-flex;align-items:center;gap:.3rem;cursor:pointer;transition:background .2s;}
+        .btn-cerrar:hover{background:var(--border);}
+        .btn-escalar{background:#fff3cd;color:#856404;border:1.5px solid rgba(212,161,0,.3);border-radius:var(--radius-sm);font-weight:700;font-size:.78rem;padding:.3rem .75rem;display:inline-flex;align-items:center;gap:.3rem;cursor:pointer;transition:background .2s;}
+        .btn-escalar:hover{background:#fef9c3;}
+
+        /* MENSAJERÍA */
+        .msg-layout{display:grid;grid-template-columns:280px 1fr;gap:0;height:520px;}
+        .msg-sidebar{border-right:1px solid var(--border);overflow-y:auto;}
+        .msg-contact{padding:.75rem 1rem;cursor:pointer;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.7rem;transition:background .15s;}
+        .msg-contact:hover,.msg-contact.active{background:var(--primario-lt);}
+        .msg-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;flex-shrink:0;}
+        .av-super{background:var(--primario);color:#fff;}
+        .av-area{background:var(--dorado);color:#fff;}
+        .msg-cname{font-size:.83rem;font-weight:700;color:var(--text);}
+        .msg-crole{font-size:.71rem;color:var(--muted);}
+        .msg-cunread{min-width:18px;height:18px;background:var(--primario);color:#fff;border-radius:50%;font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;margin-left:auto;flex-shrink:0;}
+        .msg-main{display:flex;flex-direction:column;}
+        .msg-thread{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.75rem;background:var(--bg);}
+        .msg-bubble{max-width:72%;padding:.7rem .9rem;border-radius:12px;font-size:.84rem;line-height:1.5;}
+        .msg-bubble.sent{background:var(--primario);color:#fff;align-self:flex-end;border-bottom-right-radius:4px;}
+        .msg-bubble.recv{background:#fff;color:var(--text);border:1px solid var(--border);align-self:flex-start;border-bottom-left-radius:4px;}
+        .msg-meta{font-size:.68rem;margin-top:.25rem;opacity:.7;}
+        .msg-compose{border-top:1px solid var(--border);padding:.75rem 1rem;background:#fff;display:flex;gap:.6rem;align-items:flex-end;}
+        .msg-compose textarea{flex:1;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.5rem .75rem;font-size:.84rem;font-family:inherit;resize:none;outline:none;min-height:60px;transition:border-color .2s;}
+        .msg-compose textarea:focus{border-color:var(--primario);}
+        .btn-enviar-msg{background:var(--primario);color:#fff;border:none;border-radius:var(--radius-sm);width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s;flex-shrink:0;}
+        .btn-enviar-msg:hover{background:var(--primario-dk);}
+        .msg-header-chat{padding:.75rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.7rem;background:#fff;}
+
+        /* MODAL */
+        .modal-content{border-radius:var(--radius-card);border:none;overflow:hidden;}
+        .modal-header-custom{background:var(--primario);border:none;padding:1rem 1.4rem;}
+
+        .toast-custom{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--primario);color:#fff;border-radius:var(--radius-sm);padding:.9rem 1.3rem;display:flex;align-items:center;gap:.6rem;font-size:.85rem;font-weight:600;box-shadow:0 8px 24px rgba(80,16,19,.25);transform:translateY(80px);opacity:0;transition:transform .35s ease,opacity .35s ease;z-index:9999;}
+        .toast-custom.show{transform:translateY(0);opacity:1;}
+        .footer-custom{background:var(--primario);color:rgba(255,255,255,.7);text-align:center;padding:.75rem;font-size:.75rem;}
+        @media(max-width:767px){main{padding:1.25rem 1rem;}.msg-layout{grid-template-columns:1fr;height:auto;}}
+    
+        /* ══ NOTIFICACIONES ══ */
+        .notif-btn{position:relative;background:rgba(255,255,255,.12);border:none;color:#fff;width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;transition:background .2s;flex-shrink:0;}
+        .notif-btn:hover{background:rgba(255,255,255,.22);}
+        .notif-count{position:absolute;top:4px;right:4px;background:#C9A24D;color:#fff;font-size:.58rem;font-weight:800;border-radius:20px;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0 .25rem;border:1.5px solid #501013;}
+        .notif-panel{position:fixed;top:70px;right:0;width:360px;max-height:calc(100vh - 80px);background:#fff;border:1px solid #E5E7EB;border-radius:18px 0 0 18px;box-shadow:-4px 8px 32px rgba(80,16,19,.18);z-index:1049;display:flex;flex-direction:column;transform:translateX(110%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow:hidden;}
+        .notif-panel.open{transform:translateX(0);}
+        .notif-header{padding:1rem 1.2rem;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;justify-content:space-between;background:#501013;color:#fff;flex-shrink:0;}
+        .notif-header h6{font-size:.92rem;font-weight:800;margin:0;}
+        .btn-mark-all{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.8);background:rgba(255,255,255,.12);border:none;border-radius:20px;padding:.2rem .7rem;cursor:pointer;}
+        .btn-mark-all:hover{background:rgba(255,255,255,.22);}
+        .btn-close-notif{background:none;border:none;color:rgba(255,255,255,.7);font-size:1rem;cursor:pointer;padding:.2rem;display:flex;align-items:center;border-radius:6px;}
+        .btn-close-notif:hover{color:#fff;}
+        .notif-tabs{display:flex;border-bottom:1px solid #E5E7EB;flex-shrink:0;}
+        .notif-tab{flex:1;padding:.6rem;font-size:.8rem;font-weight:700;color:#6b7280;border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;text-align:center;}
+        .notif-tab.active{color:#501013;border-bottom-color:#501013;}
+        .notif-list{overflow-y:auto;flex:1;}
+        .notif-item{padding:.9rem 1.2rem;border-bottom:1px solid #E5E7EB;display:flex;align-items:flex-start;gap:.75rem;cursor:pointer;transition:background .15s;position:relative;}
+        .notif-item:hover{background:#F2F4F8;}
+        .notif-item.unread{background:#f7eaea;}
+        .notif-item.unread::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#501013;}
+        .notif-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+        .ni-ap{background:#d1fae5;color:#065f46;} .ni-re{background:#fee2e2;color:#991b1b;} .ni-msg{background:#dbeafe;color:#1e40af;} .ni-sis{background:#f7eaea;color:#501013;} .ni-rec{background:#fdf6e3;color:#7a5a00;}
+        .notif-title{font-size:.83rem;font-weight:700;color:#1F2933;margin-bottom:.15rem;}
+        .notif-item.unread .notif-title{color:#501013;}
+        .notif-desc{font-size:.76rem;color:#6b7280;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .notif-time{font-size:.68rem;color:#6b7280;margin-top:.3rem;font-weight:500;}
+        .notif-footer{padding:.75rem 1.2rem;border-top:1px solid #E5E7EB;text-align:center;flex-shrink:0;}
+        .notif-footer a{font-size:.8rem;font-weight:700;color:#501013;text-decoration:none;}
+        .notif-overlay{display:none;position:fixed;inset:0;z-index:1048;}
+        .notif-overlay.open{display:block;}
+        .menu-badge{margin-left:auto;background:#C9A24D;color:#fff;font-size:.68rem;font-weight:800;border-radius:20px;padding:.1rem .55rem;}
+        @media(max-width:480px){.notif-panel{width:100%;border-radius:0;}}
+
+    </style>
+</head>
+<body>
+
+<nav class="navbar-custom w-100">
+    <div class="container-fluid d-flex align-items-center" style="height:70px;">
+        <div class="d-flex align-items-center gap-2">
+            <a href="https://www.uaeh.edu.mx" target="_blank" rel="noopener noreferrer"><img src="../assets/img/Logo_Login.svg" alt="Logo" height="46"></a>
+            <div class="d-flex flex-column">
+                <span class="brand-text text-white">SIARHA</span>
+                <span class="navbar-subtitle text-white d-none d-md-block">Dirección de Servicio Social y Prácticas Profesionales</span>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-2 ms-auto">
+            <div class="d-none d-md-flex align-items-center gap-2 text-white" style="font-size:.83rem;font-weight:600;opacity:.9;">
+                <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;"><i class="bi bi-flag-fill"></i></div>
+                <span>Carlos Reyes</span>
+            </div>
+            <button class="notif-btn" id="btnNotif" onclick="toggleNotif()" title="Notificaciones"><i class="bi bi-bell-fill"></i><span class="notif-count" id="notifCount">4</span></button>
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuReportes"><i class="bi bi-list"></i></button>
+        </div>
+    </div>
+</nav>
+
+<div class="offcanvas offcanvas-end offcanvas-custom" tabindex="-1" id="menuReportes">
+    <div class="offcanvas-header">
+        <div class="d-flex align-items-center gap-2">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(5,150,105,.3);display:flex;align-items:center;justify-content:center;"><i class="bi bi-flag-fill"></i></div>
+            <div><div style="font-weight:700;font-size:.9rem;">Carlos Reyes Ortega</div><div style="font-size:.72rem;opacity:.7;">Coordinador de reportes</div></div>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="navbar-nav gap-1">
+            <li><a class="nav-link active" href="ADMIN_dashboard-reportes.html"><i class="bi bi-flag-fill"></i> Mis reportes</a></li>
+            <li><a class="nav-link" href="ADMIN_mensajes-admin.html"><i class="bi bi-chat-dots-fill"></i> Mensajería interna</a></li>
+            <hr class="menu-divider">
+            <li><a class="nav-link danger" href="../index.html"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
+        </ul>
+    </div>
+</div>
+
+<main>
+    <!-- ENCABEZADO -->
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.75rem;margin-bottom:1.5rem;">
+        <div>
+            <h4 style="font-size:1.3rem;font-weight:800;margin:0;">Panel del Coordinador de Reportes</h4>
+            <p style="font-size:.8rem;color:var(--muted);margin-top:.25rem;">Periodo Enero – Junio 2026 · <span style="color:var(--verde);font-weight:600;">Solo reportes e incidencias</span></p>
+        </div>
+        <span style="background:var(--verde-lt);color:var(--verde);border:1px solid rgba(5,150,105,.3);border-radius:20px;font-size:.78rem;font-weight:700;padding:.35rem .85rem;display:flex;align-items:center;gap:.4rem;">
+            <i class="bi bi-flag-fill"></i> Coordinador de reportes
+        </span>
+    </div>
+
+    <!-- STAT CARDS -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-icon si-v"><i class="bi bi-flag-fill"></i></div><div><div class="stat-label">Total reportes</div><div class="stat-value">18</div></div></div></div>
+        <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-icon si-w"><i class="bi bi-hourglass-split"></i></div><div><div class="stat-label">En proceso</div><div class="stat-value" style="color:#a16207;">7</div></div></div></div>
+        <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-icon si-g"><i class="bi bi-check-circle-fill"></i></div><div><div class="stat-label">Resueltos</div><div class="stat-value" style="color:var(--verde);">9</div></div></div></div>
+        <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-icon si-r"><i class="bi bi-exclamation-triangle-fill"></i></div><div><div class="stat-label">Alta severidad</div><div class="stat-value" style="color:#991b1b;">3</div></div></div></div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tab-nav">
+        <button class="tab-nav-btn active" onclick="setTab('reportes',this)">
+            <i class="bi bi-flag-fill"></i> Reportes e incidencias
+            <span style="background:var(--primario);color:#fff;border-radius:20px;font-size:.68rem;font-weight:700;padding:.15rem .55rem;margin-left:.2rem;">7</span>
+        </button>
+        <button class="tab-nav-btn" id="tabMensajeria" onclick="setTab('mensajeria',this)">
+            <i class="bi bi-chat-dots-fill"></i> Mensajería interna
+            <span style="background:var(--primario);color:#fff;border-radius:20px;font-size:.68rem;font-weight:700;padding:.15rem .55rem;margin-left:.2rem;">2</span>
+        </button>
+    </div>
+
+    <!-- ═══ PANEL REPORTES ═══ -->
+    <div class="tab-panel active" id="panelReportes">
+        <div class="section-card">
+            <!-- Filtros -->
+            <div class="filtros-body">
+                <div class="row g-2 align-items-end">
+                    <div class="col-6 col-md-3"><select class="form-field"><option>Todos</option><option>En proceso</option><option>Resuelto</option><option>Cerrado</option></select></div>
+                    <div class="col-6 col-md-2"><select class="form-field"><option>Todas</option><option>Alta</option><option>Media</option><option>Baja</option></select></div>
+                    <div class="col-6 col-md-2"><select class="form-field"><option>Todos</option><option>Dirección</option><option>Unidad Receptora</option></select></div>
+                    <div class="col-6 col-md-2"><input type="month" class="form-field" value="2026-02"></div>
+                    <div class="col-12 col-md-3"><button class="btn-primary-custom w-100"><i class="bi bi-funnel-fill"></i> Filtrar</button></div>
+                </div>
+            </div>
+
+            <!-- Tabla -->
+            <div class="table-responsive">
+                <table>
+                    <thead><tr><th>Folio</th><th>Alumno / UR</th><th>Tipo</th><th>Destino</th><th>Severidad</th><th>Fecha</th><th>Estado</th><th>Acciones</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight:700;color:var(--primario);">#RPT-001</td>
+                            <td><div style="font-weight:600;font-size:.84rem;">Juan Pérez García</div><div style="font-size:.72rem;color:var(--muted);">ICBI · 2020123456</div></td>
+                            <td style="font-size:.82rem;">Error en horas registradas</td>
+                            <td><span class="badge-dir">Dirección</span></td>
+                            <td><span class="badge-media">Media</span></td>
+                            <td style="color:var(--muted);font-size:.81rem;">20 feb 2026</td>
+                            <td><span class="badge-proceso">En proceso</span></td>
+                            <td>
+                                <div style="display:flex;gap:.35rem;flex-wrap:wrap;">
+                                    <button class="btn-resolver" onclick="accionReporte('resolver','#RPT-001')"><i class="bi bi-check-lg"></i> Resolver</button>
+                                    <button class="btn-escalar" onclick="bootstrap.Modal.getOrCreateInstance(document.getElementById('modalEscalar')).show()"><i class="bi bi-arrow-up-right"></i> Escalar</button>
+                                    <button class="btn-cerrar" onclick="accionReporte('cerrar','#RPT-001')"><i class="bi bi-x-lg"></i> Cerrar</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:700;color:var(--primario);">#RPT-002</td>
+                            <td><div style="font-weight:600;font-size:.84rem;">Ana López Ramírez</div><div style="font-size:.72rem;color:var(--muted);">ICSa · 2022233445</div></td>
+                            <td style="font-size:.82rem;">Acoso o conducta inapropiada</td>
+                            <td><span class="badge-ur">Unidad Receptora</span></td>
+                            <td><span class="badge-alta">Alta</span></td>
+                            <td style="color:var(--muted);font-size:.81rem;">18 feb 2026</td>
+                            <td><span class="badge-proceso">En proceso</span></td>
+                            <td>
+                                <div style="display:flex;gap:.35rem;flex-wrap:wrap;">
+                                    <button class="btn-resolver" onclick="accionReporte('resolver','#RPT-002')"><i class="bi bi-check-lg"></i> Resolver</button>
+                                    <button class="btn-escalar" onclick="bootstrap.Modal.getOrCreateInstance(document.getElementById('modalEscalar')).show()"><i class="bi bi-arrow-up-right"></i> Escalar</button>
+                                    <button class="btn-cerrar" onclick="accionReporte('cerrar','#RPT-002')"><i class="bi bi-x-lg"></i> Cerrar</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:700;color:var(--primario);">#RPT-003</td>
+                            <td><div style="font-weight:600;font-size:.84rem;">Carlos Ramírez Soto</div><div style="font-size:.72rem;color:var(--muted);">ICBI · 2020987654</div></td>
+                            <td style="font-size:.82rem;">Actividades no relacionadas al programa</td>
+                            <td><span class="badge-ur">Unidad Receptora</span></td>
+                            <td><span class="badge-alta">Alta</span></td>
+                            <td style="color:var(--muted);font-size:.81rem;">05 ene 2026</td>
+                            <td><span class="badge-resuelto">Resuelto</span></td>
+                            <td><span style="font-size:.78rem;color:var(--muted);">Sin acciones pendientes</span></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:700;color:var(--primario);">#RPT-004</td>
+                            <td><div style="font-weight:600;font-size:.84rem;">María González López</div><div style="font-size:.72rem;color:var(--muted);">ICEA · 2021123478</div></td>
+                            <td style="font-size:.82rem;">Consulta sobre horas registradas</td>
+                            <td><span class="badge-dir">Dirección</span></td>
+                            <td><span class="badge-baja">Baja</span></td>
+                            <td style="color:var(--muted);font-size:.81rem;">17 feb 2026</td>
+                            <td><span class="badge-resuelto">Resuelto</span></td>
+                            <td><span style="font-size:.78rem;color:var(--muted);">Sin acciones pendientes</span></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:700;color:var(--primario);">#RPT-005</td>
+                            <td><div style="font-weight:600;font-size:.84rem;">Daniel Torres Vega</div><div style="font-size:.72rem;color:var(--muted);">ES-ACT · 2021345678</div></td>
+                            <td style="font-size:.82rem;">Problema con cuenta SIARHA</td>
+                            <td><span class="badge-dir">Dirección</span></td>
+                            <td><span class="badge-alta">Alta</span></td>
+                            <td style="color:var(--muted);font-size:.81rem;">14 feb 2026</td>
+                            <td><span class="badge-proceso">En proceso</span></td>
+                            <td>
+                                <div style="display:flex;gap:.35rem;flex-wrap:wrap;">
+                                    <button class="btn-resolver" onclick="accionReporte('resolver','#RPT-005')"><i class="bi bi-check-lg"></i> Resolver</button>
+                                    <button class="btn-escalar" onclick="bootstrap.Modal.getOrCreateInstance(document.getElementById('modalEscalar')).show()"><i class="bi bi-arrow-up-right"></i> Escalar</button>
+                                    <button class="btn-cerrar" onclick="accionReporte('cerrar','#RPT-005')"><i class="bi bi-x-lg"></i> Cerrar</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pag-wrap">
+                <span class="pag-info">Mostrando 1–5 de 18 reportes</span>
+                <div class="pag-btns">
+                    <button class="pag-btn" disabled><i class="bi bi-chevron-left"></i></button>
+                    <button class="pag-btn active">1</button><button class="pag-btn">2</button><button class="pag-btn">3</button><button class="pag-btn">4</button>
+                    <button class="pag-btn"><i class="bi bi-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ PANEL MENSAJERÍA ═══ -->
+    <div class="tab-panel" id="panelMensajeria">
+        <div class="section-card" style="overflow:visible;">
+            <div class="section-header">
+                <span class="title"><i class="bi bi-chat-dots-fill"></i> Mensajería interna — solo administradores</span>
+                <span style="font-size:.76rem;color:var(--muted);">Solo visible para el equipo admin del sistema</span>
+            </div>
+            <div class="msg-layout">
+
+                <!-- SIDEBAR CONTACTOS -->
+                <div class="msg-sidebar">
+                    <div style="padding:.6rem .9rem;border-bottom:1px solid var(--border);">
+                        <input type="text" class="form-field" placeholder="Buscar admin…" style="font-size:.8rem;padding:.38rem .7rem;">
+                    </div>
+                    <div class="msg-contact active" onclick="selContact(this,'Rosa Alvarado García','Superadministradora')">
+                        <div class="msg-avatar av-super">RA</div>
+                        <div style="flex:1;min-width:0;">
+                            <div class="msg-cname">Rosa Alvarado García</div>
+                            <div class="msg-crole">Superadministradora</div>
+                        </div>
+                        <span class="msg-cunread">2</span>
+                    </div>
+                    <div class="msg-contact" onclick="selContact(this,'Mario Hernández López','Superadministrador')">
+                        <div class="msg-avatar av-super">MH</div>
+                        <div style="flex:1;min-width:0;">
+                            <div class="msg-cname">Mario Hernández López</div>
+                            <div class="msg-crole">Superadministrador</div>
+                        </div>
+                    </div>
+                    <div class="msg-contact" onclick="selContact(this,'Laura Torres Ramos','Admin área · ICBI · ICSa')">
+                        <div class="msg-avatar av-area">LT</div>
+                        <div style="flex:1;min-width:0;">
+                            <div class="msg-cname">Laura Torres Ramos</div>
+                            <div class="msg-crole">Admin área · ICBI · ICSa</div>
+                        </div>
+                    </div>
+                    <div class="msg-contact" onclick="selContact(this,'Jorge Castro Soto','Admin área · ES-ACT · ES-APA · ES-TIZ')">
+                        <div class="msg-avatar av-area">JC</div>
+                        <div style="flex:1;min-width:0;">
+                            <div class="msg-cname">Jorge Castro Soto</div>
+                            <div class="msg-crole">Admin área · Escuelas Superiores</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHAT -->
+                <div class="msg-main">
+                    <div class="msg-header-chat">
+                        <div class="msg-avatar av-super" id="chatAvatar">RA</div>
+                        <div>
+                            <div style="font-weight:700;font-size:.88rem;" id="chatNombre">Rosa Alvarado García</div>
+                            <div style="font-size:.72rem;color:var(--muted);" id="chatRol">Superadministradora</div>
+                        </div>
+                    </div>
+
+                    <div class="msg-thread" id="msgThread">
+                        <div class="msg-bubble recv">
+                            Buenos días Carlos. ¿Cómo va el reporte #RPT-002? Es urgente por la severidad alta.
+                            <div class="msg-meta">Rosa A. · hace 2 horas</div>
+                        </div>
+                        <div class="msg-bubble sent">
+                            Hola Rosa. Ya lo estoy revisando. Voy a necesitar que el admin de área de ICSa me confirme si el alumno reportó algo por su parte también.
+                            <div class="msg-meta">Tú · hace 1 hora 45 min</div>
+                        </div>
+                        <div class="msg-bubble recv">
+                            Perfecto. Te copio en el correo con Laura. ¿Necesitas que yo intervenga directamente con la UR?
+                            <div class="msg-meta">Rosa A. · hace 1 hora 30 min</div>
+                        </div>
+                        <div class="msg-bubble sent">
+                            Por el momento no. Dame 24 horas para reunir más información. Si no hay avance, te escalo el reporte.
+                            <div class="msg-meta">Tú · hace 1 hora 10 min</div>
+                        </div>
+                    </div>
+
+                    <div class="msg-compose">
+                        <textarea id="msgInput" placeholder="Escribe un mensaje…" onkeydown="if(event.ctrlKey&&event.key==='Enter')enviarMsg()"></textarea>
+                        <div style="display:flex;flex-direction:column;gap:.4rem;">
+                            <button class="btn-enviar-msg" onclick="enviarMsg()" title="Enviar (Ctrl+Enter)"><i class="bi bi-send-fill"></i></button>
+                            <button class="btn-outline-custom" style="padding:.35rem .5rem;font-size:.72rem;" onclick="adjuntarReporte()" title="Adjuntar reporte"><i class="bi bi-flag-fill"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<!-- MODAL ESCALAR -->
+<div class="modal fade" id="modalEscalar" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header modal-header-custom">
+                <h6 class="modal-title text-white fw-bold" style="margin:0;"><i class="bi bi-arrow-up-right me-2"></i>Escalar reporte</h6>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" style="padding:1.4rem;">
+                <div class="mb-3">
+                    <label style="font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.35rem;display:block;">Escalar a</label>
+                    <select class="form-field">
+                        <option>Rosa Alvarado García — Superadministradora</option>
+                        <option>Mario Hernández López — Superadministrador</option>
+                        <option>Laura Torres Ramos — Admin área (ICBI · ICSa)</option>
+                        <option>Jorge Castro Soto — Admin área (Escuelas)</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.35rem;display:block;">Motivo del escalado *</label>
+                    <textarea id="motivoEscalado" class="form-field" rows="3" placeholder="Explica por qué escalas este reporte y qué se necesita del destinatario…"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer" style="border-color:var(--border);padding:.9rem 1.4rem;gap:.6rem;">
+                <button class="btn-outline-custom" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn-primary-custom" onclick="confirmarEscalado()"><i class="bi bi-arrow-up-right"></i> Confirmar escalado</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast-custom" id="toastMsg"><i class="bi bi-check-circle-fill" style="font-size:1.1rem;"></i><span id="toastTxt"></span></div>
+<footer class="footer-custom">© 2026 SIARHA · Uso exclusivo institucional · UAEH</footer>
+
+<!-- ══ PANEL NOTIFICACIONES ══ -->
+<div class="notif-overlay" id="notifOverlay" onclick="cerrarNotif()"></div>
+<div class="notif-panel" id="notifPanel">
+    <div class="notif-header">
+        <h6><i class="bi bi-bell-fill me-2"></i>Notificaciones</h6>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn-mark-all" onclick="marcarTodasLeidas()">Marcar leídas</button>
+            <button class="btn-close-notif" onclick="cerrarNotif()"><i class="bi bi-x-lg"></i></button>
+        </div>
+    </div>
+    <div class="notif-tabs">
+        <button class="notif-tab active" onclick="setNotifTab('todas',this)">Todas <span id="badgeTodas" style="background:#501013;color:#fff;border-radius:20px;font-size:.65rem;padding:.08rem .45rem;margin-left:.25rem;">4</span></button>
+        <button class="notif-tab" onclick="setNotifTab('ni-msg',this)">Mensajes</button>
+        <button class="notif-tab" onclick="setNotifTab('ni-rec',this)">Reportes</button>
+        <button class="notif-tab" onclick="setNotifTab('ni-sis',this)">Sistema</button>
+    </div>
+    <div class="notif-list" id="notifList">
+        <div class="notif-item unread" data-tipo="ni-rec" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-rec"><i class="bi bi-flag-fill"></i></div>
+            <div><div class="notif-title">Nuevo reporte #RPT-0055</div><div class="notif-desc">Juan Pérez — Error en horas registradas</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 10 min</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-rec" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-rec"><i class="bi bi-flag-fill"></i></div>
+            <div><div class="notif-title">Alta severidad #RPT-0054</div><div class="notif-desc">Trato inadecuado en UR — atención urgente</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 1 hora</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-rec" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-rec"><i class="bi bi-flag-fill"></i></div>
+            <div><div class="notif-title">Reporte UR #RPT-UR-0008</div><div class="notif-desc">Hospital General — falla en sistema</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 3 horas</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-msg" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div>
+            <div><div class="notif-title">Mensaje de Lic. Alvarado</div><div class="notif-desc">Consulta sobre reporte #RPT-0042</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer, 2:00 p.m.</div></div>
+        </div>
+        <div class="notif-item" data-tipo="ni-sis" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-sis"><i class="bi bi-info-circle-fill"></i></div>
+            <div><div class="notif-title">Resumen del día</div><div class="notif-desc">12 reportes activos · 3 alta severidad</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hoy, 8:00 a.m.</div></div>
+        </div>
+    </div>
+    <div class="notif-footer"><a href="ADMIN_dashboard-reportes.html">Ver todo →</a></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function setTab(nombre, btn) {
+    document.querySelectorAll('.tab-nav-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel' + nombre.charAt(0).toUpperCase() + nombre.slice(1)).classList.add('active');
+}
+
+function accionReporte(accion, folio) {
+    const msgs = { resolver: `Reporte ${folio} marcado como Resuelto.`, cerrar: `Reporte ${folio} cerrado.` };
+    showToast(msgs[accion] || 'Acción realizada.');
+}
+
+function confirmarEscalado() {
+    const motivo = document.getElementById('motivoEscalado').value.trim();
+    if (!motivo) { alert('El motivo es requerido.'); return; }
+    bootstrap.Modal.getInstance(document.getElementById('modalEscalar')).hide();
+    showToast('Reporte escalado. El destinatario fue notificado.');
+}
+
+function selContact(el, nombre, rol) {
+    document.querySelectorAll('.msg-contact').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    const unread = el.querySelector('.msg-cunread');
+    if (unread) unread.remove();
+    document.getElementById('chatNombre').textContent = nombre;
+    document.getElementById('chatRol').textContent = rol;
+    const initials = nombre.split(' ').slice(0,2).map(n=>n[0]).join('');
+    const av = document.getElementById('chatAvatar');
+    av.textContent = initials;
+    av.className = 'msg-avatar ' + (rol.includes('Super') ? 'av-super' : 'av-area');
+    // Limpiar thread (simulado)
+    document.getElementById('msgThread').innerHTML = `<div style="text-align:center;padding:1.5rem;color:var(--muted);font-size:.82rem;"><i class="bi bi-chat-dots" style="font-size:1.5rem;display:block;margin-bottom:.4rem;"></i>Conversación con ${nombre}</div>`;
+}
+
+function enviarMsg() {
+    const input = document.getElementById('msgInput');
+    const txt = input.value.trim();
+    if (!txt) return;
+    const thread = document.getElementById('msgThread');
+    const burbuja = document.createElement('div');
+    burbuja.className = 'msg-bubble sent';
+    burbuja.innerHTML = txt + '<div class="msg-meta">Tú · ahora</div>';
+    thread.appendChild(burbuja);
+    thread.scrollTop = thread.scrollHeight;
+    input.value = '';
+}
+
+function adjuntarReporte() {
+    showToast('Selecciona el reporte a adjuntar en el mensaje.');
+}
+
+function showToast(msg) {
+    document.getElementById('toastTxt').textContent = msg;
+    const t = document.getElementById('toastMsg');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+    // ══ NOTIFICACIONES ══════════════════════════════════════════════
+        function abrirNotif(){document.getElementById('notifPanel').classList.add('open');document.getElementById('notifOverlay').classList.add('open');_nOpen=true;}
+    function cerrarNotif(){document.getElementById('notifPanel').classList.remove('open');document.getElementById('notifOverlay').classList.remove('open');_nOpen=false;}
+    function marcarLeida(item){if(!item.classList.contains('unread'))return;item.classList.remove('unread');_badge();}
+    function marcarTodasLeidas(){document.querySelectorAll('.notif-item.unread').forEach(i=>i.classList.remove('unread'));_badge();}
+    function _badge(){const n=document.querySelectorAll('.notif-item.unread').length;const b=document.getElementById('notifCount');if(b){b.textContent=n;b.style.display=n>0?'flex':'none';}const bt=document.getElementById('badgeTodas');if(bt)bt.textContent=n;}
+    function setNotifTab(tipo,btn){document.querySelectorAll('.notif-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.notif-item').forEach(i=>{i.style.display=(tipo==='todas'||i.dataset.tipo===tipo)?'':'none';});}
+    // ════════════════════════════════════════════════════════════════
+
+</script>
+
+<script>
+    let _nOpen = false;
+    function toggleNotif() { _nOpen ? cerrarNotif() : abrirNotif(); }
+    function abrirNotif()  { document.getElementById('notifPanel').classList.add('open');    document.getElementById('notifOverlay').classList.add('open');    _nOpen = true;  }
+    function cerrarNotif() { document.getElementById('notifPanel').classList.remove('open'); document.getElementById('notifOverlay').classList.remove('open'); _nOpen = false; }
+    function marcarLeida(item) { if (!item.classList.contains('unread')) return; item.classList.remove('unread'); _badge(); }
+    function marcarTodasLeidas() { document.querySelectorAll('.notif-item.unread').forEach(i => i.classList.remove('unread')); _badge(); }
+    function _badge() {
+        const n = document.querySelectorAll('.notif-item.unread').length;
+        const b = document.getElementById('notifCount');  if (b)  { b.textContent = n; b.style.display = n > 0 ? 'flex' : 'none'; }
+        const bt = document.getElementById('badgeTodas'); if (bt) bt.textContent = n;
+    }
+    function setNotifTab(tipo, btn) {
+        document.querySelectorAll('.notif-tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.notif-item').forEach(i => {
+            i.style.display = (tipo === 'todas' || i.dataset.tipo === tipo) ? '' : 'none';
+        });
+    }
+</script>
+</body>
+</html>
