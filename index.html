@@ -7,13 +7,11 @@
 
     <title>SIARHA | Inicio de Sesión</title>
 
-    <!-- Bootstrap CSS -->
     <link 
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" 
         rel="stylesheet"
     >
 
-    <!-- Estilos propios -->
     <link rel="stylesheet" href="assets/css/login.css">
 </head>
 
@@ -22,10 +20,7 @@
 <!-- NAVBAR -->
 <nav class="navbar navbar-dark border-bottom navbar-custom">
     <div class="container-fluid position-relative justify-content-between">
-
-        <!-- LOGO + SIARHA -->
         <div class="d-flex flex-column flex-md-row align-items-center align-items-md-end">
-
             <a href="https://www.uaeh.edu.mx" target="_blank" rel="noopener noreferrer">
                 <img 
                     src="assets/img/Logo_Login.svg"
@@ -34,180 +29,93 @@
                     style="cursor: pointer;"
                 >
             </a>
-
-            <span class="brand-text text-white ms-md-2">
-                SIARHA
-            </span>
-
-            <!-- TEXTO SOLO MÓVIL -->
+            <span class="brand-text text-white ms-md-2">SIARHA</span>
             <span class="navbar-subtitle text-white d-md-none text-center mt-1">
                 Dirección de Servicio Social y Prácticas Profesionales
             </span>
         </div>
-
-        <!-- TEXTO CENTRADO SOLO DESKTOP -->
         <div class="navbar-center d-none d-md-block text-center">
             <span class="navbar-subtitle text-white">
                 Dirección de Servicio Social y Prácticas Profesionales
             </span>
         </div>
-
     </div>
 </nav>
 
 <!-- CONTENIDO -->
 <main class="container main-login">
-
     <div class="card login-card">
-
-        <!-- TÍTULO -->
         <div class="text-center mb-4">
             <h2 
                 class="fw-bold d-flex align-items-center justify-content-center gap-2"
                 style="font-family: 'Times New Roman', Times, serif; color: #501013;"
             >
-                <img 
-                    src="assets/img/garza.svg"
-                    alt="Emblema SIARHA"
-                    height="60"
-                >
+                <img src="assets/img/garza.svg" alt="Emblema SIARHA" height="60">
                 ACCESO GENERAL
             </h2>
-
             <p class="text-muted small">
                 Sistema Automatizado de Registro de Horas y Actividades de Servicio Social y Prácticas Profesionales
             </p>
         </div>
 
-        <!-- FORMULARIO -->
-        <form 
-            method="POST"
-            action="/login"
-            autocomplete="off"
-            novalidate
-        >
+        <form id="formLogin" autocomplete="off" novalidate>
 
-            <!-- Selección de Rol -->
             <div class="mb-4 text-center">
                 <div class="d-flex gap-3 justify-content-center rol-buttons">
-                    <button type="button" class="btn btn-lg rol-btn" onclick="seleccionarRol('admin', this)">
-                        Administradores
-                    </button>
-
-                    <button type="button" class="btn btn-lg rol-btn" onclick="seleccionarRol('alumno', this)">
-                        Alumnos
-                    </button>
-
-                    <!--
-                    NOTA BACKEND(Dani ¿):
-                    - Para el rol "alumno", el sistema debe detectar automáticamente
-                    si pertenece a servicio social, prácticas profesionales.
-                    - El frontend NO pregunta este dato.
-                    - La redirección y permisos lo hacemos desde el backend.
-                    -->
-
-
-                    <button type="button" class="btn btn-lg rol-btn" onclick="seleccionarRol('ur', this)">
-                        Unidad Receptora
-                    </button>
+                    <button type="button" class="btn btn-lg rol-btn" onclick="seleccionarRol('admin', this)">Administradores</button>
+                    <button type="button" class="btn btn-lg rol-btn" onclick="seleccionarRol('alumno', this)">Alumnos</button>
+                    <button type="button" class="btn btn-lg rol-btn" onclick="seleccionarRol('ur', this)">Unidad Receptora</button>
                 </div>
-
-                <!-- Rol seleccionado (NO confiable, solo UX) -->
                 <input type="hidden" name="rol" id="rol" required>
             </div>
 
-            <!-- CAMPOS LOGIN -->
             <div id="loginFields" hidden>
-
                 <div class="form-floating mb-3">
-                    <input
-                        type="text"
-                        class="form-control input-custom"
-                        id="usuario"
-                        name="usuario"
-                        required
-                        maxlength="50"
-                        placeholder="Usuario"
-                        autocomplete="username"
-                    >
-                    <label for="usuario" id="labelUsuario">
-                        Usuario
-                    </label>
+                    <input type="text" class="form-control input-custom" id="usuario" name="usuario"
+                           required maxlength="50" placeholder="Usuario" autocomplete="username">
+                    <label for="usuario" id="labelUsuario">Usuario</label>
                 </div>
 
                 <div class="form-floating mb-2">
-                    <input
-                        type="password"
-                        class="form-control input-custom"
-                        id="password"
-                        name="password"
-                        required
-                        minlength="8"
-                        autocomplete="current-password"
-                        placeholder="Contraseña"
-                    >
-                    <label for="password">
-                        Contraseña
-                    </label>
+                    <input type="password" class="form-control input-custom" id="password" name="password"
+                           required minlength="8" autocomplete="current-password" placeholder="Contraseña">
+                    <label for="password">Contraseña</label>
                 </div>
 
-                <!-- RECUPERAR ACCESO -->
                 <div class="text-center mb-3" id="linksAyuda">
-                    <span class="small text-muted d-block mb-1">
-                        ¿Perdiste acceso?
-                    </span>
-
-                    <!-- Pendiennte en hacer pagina de recuperacion-->
-
-
-                    <a 
-                        href="recuperar-acceso.html"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="small fw-bold text-dark text-decoration-underline"
-                    >
+                    <span class="small text-muted d-block mb-1">¿Perdiste acceso?</span>
+                    <a href="pages/PUB_recuperar-acceso.html" target="_blank" rel="noopener noreferrer"
+                       class="small fw-bold text-dark text-decoration-underline">
                         Recupéralo aquí
                     </a>
-
                 </div>
 
                 <div class="d-grid">
-                    <button type="submit" class="btn btn-login">
-                        Iniciar sesión
-                    </button>
+                    <button type="submit" class="btn btn-login" id="btnLogin">Iniciar sesión</button>
                 </div>
-
             </div>
         </form>
 
         <div class="text-center mt-3">
-            <small class="text-muted">
-                Uso exclusivo para personal y alumnos autorizados
-            </small>
+            <small class="text-muted">Uso exclusivo para personal y alumnos autorizados</small>
         </div>
-
     </div>
 </main>
 
-<!-- FOOTER -->
 <footer class="footer-login">
     <div class="container text-center">
-        <small>
-            © <span id="year"></span> SIARHA. Todos los derechos reservados.
-        </small>
+        <small>© <span id="year"></span> SIARHA. Todos los derechos reservados.</small>
     </div>
 </footer>
 
-<!-- JS -->
+<!-- SCRIPTS -->
+<script src="assets/js/api.js"></script>
+
 <script>
 function seleccionarRol(rol, boton) {
-
     document.getElementById('rol').value = rol;
     document.getElementById('loginFields').hidden = false;
-
-    document.querySelectorAll('.rol-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
+    document.querySelectorAll('.rol-btn').forEach(btn => btn.classList.remove('active'));
     boton.classList.add('active');
 
     const labelUsuario = document.getElementById('labelUsuario');
@@ -232,6 +140,60 @@ function seleccionarRol(rol, boton) {
 }
 
 document.getElementById('year').textContent = new Date().getFullYear();
+
+document.getElementById('formLogin').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const rol      = document.getElementById('rol').value;
+    const usuario  = document.getElementById('usuario').value.trim();
+    const password = document.getElementById('password').value;
+    const btn      = document.getElementById('btnLogin');
+
+    if (!rol) {
+        showToast('Selecciona un tipo de usuario.', 'error');
+        return;
+    }
+    if (!usuario || !password) {
+        showToast('Completa correo/usuario y contraseña.', 'error');
+        return;
+    }
+
+    if (rol !== 'admin') {
+        showToast('Login para este rol aún no disponible.', 'info');
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Ingresando…';
+
+    try {
+        const res = await apiFetch('/api/admins/login', {
+            method: 'POST',
+            body: JSON.stringify({ email: usuario, contrasena: password })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            showToast(data.error || 'Credenciales incorrectas.', 'error');
+            return;
+        }
+
+        saveSession({
+            rol: 'admin',
+            token: data.token,
+            data: data.administrador
+        });
+
+        // Los ADMIN_*.html viven en la carpeta pages/
+window.location.href = 'pages/ADMIN_dashboard-servicio.html'; 
+    } catch (err) {
+        showToast(err.message || 'Error inesperado.', 'error');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Iniciar sesión';
+    }
+});
 </script>
 
 </body>

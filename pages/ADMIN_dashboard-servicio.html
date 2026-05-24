@@ -487,8 +487,8 @@
     <div class="offcanvas-body">
         <ul class="navbar-nav gap-1">
             <li><a class="nav-link active" href="ADMIN_dashboard-servicio.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
-            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html"><i class="bi bi-people-fill"></i> Alumnos</a></li>
-            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html"><i class="bi bi-building"></i> Unidades Receptoras</a></li>
+            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html#alumnos" onclick="setTimeout(()=>irATab('alumnos'),80);"><i class="bi bi-people-fill"></i> Alumnos</a></li>
+            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html#unidades" onclick="setTimeout(()=>irATab('unidades'),80);"><i class="bi bi-building"></i> Unidades Receptoras</a></li>
             <li><a class="nav-link" href="ADMIN_gestion-administradores.html"><i class="bi bi-person-gear"></i> Administradores</a></li>
             <li><a class="nav-link" href="ADMIN_reportes-globales.html"><i class="bi bi-bar-chart-fill"></i> Reportes Globales</a></li>
             <li><a class="nav-link" href="ADMIN_mensajes-admin.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge">3</span></a></li>
@@ -555,7 +555,7 @@
                 <div class="stat-icon si-vino"><i class="bi bi-people-fill"></i></div>
                 <div>
                     <div class="stat-label">Alumnos activos</div>
-                    <div class="stat-value">245</div>
+                    <div class="stat-value" id="statAlumnos">—</div>
                 </div>
             </div>
         </div>
@@ -564,7 +564,7 @@
                 <div class="stat-icon si-dorado"><i class="bi bi-building-fill"></i></div>
                 <div>
                     <div class="stat-label">Unidades receptoras</div>
-                    <div class="stat-value">38</div>
+                    <div class="stat-value" id="statURs">—</div>
                 </div>
             </div>
         </div>
@@ -572,8 +572,8 @@
             <div class="stat-card">
                 <div class="stat-icon si-vino2"><i class="bi bi-journal-check"></i></div>
                 <div>
-                    <div class="stat-label">Servicio Social</div>
-                    <div class="stat-value">160</div>
+                    <div class="stat-label">Administradores</div>
+                    <div class="stat-value" id="statAdmins">—</div>
                 </div>
             </div>
         </div>
@@ -581,8 +581,8 @@
             <div class="stat-card">
                 <div class="stat-icon si-gold2"><i class="bi bi-briefcase-fill"></i></div>
                 <div>
-                    <div class="stat-label">Prácticas Prof.</div>
-                    <div class="stat-value">85</div>
+                    <div class="stat-label">Mi rol</div>
+                    <div class="stat-value" id="statRol" style="font-size:.85rem;">—</div>
                 </div>
             </div>
         </div>
@@ -593,11 +593,11 @@
     <div class="tab-nav">
         <button class="tab-nav-btn active" onclick="setTab('alumnos',this)" id="tabBtnAlumnos">
             <i class="bi bi-people-fill"></i> Alumnos
-            <span style="background:var(--primario);color:#fff;border-radius:20px;font-size:.68rem;font-weight:700;padding:.15rem .55rem;margin-left:.2rem;">245</span>
+            <span style="background:var(--primario);color:#fff;border-radius:20px;font-size:.68rem;font-weight:700;padding:.15rem .55rem;margin-left:.2rem;" id="tabBadgeAlumnos">0</span>
         </button>
         <button class="tab-nav-btn" onclick="setTab('unidades',this)" id="tabBtnUnidades">
             <i class="bi bi-building-fill"></i> Unidades Receptoras
-            <span style="background:var(--border);color:var(--muted);border-radius:20px;font-size:.68rem;font-weight:700;padding:.15rem .55rem;margin-left:.2rem;">38</span>
+            <span style="background:var(--border);color:var(--muted);border-radius:20px;font-size:.68rem;font-weight:700;padding:.15rem .55rem;margin-left:.2rem;" id="tabBadgeURs">0</span>
         </button>
     </div>
 
@@ -668,9 +668,9 @@
 
             <!-- RESUMEN RÁPIDO ALUMNOS -->
             <div class="resumen-strip">
-                <div class="resumen-item"><div class="r-val">245</div><div class="r-lab">Total alumnos</div></div>
-                <div class="resumen-item"><div class="r-val" style="color:var(--primario);">160</div><div class="r-lab">Servicio Social</div></div>
-                <div class="resumen-item"><div class="r-val" style="color:#7a5a00;">85</div><div class="r-lab">Prácticas Prof.</div></div>
+                <div class="resumen-item"><div class="r-val" id="resTotal">0</div><div class="r-lab">Total alumnos</div></div>
+                <div class="resumen-item"><div class="r-val" style="color:var(--primario);" id="resSS">0</div><div class="r-lab">Servicio Social</div></div>
+                <div class="resumen-item"><div class="r-val" style="color:#7a5a00;" id="resPP">0</div><div class="r-lab">Prácticas Prof.</div></div>
                 <div class="resumen-item"><div class="r-val">18</div><div class="r-lab">Finalizados</div></div>
                 <div class="resumen-item"><div class="r-val" style="color:#856404;">32</div><div class="r-lab">Pendientes revisar</div></div>
             </div>
@@ -837,7 +837,7 @@
 
             <!-- PAGINACIÓN -->
             <div class="pag-wrap">
-                <span class="pag-info">Mostrando 1–7 de 245 alumnos</span>
+                <span class="pag-info" id="pagInfoAlumnos">Cargando…</span>
                 <div class="pag-btns">
                     <button class="pag-btn" disabled><i class="bi bi-chevron-left"></i></button>
                     <button class="pag-btn active">1</button>
@@ -915,7 +915,7 @@
 
             <!-- RESUMEN RÁPIDO UR -->
             <div class="resumen-strip">
-                <div class="resumen-item"><div class="r-val">38</div><div class="r-lab">Total registradas</div></div>
+                <div class="resumen-item"><div class="r-val" id="resTotalUR">0</div><div class="r-lab">Total registradas</div></div>
                 <div class="resumen-item"><div class="r-val" style="color:#7a5a00;">31</div><div class="r-lab">Activas</div></div>
                 <div class="resumen-item"><div class="r-val" style="color:var(--muted);">5</div><div class="r-lab">Inactivas</div></div>
                 <div class="resumen-item"><div class="r-val" style="color:#991b1b;">2</div><div class="r-lab">Suspendidas</div></div>
@@ -1149,13 +1149,13 @@
      El backend debe reemplazar estos valores con los reales
 ══════════════════════════════════════════════════════════ -->
 <script>
-    // ── CONFIGURACIÓN DEL ADMINISTRADOR ACTIVO ──────────────────
-    // El backend inyecta estos valores según la sesión autenticada
-    // Valores posibles para ADMIN_ROL: 'superadmin' | 'area' | 'reportes'
-    const ADMIN_ROL        = 'superadmin'; // ← BACKEND REEMPLAZA ESTO
-    const ADMIN_NOMBRE     = 'Rosa Alvarado García'; // ← BACKEND REEMPLAZA ESTO
-    const ADMIN_INSTITUTOS = [];           // ← BACKEND REEMPLAZA ESTO (solo para rol 'area')
-    //   Ejemplo área: ['ICBI', 'ES-ACT']
+    // ── LEER SESIÓN REAL DESDE localStorage (guardada en login) ──
+    const _adminData    = JSON.parse(localStorage.getItem('admin_data') || '{}');
+    const ADMIN_ROL     = (_adminData.rol === 'admin_area')     ? 'area'
+                        : (_adminData.rol === 'admin_reportes') ? 'reportes'
+                        : 'superadmin';
+    const ADMIN_NOMBRE  = _adminData.nombre_admin || 'Administrador';
+    const ADMIN_INSTITUTOS = (_adminData.institutos || []).map(i => i.nombre_instituto || i);
     // ────────────────────────────────────────────────────────────
 
     // ── CATÁLOGO DE INSTITUTOS ───────────────────────────────────
@@ -1226,7 +1226,7 @@
 
       // Redirigir coordinador de reportes a su dashboard
       if (ADMIN_ROL === 'reportes') {
-        window.location.href = 'dashboard-reportes.html';
+        window.location.href = 'ADMIN_dashboard-reportes.html';
         return;
       }
     }
@@ -1276,7 +1276,10 @@
     }
 
     // Activar tab según hash de la URL
-    if (window.location.hash === '#unidades') irATab('unidades');
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.location.hash === '#unidades') irATab('unidades');
+        else if (window.location.hash === '#alumnos') irATab('alumnos');
+    });
 
     // ══ NOTIFICACIONES ══════════════════════════════════════════════
         function abrirNotif(){document.getElementById('notifPanel').classList.add('open');document.getElementById('notifOverlay').classList.add('open');_nOpen=true;}
@@ -1309,6 +1312,122 @@
             i.style.display = (tipo === 'todas' || i.dataset.tipo === tipo) ? '' : 'none';
         });
     }
+</script>
+<!-- ────── SIARHA scripts ────── -->
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/admin-guard.js"></script>
+
+<!-- ── SIARHA: Carga de datos reales del backend ── -->
+<script>
+(async function cargarDashboard() {
+    // ── 1. Mostrar nombre del admin ──────────────────────────────
+    const nombre = _adminData.nombre_admin || 'Administrador';
+    document.querySelectorAll('#navNombre, #offNombre').forEach(el => {
+        if (el) el.textContent = nombre;
+    });
+    if (document.getElementById('statRol')) {
+        const labels = { superadmin: 'Superadmin', admin_area: 'Admin de área', admin_reportes: 'Coordinador' };
+        document.getElementById('statRol').textContent = labels[_adminData.rol] || _adminData.rol || '—';
+    }
+
+    // ── 2. Cargar stats del dashboard ────────────────────────────
+    try {
+        const res  = await apiFetch('/api/dashboard/admin');
+        const data = await res.json();
+        if (res.ok && data.stats) {
+            const s = data.stats;
+            document.getElementById('statAlumnos').textContent = s.total_alumnos ?? 0;
+            document.getElementById('statURs').textContent     = s.total_urs     ?? 0;
+            document.getElementById('statAdmins').textContent  = s.total_admins  ?? 0;
+            if (document.getElementById('tabBadgeAlumnos')) document.getElementById('tabBadgeAlumnos').textContent = s.total_alumnos ?? 0;
+            if (document.getElementById('tabBadgeURs'))     document.getElementById('tabBadgeURs').textContent     = s.total_urs     ?? 0;
+            if (document.getElementById('resTotal'))        document.getElementById('resTotal').textContent        = s.total_alumnos ?? 0;
+        }
+    } catch(e) { console.error('Dashboard stats error:', e); }
+
+    // ── 3. Cargar tabla de alumnos ───────────────────────────────
+    try {
+        const res  = await apiFetch('/api/alumnos?por_pagina=10');
+        const data = await res.json();
+        if (res.ok) {
+            const tbody = document.querySelector('#panelAlumnos tbody');
+            if (tbody) {
+                if (!data.alumnos || data.alumnos.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--muted);">No hay alumnos registrados aún.</td></tr>`;
+                } else {
+                    tbody.innerHTML = data.alumnos.map(a => {
+                        const nombre  = [a.nombre_alum, a.apellido_p_alum, a.apellido_m_alum].filter(Boolean).join(' ');
+                        const carrera = [a.nombre_licenciatura, a.nombre_instituto].filter(Boolean).join(' · ');
+                        const pct     = parseFloat(a.avance_pct) || 0;
+                        const color   = pct >= 100 ? 'af-done' : pct >= 50 ? 'af-high' : pct >= 25 ? 'af-mid' : 'af-low';
+                        const ur      = a.nombre_ur || '—';
+                        const hrs     = a.horas_realizadas ?? 0;
+                        return `<tr>
+                            <td>
+                                <div style="font-weight:700;font-size:.86rem;">${nombre}</div>
+                                <div style="font-size:.72rem;color:var(--muted);">${carrera || '—'}</div>
+                            </td>
+                            <td style="color:var(--muted);font-size:.82rem;">${a.no_cuenta}</td>
+                            <td><span class="badge-ss">Serv. Social</span></td>
+                            <td style="font-size:.82rem;">${ur}</td>
+                            <td>
+                                <div style="font-weight:800;color:var(--primario);font-size:.88rem;">${hrs}
+                                    <span style="font-weight:500;color:var(--muted);font-size:.75rem;">/ 480 hrs</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="avance-wrap">
+                                    <div class="avance-bar"><div class="avance-fill ${color}" style="width:${pct}%;"></div></div>
+                                    <span class="avance-pct">${pct}%</span>
+                                </div>
+                            </td>
+                            <td><span class="badge-activo">Activo</span></td>
+                            <td><a href="ADMIN_detalle-alumno-admin.html?no_cuenta=${a.no_cuenta}" class="btn-outline-custom"><i class="bi bi-eye-fill"></i> Ver</a></td>
+                        </tr>`;
+                    }).join('');
+                }
+                if (document.getElementById('pagInfoAlumnos')) {
+                    document.getElementById('pagInfoAlumnos').textContent =
+                        `Mostrando ${data.alumnos.length} de ${data.total} alumnos`;
+                }
+            }
+        }
+    } catch(e) { console.error('Error cargando alumnos:', e); }
+
+    // ── 4. Cargar tabla de URs ───────────────────────────────────
+    try {
+        const res  = await apiFetch('/api/unidades-receptoras');
+        const data = await res.json();
+        if (res.ok) {
+            const tbody = document.querySelector('#panelUnidades tbody');
+            if (document.getElementById('resTotalUR')) document.getElementById('resTotalUR').textContent = data.total ?? 0;
+            if (tbody) {
+                if (!data.unidades_receptoras || data.unidades_receptoras.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--muted);">No hay unidades receptoras registradas aún.</td></tr>`;
+                } else {
+                    tbody.innerHTML = data.unidades_receptoras.map(ur => `<tr>
+                        <td>
+                            <div style="font-weight:700;font-size:.86rem;">${ur.nombre_ur}</div>
+                            <div style="font-size:.72rem;color:var(--muted);">${ur.email_ur}${ur.telefono_ur ? ' · ' + ur.telefono_ur : ''}</div>
+                        </td>
+                        <td style="font-size:.82rem;">—</td>
+                        <td style="font-size:.82rem;">—</td>
+                        <td><span class="badge-ss" style="font-size:.68rem;">SS</span></td>
+                        <td>
+                            <div class="ocup-wrap">
+                                <div class="ocup-bar"><div class="ocup-fill" style="width:${ur.alumnos_activos > 0 ? '50' : '0'}%;"></div></div>
+                                <span class="ocup-txt">${ur.alumnos_activos ?? 0} alumnos</span>
+                            </div>
+                        </td>
+                        <td style="font-size:.82rem;color:var(--muted);">—</td>
+                        <td><span class="badge-ur-act">Activa</span></td>
+                        <td><a href="ADMIN_gestion-ur.html?id_ur=${ur.id_ur}" class="btn-outline-custom"><i class="bi bi-gear-fill"></i> Gestionar</a></td>
+                    </tr>`).join('');
+                }
+            }
+        }
+    } catch(e) { console.error('Error cargando URs:', e); }
+})();
 </script>
 </body>
 </html>
