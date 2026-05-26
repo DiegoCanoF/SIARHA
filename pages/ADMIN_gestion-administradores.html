@@ -50,6 +50,21 @@
         .rol-area.selected .check{background:var(--dorado);}
         .rol-reportes.selected{border-color:#059669;background:#f0fdf4;}
         .rol-reportes.selected .check{background:#059669;}
+        /* PROGRAMA — cards gemelas de rol */
+        .prog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin-top:.4rem;}
+        .prog-card{border:2px solid var(--border);border-radius:var(--radius-sm);padding:.9rem .75rem;text-align:center;cursor:pointer;transition:all .22s;background:#fff;position:relative;}
+        .prog-card:hover{border-color:var(--primario-mid);}
+        .prog-card.selected{border-color:var(--primario);background:var(--primario-lt);box-shadow:0 0 0 3px rgba(80,16,19,.1);}
+        .prog-card .check{position:absolute;top:.4rem;right:.5rem;width:16px;height:16px;background:var(--primario);border-radius:50%;display:none;align-items:center;justify-content:center;}
+        .prog-card.selected .check{display:flex;}
+        .prog-card .pi{font-size:1.3rem;margin-bottom:.35rem;display:block;}
+        .prog-card .pn{font-size:.8rem;font-weight:700;color:var(--text);line-height:1.2;}
+        .prog-card .ps{font-size:.68rem;color:var(--muted);margin-top:.2rem;}
+        .prog-section{margin-top:.6rem;display:none;}
+        .prog-section.show{display:block;}
+        .badge-prog-ss{background:#e0f2fe;color:#075985;border-radius:20px;font-size:.69rem;font-weight:700;padding:.2rem .55rem;border:1px solid rgba(7,89,133,.25);}
+        .badge-prog-pp{background:#fef3c7;color:#92400e;border-radius:20px;font-size:.69rem;font-weight:700;padding:.2rem .55rem;border:1px solid rgba(146,64,14,.25);}
+        .badge-prog-ambos{background:#ede9fe;color:#5b21b6;border-radius:20px;font-size:.69rem;font-weight:700;padding:.2rem .55rem;border:1px solid rgba(91,33,182,.25);}
         .inst-section{margin-top:.6rem;display:none;}
         .inst-section.show{display:block;}
         .inst-group-title{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem;margin-top:.8rem;}
@@ -129,7 +144,40 @@
         .notif-overlay.open{display:block;}
         .menu-badge{margin-left:auto;background:#C9A24D;color:#fff;font-size:.68rem;font-weight:800;border-radius:20px;padding:.1rem .55rem;}
         @media(max-width:480px){.notif-panel{width:100%;border-radius:0;}}
-
+        .panel-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.38);z-index:1060;}
+        .panel-overlay.open{display:block;}
+        .panel-lateral{position:fixed;top:0;right:0;bottom:0;width:580px;max-width:100vw;background:#fff;z-index:1061;box-shadow:-8px 0 40px rgba(80,16,19,.2);display:flex;flex-direction:column;transform:translateX(110%);transition:transform .35s cubic-bezier(.4,0,.2,1);}
+        .panel-lateral.open{transform:translateX(0);}
+        .panel-head{background:var(--primario);color:#fff;padding:1.1rem 1.4rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+        .panel-head h5{font-size:1rem;font-weight:800;margin:0;}
+        .panel-close{background:none;border:none;color:rgba(255,255,255,.8);font-size:1.2rem;cursor:pointer;padding:.2rem;display:flex;align-items:center;border-radius:6px;}
+        .panel-close:hover{color:#fff;}
+        .panel-body{flex:1;overflow-y:auto;padding:1.4rem;}
+        .panel-footer{border-top:1px solid var(--border);padding:1rem 1.4rem;display:flex;gap:.75rem;background:#fff;flex-shrink:0;}
+        @media(max-width:640px){.panel-lateral{width:100%;}}
+        /* Modal de confirmación */
+        .modal-siarha{display:none;position:fixed;inset:0;z-index:2000;align-items:center;justify-content:center;padding:1rem;background:rgba(0,0,0,.45);}
+        .modal-siarha.open{display:flex;}
+        .modal-backdrop{display:none;}
+        .modal-box{background:#fff;border-radius:var(--radius-card);box-shadow:0 24px 64px rgba(80,16,19,.25);max-width:440px;width:100%;position:relative;z-index:1;overflow:hidden;animation:modalIn .25s ease;}
+        @keyframes modalIn{from{opacity:0;transform:scale(.94) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
+        .modal-box-head{padding:1.2rem 1.4rem 1rem;display:flex;align-items:center;gap:.75rem;}
+        .modal-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+        .modal-icon.danger{background:#fee2e2;color:#991b1b;}
+        .modal-icon.warning{background:#fef3c7;color:#92400e;}
+        .modal-box-head h5{font-size:1rem;font-weight:800;margin:0;color:var(--text);}
+        .modal-box-body{padding:0 1.4rem 1.2rem;font-size:.87rem;color:var(--muted);line-height:1.6;}
+        .modal-info-strip{background:var(--bg);border-radius:var(--radius-sm);padding:.75rem 1rem;margin-top:.75rem;display:flex;align-items:center;gap:.6rem;font-size:.82rem;}
+        .modal-info-strip i{color:var(--dorado);font-size:1rem;flex-shrink:0;}
+        .modal-box-foot{padding:.9rem 1.4rem;border-top:1px solid var(--border);display:flex;gap:.6rem;justify-content:flex-end;}
+        .btn-modal-cancel{background:#fff;color:var(--muted);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-weight:600;font-size:.85rem;padding:.5rem 1.1rem;cursor:pointer;transition:border-color .2s,color .2s;}
+        .btn-modal-cancel:hover{border-color:var(--primario);color:var(--primario);}
+        .btn-modal-danger{background:#991b1b;color:#fff;border:none;border-radius:var(--radius-sm);font-weight:700;font-size:.85rem;padding:.5rem 1.2rem;cursor:pointer;transition:background .2s;}
+        .btn-modal-danger:hover{background:#7f1d1d;}
+        .btn-modal-warning{background:var(--dorado);color:#fff;border:none;border-radius:var(--radius-sm);font-weight:700;font-size:.85rem;padding:.5rem 1.2rem;cursor:pointer;transition:background .2s;}
+        .btn-modal-warning:hover{background:#a07a2a;}
+        /* Separador en panel footer */
+        .panel-footer .sep-vert{width:1px;background:var(--border);align-self:stretch;}
     </style>
 </head>
 <body>
@@ -160,14 +208,13 @@
         </div>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
     </div>
-    <div class="offcanvas-body">
-        <ul class="navbar-nav gap-1">
-            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
-            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html"><i class="bi bi-people-fill"></i> Alumnos</a></li>
-            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html"><i class="bi bi-building"></i> Unidades Receptoras</a></li>
-            <li><a class="nav-link active" href="ADMIN_gestion-administradores.html"><i class="bi bi-person-gear"></i> Administradores</a></li>
-            <li><a class="nav-link" href="ADMIN_reportes-globales.html"><i class="bi bi-bar-chart-fill"></i> Reportes Globales</a></li>
-            <li><a class="nav-link" href="ADMIN_mensajes-admin.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge">3</span></a></li>
+    <div class="offcanvas-body">        <ul class="navbar-nav gap-1">
+            <li><a class="nav-link " href="ADMIN_dashboard-servicio.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link " href="ADMIN_alumnos.html"><i class="bi bi-people-fill"></i> Alumnos</a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link " href="ADMIN_gestion-ur.html"><i class="bi bi-building"></i> Unidades Receptoras</a></li>
+            <li data-visible="superadmin"><a class="nav-link active" href="ADMIN_gestion-administradores.html"><i class="bi bi-person-gear"></i> Administradores</a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link " href="ADMIN_reportes-globales.html"><i class="bi bi-bar-chart-fill"></i> Reportes Globales</a></li>
+            <li><a class="nav-link " href="ADMIN_mensajes-admin.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge">3</span></a></li>
             <hr class="menu-divider">
             <li><a class="nav-link danger" href="../index.html"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
         </ul>
@@ -184,14 +231,15 @@
         <button class="btn-add" onclick="abrirFormNuevo()"><i class="bi bi-person-plus-fill"></i> Nuevo administrador</button>
     </div>
 
-    <!-- FORMULARIO -->
-    <div class="section-card" id="formCard" style="display:none;">
-        <div class="section-header">
-            <span class="title" id="formTitle"><i class="bi bi-person-plus-fill"></i> Nuevo administrador</span>
-            <button class="btn-icon" onclick="cerrarForm()" title="Cerrar"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <div class="section-body">
-            <form id="formAdmin" novalidate>
+<!-- ── PANEL LATERAL ADMINISTRADOR ── -->
+<div class="panel-overlay" id="panelOverlay" onclick="cerrarForm()"></div>
+<div class="panel-lateral" id="panelLateral">
+    <div class="panel-head">
+        <h5 id="formTitle"><i class="bi bi-person-plus-fill me-2"></i>Nuevo administrador</h5>
+        <button class="panel-close" onclick="cerrarForm()"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="panel-body">
+        <form id="formAdmin" novalidate>
                 <div class="sep-label">Datos de la cuenta</div>
                 <div class="row g-3 mb-2">
                     <div class="col-md-6">
@@ -202,16 +250,12 @@
                         <label class="form-label-sm">Correo institucional *</label>
                         <input type="email" id="aEmail" class="form-field" placeholder="nombre@uaeh.edu.mx">
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-12">
                         <label class="form-label-sm">Contraseña temporal *</label>
                         <div class="pass-wrap">
                             <input type="password" id="aPass" class="form-field" placeholder="Mínimo 8 caracteres">
                             <button type="button" class="pass-toggle" onclick="togglePass()"><i class="bi bi-eye-fill" id="eyeP"></i></button>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label-sm">Estado</label>
-                        <select id="aEstado" class="form-field"><option value="activo">Activo</option><option value="inactivo">Inactivo</option></select>
                     </div>
                 </div>
 
@@ -237,6 +281,32 @@
                     </div>
                 </div>
                 <input type="hidden" id="aRol" value="">
+
+                <!-- PROGRAMA — solo si rol no es superadmin -->
+                <div class="prog-section" id="secPrograma">
+                    <div class="sep-label">Programa que gestionará *</div>
+                    <div class="prog-grid" id="progGrid">
+                        <div class="prog-card" data-prog="ss" onclick="selPrograma(this)">
+                            <span class="check"><i class="bi bi-check-lg" style="color:#fff;font-size:.6rem;"></i></span>
+                            <span class="pi"><i class="bi bi-journal-check" style="color:#075985;"></i></span>
+                            <div class="pn">Servicio Social</div>
+                            <div class="ps">Solo alumnos y URs de SS.</div>
+                        </div>
+                        <div class="prog-card" data-prog="pp" onclick="selPrograma(this)">
+                            <span class="check"><i class="bi bi-check-lg" style="color:#fff;font-size:.6rem;"></i></span>
+                            <span class="pi"><i class="bi bi-briefcase-fill" style="color:#92400e;"></i></span>
+                            <div class="pn">Prácticas Profesionales</div>
+                            <div class="ps">Solo alumnos y URs de PP.</div>
+                        </div>
+                        <div class="prog-card" data-prog="ambos" onclick="selPrograma(this)">
+                            <span class="check"><i class="bi bi-check-lg" style="color:#fff;font-size:.6rem;"></i></span>
+                            <span class="pi"><i class="bi bi-collection-fill" style="color:#5b21b6;"></i></span>
+                            <div class="pn">Ambos programas</div>
+                            <div class="ps">Acceso a SS y PP.</div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="aPrograma" value="">
+                </div>
 
                 <!-- INSTITUTOS — solo admin de área -->
                 <div class="inst-section" id="secInstitutos">
@@ -288,139 +358,104 @@
                     </div>
                 </div>
 
-                <div id="adminError" style="font-size:.8rem;color:#991b1b;font-weight:600;margin-top:.75rem;margin-bottom:.5rem;display:none;">
+                <div id="adminError" style="font-size:.8rem;color:#991b1b;font-weight:600;margin:.75rem 0 .5rem;display:none;background:#fee2e2;border-radius:var(--radius-sm);padding:.6rem .9rem;">
                     <i class="bi bi-exclamation-circle-fill me-1"></i><span id="adminErrorTxt"></span>
                 </div>
-                <div class="d-flex gap-3 flex-wrap" style="margin-top:1.2rem;">
-                    <button type="submit" class="btn-save"><i class="bi bi-floppy-fill"></i> Guardar</button>
-                    <button type="button" class="btn-cancel-sm" onclick="cerrarForm()"><i class="bi bi-x-circle"></i> Cancelar</button>
-                </div>
-            </form>
-        </div>
+        </form>
     </div>
+    <div class="panel-footer">
+        <button class="btn-save" onclick="document.getElementById('formAdmin').requestSubmit()">
+            <i class="bi bi-floppy-fill"></i> Guardar
+        </button>
+        <button class="btn-cancel-sm" onclick="cerrarForm()">
+            <i class="bi bi-x-circle"></i> Cancelar
+        </button>
+        <div class="sep-vert" id="panelBotonesExtra" style="display:none;"></div>
+        <button class="btn-cancel-sm" id="btnPanelEstado" style="display:none;" onclick="abrirModalEstado()">
+            <i class="bi bi-slash-circle-fill"></i> <span id="btnPanelEstadoTxt">Desactivar</span>
+        </button>
+        <button class="btn-cancel-sm" id="btnPanelEliminar" style="display:none;color:#991b1b;border-color:#fca5a5;" onclick="abrirModalEliminar()">
+            <i class="bi bi-trash-fill"></i> Eliminar
+        </button>
+    </div>
+</div>
 
-    <!-- SUPERADMINS -->
+        <!-- SUPERADMINS -->
     <div class="section-card">
         <div class="section-header">
             <span class="title"><i class="bi bi-shield-fill"></i> Superadministradores</span>
-            <span style="font-size:.78rem;color:var(--muted);">2 cuentas</span>
+            <span style="font-size:.78rem;color:var(--muted);" id="countSuper">0 cuentas</span>
         </div>
-        <div class="admin-grid">
-            <div class="admin-card">
-                <div class="admin-avatar av-superadmin">RA</div>
-                <div style="flex:1;min-width:0;">
-                    <div class="admin-name">Rosa Alvarado García</div>
-                    <div class="admin-email">r.alvarado@uaeh.edu.mx</div>
-                    <div class="admin-meta">
-                        <span class="badge-superadmin"><i class="bi bi-shield-fill me-1" style="font-size:.6rem;"></i>Superadmin</span>
-                        <span class="badge-activo-g">Activo</span>
-                    </div>
-                </div>
-                <div class="admin-actions">
-                    <button class="btn-icon" onclick="abrirEditar('Rosa Alvarado García','r.alvarado@uaeh.edu.mx','superadmin',[])"><i class="bi bi-pencil-fill"></i></button>
-                    <button class="btn-icon danger" onclick="showToast('No puedes desactivar tu propia cuenta.')"><i class="bi bi-slash-circle-fill"></i></button>
-                </div>
-            </div>
-            <div class="admin-card">
-                <div class="admin-avatar av-superadmin">MH</div>
-                <div style="flex:1;min-width:0;">
-                    <div class="admin-name">Mario Hernández López</div>
-                    <div class="admin-email">m.hernandez@uaeh.edu.mx</div>
-                    <div class="admin-meta">
-                        <span class="badge-superadmin"><i class="bi bi-shield-fill me-1" style="font-size:.6rem;"></i>Superadmin</span>
-                        <span class="badge-activo-g">Activo</span>
-                    </div>
-                </div>
-                <div class="admin-actions">
-                    <button class="btn-icon" onclick="abrirEditar('Mario Hernández López','m.hernandez@uaeh.edu.mx','superadmin',[])"><i class="bi bi-pencil-fill"></i></button>
-                    <button class="btn-icon danger" onclick="showToast('Cuenta desactivada.')"><i class="bi bi-slash-circle-fill"></i></button>
-                </div>
-            </div>
-        </div>
+        <div class="admin-grid" id="listaSuperadmins"></div>
     </div>
 
     <!-- ADMINS DE ÁREA -->
     <div class="section-card">
         <div class="section-header">
             <span class="title"><i class="bi bi-building-fill" style="color:var(--dorado);"></i> Administradores de área</span>
-            <span style="font-size:.78rem;color:var(--muted);">3 cuentas</span>
+            <span style="font-size:.78rem;color:var(--muted);" id="countArea">0 cuentas</span>
         </div>
-        <div class="admin-grid">
-            <div class="admin-card">
-                <div class="admin-avatar av-area">LT</div>
-                <div style="flex:1;min-width:0;">
-                    <div class="admin-name">Laura Torres Ramos</div>
-                    <div class="admin-email">l.torres@uaeh.edu.mx</div>
-                    <div class="admin-meta">
-                        <span class="badge-area">Admin área</span>
-                        <span style="background:var(--primario-lt);color:var(--primario);border-radius:20px;font-size:.69rem;font-weight:700;padding:.2rem .55rem;border:1px solid rgba(80,16,19,.2);">ICBI · ICSa</span>
-                        <span class="badge-activo-g">Activo</span>
-                    </div>
-                </div>
-                <div class="admin-actions">
-                    <button class="btn-icon" onclick="abrirEditar('Laura Torres Ramos','l.torres@uaeh.edu.mx','area',['ICBI','ICSa'])"><i class="bi bi-pencil-fill"></i></button>
-                    <button class="btn-icon danger" onclick="showToast('Cuenta desactivada.')"><i class="bi bi-slash-circle-fill"></i></button>
-                </div>
-            </div>
-            <div class="admin-card">
-                <div class="admin-avatar av-area">JC</div>
-                <div style="flex:1;min-width:0;">
-                    <div class="admin-name">Jorge Castro Soto</div>
-                    <div class="admin-email">j.castro@uaeh.edu.mx</div>
-                    <div class="admin-meta">
-                        <span class="badge-area">Admin área</span>
-                        <span style="background:var(--primario-lt);color:var(--primario);border-radius:20px;font-size:.69rem;font-weight:700;padding:.2rem .55rem;border:1px solid rgba(80,16,19,.2);">ES-ACT · ES-APA · ES-TIZ</span>
-                        <span class="badge-activo-g">Activo</span>
-                    </div>
-                </div>
-                <div class="admin-actions">
-                    <button class="btn-icon" onclick="abrirEditar('Jorge Castro Soto','j.castro@uaeh.edu.mx','area',['ES-ACT','ES-APA','ES-TIZ'])"><i class="bi bi-pencil-fill"></i></button>
-                    <button class="btn-icon danger" onclick="showToast('Cuenta desactivada.')"><i class="bi bi-slash-circle-fill"></i></button>
-                </div>
-            </div>
-            <div class="admin-card" style="opacity:.6;">
-                <div class="admin-avatar av-inactive">PM</div>
-                <div style="flex:1;min-width:0;">
-                    <div class="admin-name">Patricia Mora Vega</div>
-                    <div class="admin-email">p.mora@uaeh.edu.mx</div>
-                    <div class="admin-meta">
-                        <span class="badge-area">Admin área</span>
-                        <span style="background:var(--primario-lt);color:var(--primario);border-radius:20px;font-size:.69rem;font-weight:700;padding:.2rem .55rem;border:1px solid rgba(80,16,19,.2);">ICEA</span>
-                        <span class="badge-inactivo">Inactivo</span>
-                    </div>
-                </div>
-                <div class="admin-actions">
-                    <button class="btn-icon" onclick="showToast('Cuenta reactivada.')"><i class="bi bi-arrow-repeat"></i></button>
-                </div>
-            </div>
-        </div>
+        <div class="admin-grid" id="listaAreas"></div>
     </div>
 
     <!-- COORDINADORES -->
     <div class="section-card">
         <div class="section-header">
             <span class="title"><i class="bi bi-flag-fill" style="color:#059669;"></i> Coordinadores de reportes</span>
-            <span style="font-size:.78rem;color:var(--muted);">1 cuenta</span>
+            <span style="font-size:.78rem;color:var(--muted);" id="countRep">0 cuentas</span>
         </div>
-        <div class="admin-grid">
-            <div class="admin-card">
-                <div class="admin-avatar av-reportes">CR</div>
-                <div style="flex:1;min-width:0;">
-                    <div class="admin-name">Carlos Reyes Ortega</div>
-                    <div class="admin-email">c.reyes@uaeh.edu.mx</div>
-                    <div class="admin-meta">
-                        <span class="badge-reportes"><i class="bi bi-flag-fill me-1" style="font-size:.6rem;"></i>Coordinador reportes</span>
-                        <span class="badge-activo-g">Activo</span>
-                    </div>
-                </div>
-                <div class="admin-actions">
-                    <button class="btn-icon" onclick="abrirEditar('Carlos Reyes Ortega','c.reyes@uaeh.edu.mx','reportes',[])"><i class="bi bi-pencil-fill"></i></button>
-                    <button class="btn-icon danger" onclick="showToast('Cuenta desactivada.')"><i class="bi bi-slash-circle-fill"></i></button>
-                </div>
-            </div>
-        </div>
+        <div class="admin-grid" id="listaReportes"></div>
     </div>
 </main>
+
+<!-- ── MODAL ELIMINAR ── -->
+<div class="modal-siarha" id="modalEliminar" onclick="if(event.target===this)cerrarModalEliminar()">
+    <div class="modal-backdrop" onclick="cerrarModalEliminar()"></div>
+    <div class="modal-box">
+        <div class="modal-box-head">
+            <div class="modal-icon danger"><i class="bi bi-person-x-fill"></i></div>
+            <h5 id="modalEliminarTitulo">Eliminar administrador</h5>
+        </div>
+        <div class="modal-box-body">
+            <p id="modalEliminarMsg">¿Confirmas que deseas eliminar a este administrador?</p>
+            <div class="modal-info-strip">
+                <i class="bi bi-arrow-repeat"></i>
+                <span id="modalEliminarDetalle">Sus alumnos serán reasignados automáticamente al admin de área más compatible o al superadministrador.</span>
+            </div>
+        </div>
+        <div class="modal-box-foot">
+            <button class="btn-modal-cancel" onclick="cerrarModalEliminar()">Cancelar</button>
+            <button class="btn-modal-danger" id="modalEliminarBtn" onclick="ejecutarEliminar()">
+                <i class="bi bi-trash-fill me-1"></i> Sí, eliminar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ── MODAL DESACTIVAR ── -->
+<div class="modal-siarha" id="modalEstado" onclick="if(event.target===this)cerrarModalEstado()">
+    <div class="modal-backdrop" onclick="cerrarModalEstado()"></div>
+    <div class="modal-box">
+        <div class="modal-box-head">
+            <div class="modal-icon warning" id="modalEstadoIcono"><i class="bi bi-slash-circle-fill"></i></div>
+            <h5 id="modalEstadoTitulo">Desactivar administrador</h5>
+        </div>
+        <div class="modal-box-body">
+            <p id="modalEstadoMsg">¿Confirmas que deseas desactivar a este administrador?</p>
+            <div class="modal-info-strip" id="modalEstadoStrip">
+                <i class="bi bi-arrow-repeat"></i>
+                <span>Sus alumnos serán reasignados automáticamente mientras su cuenta esté inactiva.</span>
+            </div>
+        </div>
+        <div class="modal-box-foot">
+            <button class="btn-modal-cancel" onclick="cerrarModalEstado()">Cancelar</button>
+            <button class="btn-modal-warning" id="modalEstadoBtn" onclick="ejecutarCambioEstado()">
+                <i class="bi bi-slash-circle-fill me-1" id="modalEstadoBtnIcon"></i>
+                <span id="modalEstadoBtnTxt">Desactivar</span>
+            </button>
+        </div>
+    </div>
+</div>
 
 <div class="toast-custom" id="toastMsg"><i class="bi bi-check-circle-fill" style="font-size:1.1rem;"></i><span id="toastTxt"></span></div>
 <footer class="footer-custom">© 2026 SIARHA · Uso exclusivo institucional · UAEH</footer>
@@ -466,52 +501,494 @@
     <div class="notif-footer"><a href="ADMIN_mensajes-admin.html">Ver todo →</a></div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-const NOMBRES={IDA:'Instituto de Artes',ICAP:'Instituto de Ciencias Agropecuarias',ICBI:'ICBI',ICSa:'ICSa',ICEA:'ICEA',ICSHu:'ICSHu','ES-ACT':'ES Actopan','ES-APA':'ES Apan','ES-ATO':'ES Atotonilco','ES-SAH':'ES Cd. Sahagún','ES-HUE':'ES Huejutla','ES-TEP':'ES Tepeji','ES-TIZ':'ES Tizayuca','ES-TLA':'ES Tlahuelilpan','ES-ZIM':'ES Zimapán'};
-let rolActual='';
-function selRol(card){document.querySelectorAll('.rol-card').forEach(c=>c.classList.remove('selected'));card.classList.add('selected');rolActual=card.dataset.rol;document.getElementById('aRol').value=rolActual;document.getElementById('secInstitutos').classList.toggle('show',rolActual==='area');document.getElementById('secReportes').classList.toggle('show',rolActual==='reportes');}
-function actualizarPills(){const checks=document.querySelectorAll('#secInstitutos input[type=checkbox]:checked');const pills=document.getElementById('pillsContainer');document.querySelectorAll('.inst-check-item').forEach(l=>l.classList.toggle('checked',l.querySelector('input').checked));if(checks.length===0){pills.innerHTML='<span style="font-size:.78rem;color:var(--muted);font-style:italic;">Ninguno</span>';return;}pills.innerHTML='';checks.forEach(cb=>{const pill=document.createElement('span');pill.className='inst-pill';pill.innerHTML=(NOMBRES[cb.value]||cb.value)+`<button onclick="quitarInst('${cb.value}')">✕</button>`;pills.appendChild(pill);});}
-function quitarInst(val){const cb=document.querySelector(`#secInstitutos input[value="${val}"]`);if(cb){cb.checked=false;cb.closest('.inst-check-item').classList.remove('checked');}actualizarPills();}
-function abrirFormNuevo(){document.getElementById('formTitle').innerHTML='<i class="bi bi-person-plus-fill"></i> Nuevo administrador';document.getElementById('formAdmin').reset();document.querySelectorAll('.rol-card').forEach(c=>c.classList.remove('selected'));document.getElementById('aRol').value='';rolActual='';document.getElementById('secInstitutos').classList.remove('show');document.getElementById('secReportes').classList.remove('show');document.querySelectorAll('.inst-check-item').forEach(l=>l.classList.remove('checked'));document.getElementById('pillsContainer').innerHTML='<span style="font-size:.78rem;color:var(--muted);font-style:italic;">Ninguno</span>';document.getElementById('adminError').style.display='none';document.getElementById('formCard').style.display='block';document.getElementById('formCard').scrollIntoView({behavior:'smooth'});}
-function abrirEditar(nombre,email,rol,institutos){document.getElementById('formTitle').innerHTML='<i class="bi bi-pencil-fill"></i> Editar administrador';document.getElementById('aNombre').value=nombre;document.getElementById('aEmail').value=email;document.getElementById('aPass').value='';document.getElementById('aRol').value=rol;rolActual=rol;document.querySelectorAll('.rol-card').forEach(c=>c.classList.toggle('selected',c.dataset.rol===rol));document.getElementById('secInstitutos').classList.toggle('show',rol==='area');document.getElementById('secReportes').classList.toggle('show',rol==='reportes');document.querySelectorAll('#secInstitutos input[type=checkbox]').forEach(cb=>{cb.checked=institutos.includes(cb.value);cb.closest('.inst-check-item').classList.toggle('checked',cb.checked);});actualizarPills();document.getElementById('adminError').style.display='none';document.getElementById('formCard').style.display='block';document.getElementById('formCard').scrollIntoView({behavior:'smooth'});}
-function cerrarForm(){document.getElementById('formCard').style.display='none';}
-function togglePass(){const i=document.getElementById('aPass'),e=document.getElementById('eyeP');if(i.type==='password'){i.type='text';e.className='bi bi-eye-slash-fill';}else{i.type='password';e.className='bi bi-eye-fill';}}
-document.getElementById('formAdmin').addEventListener('submit',e=>{e.preventDefault();const n=document.getElementById('aNombre').value.trim(),em=document.getElementById('aEmail').value.trim(),p=document.getElementById('aPass').value,rol=document.getElementById('aRol').value,err=document.getElementById('adminError'),errTxt=document.getElementById('adminErrorTxt');err.style.display='none';if(!n){errTxt.textContent='El nombre es requerido.';err.style.display='block';return;}if(!em||!em.includes('@')){errTxt.textContent='Ingresa un correo válido.';err.style.display='block';return;}if(p&&p.length<8){errTxt.textContent='La contraseña debe tener al menos 8 caracteres.';err.style.display='block';return;}if(!rol){errTxt.textContent='Selecciona un tipo de rol.';err.style.display='block';return;}if(rol==='area'){const checks=document.querySelectorAll('#secInstitutos input[type=checkbox]:checked');if(checks.length===0){errTxt.textContent='Asigna al menos un instituto o escuela.';err.style.display='block';return;}}cerrarForm();showToast('Administrador guardado. Se enviará correo de bienvenida.');});
-function showToast(msg){document.getElementById('toastTxt').textContent=msg;const t=document.getElementById('toastMsg');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200);}
 
-    // ══ NOTIFICACIONES ══════════════════════════════════════════════
-        function abrirNotif(){document.getElementById('notifPanel').classList.add('open');document.getElementById('notifOverlay').classList.add('open');_nOpen=true;}
-    function cerrarNotif(){document.getElementById('notifPanel').classList.remove('open');document.getElementById('notifOverlay').classList.remove('open');_nOpen=false;}
-    function marcarLeida(item){if(!item.classList.contains('unread'))return;item.classList.remove('unread');_badge();}
-    function marcarTodasLeidas(){document.querySelectorAll('.notif-item.unread').forEach(i=>i.classList.remove('unread'));_badge();}
-    function _badge(){const n=document.querySelectorAll('.notif-item.unread').length;const b=document.getElementById('notifCount');if(b){b.textContent=n;b.style.display=n>0?'flex':'none';}const bt=document.getElementById('badgeTodas');if(bt)bt.textContent=n;}
-    function setNotifTab(tipo,btn){document.querySelectorAll('.notif-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.notif-item').forEach(i=>{i.style.display=(tipo==='todas'||i.dataset.tipo===tipo)?'':'none';});}
-    // ════════════════════════════════════════════════════════════════
-
-</script>
-
-<script>
-    let _nOpen = false;
-    function toggleNotif() { _nOpen ? cerrarNotif() : abrirNotif(); }
-    function abrirNotif()  { document.getElementById('notifPanel').classList.add('open');    document.getElementById('notifOverlay').classList.add('open');    _nOpen = true;  }
-    function cerrarNotif() { document.getElementById('notifPanel').classList.remove('open'); document.getElementById('notifOverlay').classList.remove('open'); _nOpen = false; }
-    function marcarLeida(item) { if (!item.classList.contains('unread')) return; item.classList.remove('unread'); _badge(); }
-    function marcarTodasLeidas() { document.querySelectorAll('.notif-item.unread').forEach(i => i.classList.remove('unread')); _badge(); }
-    function _badge() {
-        const n = document.querySelectorAll('.notif-item.unread').length;
-        const b = document.getElementById('notifCount');  if (b)  { b.textContent = n; b.style.display = n > 0 ? 'flex' : 'none'; }
-        const bt = document.getElementById('badgeTodas'); if (bt) bt.textContent = n;
-    }
-    function setNotifTab(tipo, btn) {
-        document.querySelectorAll('.notif-tab').forEach(t => t.classList.remove('active'));
-        btn.classList.add('active');
-        document.querySelectorAll('.notif-item').forEach(i => {
-            i.style.display = (tipo === 'todas' || i.dataset.tipo === tipo) ? '' : 'none';
-        });
-    }
-</script>
-<!-- ────── SIARHA scripts ────── -->
+<!-- ────── SIARHA scripts (orden importa) ────── -->
 <script src="../assets/js/api.js"></script>
 <script src="../assets/js/admin-guard.js"></script>
+<script src="../assets/js/admin-scope.js"></script>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// GUARDIA: solo superadmin entra aquí
+// ═══════════════════════════════════════════════════════════════════
+const ADMIN = requireAdmin(['superadmin']);
+
+// ═══════════════════════════════════════════════════════════════════
+// ESTADO LOCAL
+// ═══════════════════════════════════════════════════════════════════
+const NOMBRES_CORTO = {
+    IDA:'Instituto de Artes', ICAP:'Instituto de Ciencias Agropecuarias',
+    ICBI:'ICBI', ICSa:'ICSa', ICEA:'ICEA', ICSHu:'ICSHu',
+    'ES-ACT':'ES Actopan','ES-APA':'ES Apan','ES-ATO':'ES Atotonilco',
+    'ES-SAH':'ES Cd. Sahagún','ES-HUE':'ES Huejutla','ES-TEP':'ES Tepeji',
+    'ES-TIZ':'ES Tizayuca','ES-TLA':'ES Tlahuelilpan','ES-ZIM':'ES Zimapán'
+};
+
+let rolActual = '';
+let programaActual = '';
+let editandoId = null;
+let codToId = {};
+let idToCod = {};
+
+// ═══════════════════════════════════════════════════════════════════
+// CARGA INICIAL
+// ═══════════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', async () => {
+    aplicarScopeAdmin(ADMIN);
+    try {
+        await cargarInstitutos();
+        await cargarAdmins();
+    } catch (e) {
+        console.error(e);
+        showToast('Error al cargar datos. Verifica que el servidor esté activo.', 'error');
+    }
+});
+
+async function cargarInstitutos() {
+    const res = await apiFetch('/api/institutos');
+    const data = await res.json();
+    (data.institutos || []).forEach(i => {
+        const codigo = codigoDeInstituto(i.nombre_instituto);
+        codToId[codigo] = i.id_instituto;
+        idToCod[i.id_instituto] = codigo;
+    });
+}
+
+async function cargarAdmins() {
+    const res = await apiFetch('/api/admins');
+    if (!res.ok) { showToast('No se pudo cargar la lista de administradores.', 'error'); return; }
+    const data = await res.json();
+    renderListaAdmins(data.administradores || []);
+}
+
+function renderListaAdmins(admins) {
+    const supers   = admins.filter(a => a.rol === 'superadmin');
+    const areas    = admins.filter(a => a.rol === 'admin_area');
+    const reportes = admins.filter(a => a.rol === 'admin_reportes');
+
+    document.getElementById('listaSuperadmins').innerHTML = supers.map(cardAdmin).join('')
+        || '<div style="padding:1rem;color:var(--muted);font-size:.85rem;">Sin superadministradores.</div>';
+    document.getElementById('listaAreas').innerHTML = areas.map(cardAdmin).join('')
+        || '<div style="padding:1rem;color:var(--muted);font-size:.85rem;">Sin admins de área.</div>';
+    document.getElementById('listaReportes').innerHTML = reportes.map(cardAdmin).join('')
+        || '<div style="padding:1rem;color:var(--muted);font-size:.85rem;">Sin coordinadores.</div>';
+
+    document.getElementById('countSuper').textContent = supers.length + ' cuenta' + (supers.length === 1 ? '' : 's');
+    document.getElementById('countArea').textContent  = areas.length  + ' cuenta' + (areas.length  === 1 ? '' : 's');
+    document.getElementById('countRep').textContent   = reportes.length + ' cuenta' + (reportes.length === 1 ? '' : 's');
+}
+
+function cardAdmin(a) {
+    const nombreCompleto = [a.nombre_admin, a.apellido_p_admin, a.apellido_m_admin].filter(Boolean).join(' ');
+    const ini = iniciales(a.nombre_admin, a.apellido_p_admin);
+    const inactiva = a.activo === false;
+    const avClass = inactiva ? 'av-inactive'
+                  : a.rol === 'superadmin' ? 'av-superadmin'
+                  : a.rol === 'admin_area' ? 'av-area'
+                  : 'av-reportes';
+    const badgeRol = a.rol === 'superadmin'
+        ? '<span class="badge-superadmin"><i class="bi bi-shield-fill me-1" style="font-size:.6rem;"></i>Superadmin</span>'
+        : a.rol === 'admin_area'
+        ? '<span class="badge-area">Admin área</span>'
+        : '<span class="badge-reportes">Reportes</span>';
+
+    const badgePrograma = a.rol === 'superadmin' ? '' :
+        '<span class="badge-prog-' + (a.programa||'ambos') + '">' + (PROGRAMAS_LABEL[a.programa] || a.programa) + '</span>';
+
+    const badgeInstitutos = (a.institutos && a.institutos.length > 0)
+        ? '<span style="background:var(--primario-lt);color:var(--primario);border-radius:20px;font-size:.69rem;font-weight:700;padding:.2rem .55rem;border:1px solid rgba(80,16,19,.2);">' + a.institutos.map(function(i){ return codigoDeInstituto(i.nombre_instituto || i); }).join(' · ') + '</span>'
+        : '';
+
+    const badgeEstado = inactiva
+        ? '<span class="badge-inactivo">Inactivo</span>'
+        : '<span class="badge-activo-g">Activo</span>';
+
+    const propio = a.id_administrador === ADMIN.id_administrador;
+    const iconEstado = inactiva ? 'bi-check-circle-fill' : 'bi-slash-circle-fill';
+    const tituloEstado = propio ? 'No puedes desactivar tu propia cuenta' : (inactiva ? 'Activar' : 'Desactivar');
+    const tituloEliminar = propio ? 'No puedes eliminarte' : 'Eliminar administrador';
+
+    const institutosIds = JSON.stringify((a.institutos || []).map(function(i){ return i.id_instituto || i; })).replace(/"/g, '&quot;');
+
+    // Botones — sin backticks anidados
+    const disabledAttr = propio ? 'disabled style="opacity:.4;cursor:not-allowed;"' : '';
+    const onclickEstado = propio
+        ? 'showToast(\'No puedes desactivar tu propia cuenta.\', \'error\')'
+        : 'cambiarEstado(' + a.id_administrador + ', ' + inactiva + ')';
+    const onclickEditar = 'abrirEditar(' + a.id_administrador + ', ' + JSON.stringify(nombreCompleto) + ', ' + JSON.stringify(a.email) + ', ' + JSON.stringify(a.rol) + ', ' + JSON.stringify(a.programa || 'ambos') + ', ' + institutosIds.replace(/&quot;/g, '"') + ', ' + (a.activo !== false) + ')';
+    const onclickEliminar = propio ? '' : 'confirmarEliminar(' + a.id_administrador + ', ' + JSON.stringify(nombreCompleto) + ')';
+
+    const div = document.createElement('div');
+    div.className = 'admin-card';
+    div.innerHTML = [
+        '<div class="admin-avatar ' + avClass + '">' + ini + '</div>',
+        '<div style="flex:1;min-width:0;">',
+            '<div class="admin-name">' + nombreCompleto + '</div>',
+            '<div class="admin-email">' + a.email + '</div>',
+            '<div class="admin-meta">' + badgeRol + badgePrograma + badgeInstitutos + badgeEstado + '</div>',
+        '</div>',
+        '<div class="admin-actions">',
+            '<button class="btn-icon" title="Editar" onclick=\'' + onclickEditar.replace(/'/g, "&#39;") + '\'><i class="bi bi-pencil-fill"></i></button>',
+        '</div>'
+    ].join('');
+    return div.outerHTML;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// SELECCIÓN DE ROL Y PROGRAMA
+// ═══════════════════════════════════════════════════════════════════
+function selRol(card) {
+    document.querySelectorAll('.rol-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    rolActual = card.dataset.rol;
+    document.getElementById('aRol').value = rolActual;
+    document.getElementById('secInstitutos').classList.toggle('show', rolActual === 'area');
+    document.getElementById('secReportes').classList.toggle('show', rolActual === 'reportes');
+    document.getElementById('secPrograma').classList.toggle('show', rolActual !== 'superadmin');
+    if (rolActual === 'superadmin') {
+        programaActual = 'ambos';
+        document.getElementById('aPrograma').value = 'ambos';
+        document.querySelectorAll('.prog-card').forEach(c => c.classList.remove('selected'));
+    }
+}
+
+function selPrograma(card) {
+    document.querySelectorAll('.prog-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    programaActual = card.dataset.prog;
+    document.getElementById('aPrograma').value = programaActual;
+}
+
+function actualizarPills() {
+    const checks = document.querySelectorAll('#secInstitutos input[type=checkbox]:checked');
+    const pills = document.getElementById('pillsContainer');
+    document.querySelectorAll('.inst-check-item').forEach(l => l.classList.toggle('checked', l.querySelector('input').checked));
+    if (checks.length === 0) {
+        pills.innerHTML = '<span style="font-size:.78rem;color:var(--muted);font-style:italic;">Ninguno</span>';
+        return;
+    }
+    pills.innerHTML = '';
+    checks.forEach(cb => {
+        const pill = document.createElement('span');
+        pill.className = 'inst-pill';
+        pill.innerHTML = (NOMBRES_CORTO[cb.value] || cb.value) + `<button onclick="quitarInst('${cb.value}')">✕</button>`;
+        pills.appendChild(pill);
+    });
+}
+
+function quitarInst(val) {
+    const cb = document.querySelector(`#secInstitutos input[value="${val}"]`);
+    if (cb) { cb.checked = false; cb.closest('.inst-check-item').classList.remove('checked'); }
+    actualizarPills();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// FORM: abrir/cerrar
+// ═══════════════════════════════════════════════════════════════════
+function abrirFormNuevo() {
+    editandoId = null;
+    document.getElementById('formTitle').innerHTML = '<i class="bi bi-person-plus-fill"></i> Nuevo administrador';
+    document.getElementById('formAdmin').reset();
+    document.querySelectorAll('.rol-card').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('.prog-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('aRol').value = '';
+    document.getElementById('aPrograma').value = '';
+    rolActual = ''; programaActual = '';
+    document.getElementById('secInstitutos').classList.remove('show');
+    document.getElementById('secReportes').classList.remove('show');
+    document.getElementById('secPrograma').classList.remove('show');
+    document.querySelectorAll('.inst-check-item').forEach(l => l.classList.remove('checked'));
+    document.getElementById('pillsContainer').innerHTML = '<span style="font-size:.78rem;color:var(--muted);font-style:italic;">Ninguno</span>';
+    document.getElementById('adminError').style.display = 'none';
+    document.getElementById('formTitle').innerHTML = '<i class="bi bi-person-plus-fill me-2"></i>Nuevo administrador';
+    document.getElementById('panelBotonesExtra').style.display = 'none';
+    document.getElementById('btnPanelEstado').style.display = 'none';
+    document.getElementById('btnPanelEliminar').style.display = 'none';
+    document.getElementById('panelOverlay').classList.add('open');
+    document.getElementById('panelLateral').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function abrirEditar(id, nombre, email, rolBack, programa, institutosIds, activo) {
+    editandoId = id;
+    window._adminEditandoNombre = nombre;
+    window._adminEditandoActivo = (activo !== false); // default true si no viene
+
+    // Titulo del panel o del form según cuál exista
+    const tituloEl = document.getElementById('panelTitulo') || document.getElementById('formTitle');
+    if (tituloEl) tituloEl.innerHTML = '<i class="bi bi-pencil-fill me-2"></i> Editar administrador';
+
+    // Nombre — compatible con panel nuevo (aNombreP) y form viejo (aNombre)
+    const campoNombre = document.getElementById('aNombreP') || document.getElementById('aNombre');
+    if (campoNombre) {
+        if (campoNombre.id === 'aNombreP') {
+            const partes = nombre.split(' ');
+            campoNombre.value = partes[0] || '';
+            const apP = document.getElementById('aApP');
+            const apM = document.getElementById('aApM');
+            if (apP) apP.value = partes[1] || '';
+            if (apM) apM.value = partes.slice(2).join(' ') || '';
+        } else {
+            campoNombre.value = nombre;
+        }
+    }
+
+    document.getElementById('aEmail').value = email;
+    document.getElementById('aPass').value = '';
+    document.getElementById('aPass').placeholder = 'Dejar vacío para no cambiar';
+
+    const rolFront = rolBackToFront(rolBack);
+    document.getElementById('aRol').value = rolFront;
+    rolActual = rolFront;
+    document.querySelectorAll('.rol-card').forEach(c => c.classList.toggle('selected', c.dataset.rol === rolFront));
+    document.getElementById('secInstitutos').classList.toggle('show', rolFront === 'area');
+    document.getElementById('secReportes').classList.toggle('show', rolFront === 'reportes');
+    document.getElementById('secPrograma').classList.toggle('show', rolFront !== 'superadmin');
+
+    document.getElementById('aPrograma').value = programa;
+    programaActual = programa;
+    document.querySelectorAll('.prog-card').forEach(c => c.classList.toggle('selected', c.dataset.prog === programa));
+
+    const codigos = (institutosIds || []).map(id => idToCod[id]).filter(Boolean);
+    document.querySelectorAll('#secInstitutos input[type=checkbox]').forEach(cb => {
+        cb.checked = codigos.includes(cb.value);
+        cb.closest('.inst-check-item').classList.toggle('checked', cb.checked);
+    });
+    actualizarPills();
+    document.getElementById('adminError').style.display = 'none';
+
+    // Botones extra del panel (solo al editar)
+    document.getElementById('panelBotonesExtra').style.display = 'block';
+    document.getElementById('btnPanelEstado').style.display    = 'inline-flex';
+    document.getElementById('btnPanelEliminar').style.display  = 'inline-flex';
+
+    // Configurar botón de estado según activo/inactivo real
+    const estaActivo = window._adminEditandoActivo;
+    const btnEstado  = document.getElementById('btnPanelEstado');
+    const txtEstado  = document.getElementById('btnPanelEstadoTxt');
+    btnEstado.style.color       = estaActivo ? '' : '#16a34a';
+    btnEstado.style.borderColor = estaActivo ? '' : '#86efac';
+    btnEstado.querySelector('i').className = estaActivo ? 'bi bi-slash-circle-fill' : 'bi bi-check-circle-fill';
+    txtEstado.textContent = estaActivo ? 'Desactivar' : 'Activar';
+
+    document.getElementById('panelOverlay').classList.add('open');
+    document.getElementById('panelLateral').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function cerrarForm() {
+    document.getElementById('panelOverlay').classList.remove('open');
+    document.getElementById('panelLateral').classList.remove('open');
+    document.body.style.overflow = '';
+    document.getElementById('aPass').placeholder = 'Mínimo 8 caracteres';
+    editandoId = null;
+}
+
+function togglePass() {
+    const i = document.getElementById('aPass'), e = document.getElementById('eyeP');
+    if (i.type === 'password') { i.type = 'text';     e.className = 'bi bi-eye-slash-fill'; }
+    else                       { i.type = 'password'; e.className = 'bi bi-eye-fill'; }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// SUBMIT: POST o PUT al backend
+// ═══════════════════════════════════════════════════════════════════
+document.getElementById('formAdmin').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const err = document.getElementById('adminError');
+    const errTxt = document.getElementById('adminErrorTxt');
+    err.style.display = 'none';
+
+    // Leer campos — compatibles con panel lateral (aNombreP) y formulario viejo (aNombre)
+    const nombreP   = (document.getElementById('aNombreP') || document.getElementById('aNombre'))?.value.trim() || '';
+    const apellidoP = document.getElementById('aApP')?.value.trim() || '';
+    const apellidoM = document.getElementById('aApM')?.value.trim() || '';
+    const email     = document.getElementById('aEmail').value.trim();
+    const tel       = document.getElementById('aTelefono')?.value.trim() || '';
+    const pass      = document.getElementById('aPass').value;
+    const rolFront  = document.getElementById('aRol').value;
+    const programa  = document.getElementById('aPrograma').value;
+
+    if (!nombreP) return mostrarError(errTxt, err, 'El nombre es requerido.');
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return mostrarError(errTxt, err, 'Ingresa un correo válido.');
+    if (!editandoId && pass.length < 8) return mostrarError(errTxt, err, 'La contraseña debe tener al menos 8 caracteres.');
+    if (editandoId && pass && pass.length < 8) return mostrarError(errTxt, err, 'La contraseña debe tener al menos 8 caracteres.');
+    if (!rolFront) return mostrarError(errTxt, err, 'Selecciona un tipo de rol.');
+    if (rolFront !== 'superadmin' && !programa) return mostrarError(errTxt, err, 'Selecciona el programa que gestionará.');
+
+    let institutosIds = [];
+    if (rolFront === 'area') {
+        const checks = document.querySelectorAll('#secInstitutos input[type=checkbox]:checked');
+        if (checks.length === 0) return mostrarError(errTxt, err, 'Asigna al menos un instituto o escuela.');
+        institutosIds = Array.from(checks).map(cb => codToId[cb.value]).filter(Boolean);
+        if (institutosIds.length === 0) {
+            return mostrarError(errTxt, err, 'Los institutos no existen en la BD. Corre seed_institutos.sql primero.');
+        }
+    }
+
+    const body = {
+        nombre_admin:     nombreP,
+        apellido_p_admin: apellidoP || null,
+        apellido_m_admin: apellidoM || null,
+        email,
+        telefono: tel || null,
+        rol: rolFrontToBack(rolFront),
+        programa: rolFront === 'superadmin' ? 'ambos' : programa,
+        institutos: institutosIds
+    };
+    if (pass) body.contrasena = pass;
+
+    try {
+        const res = editandoId
+            ? await apiFetch(`/api/admins/${editandoId}`, { method: 'PUT',  body: JSON.stringify(body) })
+            : await apiFetch('/api/admins',                { method: 'POST', body: JSON.stringify(body) });
+        const data = await res.json();
+        if (!res.ok) return mostrarError(errTxt, err, data.error || 'Error al guardar.');
+
+        cerrarForm();
+        showToast(editandoId ? 'Administrador actualizado.' : 'Administrador creado con éxito.', 'success');
+        await cargarAdmins();
+    } catch (ex) {
+        console.error(ex);
+        mostrarError(errTxt, err, 'Error de conexión con el servidor.');
+    }
+});
+
+function mostrarError(elTxt, elBox, msg) {
+    elTxt.textContent = msg;
+    elBox.style.display = 'block';
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// CAMBIAR ESTADO (activar/desactivar)
+// ═══════════════════════════════════════════════════════════════════
+// cambiarEstado: mantenido por compatibilidad, la UI usa ejecutarCambioEstado
+async function cambiarEstado(id, nuevoActivo) { _modalAdminId = id; _modalAdminActivo = !nuevoActivo; await ejecutarCambioEstado(); }
+
+// ═══════════════════════════════════════════════════════════════════
+// NOTIFICACIONES (panel)
+// ═══════════════════════════════════════════════════════════════════
+// ── ELIMINAR ADMINISTRADOR ───────────────────────────────────
+// Estado temporal para los modales
+let _modalAdminId   = null;
+let _modalAdminNombre = '';
+let _modalAdminActivo = true;
+
+function abrirModalEliminar() {
+    _modalAdminId = editandoId;
+    const nombre  = window._adminEditandoNombre || document.getElementById('aNombre')?.value || 'este administrador';
+    document.getElementById('modalEliminarTitulo').textContent = 'Eliminar a ' + nombre;
+    document.getElementById('modalEliminarMsg').textContent =
+        '¿Confirmas que deseas eliminar permanentemente la cuenta de ' + nombre + '?';
+    document.getElementById('modalEliminar').classList.add('open');
+}
+function cerrarModalEliminar() {
+    document.getElementById('modalEliminar').classList.remove('open');
+}
+
+async function ejecutarEliminar() {
+    cerrarModalEliminar();
+    try {
+        const res  = await apiFetch('/api/admins/' + _modalAdminId, { method: 'DELETE' });
+        const data = await res.json();
+        if (!res.ok) { showToast(data.error || 'Error al eliminar.', 'error'); return; }
+        cerrarForm();
+        // Toast con info de reasignación (alumnos y URs)
+        const totalAl  = data.alumnos_reasignados || 0;
+        const totalUr  = data.urs_reasignadas || 0;
+        const partes = [];
+        if (totalAl > 0) partes.push(totalAl + ' alumno' + (totalAl > 1 ? 's' : '') + ' reasignado' + (totalAl > 1 ? 's' : ''));
+        if (totalUr > 0) partes.push(totalUr + ' UR' + (totalUr > 1 ? 's reasignadas' : ' reasignada'));
+        const sufijo = partes.length > 0 ? ' (' + partes.join(', ') + ')' : '';
+        showToast(data.mensaje + sufijo, 'success');
+        await cargarAdmins();
+    } catch(e) {
+        console.error('ejecutarEliminar:', e);
+        showToast('Error de conexión: ' + (e.message || 'desconocido'), 'error');
+    }
+}
+
+function abrirModalEstado() {
+    _modalAdminId     = editandoId;
+    _modalAdminActivo = window._adminEditandoActivo !== false;
+    const nombre = window._adminEditandoNombre || document.getElementById('aNombre')?.value || 'este administrador';
+    const accion = _modalAdminActivo ? 'desactivar' : 'activar';
+    document.getElementById('modalEstadoTitulo').textContent =
+        (_modalAdminActivo ? 'Desactivar' : 'Activar') + ' a ' + nombre;
+    document.getElementById('modalEstadoMsg').textContent =
+        '¿Confirmas que deseas ' + accion + ' la cuenta de ' + nombre + '?';
+    document.getElementById('modalEstadoStrip').style.display = _modalAdminActivo ? 'flex' : 'none';
+    document.getElementById('modalEstadoBtnTxt').textContent = _modalAdminActivo ? 'Desactivar' : 'Activar';
+    document.getElementById('modalEstadoBtnIcon').className =
+        _modalAdminActivo ? 'bi bi-slash-circle-fill me-1' : 'bi bi-check-circle-fill me-1';
+    document.getElementById('modalEstadoBtn').style.background =
+        _modalAdminActivo ? 'var(--dorado)' : '#16a34a';
+    document.getElementById('modalEstado').classList.add('open');
+}
+function cerrarModalEstado() {
+    document.getElementById('modalEstado').classList.remove('open');
+}
+
+async function ejecutarCambioEstado() {
+    cerrarModalEstado();
+    const nuevoActivo = !_modalAdminActivo;
+    try {
+        const res  = await apiFetch('/api/admins/' + _modalAdminId + '/estado', {
+            method: 'PATCH', body: JSON.stringify({ activo: nuevoActivo })
+        });
+        const data = await res.json();
+        if (!res.ok) { showToast(data.error || 'Error.', 'error'); return; }
+        cerrarForm();
+        const totalReas = data.alumnos_reasignados || 0;
+        const msgReas = (!nuevoActivo && totalReas > 0)
+            ? totalReas + ' alumno' + (totalReas > 1 ? 's fueron reasignados' : ' fue reasignado') + ' mientras la cuenta esté inactiva.'
+            : '';
+        showToastRich(data.mensaje || (nuevoActivo ? 'Cuenta activada.' : 'Cuenta desactivada.'), msgReas, nuevoActivo ? 'success' : 'info');
+        await cargarAdmins();
+    } catch(e) { showToast('Error de conexión.', 'error'); }
+}
+
+// Toast enriquecido con título + subtítulo
+function showToastRich(titulo, subtitulo, tipo) {
+    const cont = document.getElementById('toastMsg');
+    const bg = tipo === 'success' ? '#1f6b3a' : tipo === 'error' ? '#9b1c1c' : '#501013';
+    const icon = tipo === 'success' ? 'bi-check-circle-fill' : tipo === 'error' ? 'bi-exclamation-triangle-fill' : 'bi-info-circle-fill';
+    cont.style.background = bg;
+    cont.style.flexDirection = 'column';
+    cont.style.alignItems = 'flex-start';
+    cont.style.gap = '.2rem';
+    cont.innerHTML = '<div style="display:flex;align-items:center;gap:.5rem;"><i class="bi ' + icon + '" style="font-size:1rem;"></i><strong>' + titulo + '</strong></div>'
+        + (subtitulo ? '<div style="font-size:.78rem;opacity:.9;padding-left:1.5rem;">' + subtitulo + '</div>' : '');
+    cont.classList.add('show');
+    setTimeout(() => cont.classList.remove('show'), 4500);
+}
+
+// Compat: se llama desde cards si quedara alguna
+function confirmarEliminar(id, nombre) {
+    editandoId = id;
+    document.getElementById('modalEliminarTitulo').textContent = 'Eliminar a ' + nombre;
+    document.getElementById('modalEliminarMsg').textContent = '¿Confirmas eliminar la cuenta de ' + nombre + '?';
+    document.getElementById('modalEliminar').classList.add('open');
+}
+
+let _nOpen = false;
+function toggleNotif() { _nOpen ? cerrarNotif() : abrirNotif(); }
+function abrirNotif()  { document.getElementById('notifPanel').classList.add('open');    document.getElementById('notifOverlay').classList.add('open');    _nOpen = true;  }
+function cerrarNotif() { document.getElementById('notifPanel').classList.remove('open'); document.getElementById('notifOverlay').classList.remove('open'); _nOpen = false; }
+function marcarLeida(item) { if (!item.classList.contains('unread')) return; item.classList.remove('unread'); _badge(); }
+function marcarTodasLeidas() { document.querySelectorAll('.notif-item.unread').forEach(i => i.classList.remove('unread')); _badge(); }
+function _badge() {
+    const n = document.querySelectorAll('.notif-item.unread').length;
+    const b = document.getElementById('notifCount');  if (b)  { b.textContent = n; b.style.display = n > 0 ? 'flex' : 'none'; }
+    const bt = document.getElementById('badgeTodas'); if (bt) bt.textContent = n;
+}
+function setNotifTab(tipo, btn) {
+    document.querySelectorAll('.notif-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.notif-item').forEach(i => {
+        i.style.display = (tipo === 'todas' || i.dataset.tipo === tipo) ? '' : 'none';
+    });
+}
+</script>
 </body>
 </html>

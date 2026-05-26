@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>SIARHA | Gestión Unidad Receptora</title>
+    <title>SIARHA | Unidades Receptoras</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../assets/css/siarha.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -10,149 +10,142 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
         :root {
-            --primario:     #501013;
-            --primario-dk:  #3a0b0e;
-            --primario-lt:  #f7eaea;
-            --primario-mid: #7a1820;
-            --dorado:       #C9A24D;
-            --dorado-lt:    #fdf6e3;
-            --bg:           #F2F4F8;
-            --card-bg:      #ffffff;
-            --text:         #1F2933;
-            --muted:        #6b7280;
-            --border:       #E5E7EB;
-            --radius-card:  18px;
-            --radius-sm:    10px;
-            --shadow:       0 2px 16px rgba(80,16,19,.08);
-            --shadow-hover: 0 6px 28px rgba(80,16,19,.15);
+            --primario:#501013; --primario-dk:#3a0b0e; --primario-lt:#f7eaea; --primario-mid:#7a1820;
+            --dorado:#C9A24D; --dorado-lt:#fdf6e3; --bg:#F2F4F8; --card-bg:#fff;
+            --text:#1F2933; --muted:#6b7280; --border:#E5E7EB;
+            --radius-card:18px; --radius-sm:10px;
+            --shadow:0 2px 16px rgba(80,16,19,.08); --shadow-hover:0 6px 28px rgba(80,16,19,.15);
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
-
-        /* ── NAVBAR ── */
-        .navbar-custom { background: var(--primario); padding: 0 1.5rem; height: 70px; box-shadow: 0 2px 16px rgba(0,0,0,.15); position: sticky; top: 0; z-index: 1050; display: flex; align-items: center; }
-        .brand-text { font-size: 1.5rem; font-weight: 800; letter-spacing: .04em; line-height: 1; }
-        .navbar-subtitle { font-size: .7rem; font-weight: 500; opacity: .85; }
-        .navbar-toggler { border: none; color: #fff; font-size: 1.25rem; padding: .4rem .6rem; border-radius: var(--radius-sm); background: rgba(255,255,255,.12); transition: background .2s; }
-        .navbar-toggler:hover { background: rgba(255,255,255,.22); }
-
-        /* ── OFFCANVAS ── */
-        .offcanvas-custom { background: var(--primario-dk); color: #fff; width: 280px !important; border-radius: var(--radius-card) 0 0 var(--radius-card); }
-        .offcanvas-custom .offcanvas-header { border-color: rgba(255,255,255,.12) !important; padding: 1.25rem 1.5rem; }
-        .offcanvas-custom .nav-link { color: rgba(255,255,255,.8); font-weight: 500; font-size: .9rem; padding: .65rem 1rem; border-radius: var(--radius-sm); display: flex; align-items: center; gap: .6rem; transition: background .2s, color .2s; }
-        .offcanvas-custom .nav-link:hover, .offcanvas-custom .nav-link.active { background: rgba(255,255,255,.12); color: #fff; }
-        .offcanvas-custom .nav-link.active { font-weight: 700; }
-        .offcanvas-custom .nav-link.danger { color: #ff9090 !important; }
-        .offcanvas-custom .nav-link.danger:hover { background: rgba(255,80,80,.15); }
-        .menu-divider { border-color: rgba(255,255,255,.12); margin: .5rem 0; }
-
-        /* ── MAIN ── */
-        main { flex: 1; padding: 1.75rem 1.5rem; max-width: 1000px; width: 100%; margin: 0 auto; }
-
-        .btn-back { display: inline-flex; align-items: center; gap: .4rem; font-size: .83rem; font-weight: 600; color: var(--muted); background: var(--card-bg); border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: .45rem .9rem; text-decoration: none; margin-bottom: 1.4rem; transition: border-color .2s, color .2s, background .2s; }
-        .btn-back:hover { border-color: var(--primario); color: var(--primario); background: var(--primario-lt); }
-
-        /* ── MODE TOGGLE ── */
-        .mode-toggle { display: flex; background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; margin-bottom: 1.5rem; width: fit-content; }
-        .mode-btn { padding: .55rem 1.3rem; font-size: .85rem; font-weight: 600; cursor: pointer; border: none; background: transparent; color: var(--muted); transition: background .2s, color .2s; display: flex; align-items: center; gap: .4rem; }
-        .mode-btn.active { background: var(--primario); color: #fff; }
-
-        /* ── SECTION CARD ── */
-        .section-card { background: var(--card-bg); border-radius: var(--radius-card); box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden; margin-bottom: 1.4rem; }
-        .section-header { padding: 1rem 1.4rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem; }
-        .section-header .title { font-weight: 700; font-size: .95rem; display: flex; align-items: center; gap: .5rem; color: var(--primario); }
-        .section-body { padding: 1.4rem; }
-
-        /* ── FORM ── */
-        .form-label-sm { font-size: .75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin-bottom: .35rem; display: block; }
-        .form-field { border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: .55rem .9rem; font-size: .88rem; font-family: inherit; color: var(--text); background: #fff; width: 100%; outline: none; transition: border-color .2s, box-shadow .2s; }
-        .form-field:focus { border-color: var(--primario); box-shadow: 0 0 0 3px rgba(80,16,19,.1); }
-        .form-field:disabled { background: var(--bg); color: var(--muted); cursor: not-allowed; }
-        textarea.form-field { resize: vertical; min-height: 80px; }
-        .field-hint { font-size: .72rem; color: var(--muted); margin-top: .28rem; }
-
-        /* ── SEP LABEL ── */
-        .sep-label { font-size: .72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; display: flex; align-items: center; gap: .6rem; margin: 1.2rem 0 1rem; }
-        .sep-label::before, .sep-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-        /* ── BOTONES ── */
-        .btn-save { background: var(--primario); color: #fff; border: none; border-radius: var(--radius-sm); font-weight: 700; font-size: .9rem; padding: .65rem 1.5rem; display: inline-flex; align-items: center; gap: .45rem; cursor: pointer; transition: background .2s, transform .15s; box-shadow: 0 4px 14px rgba(80,16,19,.2); }
-        .btn-save:hover { background: var(--primario-dk); transform: translateY(-1px); }
-        .btn-outline-custom { border: 1.5px solid var(--border); background: #fff; color: var(--muted); border-radius: var(--radius-sm); font-weight: 600; font-size: .85rem; padding: .6rem 1.1rem; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; transition: border-color .2s, color .2s, background .2s; text-decoration: none; }
-        .btn-outline-custom:hover { border-color: var(--primario); color: var(--primario); background: var(--primario-lt); }
-        .btn-danger-outline { border: 1.5px solid #fca5a5; background: #fff; color: #991b1b; border-radius: var(--radius-sm); font-weight: 600; font-size: .85rem; padding: .6rem 1.1rem; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; transition: background .2s; }
-        .btn-danger-outline:hover { background: #fee2e2; }
-
-        /* ── ESTADO TOGGLE ── */
-        .estado-toggle { display: flex; gap: .6rem; flex-wrap: wrap; }
-        .est-btn { border: 1.5px solid var(--border); background: #fff; border-radius: 20px; font-size: .82rem; font-weight: 600; padding: .38rem 1rem; cursor: pointer; transition: all .2s; display: flex; align-items: center; gap: .4rem; }
-        .est-btn.activa.selected { border-color: var(--dorado); background: var(--dorado-lt); color: #7a5a00; }
-        .est-btn.inactiva.selected { border-color: #9ca3af; background: #f3f4f6; color: #374151; }
-        .est-btn.suspendida.selected { border-color: #fca5a5; background: #fee2e2; color: #991b1b; }
-
-        /* ── TABLA ALUMNOS ── */
-        .table-responsive { overflow-x: auto; }
-        table { margin: 0; font-size: .83rem; width: 100%; border-collapse: collapse; }
-        table thead th { background: var(--primario); color: #fff; font-weight: 700; font-size: .74rem; text-transform: uppercase; letter-spacing: .05em; padding: .8rem 1rem; border: none; white-space: nowrap; }
-        table tbody td { padding: .7rem 1rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
-        table tbody tr:last-child td { border-bottom: none; }
-        table tbody tr:hover { background: var(--primario-lt); }
-        .badge-activo    { background: var(--dorado-lt); color: #7a5a00; border-radius: 20px; font-size: .73rem; font-weight: 700; padding: .25rem .65rem; border: 1px solid var(--dorado); }
-        .badge-inactivo  { background: #f3f4f6; color: #6b7280; border-radius: 20px; font-size: .73rem; font-weight: 700; padding: .25rem .65rem; }
-        .badge-revision  { background: var(--primario-lt); color: var(--primario); border-radius: 20px; font-size: .73rem; font-weight: 700; padding: .25rem .65rem; }
-
-        /* avance */
-        .avance-wrap { display: flex; align-items: center; gap: .5rem; min-width: 90px; }
-        .avance-bar  { flex: 1; height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
-        .avance-fill { height: 100%; border-radius: 99px; }
-        .avance-fill.low  { background: #e57373; }
-        .avance-fill.mid  { background: var(--dorado); }
-        .avance-fill.high { background: var(--primario-mid); }
-        .avance-fill.done { background: var(--primario); }
-        .avance-pct { font-size: .78rem; font-weight: 800; color: var(--text); min-width: 34px; text-align: right; }
-
-        /* ── TOAST ── */
-        .toast-custom { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--primario); color: #fff; border-radius: var(--radius-sm); padding: .9rem 1.3rem; display: flex; align-items: center; gap: .6rem; font-size: .85rem; font-weight: 600; box-shadow: 0 8px 24px rgba(80,16,19,.25); transform: translateY(80px); opacity: 0; transition: transform .35s ease, opacity .35s ease; z-index: 9999; }
-        .toast-custom.show { transform: translateY(0); opacity: 1; }
-
-        /* ── FOOTER ── */
-        .footer-custom { background: var(--primario); color: rgba(255,255,255,.7); text-align: center; padding: .75rem; font-size: .75rem; }
-
-        @media (max-width: 767px) { main { padding: 1.25rem 1rem; } }
-    
-        /* ══ NOTIFICACIONES ══ */
-        .notif-btn{position:relative;background:rgba(255,255,255,.12);border:none;color:#fff;width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;transition:background .2s;flex-shrink:0;}
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+        /* NAVBAR */
+        .navbar-custom{background:var(--primario);padding:0 1.5rem;height:70px;box-shadow:0 2px 16px rgba(0,0,0,.15);position:sticky;top:0;z-index:1050;display:flex;align-items:center;}
+        .brand-text{font-size:1.5rem;font-weight:800;letter-spacing:.04em;line-height:1;}
+        .navbar-subtitle{font-size:.7rem;font-weight:500;opacity:.85;}
+        .navbar-toggler{border:none;color:#fff;font-size:1.25rem;padding:.4rem .6rem;border-radius:var(--radius-sm);background:rgba(255,255,255,.12);transition:background .2s;}
+        .navbar-toggler:hover{background:rgba(255,255,255,.22);}
+        /* OFFCANVAS */
+        .offcanvas-custom{background:var(--primario-dk);color:#fff;width:280px!important;border-radius:var(--radius-card) 0 0 var(--radius-card);}
+        .offcanvas-custom .offcanvas-header{border-color:rgba(255,255,255,.12)!important;padding:1.25rem 1.5rem;}
+        .offcanvas-custom .nav-link{color:rgba(255,255,255,.8);font-weight:500;font-size:.9rem;padding:.65rem 1rem;border-radius:var(--radius-sm);display:flex;align-items:center;gap:.6rem;transition:background .2s,color .2s;}
+        .offcanvas-custom .nav-link:hover,.offcanvas-custom .nav-link.active{background:rgba(255,255,255,.12);color:#fff;}
+        .offcanvas-custom .nav-link.active{font-weight:700;}
+        .offcanvas-custom .nav-link.danger{color:#ff9090!important;}
+        .offcanvas-custom .nav-link.danger:hover{background:rgba(255,80,80,.15);}
+        .menu-divider{border-color:rgba(255,255,255,.12);margin:.5rem 0;}
+        .menu-badge{margin-left:auto;background:var(--dorado);color:#fff;font-size:.68rem;font-weight:800;border-radius:20px;padding:.1rem .55rem;}
+        /* MAIN */
+        main{flex:1;padding:1.75rem 1.5rem;max-width:1200px;width:100%;margin:0 auto;}
+        .btn-back{display:inline-flex;align-items:center;gap:.4rem;font-size:.83rem;font-weight:600;color:var(--muted);background:var(--card-bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.45rem .9rem;text-decoration:none;margin-bottom:1.4rem;transition:border-color .2s,color .2s,background .2s;}
+        .btn-back:hover{border-color:var(--primario);color:var(--primario);background:var(--primario-lt);}
+        /* SECTION */
+        .section-card{background:var(--card-bg);border-radius:var(--radius-card);box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden;margin-bottom:1.5rem;}
+        .section-header{padding:1rem 1.4rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+        .section-header .title{font-weight:700;font-size:.95rem;display:flex;align-items:center;gap:.5rem;color:var(--primario);}
+        /* BOTONES */
+        .btn-outline-custom{border:1.5px solid var(--border);background:#fff;color:var(--muted);border-radius:var(--radius-sm);font-weight:600;font-size:.82rem;padding:.45rem .9rem;display:inline-flex;align-items:center;gap:.4rem;transition:border-color .2s,color .2s,background .2s;cursor:pointer;text-decoration:none;}
+        .btn-outline-custom:hover{border-color:var(--primario);color:var(--primario);background:var(--primario-lt);}
+        .btn-primary-custom{background:var(--primario);color:#fff;border:none;border-radius:var(--radius-sm);font-weight:600;font-size:.82rem;padding:.45rem .9rem;display:inline-flex;align-items:center;gap:.4rem;cursor:pointer;transition:background .2s;text-decoration:none;}
+        .btn-primary-custom:hover{background:var(--primario-dk);}
+        .btn-danger-sm{border:1.5px solid #fca5a5;background:#fff;color:#991b1b;border-radius:var(--radius-sm);font-weight:600;font-size:.78rem;padding:.35rem .75rem;display:inline-flex;align-items:center;gap:.3rem;cursor:pointer;transition:background .2s;}
+        .btn-danger-sm:hover{background:#fee2e2;}
+        /* FILTROS */
+        .filtros-bar{background:var(--bg);border-bottom:1px solid var(--border);padding:.9rem 1.4rem;}
+        .form-field{border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.45rem .85rem;font-size:.83rem;font-family:inherit;color:var(--text);background:#fff;outline:none;transition:border-color .2s;width:100%;}
+        .form-field:focus{border-color:var(--primario);box-shadow:0 0 0 3px rgba(80,16,19,.1);}
+        .form-field:disabled{background:var(--bg);color:var(--muted);}
+        textarea.form-field{resize:vertical;min-height:80px;}
+        .form-label-sm{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.35rem;display:block;}
+        /* RESUMEN */
+        .resumen-strip{display:flex;border-bottom:1px solid var(--border);}
+        .resumen-item{flex:1;text-align:center;padding:.75rem .5rem;border-right:1px solid var(--border);}
+        .resumen-item:last-child{border-right:none;}
+        .resumen-item .r-val{font-size:1.05rem;font-weight:800;color:var(--text);}
+        .resumen-item .r-lab{font-size:.68rem;color:var(--muted);font-weight:500;margin-top:.12rem;}
+        /* TABLE */
+        .table-responsive{overflow-x:auto;}
+        table{margin:0;font-size:.83rem;width:100%;border-collapse:collapse;}
+        table thead th{background:var(--primario);color:#fff;font-weight:700;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;padding:.8rem 1rem;border:none;white-space:nowrap;}
+        table tbody td{padding:.7rem 1rem;border-bottom:1px solid var(--border);vertical-align:middle;color:var(--text);}
+        table tbody tr:last-child td{border-bottom:none;}
+        table tbody tr:hover{background:var(--primario-lt);}
+        /* BADGES */
+        .badge-ur-act{background:var(--dorado-lt);color:#7a5a00;border-radius:20px;font-size:.73rem;font-weight:700;padding:.26rem .68rem;border:1px solid var(--dorado);}
+        .badge-ur-ina{background:#f3f4f6;color:#6b7280;border-radius:20px;font-size:.73rem;font-weight:700;padding:.26rem .68rem;}
+        .badge-ur-sus{background:#fee2e2;color:#991b1b;border-radius:20px;font-size:.73rem;font-weight:700;padding:.26rem .68rem;}
+        .badge-ss{background:var(--primario-lt);color:var(--primario);border-radius:20px;font-size:.71rem;font-weight:700;padding:.22rem .6rem;border:1px solid rgba(80,16,19,.18);}
+        .badge-pp{background:var(--dorado-lt);color:#7a5a00;border-radius:20px;font-size:.71rem;font-weight:700;padding:.22rem .6rem;border:1px solid rgba(201,162,77,.35);}
+        /* OCUPACIÓN */
+        .ocup-wrap{display:flex;align-items:center;gap:.5rem;min-width:110px;}
+        .ocup-bar{flex:1;height:6px;background:var(--border);border-radius:99px;overflow:hidden;}
+        .ocup-fill{height:100%;border-radius:99px;background:var(--primario);}
+        .ocup-txt{font-size:.77rem;font-weight:700;color:var(--text);white-space:nowrap;}
+        /* PAGINACIÓN */
+        .pag-wrap{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.4rem;border-top:1px solid var(--border);flex-wrap:wrap;gap:.5rem;}
+        .pag-info{font-size:.78rem;color:var(--muted);font-weight:500;}
+        .pag-btns{display:flex;gap:.35rem;}
+        .pag-btn{width:32px;height:32px;border-radius:8px;border:1.5px solid var(--border);background:#fff;color:var(--muted);font-size:.82rem;font-weight:600;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;}
+        .pag-btn:hover{border-color:var(--primario);color:var(--primario);background:var(--primario-lt);}
+        .pag-btn.active{background:var(--primario);color:#fff;border-color:var(--primario);}
+        .pag-btn:disabled{opacity:.4;cursor:not-allowed;}
+        /* FOOTER */
+        .footer-custom{background:var(--primario);color:rgba(255,255,255,.7);text-align:center;padding:.75rem;font-size:.75rem;}
+        /* PANEL LATERAL (formulario) */
+        .panel-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:1060;backdrop-filter:blur(2px);}
+        .panel-overlay.open{display:block;}
+        .panel-lateral{position:fixed;top:0;right:0;bottom:0;width:560px;max-width:100vw;background:#fff;z-index:1061;box-shadow:-8px 0 40px rgba(80,16,19,.18);display:flex;flex-direction:column;transform:translateX(110%);transition:transform .35s cubic-bezier(.4,0,.2,1);}
+        .panel-lateral.open{transform:translateX(0);}
+        .panel-head{background:var(--primario);color:#fff;padding:1.1rem 1.4rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+        .panel-head h5{font-size:1rem;font-weight:800;margin:0;}
+        .panel-close{background:none;border:none;color:rgba(255,255,255,.8);font-size:1.2rem;cursor:pointer;padding:.2rem;display:flex;align-items:center;border-radius:6px;}
+        .panel-close:hover{color:#fff;}
+        .panel-body{flex:1;overflow-y:auto;padding:1.4rem;}
+        .panel-footer{border-top:1px solid var(--border);padding:1rem 1.4rem;display:flex;gap:.75rem;flex-wrap:wrap;flex-shrink:0;background:#fff;}
+        .sep-label{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;display:flex;align-items:center;gap:.6rem;margin:1.2rem 0 1rem;}
+        .sep-label::before,.sep-label::after{content:'';flex:1;height:1px;background:var(--border);}
+        .btn-save{background:var(--primario);color:#fff;border:none;border-radius:var(--radius-sm);font-weight:700;font-size:.88rem;padding:.6rem 1.4rem;display:inline-flex;align-items:center;gap:.45rem;cursor:pointer;transition:background .2s;}
+        .btn-save:hover{background:var(--primario-dk);}
+        /* ESTADO TOGGLE */
+        .estado-toggle{display:flex;gap:.6rem;flex-wrap:wrap;}
+        .est-btn{border:1.5px solid var(--border);background:#fff;border-radius:20px;font-size:.82rem;font-weight:600;padding:.38rem 1rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.4rem;}
+        .est-btn.activa.selected{border-color:var(--dorado);background:var(--dorado-lt);color:#7a5a00;}
+        .est-btn.inactiva.selected{border-color:#9ca3af;background:#f3f4f6;color:#374151;}
+        .est-btn.suspendida.selected{border-color:#fca5a5;background:#fee2e2;color:#991b1b;}
+        /* NOTIFICACIONES */
+        .notif-btn{position:relative;background:rgba(255,255,255,.12);border:none;color:#fff;width:40px;height:40px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;transition:background .2s;flex-shrink:0;}
         .notif-btn:hover{background:rgba(255,255,255,.22);}
-        .notif-count{position:absolute;top:4px;right:4px;background:#C9A24D;color:#fff;font-size:.58rem;font-weight:800;border-radius:20px;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0 .25rem;border:1.5px solid #501013;}
-        .notif-panel{position:fixed;top:70px;right:0;width:360px;max-height:calc(100vh - 80px);background:#fff;border:1px solid #E5E7EB;border-radius:18px 0 0 18px;box-shadow:-4px 8px 32px rgba(80,16,19,.18);z-index:1049;display:flex;flex-direction:column;transform:translateX(110%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow:hidden;}
+        .notif-count{position:absolute;top:4px;right:4px;background:var(--dorado);color:#fff;font-size:.58rem;font-weight:800;border-radius:20px;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0 .25rem;border:1.5px solid var(--primario);}
+        .notif-panel{position:fixed;top:70px;right:0;width:360px;max-height:calc(100vh - 80px);background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-card) 0 0 var(--radius-card);box-shadow:-4px 8px 32px rgba(80,16,19,.18);z-index:1049;display:flex;flex-direction:column;transform:translateX(110%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow:hidden;}
         .notif-panel.open{transform:translateX(0);}
-        .notif-header{padding:1rem 1.2rem;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;justify-content:space-between;background:#501013;color:#fff;flex-shrink:0;}
+        .notif-header{padding:1rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--primario);color:#fff;flex-shrink:0;}
         .notif-header h6{font-size:.92rem;font-weight:800;margin:0;}
         .btn-mark-all{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.8);background:rgba(255,255,255,.12);border:none;border-radius:20px;padding:.2rem .7rem;cursor:pointer;}
         .btn-mark-all:hover{background:rgba(255,255,255,.22);}
         .btn-close-notif{background:none;border:none;color:rgba(255,255,255,.7);font-size:1rem;cursor:pointer;padding:.2rem;display:flex;align-items:center;border-radius:6px;}
         .btn-close-notif:hover{color:#fff;}
-        .notif-tabs{display:flex;border-bottom:1px solid #E5E7EB;flex-shrink:0;}
-        .notif-tab{flex:1;padding:.6rem;font-size:.8rem;font-weight:700;color:#6b7280;border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;text-align:center;}
-        .notif-tab.active{color:#501013;border-bottom-color:#501013;}
+        .notif-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;}
+        .notif-tab{flex:1;padding:.6rem;font-size:.8rem;font-weight:700;color:var(--muted);border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;text-align:center;}
+        .notif-tab.active{color:var(--primario);border-bottom-color:var(--primario);}
         .notif-list{overflow-y:auto;flex:1;}
-        .notif-item{padding:.9rem 1.2rem;border-bottom:1px solid #E5E7EB;display:flex;align-items:flex-start;gap:.75rem;cursor:pointer;transition:background .15s;position:relative;}
-        .notif-item:hover{background:#F2F4F8;}
-        .notif-item.unread{background:#f7eaea;}
-        .notif-item.unread::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#501013;}
+        .notif-item{padding:.9rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:.75rem;cursor:pointer;transition:background .15s;position:relative;}
+        .notif-item:hover{background:var(--bg);}
+        .notif-item.unread{background:var(--primario-lt);}
+        .notif-item.unread::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--primario);}
         .notif-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
-        .ni-ap{background:#d1fae5;color:#065f46;} .ni-re{background:#fee2e2;color:#991b1b;} .ni-msg{background:#dbeafe;color:#1e40af;} .ni-sis{background:#f7eaea;color:#501013;} .ni-rec{background:#fdf6e3;color:#7a5a00;}
-        .notif-title{font-size:.83rem;font-weight:700;color:#1F2933;margin-bottom:.15rem;}
-        .notif-item.unread .notif-title{color:#501013;}
-        .notif-desc{font-size:.76rem;color:#6b7280;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-        .notif-time{font-size:.68rem;color:#6b7280;margin-top:.3rem;font-weight:500;}
-        .notif-footer{padding:.75rem 1.2rem;border-top:1px solid #E5E7EB;text-align:center;flex-shrink:0;}
-        .notif-footer a{font-size:.8rem;font-weight:700;color:#501013;text-decoration:none;}
-        .notif-overlay{display:none;position:fixed;inset:0;z-index:1048;}
-        .notif-overlay.open{display:block;}
-        .menu-badge{margin-left:auto;background:#C9A24D;color:#fff;font-size:.68rem;font-weight:800;border-radius:20px;padding:.1rem .55rem;}
+        .ni-msg{background:#dbeafe;color:#1e40af;} .ni-rec{background:var(--dorado-lt);color:#7a5a00;} .ni-sis{background:var(--primario-lt);color:var(--primario);}
+        .notif-title{font-size:.83rem;font-weight:700;color:var(--text);margin-bottom:.15rem;}
+        .notif-item.unread .notif-title{color:var(--primario);}
+        .notif-desc{font-size:.76rem;color:var(--muted);line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .notif-time{font-size:.68rem;color:var(--muted);margin-top:.3rem;font-weight:500;}
+        .notif-footer{padding:.75rem 1.2rem;border-top:1px solid var(--border);text-align:center;flex-shrink:0;}
+        .notif-footer a{font-size:.8rem;font-weight:700;color:var(--primario);text-decoration:none;}
+        .notif-overlay2{display:none;position:fixed;inset:0;z-index:1048;}
+        .notif-overlay2.open{display:block;}
+        [data-visible]{transition:opacity .2s;}
+        @media(max-width:767px){main{padding:1.25rem 1rem;}.panel-lateral{width:100%;}}
         @media(max-width:480px){.notif-panel{width:100%;border-radius:0;}}
-
+        .campo-ok-ur{border-color:#16a34a!important;}
+        .campo-err-ur{border-color:#dc2626!important;box-shadow:0 0 0 3px rgba(220,38,38,.1)!important;}
     </style>
 </head>
 <body>
@@ -171,7 +164,7 @@
         </div>
         <div class="d-flex align-items-center gap-2 ms-auto">
             <div class="d-none d-md-flex align-items-center gap-2 text-white" style="font-size:.83rem;font-weight:600;opacity:.9;">
-                <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;"><i class="bi bi-shield-fill"></i></div>
+                <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;"><i class="bi bi-person-fill"></i></div>
                 <span>Administrador</span>
             </div>
             <button class="notif-btn" id="btnNotif" onclick="toggleNotif()" title="Notificaciones"><i class="bi bi-bell-fill"></i><span class="notif-count" id="notifCount">4</span></button>
@@ -192,10 +185,10 @@
     <div class="offcanvas-body">
         <ul class="navbar-nav gap-1">
             <li><a class="nav-link" href="ADMIN_dashboard-servicio.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
-            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html"><i class="bi bi-people-fill"></i> Alumnos</a></li>
-            <li><a class="nav-link active" href="ADMIN_dashboard-servicio.html"><i class="bi bi-building"></i> Unidades Receptoras</a></li>
-            <li><a class="nav-link" href="ADMIN_gestion-administradores.html"><i class="bi bi-person-gear"></i> Administradores</a></li>
-            <li><a class="nav-link" href="ADMIN_reportes-globales.html"><i class="bi bi-bar-chart-fill"></i> Reportes Globales</a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link" href="ADMIN_alumnos.html"><i class="bi bi-people-fill"></i> Alumnos</a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link active" href="ADMIN_gestion-ur.html"><i class="bi bi-building"></i> Unidades Receptoras</a></li>
+            <li data-visible="superadmin"><a class="nav-link" href="ADMIN_gestion-administradores.html"><i class="bi bi-person-gear"></i> Administradores</a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link" href="ADMIN_reportes-globales.html"><i class="bi bi-bar-chart-fill"></i> Reportes Globales</a></li>
             <li><a class="nav-link" href="ADMIN_mensajes-admin.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge">3</span></a></li>
             <hr class="menu-divider">
             <li><a class="nav-link danger" href="../index.html"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
@@ -205,248 +198,236 @@
 
 <!-- ── MAIN ── -->
 <main>
-
     <a href="ADMIN_dashboard-servicio.html" class="btn-back"><i class="bi bi-arrow-left"></i> Volver al panel</a>
 
-    <!-- TÍTULO + MODO -->
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.4rem;">
+    <!-- ENCABEZADO -->
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.75rem;margin-bottom:1.25rem;">
         <div>
-            <h4 style="font-size:1.3rem;font-weight:800;margin:0;">Gestión de Unidad Receptora</h4>
-            <p style="font-size:.8rem;color:var(--muted);margin-top:.25rem;" id="modoDesc">Editando: <strong>Hospital General</strong></p>
+            <h4 style="font-size:1.3rem;font-weight:800;margin:0;">Unidades Receptoras</h4>
+            <p style="font-size:.8rem;color:var(--muted);margin-top:.25rem;">Instituciones con convenio activo · Periodo Enero – Junio 2026</p>
         </div>
-        <div class="mode-toggle">
-            <button class="mode-btn" onclick="setModo('nueva')"><i class="bi bi-plus-circle-fill"></i> Nueva UR</button>
-            <button class="mode-btn active" onclick="setModo('editar')"><i class="bi bi-pencil-fill"></i> Editar UR</button>
-        </div>
-    </div>
-
-    <!-- FORMULARIO PRINCIPAL -->
-    <div class="section-card">
-        <div class="section-header">
-            <span class="title"><i class="bi bi-building-fill"></i> Datos de la institución</span>
-            <span style="font-size:.75rem;color:var(--muted);">ID: UR-0014</span>
-        </div>
-        <div class="section-body">
-            <form id="formUR" novalidate>
-
-                <!-- DATOS GENERALES -->
-                <div class="row g-3 mb-2">
-                    <div class="col-md-8">
-                        <label class="form-label-sm">Nombre de la institución <span style="color:var(--primario);">*</span></label>
-                        <input type="text" id="nombreUR" class="form-field" value="Hospital General" placeholder="Nombre oficial de la institución">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label-sm">Sector <span style="color:var(--primario);">*</span></label>
-                        <select id="sector" class="form-field">
-                            <option>Salud</option>
-                            <option>Educación</option>
-                            <option>Gobierno</option>
-                            <option>Empresa privada</option>
-                            <option>ONG / Social</option>
-                            <option>Tecnología</option>
-                            <option>Otro</option>
-                        </select>
-                    </div>
-                    <div class="col-12">
-                        <label class="form-label-sm">Dirección / Ubicación <span style="color:var(--primario);">*</span></label>
-                        <input type="text" class="form-field" value="Av. Juárez 120, Col. Centro, Pachuca, Hgo." placeholder="Dirección completa">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label-sm">Municipio</label>
-                        <input type="text" class="form-field" value="Pachuca de Soto">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label-sm">Estado</label>
-                        <input type="text" class="form-field" value="Hidalgo">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label-sm">Código postal</label>
-                        <input type="text" class="form-field" value="42000" maxlength="5">
-                    </div>
-                </div>
-
-                <div class="sep-label">Responsable / Enlace institucional</div>
-
-                <div class="row g-3 mb-2">
-                    <div class="col-md-4">
-                        <label class="form-label-sm">Nombre del responsable <span style="color:var(--primario);">*</span></label>
-                        <input type="text" class="form-field" value="Dr. Roberto Martínez" placeholder="Nombre completo">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label-sm">Cargo / Puesto</label>
-                        <input type="text" class="form-field" value="Director de Recursos Humanos" placeholder="Cargo dentro de la institución">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label-sm">Correo de contacto <span style="color:var(--primario);">*</span></label>
-                        <input type="email" class="form-field" value="hospital@institucion.mx" placeholder="correo@institucion.mx">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label-sm">Teléfono</label>
-                        <input type="tel" class="form-field" value="771 200 0000" placeholder="000 000 0000">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label-sm">Extensión</label>
-                        <input type="text" class="form-field" placeholder="Ext. 000" maxlength="6">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label-sm">Horario de atención</label>
-                        <input type="text" class="form-field" value="Lun – Vie · 8:00 – 15:00" placeholder="Lun – Vie · 9:00 – 14:00">
-                    </div>
-                </div>
-
-                <div class="sep-label">Capacidad y configuración</div>
-
-                <div class="row g-3 mb-3">
-                    <div class="col-md-3">
-                        <label class="form-label-sm">Cupo máximo de alumnos <span style="color:var(--primario);">*</span></label>
-                        <input type="number" class="form-field" value="15" min="1" max="100">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label-sm">Programas aceptados <span style="color:var(--primario);">*</span></label>
-                        <select class="form-field">
-                            <option>Ambos</option>
-                            <option>Solo Servicio Social</option>
-                            <option>Solo Prácticas Prof.</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label-sm">Horas requeridas (SS)</label>
-                        <input type="number" class="form-field" value="480" min="1">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label-sm">Horas requeridas (PP)</label>
-                        <input type="number" class="form-field" value="240" min="1">
-                    </div>
-                    <div class="col-12">
-                        <label class="form-label-sm">Observaciones / Notas internas</label>
-                        <textarea class="form-field" placeholder="Información adicional sobre esta Unidad Receptora…">Institución con convenio vigente hasta diciembre 2026. Prioridad para alumnos de ICSA e ICBI.</textarea>
-                    </div>
-                </div>
-
-                <!-- ESTADO -->
-                <div class="mb-4">
-                    <label class="form-label-sm">Estado de la UR <span style="color:var(--primario);">*</span></label>
-                    <div class="estado-toggle">
-                        <button type="button" class="est-btn activa selected" onclick="selEstado(this,'activa')">
-                            <i class="bi bi-circle-fill" style="font-size:.5rem;color:var(--dorado);"></i> Activa
-                        </button>
-                        <button type="button" class="est-btn inactiva" onclick="selEstado(this,'inactiva')">
-                            <i class="bi bi-circle-fill" style="font-size:.5rem;color:#9ca3af;"></i> Inactiva
-                        </button>
-                        <button type="button" class="est-btn suspendida" onclick="selEstado(this,'suspendida')">
-                            <i class="bi bi-circle-fill" style="font-size:.5rem;color:#ef4444;"></i> Suspendida
-                        </button>
-                    </div>
-                    <input type="hidden" id="estadoUR" value="activa">
-                </div>
-
-                <!-- ACCIONES -->
-                <div class="d-flex gap-3 flex-wrap align-items-center">
-                    <button type="submit" class="btn-save"><i class="bi bi-floppy-fill"></i> Guardar cambios</button>
-                    <a href="ADMIN_dashboard-servicio.html" class="btn-outline-custom"><i class="bi bi-x-circle"></i> Cancelar</a>
-                    <button type="button" class="btn-danger-outline ms-auto" onclick="bootstrap.Modal.getOrCreateInstance(document.getElementById('modalEliminar')).show()">
-                        <i class="bi bi-trash-fill"></i> Eliminar UR
-                    </button>
-                </div>
-
-            </form>
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            <button class="btn-outline-custom" onclick="exportarExcel()"><i class="bi bi-file-earmark-excel"></i> Exportar</button>
+            <button class="btn-primary-custom" data-visible="superadmin" onclick="abrirPanel(null)"><i class="bi bi-plus-circle-fill"></i> Nueva UR</button>
         </div>
     </div>
 
-    <!-- ALUMNOS ASIGNADOS -->
     <div class="section-card">
-        <div class="section-header">
-            <span class="title"><i class="bi bi-people-fill"></i> Alumnos asignados a esta UR</span>
-            <div class="d-flex gap-2 align-items-center">
-                <span style="font-size:.78rem;color:var(--muted);font-weight:500;">12 / 15 lugares ocupados</span>
-                <button class="btn-outline-custom" onclick="showToast('Exportando lista…')"><i class="bi bi-file-earmark-excel"></i> Exportar</button>
+
+        <!-- FILTROS -->
+        <div class="filtros-bar">
+            <div class="row g-2 align-items-end">
+                <div class="col-12 col-md-3">
+                    <input type="text" class="form-field" id="buscarUR" placeholder="🔍  Buscar institución…" oninput="filtrarDOM()">
+                </div>
+                <div class="col-6 col-md-2">
+                    <select class="form-field" id="filtroEstadoUR" onchange="filtrarDOM()">
+                        <option value="">Estado</option>
+                        <option value="activa">Activa</option>
+                        <option value="inactiva">Inactiva</option>
+                        <option value="suspendida">Suspendida</option>
+                    </select>
+                </div>
+                <div class="col-6 col-md-2">
+                    <select class="form-field" id="filtroProgUR" onchange="filtrarDOM()">
+                        <option value="">Programas</option>
+                        <option value="ss">Solo SS</option>
+                        <option value="pp">Solo PP</option>
+                        <option value="ambos">Ambos</option>
+                    </select>
+                </div>
+                <div class="col-6 col-md-2">
+                    <select class="form-field" id="filtroOcupUR" onchange="filtrarDOM()">
+                        <option value="">Ocupación</option>
+                        <option value="disponible">Con lugar disponible</option>
+                        <option value="llena">Llenas</option>
+                    </select>
+                </div>
+                <div class="col-6 col-md-2">
+                    <button class="btn-outline-custom w-100" onclick="limpiarFiltros()"><i class="bi bi-x-circle"></i> Limpiar</button>
+                </div>
+                <div class="col-6 col-md-1">
+                    <button class="btn-primary-custom w-100" onclick="filtrarDOM()"><i class="bi bi-funnel-fill"></i></button>
+                </div>
             </div>
         </div>
 
-        <!-- Barra ocupación -->
-        <div style="padding:.75rem 1.4rem;border-bottom:1px solid var(--border);background:var(--bg);">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.35rem;">
-                <span style="font-size:.75rem;font-weight:600;color:var(--muted);">Ocupación actual</span>
-                <span style="font-size:.8rem;font-weight:800;color:var(--primario);">12 / 15 alumnos</span>
-            </div>
-            <div style="background:var(--border);border-radius:99px;height:8px;overflow:hidden;">
-                <div style="width:80%;height:100%;background:linear-gradient(90deg,var(--primario-mid),var(--primario));border-radius:99px;"></div>
-            </div>
+        <!-- RESUMEN -->
+        <div class="resumen-strip">
+            <div class="resumen-item"><div class="r-val" id="resTotal">—</div><div class="r-lab">Total</div></div>
+            <div class="resumen-item"><div class="r-val" style="color:#7a5a00;" id="resActivas">—</div><div class="r-lab">Activas</div></div>
+            <div class="resumen-item"><div class="r-val" style="color:var(--muted);" id="resInactivas">—</div><div class="r-lab">Inactivas</div></div>
+            <div class="resumen-item"><div class="r-val" style="color:#991b1b;" id="resSuspendidas">—</div><div class="r-lab">Suspendidas</div></div>
+            <div class="resumen-item"><div class="r-val" id="resLugares">—</div><div class="r-lab">Lugares ocupados</div></div>
         </div>
 
+        <!-- TABLA -->
         <div class="table-responsive">
             <table>
                 <thead>
                     <tr>
-                        <th>Nombre</th>
-                        <th>No. Cuenta</th>
-                        <th>Programa</th>
-                        <th>Avance</th>
+                        <th>Institución</th>
+                        <th>Programas</th>
+                        <th>Cupo / Ocupación</th>
+                        <th>Alumnos activos</th>
                         <th>Estado</th>
                         <th>Acción</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td style="font-weight:600;">Juan Pérez García</td>
-                        <td style="color:var(--muted);">2020123456</td>
-                        <td>Servicio Social</td>
-                        <td>
-                            <div class="avance-wrap">
-                                <div class="avance-bar"><div class="avance-fill high" style="width:80%;"></div></div>
-                                <span class="avance-pct">80%</span>
-                            </div>
-                        </td>
-                        <td><span class="badge-revision">En revisión</span></td>
-                        <td><a href="ADMIN_detalle-alumno-admin.html" class="btn-outline-custom" style="font-size:.78rem;padding:.3rem .7rem;"><i class="bi bi-eye"></i> Ver</a></td>
-                    </tr>
-                    <tr>
-                        <td style="font-weight:600;">María González López</td>
-                        <td style="color:var(--muted);">2021123478</td>
-                        <td>Prácticas Prof.</td>
-                        <td>
-                            <div class="avance-wrap">
-                                <div class="avance-bar"><div class="avance-fill mid" style="width:60%;"></div></div>
-                                <span class="avance-pct">60%</span>
-                            </div>
-                        </td>
-                        <td><span class="badge-activo">Activo</span></td>
-                        <td><a href="ADMIN_detalle-alumno-admin.html" class="btn-outline-custom" style="font-size:.78rem;padding:.3rem .7rem;"><i class="bi bi-eye"></i> Ver</a></td>
-                    </tr>
-                    <tr>
-                        <td style="font-weight:600;">Carlos Ramírez Soto</td>
-                        <td style="color:var(--muted);">2020987654</td>
-                        <td>Servicio Social</td>
-                        <td>
-                            <div class="avance-wrap">
-                                <div class="avance-bar"><div class="avance-fill done" style="width:100%;"></div></div>
-                                <span class="avance-pct">100%</span>
-                            </div>
-                        </td>
-                        <td><span class="badge-activo" style="background:#d1fae5;color:#065f46;border-color:#6ee7b7;">Finalizado</span></td>
-                        <td><a href="ADMIN_detalle-alumno-admin.html" class="btn-outline-custom" style="font-size:.78rem;padding:.3rem .7rem;"><i class="bi bi-eye"></i> Ver</a></td>
-                    </tr>
-                    <tr>
-                        <td style="font-weight:600;">Ana López Ramírez</td>
-                        <td style="color:var(--muted);">2022233445</td>
-                        <td>Prácticas Prof.</td>
-                        <td>
-                            <div class="avance-wrap">
-                                <div class="avance-bar"><div class="avance-fill mid" style="width:62%;"></div></div>
-                                <span class="avance-pct">62%</span>
-                            </div>
-                        </td>
-                        <td><span class="badge-revision">En revisión</span></td>
-                        <td><a href="ADMIN_detalle-alumno-admin.html" class="btn-outline-custom" style="font-size:.78rem;padding:.3rem .7rem;"><i class="bi bi-eye"></i> Ver</a></td>
-                    </tr>
+                <tbody id="tablaUR">
+                    <tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--muted);"><i class="bi bi-arrow-clockwise"></i> Cargando…</td></tr>
                 </tbody>
             </table>
         </div>
-    </div>
 
+        <!-- PAGINACIÓN -->
+        <div class="pag-wrap">
+            <span class="pag-info" id="pagInfo">—</span>
+            <div class="pag-btns" id="pagBtns"></div>
+        </div>
+
+    </div>
 </main>
 
-<!-- MODAL ELIMINAR -->
+<footer class="footer-custom">© 2026 SIARHA · Uso exclusivo institucional · UAEH</footer>
+
+<!-- ══ PANEL LATERAL FORMULARIO ══ -->
+<div class="panel-overlay" id="panelOverlay" onclick="cerrarPanel()"></div>
+<div class="panel-lateral" id="panelLateral">
+    <div class="panel-head">
+        <h5 id="panelTitulo"><i class="bi bi-building-fill me-2"></i>Nueva Unidad Receptora</h5>
+        <button class="panel-close" onclick="cerrarPanel()"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="panel-body">
+        <form id="formUR" novalidate>
+            <input type="hidden" id="urId">
+
+            <div class="row g-3">
+                <div class="col-12">
+                    <label class="form-label-sm">Nombre de la institución <span style="color:var(--primario);">*</span></label>
+                    <input type="text" id="urNombre" class="form-field" placeholder="Nombre oficial">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label-sm">Correo electrónico <span style="color:var(--primario);">*</span></label>
+                    <input type="email" id="urEmail" class="form-field" placeholder="correo@institucion.mx"
+                           oninput="validarEmailUR(this)" onblur="validarEmailUR(this)">
+                    <span class="field-hint-ur" id="hintEmailUR" style="font-size:.72rem;color:var(--muted);display:block;margin-top:.2rem;">Formato: correo@dominio.com</span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label-sm">Teléfono</label>
+                    <input type="tel" id="urTelefono" class="form-field" placeholder="7710000000"
+                           maxlength="10" inputmode="numeric"
+                           oninput="this.value=this.value.replace(/\D/g,''); validarCampoUR(this,'hintTelUR', /^\d{10}$/, '10 dígitos numéricos sin espacios.')">
+                    <span class="field-hint-ur" id="hintTelUR" style="font-size:.72rem;color:var(--muted);display:block;margin-top:.2rem;">Opcional · 10 dígitos.</span>
+                </div>
+            </div>
+
+            <div class="sep-label">Configuración</div>
+
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label-sm">Cupo máximo <span style="color:var(--primario);">*</span></label>
+                    <input type="number" id="urCupo" class="form-field" value="15" min="1" max="200"
+                           oninput="this.value=Math.max(1,Math.min(200,parseInt(this.value)||1))">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label-sm">Horas SS</label>
+                    <input type="number" id="urHoraSS" class="form-field" value="480" min="1" max="2000"
+                           oninput="this.value=Math.max(1,parseInt(this.value)||1)">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label-sm">Horas PP</label>
+                    <input type="number" id="urHoraPP" class="form-field" value="240" min="1" max="2000"
+                           oninput="this.value=Math.max(1,parseInt(this.value)||1)">
+                </div>
+                <div class="col-12">
+                    <label class="form-label-sm">Programas aceptados <span style="color:var(--primario);">*</span></label>
+                    <select id="urProgramas" class="form-field">
+                        <option value="ambos">Ambos (SS y PP)</option>
+                        <option value="ss">Solo Servicio Social</option>
+                        <option value="pp">Solo Prácticas Prof.</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="sep-label">Acceso al sistema</div>
+
+            <div class="row g-3" id="seccionContrasena">
+                <div class="col-12" id="bloqueContrasena" style="display:none;">
+                    <!-- Al editar: cambio opcional de contraseña -->
+                    <label class="form-label-sm">Nueva contraseña <span style="color:var(--muted);font-weight:400;text-transform:none;">(dejar vacío para no cambiar)</span></label>
+                    <div style="position:relative;">
+                        <input type="password" id="urContrasena" class="form-field" placeholder="Mínimo 8 caracteres"
+                               oninput="validarContrasenaUR(this)" style="padding-right:2.5rem;">
+                        <button type="button" onclick="togglePassUR()" style="position:absolute;right:.6rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;">
+                            <i class="bi bi-eye-fill" id="iconoOjoUR"></i>
+                        </button>
+                    </div>
+                    <span class="field-hint-ur" id="hintPassUR" style="font-size:.72rem;color:var(--muted);display:block;margin-top:.2rem;">Mínimo 8 caracteres.</span>
+                </div>
+                <div class="col-12" id="bloqueNuevaUR" style="display:none;">
+                    <!-- Al crear: contraseña obligatoria -->
+                    <label class="form-label-sm">Contraseña <span style="color:var(--primario);">*</span></label>
+                    <div style="position:relative;">
+                        <input type="password" id="urContrasenaNew" class="form-field" placeholder="Mínimo 8 caracteres"
+                               oninput="validarContrasenaUR(this)" style="padding-right:2.5rem;">
+                        <button type="button" onclick="togglePassURNew()" style="position:absolute;right:.6rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;">
+                            <i class="bi bi-eye-fill" id="iconoOjoURNew"></i>
+                        </button>
+                    </div>
+                    <span class="field-hint-ur" id="hintPassURNew" style="font-size:.72rem;color:var(--muted);display:block;margin-top:.2rem;">Mínimo 8 caracteres.</span>
+                </div>
+            </div>
+
+            <div class="sep-label">Estado</div>
+
+            <div class="estado-toggle mb-3">
+                <button type="button" class="est-btn activa selected" onclick="selEstado(this,'activa')">
+                    <i class="bi bi-circle-fill" style="font-size:.5rem;color:var(--dorado);"></i> Activa
+                </button>
+                <button type="button" class="est-btn inactiva" onclick="selEstado(this,'inactiva')">
+                    <i class="bi bi-circle-fill" style="font-size:.5rem;color:#9ca3af;"></i> Inactiva
+                </button>
+                <button type="button" class="est-btn suspendida" onclick="selEstado(this,'suspendida')">
+                    <i class="bi bi-circle-fill" style="font-size:.5rem;color:#ef4444;"></i> Suspendida
+                </button>
+            </div>
+            <input type="hidden" id="urEstado" value="activa">
+
+            <!-- ALUMNOS ASIGNADOS (solo al editar) -->
+            <div id="seccionAlumnos" style="display:none;">
+                <div class="sep-label">Alumnos asignados</div>
+                <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.75rem 1rem;margin-bottom:.75rem;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem;">
+                        <span style="font-size:.78rem;font-weight:600;color:var(--muted);">Ocupación</span>
+                        <span style="font-size:.82rem;font-weight:800;color:var(--primario);" id="urOcupTxt">0 / 0</span>
+                    </div>
+                    <div style="background:var(--border);border-radius:99px;height:7px;overflow:hidden;">
+                        <div id="urOcupBar" style="width:0%;height:100%;background:linear-gradient(90deg,var(--primario-mid),var(--primario));border-radius:99px;transition:width .4s;"></div>
+                    </div>
+                </div>
+                <div class="table-responsive" style="max-height:220px;overflow-y:auto;">
+                    <table>
+                        <thead><tr><th>Alumno</th><th>Programa</th><th>Avance</th><th></th></tr></thead>
+                        <tbody id="tablaAlumnosUR">
+                            <tr><td colspan="4" style="text-align:center;color:var(--muted);padding:1rem;">Cargando…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div class="panel-footer" id="panelFooter">
+        <button class="btn-save" onclick="guardarUR()"><i class="bi bi-floppy-fill"></i> Guardar</button>
+        <button class="btn-outline-custom" onclick="cerrarPanel()"><i class="bi bi-x-circle"></i> Cancelar</button>
+        <button class="btn-danger-sm ms-auto" id="btnEliminarUR" style="display:none;" onclick="confirmarEliminar()">
+            <i class="bi bi-trash-fill"></i> Eliminar UR
+        </button>
+    </div>
+</div>
+
+<!-- MODAL CONFIRMAR ELIMINAR -->
 <div class="modal fade" id="modalEliminar" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius:var(--radius-card);border:none;overflow:hidden;">
@@ -456,26 +437,19 @@
             </div>
             <div class="modal-body" style="padding:1.4rem;">
                 <p style="font-size:.88rem;color:var(--text);margin:0;">
-                    ¿Estás seguro de que deseas eliminar <strong>Hospital General</strong>? Esta acción es irreversible y desvinculará a todos sus alumnos activos.
+                    ¿Eliminar <strong id="nombreEliminar">esta UR</strong>? Esta acción es irreversible y desvinculará a sus alumnos activos.
                 </p>
             </div>
             <div class="modal-footer" style="border-color:var(--border);padding:.9rem 1.4rem;gap:.6rem;">
                 <button type="button" class="btn-outline-custom" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn-danger-outline"
-                        onclick="bootstrap.Modal.getInstance(document.getElementById('modalEliminar')).hide(); showToast('Unidad Receptora eliminada.')">
-                    <i class="bi bi-trash-fill"></i> Sí, eliminar
-                </button>
+                <button type="button" class="btn-danger-sm" onclick="ejecutarEliminar()"><i class="bi bi-trash-fill"></i> Sí, eliminar</button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="toast-custom" id="toastMsg"><i class="bi bi-check-circle-fill" style="font-size:1.1rem;"></i><span id="toastTxt"></span></div>
-
-<footer class="footer-custom">© 2026 SIARHA · Uso exclusivo institucional · UAEH</footer>
-
-<!-- ══ PANEL NOTIFICACIONES ══ -->
-<div class="notif-overlay" id="notifOverlay" onclick="cerrarNotif()"></div>
+<!-- PANEL NOTIFICACIONES -->
+<div class="notif-overlay2" id="notifOverlay2" onclick="cerrarNotif()"></div>
 <div class="notif-panel" id="notifPanel">
     <div class="notif-header">
         <h6><i class="bi bi-bell-fill me-2"></i>Notificaciones</h6>
@@ -507,84 +481,400 @@
             <div class="notif-icon ni-sis"><i class="bi bi-person-plus-fill"></i></div>
             <div><div class="notif-title">Nuevo alumno dado de alta</div><div class="notif-desc">María González — Prácticas Profesionales</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer, 4:00 p.m.</div></div>
         </div>
-        <div class="notif-item" data-tipo="ni-sis" onclick="marcarLeida(this)">
-            <div class="notif-icon ni-sis"><i class="bi bi-building-fill"></i></div>
-            <div><div class="notif-title">Nueva UR registrada</div><div class="notif-desc">IMSS Pachuca fue agregada al sistema</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer, 10:00 a.m.</div></div>
-        </div>
     </div>
     <div class="notif-footer"><a href="ADMIN_mensajes-admin.html">Ver todo →</a></div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    function showToast(msg) {
-        document.getElementById('toastTxt').textContent = msg;
-        const t = document.getElementById('toastMsg');
-        t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 3000);
-    }
-
-    function selEstado(el, val) {
-        document.querySelectorAll('.est-btn').forEach(b => b.classList.remove('selected'));
-        el.classList.add('selected');
-        document.getElementById('estadoUR').value = val;
-    }
-
-    function setModo(modo) {
-        const btns = document.querySelectorAll('.mode-btn');
-        btns.forEach(b => b.classList.remove('active'));
-        event.currentTarget.classList.add('active');
-        const desc = document.getElementById('modoDesc');
-        if (modo === 'nueva') {
-            desc.innerHTML = 'Creando una <strong>nueva Unidad Receptora</strong>';
-            document.getElementById('formUR').reset();
-            document.getElementById('estadoUR').value = 'activa';
-            document.querySelectorAll('.est-btn').forEach(b => b.classList.remove('selected'));
-            document.querySelector('.est-btn.activa').classList.add('selected');
-        } else {
-            desc.innerHTML = 'Editando: <strong>Hospital General</strong>';
-        }
-    }
-
-    document.getElementById('formUR').addEventListener('submit', e => {
-        e.preventDefault();
-        const nombre = document.getElementById('nombreUR').value.trim();
-        if (!nombre) { showToast('El nombre de la institución es requerido.'); return; }
-        showToast('Unidad Receptora guardada correctamente.');
-    });
-
-    // ══ NOTIFICACIONES ══════════════════════════════════════════════
-        function abrirNotif(){document.getElementById('notifPanel').classList.add('open');document.getElementById('notifOverlay').classList.add('open');_nOpen=true;}
-    function cerrarNotif(){document.getElementById('notifPanel').classList.remove('open');document.getElementById('notifOverlay').classList.remove('open');_nOpen=false;}
-    function marcarLeida(item){if(!item.classList.contains('unread'))return;item.classList.remove('unread');_badge();}
-    function marcarTodasLeidas(){document.querySelectorAll('.notif-item.unread').forEach(i=>i.classList.remove('unread'));_badge();}
-    function _badge(){const n=document.querySelectorAll('.notif-item.unread').length;const b=document.getElementById('notifCount');if(b){b.textContent=n;b.style.display=n>0?'flex':'none';}const bt=document.getElementById('badgeTodas');if(bt)bt.textContent=n;}
-    function setNotifTab(tipo,btn){document.querySelectorAll('.notif-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.notif-item').forEach(i=>{i.style.display=(tipo==='todas'||i.dataset.tipo===tipo)?'':'none';});}
-    // ════════════════════════════════════════════════════════════════
-
+// ── NOTIFICACIONES ──────────────────────────────────────────
+let _nOpen = false;
+function toggleNotif() { _nOpen ? cerrarNotif() : abrirNotif(); }
+function abrirNotif()  { document.getElementById('notifPanel').classList.add('open'); document.getElementById('notifOverlay2').classList.add('open'); _nOpen = true; }
+function cerrarNotif() { document.getElementById('notifPanel').classList.remove('open'); document.getElementById('notifOverlay2').classList.remove('open'); _nOpen = false; }
+function marcarLeida(item) { if (!item.classList.contains('unread')) return; item.classList.remove('unread'); _badge(); }
+function marcarTodasLeidas() { document.querySelectorAll('.notif-item.unread').forEach(i => i.classList.remove('unread')); _badge(); }
+function _badge() {
+    const n = document.querySelectorAll('.notif-item.unread').length;
+    const b = document.getElementById('notifCount'); if (b) { b.textContent = n; b.style.display = n > 0 ? 'flex' : 'none'; }
+    const bt = document.getElementById('badgeTodas'); if (bt) bt.textContent = n;
+}
+function setNotifTab(tipo, btn) {
+    document.querySelectorAll('.notif-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.notif-item').forEach(i => { i.style.display = (tipo === 'todas' || i.dataset.tipo === tipo) ? '' : 'none'; });
+}
+function showToast(msg, ok = true) {
+    let t = document.getElementById('_toast');
+    if (!t) { t = document.createElement('div'); t.id = '_toast'; t.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;border-radius:10px;padding:.9rem 1.3rem;display:flex;align-items:center;gap:.6rem;font-size:.85rem;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:transform .35s,opacity .35s;z-index:9999;transform:translateY(80px);opacity:0;'; document.body.appendChild(t); }
+    t.style.background = ok ? '#1f6b3a' : '#9b1c1c';
+    t.style.color = '#fff';
+    t.innerHTML = `<i class="bi bi-${ok ? 'check-circle-fill' : 'exclamation-triangle-fill'}" style="font-size:1.1rem;"></i>` + msg;
+    t.style.transform = 'translateY(0)'; t.style.opacity = '1';
+    setTimeout(() => { t.style.transform = 'translateY(80px)'; t.style.opacity = '0'; }, 3200);
+}
 </script>
-
-<script>
-    let _nOpen = false;
-    function toggleNotif() { _nOpen ? cerrarNotif() : abrirNotif(); }
-    function abrirNotif()  { document.getElementById('notifPanel').classList.add('open');    document.getElementById('notifOverlay').classList.add('open');    _nOpen = true;  }
-    function cerrarNotif() { document.getElementById('notifPanel').classList.remove('open'); document.getElementById('notifOverlay').classList.remove('open'); _nOpen = false; }
-    function marcarLeida(item) { if (!item.classList.contains('unread')) return; item.classList.remove('unread'); _badge(); }
-    function marcarTodasLeidas() { document.querySelectorAll('.notif-item.unread').forEach(i => i.classList.remove('unread')); _badge(); }
-    function _badge() {
-        const n = document.querySelectorAll('.notif-item.unread').length;
-        const b = document.getElementById('notifCount');  if (b)  { b.textContent = n; b.style.display = n > 0 ? 'flex' : 'none'; }
-        const bt = document.getElementById('badgeTodas'); if (bt) bt.textContent = n;
-    }
-    function setNotifTab(tipo, btn) {
-        document.querySelectorAll('.notif-tab').forEach(t => t.classList.remove('active'));
-        btn.classList.add('active');
-        document.querySelectorAll('.notif-item').forEach(i => {
-            i.style.display = (tipo === 'todas' || i.dataset.tipo === tipo) ? '' : 'none';
-        });
-    }
-</script>
-<!-- ────── SIARHA scripts ────── -->
 <script src="../assets/js/api.js"></script>
 <script src="../assets/js/admin-guard.js"></script>
+<script>
+// ── ESTADO GLOBAL ───────────────────────────────────────────
+let urActualId = null;
+// Rol del admin logueado — determina qué puede hacer en esta página
+const _adminData    = JSON.parse(localStorage.getItem('admin_data') || '{}');
+const _esSuperAdmin = _adminData.rol === 'superadmin';
+
+// ── PANEL LATERAL ───────────────────────────────────────────
+function abrirPanel(ur) {
+    // Solo superadmin puede editar/crear URs
+    if (!_esSuperAdmin) { showToast('Solo el superadministrador puede gestionar unidades receptoras.', false); return; }
+    urActualId = ur ? ur.id_ur : null;
+    const esNueva = !ur;
+
+    document.getElementById('panelTitulo').innerHTML =
+        `<i class="bi bi-building-fill me-2"></i>${esNueva ? 'Nueva Unidad Receptora' : 'Editar: ' + ur.nombre_ur}`;
+    document.getElementById('urId').value        = ur?.id_ur || '';
+    document.getElementById('urNombre').value    = ur?.nombre_ur || '';
+    document.getElementById('urEmail').value     = ur?.email_ur || '';
+    document.getElementById('urTelefono').value  = ur?.telefono_ur || '';
+    document.getElementById('urCupo').value      = ur?.cupo_maximo ?? 15;
+    document.getElementById('urHoraSS').value    = ur?.horas_requeridas_ss ?? 480;
+    document.getElementById('urHoraPP').value    = ur?.horas_requeridas_pp ?? 240;
+    document.getElementById('urProgramas').value = ur?.programas_aceptados || 'ambos';
+    document.getElementById('urEstado').value    = ur?.estado || 'activa';
+
+    // Estado visual
+    document.querySelectorAll('.est-btn').forEach(b => b.classList.remove('selected'));
+    const estadoEl = document.querySelector(`.est-btn.${ur?.estado || 'activa'}`);
+    if (estadoEl) estadoEl.classList.add('selected');
+
+    // Botón eliminar solo al editar
+    document.getElementById('btnEliminarUR').style.display = esNueva ? 'none' : 'inline-flex';
+
+    // Contraseña: obligatoria al crear, opcional al editar
+    document.getElementById('bloqueNuevaUR').style.display  = esNueva ? 'block' : 'none';
+    document.getElementById('bloqueContrasena').style.display = esNueva ? 'none' : 'block';
+    if (esNueva) {
+        document.getElementById('urContrasenaNew').value = '';
+    } else {
+        document.getElementById('urContrasena').value = '';
+    }
+
+    // Sección de alumnos solo al editar
+    const seccion = document.getElementById('seccionAlumnos');
+    seccion.style.display = esNueva ? 'none' : 'block';
+    if (!esNueva) cargarAlumnosUR(ur);
+
+    document.getElementById('panelOverlay').classList.add('open');
+    document.getElementById('panelLateral').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function cerrarPanel() {
+    document.getElementById('panelOverlay').classList.remove('open');
+    document.getElementById('panelLateral').classList.remove('open');
+    document.body.style.overflow = '';
+    urActualId = null;
+}
+
+// ── ALUMNOS DE LA UR (mini-tabla en panel) ──────────────────
+async function cargarAlumnosUR(ur) {
+    const tbody = document.getElementById('tablaAlumnosUR');
+    const ocup  = ur.alumnos_activos ?? 0;
+    const cupo  = ur.cupo_maximo ?? 0;
+    const pct   = cupo > 0 ? Math.round(ocup / cupo * 100) : 0;
+    document.getElementById('urOcupTxt').textContent = `${ocup} / ${cupo}`;
+    document.getElementById('urOcupBar').style.width = pct + '%';
+
+    try {
+        const res  = await apiFetch(`/api/alumnos?id_ur=${ur.id_ur}&por_pagina=50`);
+        const data = await res.json();
+        const alumnos = data.alumnos || [];
+        if (!alumnos.length) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:1rem;">Sin alumnos asignados.</td></tr>';
+            return;
+        }
+        tbody.innerHTML = alumnos.map(a => {
+            const nombre = [a.nombre_alum, a.apellido_p_alum].filter(Boolean).join(' ');
+            const pct    = Math.round(parseFloat(a.avance_pct) || 0);
+            const prog   = a.programa === 'pp' ? '<span class="badge-pp" style="font-size:.68rem;">PP</span>' : '<span class="badge-ss" style="font-size:.68rem;">SS</span>';
+            return `<tr>
+                <td style="font-size:.82rem;font-weight:600;">${nombre}</td>
+                <td>${prog}</td>
+                <td style="font-size:.8rem;">${pct}%</td>
+                <td><a href="ADMIN_detalle-alumno-admin.html?no_cuenta=${a.no_cuenta}" class="btn-outline-custom" style="font-size:.72rem;padding:.25rem .55rem;"><i class="bi bi-eye-fill"></i></a></td>
+            </tr>`;
+        }).join('');
+    } catch(e) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#991b1b;padding:1rem;">Error al cargar alumnos.</td></tr>';
+    }
+}
+
+// ── GUARDAR UR ──────────────────────────────────────────────
+async function guardarUR() {
+    const esNueva = !urActualId;
+    const nombre  = document.getElementById('urNombre').value.trim();
+    const email   = document.getElementById('urEmail').value.trim();
+    const tel     = document.getElementById('urTelefono').value.trim();
+    const pass    = esNueva
+        ? document.getElementById('urContrasenaNew').value
+        : document.getElementById('urContrasena').value;
+
+    // Validaciones
+    if (!nombre) { showToast('El nombre es requerido.', false); return; }
+    if (!email)  { showToast('El correo es requerido.', false); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showToast('El formato del correo no es válido.', false); return;
+    }
+    if (tel && !/^\d{10}$/.test(tel)) {
+        showToast('El teléfono debe tener exactamente 10 dígitos.', false); return;
+    }
+    if (esNueva && (!pass || pass.length < 8)) {
+        showToast('La contraseña debe tener al menos 8 caracteres.', false); return;
+    }
+    if (!esNueva && pass && pass.length < 8) {
+        showToast('La nueva contraseña debe tener al menos 8 caracteres.', false); return;
+    }
+
+    const cupo = parseInt(document.getElementById('urCupo').value);
+    if (!cupo || cupo < 1 || cupo > 200) {
+        showToast('El cupo debe ser entre 1 y 200.', false); return;
+    }
+
+    const body = {
+        nombre_ur:            nombre,
+        email_ur:             email,
+        telefono_ur:          tel || null,
+        cupo_maximo:          cupo,
+        horas_requeridas_ss:  parseInt(document.getElementById('urHoraSS').value) || 480,
+        horas_requeridas_pp:  parseInt(document.getElementById('urHoraPP').value) || 240,
+        programas_aceptados:  document.getElementById('urProgramas').value,
+        estado:               document.getElementById('urEstado').value,
+    };
+
+    // Incluir contraseña solo si se proporcionó
+    if (pass) body.contrasena = pass;
+
+    try {
+        const url    = urActualId ? `/api/unidades-receptoras/${urActualId}` : '/api/unidades-receptoras';
+        const method = urActualId ? 'PUT' : 'POST';
+        const res    = await apiFetch(url, { method, body: JSON.stringify(body) });
+        const data   = await res.json();
+        if (!res.ok) throw new Error(data.error || data.message || 'Error al guardar');
+
+        let msg = urActualId ? 'Unidad Receptora actualizada.' : 'Unidad Receptora creada.';
+        if (data.contrasena_temporal) msg += ` Contraseña: ${data.contrasena_temporal}`;
+        showToast(msg, true);
+        cerrarPanel();
+        cargarURs();
+    } catch(e) {
+        showToast(e.message || 'Error al guardar.', false);
+    }
+}
+
+// ── ELIMINAR UR ─────────────────────────────────────────────
+function confirmarEliminar() {
+    const nombre = document.getElementById('urNombre').value || 'esta UR';
+    document.getElementById('nombreEliminar').textContent = nombre;
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('modalEliminar')).show();
+}
+
+async function ejecutarEliminar() {
+    bootstrap.Modal.getInstance(document.getElementById('modalEliminar')).hide();
+    try {
+        const res = await apiFetch(`/api/unidades-receptoras/${urActualId}`, { method: 'DELETE' });
+        if (!res.ok) { const d = await res.json(); throw new Error(d.message); }
+        showToast('Unidad Receptora eliminada.');
+        cerrarPanel();
+        cargarURs();
+    } catch(e) {
+        showToast(e.message || 'Error al eliminar.', false);
+    }
+}
+
+// ── ESTADO ──────────────────────────────────────────────────
+function selEstado(el, val) {
+    document.querySelectorAll('.est-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('urEstado').value = val;
+}
+
+// ── VALIDACIONES DE CAMPO ────────────────────────────────────
+function validarEmailUR(input) {
+    const v = input.value.trim();
+    const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+    input.classList.toggle('campo-ok-ur',  ok && v.length > 0);
+    input.classList.toggle('campo-err-ur', !ok && v.length > 0);
+    const hint = document.getElementById('hintEmailUR');
+    if (hint) {
+        hint.textContent = !v ? 'Formato: correo@dominio.com' : ok ? '✓ Correo válido.' : 'Formato inválido.';
+        hint.style.color = !v ? 'var(--muted)' : ok ? '#16a34a' : '#dc2626';
+    }
+}
+
+function validarCampoUR(input, hintId, regex, msgError) {
+    const v = input.value;
+    const ok = regex.test(v);
+    input.classList.toggle('campo-ok-ur',  ok);
+    input.classList.toggle('campo-err-ur', !ok && v.length > 0);
+    const hint = document.getElementById(hintId);
+    if (hint) {
+        hint.textContent = !v ? msgError : ok ? '✓ Válido.' : msgError;
+        hint.style.color = !v ? 'var(--muted)' : ok ? '#16a34a' : '#dc2626';
+    }
+}
+
+function validarContrasenaUR(input) {
+    const v = input.value;
+    const ok = v.length >= 8;
+    input.classList.toggle('campo-ok-ur',  ok);
+    input.classList.toggle('campo-err-ur', !ok && v.length > 0);
+    const hintId = input.id === 'urContrasena' ? 'hintPassUR' : 'hintPassURNew';
+    const hint = document.getElementById(hintId);
+    if (hint) {
+        hint.textContent = !v ? 'Mínimo 8 caracteres.' : ok ? '✓ Contraseña válida.' : `${v.length}/8 caracteres mínimos.`;
+        hint.style.color = !v ? 'var(--muted)' : ok ? '#16a34a' : '#dc2626';
+    }
+}
+
+function togglePassUR() {
+    const inp = document.getElementById('urContrasena');
+    const ico = document.getElementById('iconoOjoUR');
+    const show = inp.type === 'password';
+    inp.type = show ? 'text' : 'password';
+    ico.className = show ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill';
+}
+function togglePassURNew() {
+    const inp = document.getElementById('urContrasenaNew');
+    const ico = document.getElementById('iconoOjoURNew');
+    const show = inp.type === 'password';
+    inp.type = show ? 'text' : 'password';
+    ico.className = show ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill';
+}
+
+// ── FILTRO DOM ──────────────────────────────────────────────
+function filtrarDOM() {
+    const buscar = (document.getElementById('buscarUR')?.value || '').toLowerCase().trim();
+    const estado = document.getElementById('filtroEstadoUR')?.value || '';
+    const prog   = document.getElementById('filtroProgUR')?.value || '';
+    const ocup   = document.getElementById('filtroOcupUR')?.value || '';
+
+    let visibles = 0;
+    document.querySelectorAll('#tablaUR tr[data-id]').forEach(tr => {
+        let ok = true;
+        if (buscar && !tr.dataset.nombre?.toLowerCase().includes(buscar)) ok = false;
+        if (estado && tr.dataset.estado !== estado) ok = false;
+        if (prog && tr.dataset.programas !== prog) ok = false;
+        if (ocup === 'disponible' && parseInt(tr.dataset.alumnos) >= parseInt(tr.dataset.cupo)) ok = false;
+        if (ocup === 'llena' && parseInt(tr.dataset.alumnos) < parseInt(tr.dataset.cupo)) ok = false;
+        tr.style.display = ok ? '' : 'none';
+        if (ok) visibles++;
+    });
+    const total = document.querySelectorAll('#tablaUR tr[data-id]').length;
+    const info  = document.getElementById('pagInfo');
+    if (info) info.textContent = visibles === total ? `${total} unidades` : `${visibles} de ${total} unidades (filtrado)`;
+}
+
+function limpiarFiltros() {
+    document.getElementById('buscarUR').value = '';
+    document.getElementById('filtroEstadoUR').value = '';
+    document.getElementById('filtroProgUR').value = '';
+    document.getElementById('filtroOcupUR').value = '';
+    filtrarDOM();
+}
+
+// ── EXPORTAR ────────────────────────────────────────────────
+function exportarExcel() { showToast('Preparando exportación…'); }
+
+// ── RENDERIZAR FILA UR ───────────────────────────────────────
+function renderFilaUR(ur) {
+    const nombre    = ur.nombre_ur;
+    const email     = ur.email_ur || '';
+    const tel       = ur.telefono_ur ? ' · ' + ur.telefono_ur : '';
+    const alumnos   = ur.alumnos_activos ?? 0;
+    const cupo      = ur.cupo_maximo ?? 0;
+    const pct       = cupo > 0 ? Math.round(alumnos / cupo * 100) : 0;
+    const pctColor  = pct >= 90 ? '#991b1b' : pct >= 70 ? '#7a5a00' : 'var(--primario)';
+    const prog      = ur.programas_aceptados;
+    const progBadge = prog === 'ss' ? '<span class="badge-ss">SS</span>' :
+                      prog === 'pp' ? '<span class="badge-pp">PP</span>' :
+                      '<span class="badge-ss">SS</span> <span class="badge-pp">PP</span>';
+    const estado    = ur.estado || 'activa';
+    const badgeEst  = { activa:'<span class="badge-ur-act">Activa</span>', inactiva:'<span class="badge-ur-ina">Inactiva</span>', suspendida:'<span class="badge-ur-sus">Suspendida</span>' }[estado] || '';
+
+    return `<tr data-id="${ur.id_ur}" data-nombre="${nombre}" data-estado="${estado}" data-programas="${prog}" data-alumnos="${alumnos}" data-cupo="${cupo}">
+        <td>
+            <div style="font-weight:700;font-size:.86rem;">${nombre}</div>
+            <div style="font-size:.72rem;color:var(--muted);">${email}${tel}</div>
+        </td>
+        <td>${progBadge}</td>
+        <td>
+            <div class="ocup-wrap">
+                <div class="ocup-bar"><div class="ocup-fill" style="width:${pct}%;background:${pctColor};"></div></div>
+                <span class="ocup-txt" style="color:${pctColor};">${alumnos}/${cupo}</span>
+            </div>
+        </td>
+        <td style="font-weight:700;color:var(--primario);font-size:.88rem;">${alumnos}</td>
+        <td>${badgeEst}</td>
+        <td>
+            ${_esSuperAdmin
+                ? `<button class="btn-outline-custom" onclick='abrirPanel(${JSON.stringify(ur).replace(/'/g,"&#39;")})'><i class="bi bi-gear-fill"></i> Gestionar</button>`
+                : `<span style="font-size:.78rem;color:var(--muted);">Solo lectura</span>`
+            }
+        </td>
+    </tr>`;
+}
+
+// ── CARGAR URs DESDE API ─────────────────────────────────────
+async function cargarURs() {
+    const tbody = document.getElementById('tablaUR');
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--muted);"><i class="bi bi-arrow-clockwise"></i> Cargando…</td></tr>';
+    try {
+        const res  = await apiFetch('/api/unidades-receptoras?por_pagina=200');
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message);
+
+        const urs = data.unidades_receptoras || [];
+        const total = data.total || urs.length;
+
+        // Resumen
+        const activas     = urs.filter(u => u.estado === 'activa').length;
+        const inactivas   = urs.filter(u => u.estado === 'inactiva').length;
+        const suspendidas = urs.filter(u => u.estado === 'suspendida').length;
+        const lugOcup     = urs.reduce((s, u) => s + (u.alumnos_activos ?? 0), 0);
+        const lugTotal    = urs.reduce((s, u) => s + (u.cupo_maximo ?? 0), 0);
+        document.getElementById('resTotal').textContent      = total;
+        document.getElementById('resActivas').textContent    = activas;
+        document.getElementById('resInactivas').textContent  = inactivas;
+        document.getElementById('resSuspendidas').textContent= suspendidas;
+        document.getElementById('resLugares').textContent    = `${lugOcup} / ${lugTotal}`;
+
+        if (!urs.length) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2.5rem;color:var(--muted);"><i class="bi bi-building" style="font-size:1.5rem;display:block;margin-bottom:.5rem;"></i>No hay unidades receptoras registradas.</td></tr>';
+        } else {
+            tbody.innerHTML = urs.map(renderFilaUR).join('');
+        }
+
+        document.getElementById('pagInfo').textContent = `${total} unidades registradas`;
+        document.getElementById('pagBtns').innerHTML = '';
+        filtrarDOM(); // aplicar filtros activos
+    } catch(e) {
+        console.error('Error cargando URs:', e);
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:#991b1b;"><i class="bi bi-exclamation-triangle me-2"></i>Error al cargar unidades receptoras.</td></tr>';
+    }
+}
+
+// ── INIT ────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    // Si viene con ?id_ur=X en la URL, abrir directamente ese panel
+    const params = new URLSearchParams(window.location.search);
+    const idParam = params.get('id_ur');
+    cargarURs().then(() => {
+        if (idParam) {
+            const fila = document.querySelector(`#tablaUR tr[data-id="${idParam}"]`);
+            if (fila) fila.querySelector('button')?.click();
+        }
+    });
+});
+</script>
 </body>
 </html>

@@ -25,6 +25,7 @@
         .offcanvas-custom .nav-link.danger{color:#ff9090!important;}
         .offcanvas-custom .nav-link.danger:hover{background:rgba(255,80,80,.15);}
         .menu-divider{border-color:rgba(255,255,255,.12);margin:.5rem 0;}
+        .menu-badge{margin-left:auto;background:var(--dorado);color:#fff;font-size:.68rem;font-weight:800;border-radius:20px;padding:.1rem .55rem;}
         main{flex:1;padding:1.75rem 1.5rem;max-width:820px;width:100%;margin:0 auto;}
         .btn-back{display:inline-flex;align-items:center;gap:.4rem;font-size:.83rem;font-weight:600;color:var(--muted);background:var(--card-bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.45rem .9rem;text-decoration:none;margin-bottom:1.4rem;transition:border-color .2s,color .2s,background .2s;}
         .btn-back:hover{border-color:var(--primario);color:var(--primario);background:var(--primario-lt);}
@@ -36,9 +37,13 @@
         .form-field{border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.55rem .9rem;font-size:.88rem;font-family:inherit;color:var(--text);background:#fff;width:100%;outline:none;transition:border-color .2s,box-shadow .2s;}
         .form-field:focus{border-color:var(--primario);box-shadow:0 0 0 3px rgba(80,16,19,.1);}
         .form-field:disabled{background:var(--bg);color:var(--muted);}
-        .sep-label{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;display:flex;align-items:center;gap:.6rem;margin:1.2rem 0 .9rem;}
-        .sep-label::before,.sep-label::after{content:'';flex:1;height:1px;background:var(--border);}
-
+        /* Validación visual */
+        .form-field.campo-ok{border-color:#16a34a;}
+        .form-field.campo-err{border-color:#dc2626;box-shadow:0 0 0 3px rgba(220,38,38,.1);}
+        .field-hint{font-size:.72rem;margin-top:.28rem;display:block;}
+        .hint-err{color:#dc2626;}
+        .hint-ok{color:#16a34a;}
+        .hint-info{color:var(--muted);}
         /* PROGRAMA CARDS */
         .prog-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:.4rem;}
         .prog-card{border:2px solid var(--border);border-radius:var(--radius-sm);padding:1rem;cursor:pointer;transition:all .22s;background:#fff;display:flex;align-items:flex-start;gap:.75rem;position:relative;}
@@ -52,30 +57,31 @@
         .prog-card .pn{font-size:.85rem;font-weight:700;color:var(--text);}
         .prog-card .ps{font-size:.75rem;color:var(--muted);margin-top:.15rem;}
         .prog-card .ph{font-size:.8rem;font-weight:700;color:var(--primario);margin-top:.3rem;}
-
-        /* INSTITUTO BADGE (cuando el admin solo tiene uno) */
+        /* INSTITUTO BADGE */
         .inst-auto-badge{background:var(--primario-lt);color:var(--primario);border:1px solid rgba(80,16,19,.2);border-radius:var(--radius-sm);padding:.55rem .9rem;font-size:.88rem;font-weight:600;display:flex;align-items:center;gap:.5rem;}
-
-        /* UR SELECT CON BÚSQUEDA */
+        /* UR SELECT */
         .ur-item{padding:.55rem .9rem;border-radius:var(--radius-sm);cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:space-between;transition:background .15s;}
         .ur-item:hover{background:var(--primario-lt);}
         .ur-item.selected{background:var(--primario-lt);font-weight:600;color:var(--primario);}
-        .ur-list{border:1.5px solid var(--border);border-radius:var(--radius-sm);max-height:200px;overflow-y:auto;background:#fff;}
+        .ur-list{border:1.5px solid var(--border);border-radius:var(--radius-sm);max-height:220px;overflow-y:auto;background:#fff;}
         .ur-ocup{font-size:.72rem;color:var(--muted);}
         .ur-ocup.full{color:#991b1b;}
-
+        /* SEPARADOR */
+        .sep-label{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;display:flex;align-items:center;gap:.6rem;margin:1.2rem 0 .9rem;}
+        .sep-label::before,.sep-label::after{content:'';flex:1;height:1px;background:var(--border);}
         /* BOTONES */
         .btn-save{background:var(--primario);color:#fff;border:none;border-radius:var(--radius-sm);font-weight:700;font-size:.9rem;padding:.7rem 1.8rem;display:inline-flex;align-items:center;gap:.5rem;cursor:pointer;transition:background .2s,transform .15s;box-shadow:0 4px 14px rgba(80,16,19,.2);}
         .btn-save:hover{background:var(--primario-dk);transform:translateY(-1px);}
         .btn-cancel-sm{background:#fff;color:var(--muted);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-weight:600;font-size:.9rem;padding:.65rem 1.2rem;display:inline-flex;align-items:center;gap:.4rem;cursor:pointer;text-decoration:none;transition:border-color .2s,color .2s;}
         .btn-cancel-sm:hover{border-color:var(--primario);color:var(--primario);}
         .aviso-info{background:var(--dorado-lt);border:1px solid rgba(201,162,77,.3);border-radius:var(--radius-sm);padding:.7rem 1rem;font-size:.82rem;color:#7a5a00;display:flex;align-items:flex-start;gap:.55rem;margin-bottom:1rem;}
-        .toast-custom{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--primario);color:#fff;border-radius:var(--radius-sm);padding:.9rem 1.3rem;display:flex;align-items:center;gap:.6rem;font-size:.85rem;font-weight:600;box-shadow:0 8px 24px rgba(80,16,19,.25);transform:translateY(80px);opacity:0;transition:transform .35s ease,opacity .35s ease;z-index:9999;}
+        .toast-custom{position:fixed;bottom:1.5rem;right:1.5rem;border-radius:var(--radius-sm);padding:.9rem 1.3rem;display:flex;align-items:center;gap:.6rem;font-size:.85rem;font-weight:600;box-shadow:0 8px 24px rgba(80,16,19,.25);transform:translateY(80px);opacity:0;transition:transform .35s ease,opacity .35s ease;z-index:9999;}
         .toast-custom.show{transform:translateY(0);opacity:1;}
+        .toast-ok{background:#1f6b3a;color:#fff;}
+        .toast-err{background:#9b1c1c;color:#fff;}
         .footer-custom{background:var(--primario);color:rgba(255,255,255,.7);text-align:center;padding:.75rem;font-size:.75rem;}
         @media(max-width:767px){main{padding:1.25rem 1rem;}.prog-grid{grid-template-columns:1fr;}}
-    
-        /* ══ NOTIFICACIONES ══ */
+        /* NOTIFICACIONES */
         .notif-btn{position:relative;background:rgba(255,255,255,.12);border:none;color:#fff;width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;transition:background .2s;flex-shrink:0;}
         .notif-btn:hover{background:rgba(255,255,255,.22);}
         .notif-count{position:absolute;top:4px;right:4px;background:#C9A24D;color:#fff;font-size:.58rem;font-weight:800;border-radius:20px;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0 .25rem;border:1.5px solid #501013;}
@@ -84,9 +90,7 @@
         .notif-header{padding:1rem 1.2rem;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;justify-content:space-between;background:#501013;color:#fff;flex-shrink:0;}
         .notif-header h6{font-size:.92rem;font-weight:800;margin:0;}
         .btn-mark-all{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.8);background:rgba(255,255,255,.12);border:none;border-radius:20px;padding:.2rem .7rem;cursor:pointer;}
-        .btn-mark-all:hover{background:rgba(255,255,255,.22);}
         .btn-close-notif{background:none;border:none;color:rgba(255,255,255,.7);font-size:1rem;cursor:pointer;padding:.2rem;display:flex;align-items:center;border-radius:6px;}
-        .btn-close-notif:hover{color:#fff;}
         .notif-tabs{display:flex;border-bottom:1px solid #E5E7EB;flex-shrink:0;}
         .notif-tab{flex:1;padding:.6rem;font-size:.8rem;font-weight:700;color:#6b7280;border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;text-align:center;}
         .notif-tab.active{color:#501013;border-bottom-color:#501013;}
@@ -96,7 +100,7 @@
         .notif-item.unread{background:#f7eaea;}
         .notif-item.unread::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#501013;}
         .notif-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
-        .ni-ap{background:#d1fae5;color:#065f46;} .ni-re{background:#fee2e2;color:#991b1b;} .ni-msg{background:#dbeafe;color:#1e40af;} .ni-sis{background:#f7eaea;color:#501013;} .ni-rec{background:#fdf6e3;color:#7a5a00;}
+        .ni-msg{background:#dbeafe;color:#1e40af;}.ni-rec{background:#fdf6e3;color:#7a5a00;}.ni-sis{background:#f7eaea;color:#501013;}
         .notif-title{font-size:.83rem;font-weight:700;color:#1F2933;margin-bottom:.15rem;}
         .notif-item.unread .notif-title{color:#501013;}
         .notif-desc{font-size:.76rem;color:#6b7280;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -105,46 +109,74 @@
         .notif-footer a{font-size:.8rem;font-weight:700;color:#501013;text-decoration:none;}
         .notif-overlay{display:none;position:fixed;inset:0;z-index:1048;}
         .notif-overlay.open{display:block;}
-        .menu-badge{margin-left:auto;background:#C9A24D;color:#fff;font-size:.68rem;font-weight:800;border-radius:20px;padding:.1rem .55rem;}
+        [data-visible]{transition:opacity .2s;}
         @media(max-width:480px){.notif-panel{width:100%;border-radius:0;}}
-
     </style>
 </head>
 <body>
 
-<!-- ── BACKEND VARS ─────────────────────────────────────────────────────────── -->
+<!-- ── DATOS DEL SISTEMA ─────────────────────────────────────────── -->
 <script>
-    // El backend inyecta estos valores según la sesión
-    const ADMIN_ROL        = 'area';           // 'superadmin' | 'area'
-    const ADMIN_INSTITUTOS = ['ICBI', 'ICSa']; // [] = todos (superadmin)
-    const NOMBRES_INST = {
-      IDA:'Instituto de Artes',ICAP:'Instituto de Ciencias Agropecuarias',
-      ICBI:'Inst. Ciencias Básicas e Ingeniería',ICSa:'Instituto de Ciencias de la Salud',
-      ICEA:'Inst. Ciencias Económico Administrativas',ICSHu:'Inst. Ciencias Sociales y Humanidades',
-      'ES-ACT':'ES Actopan','ES-APA':'ES Apan','ES-ATO':'ES Atotonilco de Tula',
-      'ES-SAH':'ES Ciudad Sahagún','ES-HUE':'ES Huejutla','ES-TEP':'ES Tepeji del Río',
-      'ES-TIZ':'ES Tizayuca','ES-TLA':'ES Tlahuelilpan','ES-ZIM':'ES Zimapán'
-    };
-    // Todas las carreras disponibles por instituto (el backend llena esto)
-    const CARRERAS = {
-      ICBI:['Ingeniería en Computación','Ingeniería Civil','Ingeniería en Sistemas Computacionales','Ingeniería Química','Ing. Electrónica y Comunicaciones'],
-      ICSa:['Médico Cirujano','Enfermería','Nutrición','Odontología','Psicología'],
-      IDA:['Artes Visuales','Diseño Gráfico','Música','Danza'],
-      ICAP:['Ingeniería Agroindustrial','Medicina Veterinaria','Ingeniería en Recursos Naturales'],
-      ICEA:['Administración','Contaduría','Economía','Mercadotecnia'],
-      ICSHu:['Derecho','Trabajo Social','Comunicación','Historia','Filosofía'],
-    };
-    const ALL_CARRERAS = Object.values(CARRERAS).flat();
-    // URs disponibles (el backend llena esto con las dadas de alta)
-    const URS = [
-      {id:'ur1',nombre:'Hospital General',sector:'Salud',cupo:15,ocupados:12},
-      {id:'ur2',nombre:'Secretaría Académica UAEH',sector:'Educación',cupo:10,ocupados:7},
-      {id:'ur3',nombre:'DIF Municipal Pachuca',sector:'Social',cupo:10,ocupados:4},
-      {id:'ur4',nombre:'IMSS Delegación Hidalgo',sector:'Salud',cupo:20,ocupados:20},
-      {id:'ur5',nombre:'Presidencia Municipal Mineral',sector:'Gobierno',cupo:8,ocupados:0},
-      {id:'ur6',nombre:'UAEH - Dirección de TI',sector:'Educación',cupo:6,ocupados:3},
-      {id:'ur7',nombre:'Cruz Roja Pachuca',sector:'Salud',cupo:6,ocupados:0},
-    ];
+// ── INSTITUTOS (id_instituto exacto de la BD → nombre completo) ──
+const INSTITUTOS = [
+    { id: 2,  codigo: 'IDA',    nombre: 'Instituto de Artes' },
+    { id: 3,  codigo: 'ICAP',   nombre: 'Instituto de Ciencias Agropecuarias' },
+    { id: 4,  codigo: 'ICBI',   nombre: 'Instituto de Ciencias Básicas e Ingeniería' },
+    { id: 5,  codigo: 'ICSa',   nombre: 'Instituto de Ciencias de la Salud' },
+    { id: 6,  codigo: 'ICEA',   nombre: 'Instituto de Ciencias Económico Administrativas' },
+    { id: 7,  codigo: 'ICSHu',  nombre: 'Instituto de Ciencias Sociales y Humanidades' },
+    { id: 8,  codigo: 'ES-ACT', nombre: 'Escuela Superior de Actopan' },
+    { id: 9,  codigo: 'ES-APA', nombre: 'Escuela Superior de Apan' },
+    { id: 10, codigo: 'ES-ATO', nombre: 'Escuela Superior de Atotonilco de Tula' },
+    { id: 11, codigo: 'ES-SAH', nombre: 'Escuela Superior de Ciudad Sahagún' },
+    { id: 12, codigo: 'ES-HUE', nombre: 'Escuela Superior de Huejutla' },
+    { id: 13, codigo: 'ES-TEP', nombre: 'Escuela Superior de Tepeji del Río' },
+    { id: 14, codigo: 'ES-TIZ', nombre: 'Escuela Superior de Tizayuca' },
+    { id: 15, codigo: 'ES-TLA', nombre: 'Escuela Superior de Tlahuelilpan' },
+    { id: 16, codigo: 'ES-ZIM', nombre: 'Escuela Superior de Zimapán' },
+];
+
+// ── OFERTA EDUCATIVA POR INSTITUTO ───────────────────────────────
+// Fuente: UAEH oferta académica oficial
+const CARRERAS = {
+    // ── Institutos (Pachuca / Tulancingo / Mineral del Monte) ──
+    'IDA':   ['Artes Visuales', 'Danza', 'Música', 'Teatro'],
+    'ICAP':  ['Alimentación Sustentable', 'Gestión de Negocios Agropecuarios',
+              'Ingeniería Agroindustrial', 'Ingeniería en Agronomía para la Producción Sustentable',
+              'Ingeniería en Biotecnología', 'Medicina Veterinaria y Zootecnia'],
+    'ICBI':  ['Arquitectura', 'Biología', 'Ciencias Computacionales',
+              'Física y Tecnología Avanzada', 'Geociencias', 'Ingeniería Civil',
+              'Ingeniería de Materiales', 'Ingeniería en Control Automático y Robótica',
+              'Ingeniería en Electrónica', 'Ingeniería en Nanotecnología',
+              'Ingeniería en Software', 'Ingeniería en Tecnologías de la Información',
+              'Ingeniería Industrial', 'Ingeniería Mecánica'],
+    'ICSa':  ['Cirujano Dentista', 'Enfermería', 'Farmacia', 'Gerontología',
+              'Médico Cirujano', 'Nutrición', 'Psicología', 'Trabajo Social'],
+    'ICEA':  ['Administración', 'Comercio Exterior', 'Contaduría', 'Economía',
+              'Gastronomía', 'Mercadotecnia', 'Turismo'],
+    'ICSHu': ['Antropología Social', 'Ciencia Política y Administración Pública',
+              'Ciencias de la Comunicación', 'Ciencias de la Educación', 'Derecho',
+              'Enseñanza de la Lengua Inglesa', 'Historia de México',
+              'Sociología', 'Trabajo Social'],
+    // ── Escuelas Superiores ──
+    'ES-ACT': ['Administración', 'Ciencias Computacionales', 'Creación y Desarrollo de Empresas',
+               'Derecho', 'Diseño Gráfico', 'Enfermería', 'Psicología'],
+    'ES-APA': ['Ingeniería Económica', 'Ingeniería en Biociencias',
+               'Ingeniería en Nanotecnología', 'Ingeniería en Tecnología del Frío'],
+    'ES-ATO': ['Ingeniería en Automatización Industrial', 'Ingeniería Industrial', 'Ingeniería Mecánica'],
+    'ES-SAH': ['Ingeniería en Automatización Industrial', 'Ingeniería Industrial', 'Ingeniería Mecánica'],
+    'ES-HUE': ['Administración', 'Derecho', 'Enfermería', 'Médico Cirujano', 'Sistemas Computacionales'],
+    'ES-TEP': ['Administración', 'Derecho', 'Ingeniería de Software', 'Ingeniería Industrial', 'Psicología'],
+    'ES-TIZ': ['Ciencias de la Educación', 'Contaduría', 'Ingeniería en Software',
+               'Ingeniería en Telecomunicaciones', 'Psicología', 'Seguridad Ciudadana',
+               'Tecnologías de la Información'],
+    'ES-TLA': ['Administración', 'Enfermería', 'Ingeniería de Software', 'Médico Cirujano'],
+    'ES-ZIM': ['Derecho', 'Ingeniería en Procesamiento de Recursos Minerales', 'Ingeniería Industrial'],
+};
+
+// ── URs: se cargan del backend al iniciar ─────────────────────────
+let URS = [];
+let urSelId = '';
 </script>
 
 <!-- NAVBAR -->
@@ -160,9 +192,9 @@
         <div class="d-flex align-items-center gap-2 ms-auto">
             <div class="d-none d-md-flex align-items-center gap-2 text-white" style="font-size:.83rem;font-weight:600;opacity:.9;">
                 <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;"><i class="bi bi-shield-fill"></i></div>
-                <span id="navNombre">Administrador</span>
+                <span>Administrador</span>
             </div>
-            <button class="notif-btn" id="btnNotif" onclick="toggleNotif()" title="Notificaciones"><i class="bi bi-bell-fill"></i><span class="notif-count" id="notifCount">4</span></button>
+            <button class="notif-btn" id="btnNotif" onclick="toggleNotif()"><i class="bi bi-bell-fill"></i><span class="notif-count" id="notifCount">4</span></button>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuAdmin"><i class="bi bi-list"></i></button>
         </div>
     </div>
@@ -172,17 +204,17 @@
     <div class="offcanvas-header">
         <div class="d-flex align-items-center gap-2">
             <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;"><i class="bi bi-shield-fill"></i></div>
-            <div><div style="font-weight:700;font-size:.9rem;" id="offNombre">Administrador</div><div style="font-size:.72rem;opacity:.7;" id="offRol">Panel de control</div></div>
+            <div><div style="font-weight:700;font-size:.9rem;">Administrador</div><div style="font-size:.72rem;opacity:.7;">Panel de control</div></div>
         </div>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
     </div>
     <div class="offcanvas-body">
         <ul class="navbar-nav gap-1">
-            <li><a class="nav-link active" href="ADMIN_dashboard-servicio.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
-            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html"><i class="bi bi-people-fill"></i> Alumnos</a></li>
-            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html"><i class="bi bi-building"></i> Unidades Receptoras</a></li>
-            <li><a class="nav-link" href="ADMIN_gestion-administradores.html"><i class="bi bi-person-gear"></i> Administradores</a></li>
-            <li><a class="nav-link" href="ADMIN_reportes-globales.html"><i class="bi bi-bar-chart-fill"></i> Reportes Globales</a></li>
+            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link active" href="ADMIN_alumnos.html"><i class="bi bi-people-fill"></i> Alumnos</a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link" href="ADMIN_gestion-ur.html"><i class="bi bi-building"></i> Unidades Receptoras</a></li>
+            <li data-visible="superadmin"><a class="nav-link" href="ADMIN_gestion-administradores.html"><i class="bi bi-person-gear"></i> Administradores</a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link" href="ADMIN_reportes-globales.html"><i class="bi bi-bar-chart-fill"></i> Reportes Globales</a></li>
             <li><a class="nav-link" href="ADMIN_mensajes-admin.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge">3</span></a></li>
             <hr class="menu-divider">
             <li><a class="nav-link danger" href="../index.html"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
@@ -191,7 +223,7 @@
 </div>
 
 <main>
-    <a href="ADMIN_dashboard-servicio.html" class="btn-back"><i class="bi bi-arrow-left"></i> Volver al panel</a>
+    <a href="ADMIN_alumnos.html" class="btn-back"><i class="bi bi-arrow-left"></i> Volver a alumnos</a>
 
     <div style="margin-bottom:1.4rem;">
         <h4 style="font-size:1.3rem;font-weight:800;margin:0;">Alta de alumno</h4>
@@ -200,49 +232,80 @@
 
     <form id="formAlta" novalidate>
 
-    <!-- DATOS PERSONALES -->
+    <!-- ── DATOS PERSONALES ─────────────────────────────────── -->
     <div class="section-card">
         <div class="section-header"><span class="title"><i class="bi bi-person-fill"></i> Datos personales</span></div>
         <div class="section-body">
             <div class="row g-3">
+
                 <div class="col-md-6">
-                    <label class="form-label-sm">Nombre completo *</label>
-                    <input type="text" id="fNombre" class="form-field" placeholder="Nombre(s) Apellido Apellido">
+                    <label class="form-label-sm">Nombre(s) *</label>
+                    <input type="text" id="fNombre" class="form-field" placeholder="Nombre(s)" autocomplete="off"
+                           oninput="validarTextoNombre(this)">
+                    <span class="field-hint hint-info" id="hintNombre">Solo letras y espacios.</span>
                 </div>
-                <div class="col-md-6">
-                    <label class="form-label-sm">Número de cuenta *</label>
-                    <input type="text" id="fCuenta" class="form-field" placeholder="Ej. 2024123456" maxlength="10">
+
+                <div class="col-md-3">
+                    <label class="form-label-sm">Apellido paterno *</label>
+                    <input type="text" id="fApP" class="form-field" placeholder="Apellido paterno" autocomplete="off"
+                           oninput="validarTextoNombre(this)">
                 </div>
-                <div class="col-md-6">
+
+                <div class="col-md-3">
+                    <label class="form-label-sm">Apellido materno</label>
+                    <input type="text" id="fApM" class="form-field" placeholder="Apellido materno" autocomplete="off"
+                           oninput="validarTextoNombre(this)">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label-sm">Número de cuenta * <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;">(6 dígitos)</span></label>
+                    <input type="text" id="fCuenta" class="form-field" placeholder="Ej. 240001"
+                           maxlength="6" inputmode="numeric"
+                           oninput="this.value=this.value.replace(/\D/g,''); validarCuenta(this)">
+                    <span class="field-hint hint-info" id="hintCuenta">Exactamente 6 dígitos numéricos.</span>
+                </div>
+
+                <div class="col-md-4">
                     <label class="form-label-sm">Correo institucional *</label>
-                    <input type="email" id="fCorreo" class="form-field" placeholder="cuenta@uaeh.edu.mx">
+                    <input type="email" id="fCorreo" class="form-field" placeholder="usuario@uaeh.edu.mx"
+                           oninput="validarCorreo(this)" onblur="validarCorreo(this)">
+                    <span class="field-hint hint-info" id="hintCorreo">Debe terminar en @uaeh.edu.mx</span>
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label-sm">Teléfono</label>
-                    <input type="tel" id="fTel" class="form-field" placeholder="771 000 0000">
+
+                <div class="col-md-4">
+                    <label class="form-label-sm">Teléfono <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;">(10 dígitos)</span></label>
+                    <input type="tel" id="fTel" class="form-field" placeholder="7710000000"
+                           maxlength="10" inputmode="numeric"
+                           oninput="this.value=this.value.replace(/\D/g,''); validarTel(this)">
+                    <span class="field-hint hint-info" id="hintTel">10 dígitos, sin espacios ni guiones.</span>
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label-sm">CURP</label>
-                    <input type="text" id="fCURP" class="form-field" placeholder="CURP" maxlength="18">
+
+                <div class="col-md-6">
+                    <label class="form-label-sm">CURP <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;">(18 caracteres)</span></label>
+                    <input type="text" id="fCURP" class="form-field" placeholder="XXXX000000XXXXXX00"
+                           maxlength="18" style="text-transform:uppercase;"
+                           oninput="this.value=this.value.toUpperCase(); validarCURP(this)">
+                    <span class="field-hint hint-info" id="hintCURP">18 caracteres alfanuméricos.</span>
                 </div>
+
             </div>
         </div>
     </div>
 
-    <!-- INSTITUTO Y CARRERA -->
+    <!-- ── INSTITUTO Y CARRERA ──────────────────────────────── -->
     <div class="section-card">
         <div class="section-header"><span class="title"><i class="bi bi-building-fill"></i> Instituto y carrera</span></div>
         <div class="section-body">
 
-            <!-- Selector de instituto — se oculta si el admin tiene solo uno -->
             <div id="bloqueInstituto">
-                <label class="form-label-sm">Instituto / Escuela *</label>
+                <label class="form-label-sm">Instituto / Escuela Superior *</label>
                 <select id="fInstituto" class="form-field" onchange="actualizarCarreras()">
                     <option value="">Selecciona un instituto…</option>
+                    <optgroup label="── Institutos (Pachuca y Tulancingo) ──" id="grpInstitutos"></optgroup>
+                    <optgroup label="── Escuelas Superiores ──" id="grpEscuelas"></optgroup>
                 </select>
             </div>
 
-            <!-- Badge fijo si solo tiene uno -->
             <div id="instAutoBadge" style="display:none;">
                 <label class="form-label-sm">Instituto</label>
                 <div class="inst-auto-badge"><i class="bi bi-building-fill"></i><span id="instAutoNombre"></span><span style="font-size:.72rem;color:var(--muted);margin-left:.25rem;">(asignado automáticamente)</span></div>
@@ -250,14 +313,15 @@
 
             <div style="margin-top:.9rem;">
                 <label class="form-label-sm">Carrera *</label>
-                <select id="fCarrera" class="form-field">
+                <select id="fCarrera" class="form-field" disabled>
                     <option value="">Selecciona primero un instituto…</option>
                 </select>
             </div>
+
         </div>
     </div>
 
-    <!-- PROGRAMA -->
+    <!-- ── PROGRAMA ─────────────────────────────────────────── -->
     <div class="section-card">
         <div class="section-header"><span class="title"><i class="bi bi-journal-check"></i> Programa</span></div>
         <div class="section-body">
@@ -285,18 +349,18 @@
         </div>
     </div>
 
-    <!-- PERIODO -->
+    <!-- ── PERIODO ───────────────────────────────────────────── -->
     <div class="section-card">
         <div class="section-header"><span class="title"><i class="bi bi-calendar3"></i> Periodo</span></div>
         <div class="section-body">
             <div class="row g-3">
                 <div class="col-md-4">
                     <label class="form-label-sm">Fecha de inicio *</label>
-                    <input type="date" id="fInicio" class="form-field">
+                    <input type="date" id="fInicio" class="form-field" onchange="calcDur()">
                 </div>
                 <div class="col-md-4">
                     <label class="form-label-sm">Fecha estimada de término *</label>
-                    <input type="date" id="fFin" class="form-field">
+                    <input type="date" id="fFin" class="form-field" onchange="calcDur()">
                 </div>
                 <div class="col-md-4">
                     <label class="form-label-sm">Duración calculada</label>
@@ -306,33 +370,36 @@
         </div>
     </div>
 
-    <!-- UNIDAD RECEPTORA -->
+    <!-- ── UNIDAD RECEPTORA ──────────────────────────────────── -->
     <div class="section-card">
         <div class="section-header"><span class="title"><i class="bi bi-building-fill"></i> Unidad Receptora</span></div>
         <div class="section-body">
             <div class="aviso-info">
                 <i class="bi bi-info-circle-fill" style="flex-shrink:0;margin-top:.05rem;"></i>
-                <span>Solo se muestran las URs que ya están dadas de alta y que tienen lugares disponibles. Para agregar una nueva UR ve a <strong>Gestión de URs</strong>.</span>
+                <span>Solo se muestran las URs dadas de alta con lugares disponibles. Para agregar una nueva ve a <strong>Unidades Receptoras</strong>.</span>
             </div>
             <label class="form-label-sm">Buscar Unidad Receptora *</label>
-            <input type="text" id="urBuscar" class="form-field" placeholder="Buscar por nombre o sector…" oninput="filtrarURs()" style="margin-bottom:.5rem;">
-            <div class="ur-list" id="urLista"></div>
+            <input type="text" id="urBuscar" class="form-field" placeholder="Buscar por nombre…"
+                   oninput="filtrarURs()" style="margin-bottom:.5rem;">
+            <div class="ur-list" id="urLista">
+                <p style="padding:.75rem 1rem;font-size:.82rem;color:var(--muted);">Cargando unidades receptoras…</p>
+            </div>
             <div id="urSeleccionada" style="margin-top:.6rem;font-size:.82rem;font-weight:600;color:var(--primario);display:none;">
-                <i class="bi bi-check-circle-fill me-1"></i><span id="urNombre"></span>
+                <i class="bi bi-check-circle-fill me-1"></i><span id="urNombreSelec"></span>
             </div>
             <input type="hidden" id="fUR">
         </div>
     </div>
 
-    <!-- ACCIONES -->
+    <!-- ── ACCIONES ──────────────────────────────────────────── -->
     <div class="section-card">
         <div class="section-body">
-            <div id="formError" style="font-size:.8rem;color:#991b1b;font-weight:600;margin-bottom:.75rem;display:none;">
+            <div id="formError" style="font-size:.8rem;color:#991b1b;font-weight:600;margin-bottom:.75rem;display:none;background:#fee2e2;border-radius:var(--radius-sm);padding:.6rem .9rem;">
                 <i class="bi bi-exclamation-circle-fill me-1"></i><span id="formErrorTxt"></span>
             </div>
             <div class="d-flex gap-3 flex-wrap align-items-center">
                 <button type="submit" class="btn-save"><i class="bi bi-person-check-fill"></i> Dar de alta alumno</button>
-                <a href="ADMIN_dashboard-servicio.html" class="btn-cancel-sm"><i class="bi bi-x-circle"></i> Cancelar</a>
+                <a href="ADMIN_alumnos.html" class="btn-cancel-sm"><i class="bi bi-x-circle"></i> Cancelar</a>
             </div>
         </div>
     </div>
@@ -340,10 +407,11 @@
     </form>
 </main>
 
-<div class="toast-custom" id="toastOk"><i class="bi bi-check-circle-fill" style="font-size:1.1rem;"></i> Alumno registrado exitosamente.</div>
+<div class="toast-custom toast-ok" id="toastOk"><i class="bi bi-check-circle-fill" style="font-size:1.1rem;"></i> Alumno registrado exitosamente.</div>
+<div class="toast-custom toast-err" id="toastErr"><i class="bi bi-exclamation-triangle-fill" style="font-size:1.1rem;"></i> <span id="toastErrTxt"></span></div>
 <footer class="footer-custom">© 2026 SIARHA · Uso exclusivo institucional · UAEH</footer>
 
-<!-- ══ PANEL NOTIFICACIONES ══ -->
+<!-- NOTIFICACIONES -->
 <div class="notif-overlay" id="notifOverlay" onclick="cerrarNotif()"></div>
 <div class="notif-panel" id="notifPanel">
     <div class="notif-header">
@@ -359,194 +427,370 @@
         <button class="notif-tab" onclick="setNotifTab('ni-rec',this)">Reportes</button>
         <button class="notif-tab" onclick="setNotifTab('ni-sis',this)">Sistema</button>
     </div>
-    <div class="notif-list" id="notifList">
+    <div class="notif-list">
         <div class="notif-item unread" data-tipo="ni-msg" onclick="marcarLeida(this)">
             <div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div>
-            <div><div class="notif-title">Mensaje de Juan Pérez García</div><div class="notif-desc">Solicitud de prórroga de 2 semanas</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 15 min</div></div>
-        </div>
-        <div class="notif-item unread" data-tipo="ni-msg" onclick="marcarLeida(this)">
-            <div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div>
-            <div><div class="notif-title">2 mensajes de Ana López</div><div class="notif-desc">Problema con acceso al sistema</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 30 min</div></div>
+            <div><div class="notif-title">Mensaje de Juan Pérez García</div><div class="notif-desc">Solicitud de prórroga</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 15 min</div></div>
         </div>
         <div class="notif-item unread" data-tipo="ni-rec" onclick="marcarLeida(this)">
             <div class="notif-icon ni-rec"><i class="bi bi-flag-fill"></i></div>
             <div><div class="notif-title">Reporte escalado #RPT-0042</div><div class="notif-desc">El coordinador te escaló un reporte</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 2 horas</div></div>
         </div>
-        <div class="notif-item" data-tipo="ni-sis" onclick="marcarLeida(this)">
-            <div class="notif-icon ni-sis"><i class="bi bi-person-plus-fill"></i></div>
-            <div><div class="notif-title">Nuevo alumno dado de alta</div><div class="notif-desc">María González — Prácticas Profesionales</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer, 4:00 p.m.</div></div>
-        </div>
-        <div class="notif-item" data-tipo="ni-sis" onclick="marcarLeida(this)">
-            <div class="notif-icon ni-sis"><i class="bi bi-building-fill"></i></div>
-            <div><div class="notif-title">Nueva UR registrada</div><div class="notif-desc">IMSS Pachuca fue agregada al sistema</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer, 10:00 a.m.</div></div>
-        </div>
     </div>
     <div class="notif-footer"><a href="ADMIN_mensajes-admin.html">Ver todo →</a></div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/admin-guard.js"></script>
+
 <script>
-// ── INIT ─────────────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-    // Determinar institutos disponibles para este admin
-    const insts = ADMIN_ROL === 'superadmin' ? Object.keys(NOMBRES_INST) : ADMIN_INSTITUTOS;
+// ════════════════════════════════════════════════════════════════
+// VALIDACIONES DE CAMPO
+// ════════════════════════════════════════════════════════════════
 
-    if (insts.length === 1) {
-        // Un solo instituto → ocultar selector, mostrar badge
-        document.getElementById('bloqueInstituto').style.display = 'none';
-        document.getElementById('instAutoBadge').style.display = 'block';
-        document.getElementById('instAutoNombre').textContent = NOMBRES_INST[insts[0]] || insts[0];
-        // Cargar carreras automáticamente
-        const sel = document.getElementById('fCarrera');
-        sel.innerHTML = '<option value="">Selecciona una carrera…</option>';
-        (CARRERAS[insts[0]] || ALL_CARRERAS).forEach(c => {
-            sel.innerHTML += `<option>${c}</option>`;
-        });
-    } else {
-        // Varios institutos → llenar selector
-        const sel = document.getElementById('fInstituto');
-        insts.forEach(id => {
-            sel.innerHTML += `<option value="${id}">${NOMBRES_INST[id] || id}</option>`;
-        });
-    }
-
-    // Render URs
-    renderURs(URS);
-
-    // Visibilidad menú según rol
-    if (ADMIN_ROL === 'superadmin') {
-        document.getElementById('navURs').style.display = '';
-        document.getElementById('navAdmins').style.display = '';
-    }
-
-    // Fecha mínima = hoy
-    const hoy = new Date().toISOString().split('T')[0];
-    document.getElementById('fInicio').min = hoy;
-    document.getElementById('fInicio').value = hoy;
-});
-
-function actualizarCarreras() {
-    const inst = document.getElementById('fInstituto').value;
-    const sel  = document.getElementById('fCarrera');
-    sel.innerHTML = '<option value="">Selecciona una carrera…</option>';
-    if (!inst) return;
-    (CARRERAS[inst] || ALL_CARRERAS).forEach(c => {
-        sel.innerHTML += `<option>${c}</option>`;
-    });
+function setFieldState(input, hintId, ok, msg) {
+    input.classList.toggle('campo-ok',  ok === true);
+    input.classList.toggle('campo-err', ok === false);
+    const hint = document.getElementById(hintId);
+    if (!hint) return;
+    hint.textContent = msg;
+    hint.className = 'field-hint ' + (ok === true ? 'hint-ok' : ok === false ? 'hint-err' : 'hint-info');
 }
 
+function validarTextoNombre(input) {
+    const v = input.value.trim();
+    const ok = v.length >= 2 && /^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ\s'-]+$/.test(v);
+    input.classList.toggle('campo-ok', ok);
+    input.classList.toggle('campo-err', v.length > 0 && !ok);
+}
+
+function validarCuenta(input) {
+    const v = input.value;
+    const ok = /^\d{6}$/.test(v);
+    setFieldState(input, 'hintCuenta',
+        v.length === 0 ? null : ok,
+        ok ? '✓ Número de cuenta válido.' : v.length < 6 ? `${v.length} / 6 dígitos ingresados.` : 'Solo se permiten exactamente 6 dígitos.'
+    );
+}
+
+function validarCorreo(input) {
+    const v = input.value.trim();
+    const ok = /^[a-zA-Z0-9._%+\-]+@uaeh\.edu\.mx$/.test(v);
+    setFieldState(input, 'hintCorreo',
+        v.length === 0 ? null : ok,
+        ok ? '✓ Correo institucional válido.' : 'El correo debe terminar en @uaeh.edu.mx'
+    );
+}
+
+function validarTel(input) {
+    const v = input.value;
+    const ok = /^\d{10}$/.test(v);
+    setFieldState(input, 'hintTel',
+        v.length === 0 ? null : ok,
+        ok ? '✓ Teléfono válido.' : `${v.length} / 10 dígitos ingresados.`
+    );
+}
+
+function validarCURP(input) {
+    const v = input.value;
+    // Patrón oficial CURP México
+    const ok = /^[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z0-9]\d$/.test(v);
+    setFieldState(input, 'hintCURP',
+        v.length === 0 ? null : ok,
+        ok ? '✓ CURP con formato válido.' : v.length < 18 ? `${v.length} / 18 caracteres.` : 'Formato de CURP inválido.'
+    );
+}
+
+// ════════════════════════════════════════════════════════════════
+// INSTITUTOS Y CARRERAS
+// ════════════════════════════════════════════════════════════════
+
+async function iniciarInstitutos() {
+    const _admin = JSON.parse(localStorage.getItem('admin_data') || '{}');
+    const rolAdmin = _admin.rol || 'superadmin';
+
+    // Determinar qué institutos puede ver este admin
+    let instPermitidos;
+    if (rolAdmin === 'admin_area' && _admin.institutos?.length) {
+        // Solo sus institutos asignados (por id_instituto)
+        const idsAsignados = _admin.institutos.map(i => i.id_instituto ?? i.id);
+        instPermitidos = INSTITUTOS.filter(i => idsAsignados.includes(i.id));
+    } else {
+        instPermitidos = INSTITUTOS; // superadmin ve todos
+    }
+
+    if (instPermitidos.length === 1) {
+        // Un solo instituto → ocultar selector, mostrar badge fijo
+        document.getElementById('bloqueInstituto').style.display = 'none';
+        document.getElementById('instAutoBadge').style.display = 'block';
+        document.getElementById('instAutoNombre').textContent = instPermitidos[0].nombre;
+        // Cargar carreras automáticamente
+        await poblarCarreras(instPermitidos[0].codigo);
+    } else {
+        // Varios → llenar select con optgroups
+        const grpInst = document.getElementById('grpInstitutos');
+        const grpEsc  = document.getElementById('grpEscuelas');
+        instPermitidos.forEach(inst => {
+            const opt = document.createElement('option');
+            opt.value = inst.codigo;
+            opt.textContent = inst.nombre;
+            if (inst.codigo.startsWith('ES-')) grpEsc.appendChild(opt);
+            else grpInst.appendChild(opt);
+        });
+    }
+}
+
+async function actualizarCarreras() {
+    const codigo = document.getElementById('fInstituto').value;
+    await poblarCarreras(codigo);
+}
+
+async function poblarCarreras(codigo) {
+    const sel = document.getElementById('fCarrera');
+    sel.innerHTML = '<option value="">Cargando carreras…</option>';
+    sel.disabled = true;
+    if (!codigo) return;
+
+    // Intentar cargar del backend (licenciaturas por instituto)
+    const instObj = INSTITUTOS.find(i => i.codigo === codigo);
+    if (instObj) {
+        try {
+            const res  = await apiFetch(`/api/licenciaturas?id_instituto=${instObj.id}`);
+            const data = await res.json();
+            if (res.ok && data.licenciaturas?.length > 0) {
+                sel.innerHTML = '<option value="">Selecciona una carrera…</option>';
+                data.licenciaturas.forEach(l => {
+                    const opt = document.createElement('option');
+                    opt.value = l.nombre_licenciatura;
+                    opt.textContent = l.nombre_licenciatura;
+                    sel.appendChild(opt);
+                });
+                sel.disabled = false;
+                return;
+            }
+        } catch(e) { /* fall through to static catalog */ }
+    }
+
+    // Fallback: catálogo estático
+    const lista = CARRERAS[codigo] || [];
+    sel.innerHTML = '<option value="">Selecciona una carrera…</option>';
+    lista.sort().forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        sel.appendChild(opt);
+    });
+    sel.disabled = lista.length === 0;
+}
+
+// ════════════════════════════════════════════════════════════════
 // PROGRAMA
+// ════════════════════════════════════════════════════════════════
+
 function selProg(card) {
     document.querySelectorAll('.prog-card').forEach(c => c.classList.remove('selected'));
     card.classList.add('selected');
     document.getElementById('fProg').value = card.dataset.prog;
 }
 
+// ════════════════════════════════════════════════════════════════
 // DURACIÓN
-document.getElementById('fInicio').addEventListener('change', calcDur);
-document.getElementById('fFin').addEventListener('change', calcDur);
+// ════════════════════════════════════════════════════════════════
+
 function calcDur() {
     const ini = document.getElementById('fInicio').value;
     const fin = document.getElementById('fFin').value;
+    const divDur = document.getElementById('duracion');
     if (!ini || !fin) return;
     const dias = Math.round((new Date(fin) - new Date(ini)) / 86400000);
+    if (dias <= 0) {
+        divDur.textContent = 'Fecha inválida';
+        divDur.style.color = '#dc2626';
+        return;
+    }
     const semanas = Math.round(dias / 7);
-    document.getElementById('duracion').textContent = dias > 0 ? `${semanas} semanas (${dias} días)` : 'Fecha inválida';
-    // Actualizar mín de fin
+    divDur.textContent = `${semanas} semanas (${dias} días)`;
+    divDur.style.color = 'var(--muted)';
     document.getElementById('fFin').min = ini;
 }
 
-// URs
-let urSelId = '';
+// ════════════════════════════════════════════════════════════════
+// UNIDADES RECEPTORAS — carga real del backend
+// ════════════════════════════════════════════════════════════════
+
+async function cargarURs() {
+    try {
+        const res  = await apiFetch('/api/unidades-receptoras?por_pagina=200');
+        const data = await res.json();
+        URS = (data.unidades_receptoras || []).filter(ur => ur.estado === 'activa');
+        renderURs(URS);
+    } catch(e) {
+        console.error('Error cargando URs:', e);
+        document.getElementById('urLista').innerHTML =
+            '<p style="padding:.75rem 1rem;font-size:.82rem;color:#991b1b;">Error al cargar unidades receptoras.</p>';
+    }
+}
+
 function renderURs(lista) {
     const div = document.getElementById('urLista');
-    if (!lista.length) { div.innerHTML = '<p style="padding:.75rem 1rem;font-size:.82rem;color:var(--muted);">Sin URs disponibles</p>'; return; }
+    if (!lista.length) {
+        div.innerHTML = '<p style="padding:.75rem 1rem;font-size:.82rem;color:var(--muted);">Sin unidades receptoras disponibles.</p>';
+        return;
+    }
     div.innerHTML = lista.map(ur => {
-        const llena = ur.ocupados >= ur.cupo;
-        return `<div class="ur-item${llena?' ur-item-llena':''}" onclick="${llena?'':` selUR('${ur.id}','${ur.nombre}')`}" style="${llena?'opacity:.45;cursor:not-allowed;':''}">
+        const ocupados = ur.alumnos_activos ?? 0;
+        const cupo     = ur.cupo_maximo ?? 0;
+        const llena    = ocupados >= cupo;
+        const pct      = cupo > 0 ? Math.round(ocupados / cupo * 100) : 0;
+        return `<div class="ur-item${llena ? '' : ''}"
+                     onclick="${llena ? '' : `selUR(${ur.id_ur},'${ur.nombre_ur.replace(/'/g,"\\'")}',this)`}"
+                     style="${llena ? 'opacity:.45;cursor:not-allowed;' : ''}">
             <div>
-                <div style="font-weight:600;font-size:.84rem;">${ur.nombre}</div>
-                <div style="font-size:.73rem;color:var(--muted);">${ur.sector}</div>
+                <div style="font-weight:600;font-size:.84rem;">${ur.nombre_ur}</div>
+                <div style="font-size:.73rem;color:var(--muted);">${ur.programas_aceptados === 'ss' ? 'Solo SS' : ur.programas_aceptados === 'pp' ? 'Solo PP' : 'SS y PP'}</div>
             </div>
-            <span class="ur-ocup${llena?' full':''}">${ur.ocupados}/${ur.cupo} ${llena?'<i class="bi bi-lock-fill"></i>':''}</span>
+            <span class="ur-ocup${llena ? ' full' : ''}">${ocupados}/${cupo} lugares${llena ? ' <i class="bi bi-lock-fill"></i>' : ''}</span>
         </div>`;
     }).join('');
 }
+
 function filtrarURs() {
     const q = document.getElementById('urBuscar').value.toLowerCase();
-    renderURs(URS.filter(u => u.nombre.toLowerCase().includes(q) || u.sector.toLowerCase().includes(q)));
+    renderURs(URS.filter(u => u.nombre_ur.toLowerCase().includes(q)));
 }
-function selUR(id, nombre) {
+
+function selUR(id, nombre, el) {
     urSelId = id;
     document.getElementById('fUR').value = id;
-    document.getElementById('urNombre').textContent = nombre;
+    document.getElementById('urNombreSelec').textContent = nombre;
     document.getElementById('urSeleccionada').style.display = 'block';
-    document.querySelectorAll('.ur-item').forEach(el => el.classList.remove('selected'));
-    event.currentTarget.classList.add('selected');
+    document.querySelectorAll('.ur-item').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
 }
 
-// VALIDACIÓN Y ENVÍO
-document.getElementById('formAlta').addEventListener('submit', e => {
+// ════════════════════════════════════════════════════════════════
+// VALIDACIÓN FINAL Y ENVÍO
+// ════════════════════════════════════════════════════════════════
+
+function mostrarError(msg) {
+    const div = document.getElementById('formError');
+    document.getElementById('formErrorTxt').textContent = msg;
+    div.style.display = 'block';
+    div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+document.getElementById('formAlta').addEventListener('submit', async e => {
     e.preventDefault();
-    const err = document.getElementById('formError');
-    const errTxt = document.getElementById('formErrorTxt');
-    err.style.display = 'none';
+    document.getElementById('formError').style.display = 'none';
 
     const nombre  = document.getElementById('fNombre').value.trim();
+    const apP     = document.getElementById('fApP').value.trim();
     const cuenta  = document.getElementById('fCuenta').value.trim();
     const correo  = document.getElementById('fCorreo').value.trim();
+    const tel     = document.getElementById('fTel').value.trim();
+    const curp    = document.getElementById('fCURP').value.trim();
+    const inst    = document.getElementById('fInstituto').value || document.getElementById('instAutoNombre').textContent;
     const carrera = document.getElementById('fCarrera').value;
     const prog    = document.getElementById('fProg').value;
     const inicio  = document.getElementById('fInicio').value;
     const fin     = document.getElementById('fFin').value;
     const ur      = document.getElementById('fUR').value;
 
-    if (!nombre) { errTxt.textContent = 'El nombre es requerido.'; err.style.display='block'; return; }
-    if (cuenta.length < 8) { errTxt.textContent = 'El número de cuenta debe tener al menos 8 dígitos.'; err.style.display='block'; return; }
-    if (!correo || !correo.includes('@')) { errTxt.textContent = 'Ingresa un correo institucional válido.'; err.style.display='block'; return; }
-    if (!carrera) { errTxt.textContent = 'Selecciona la carrera del alumno.'; err.style.display='block'; return; }
-    if (!prog) { errTxt.textContent = 'Selecciona el programa (Servicio Social o Prácticas Profesionales).'; err.style.display='block'; return; }
-    if (!inicio || !fin) { errTxt.textContent = 'Define el periodo de inicio y término.'; err.style.display='block'; return; }
-    if (new Date(fin) <= new Date(inicio)) { errTxt.textContent = 'La fecha de término debe ser posterior a la de inicio.'; err.style.display='block'; return; }
-    if (!ur) { errTxt.textContent = 'Asigna una Unidad Receptora al alumno.'; err.style.display='block'; return; }
+    // Validaciones
+    if (!nombre) return mostrarError('El nombre es requerido.');
+    if (!apP)    return mostrarError('El apellido paterno es requerido.');
+    if (!/^\d{6}$/.test(cuenta)) return mostrarError('El número de cuenta debe tener exactamente 6 dígitos.');
+    if (!/^[a-zA-Z0-9._%+\-]+@uaeh\.edu\.mx$/.test(correo)) return mostrarError('El correo debe terminar en @uaeh.edu.mx');
+    if (tel && !/^\d{10}$/.test(tel)) return mostrarError('El teléfono debe tener exactamente 10 dígitos.');
+    if (curp && !/^[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z0-9]\d$/.test(curp)) return mostrarError('El formato de la CURP es inválido.');
+    if (!carrera) return mostrarError('Selecciona la carrera del alumno.');
+    if (!prog)    return mostrarError('Selecciona el programa (Servicio Social o Prácticas Profesionales).');
+    if (!inicio || !fin) return mostrarError('Define el periodo de inicio y término.');
+    if (new Date(fin) <= new Date(inicio)) return mostrarError('La fecha de término debe ser posterior a la de inicio.');
+    if (!ur) return mostrarError('Asigna una Unidad Receptora al alumno.');
 
-    const t = document.getElementById('toastOk');
-    t.classList.add('show');
-    setTimeout(() => { t.classList.remove('show'); window.location.href = 'dashboard-servicio.html'; }, 2200);
+    // Construir payload para el backend
+    const _admin = JSON.parse(localStorage.getItem('admin_data') || '{}');
+    // Buscar el id_instituto del código seleccionado
+    const instSelCodigo = document.getElementById('fInstituto').value ||
+                          INSTITUTOS.find(i => i.nombre === document.getElementById('instAutoNombre').textContent)?.codigo;
+    const instObj = INSTITUTOS.find(i => i.codigo === instSelCodigo);
+
+    const payload = {
+        no_cuenta:           parseInt(cuenta),
+        nombre_alum:         nombre,
+        apellido_p_alum:     apP,
+        apellido_m_alum:     document.getElementById('fApM').value.trim() || null,
+        correo:              correo,
+        telefono:            tel || null,
+        curp:                curp || null,
+        programa:            prog,
+        nombre_licenciatura: carrera,
+        id_instituto:        instObj?.id || null,
+        id_ur:               parseInt(ur),
+        fecha_inicio:        inicio,
+        fecha_fin:           fin,
+    };
+
+    try {
+        const res  = await apiFetch('/api/alumnos/admin/alta', { method: 'POST', body: JSON.stringify(payload) });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || data.message || 'Error al registrar alumno.');
+
+        // Mostrar contraseña temporal al administrador
+        const contra = data.contrasena_temporal || '';
+        const t = document.getElementById('toastOk');
+        t.querySelector ? null : null;
+        document.getElementById('toastOk').innerHTML = `<i class="bi bi-check-circle-fill" style="font-size:1.1rem;"></i> Alumno registrado. Contraseña temporal: <strong>${contra}</strong>`;
+        document.getElementById('toastOk').classList.add('show');
+        setTimeout(() => {
+            document.getElementById('toastOk').classList.remove('show');
+            window.location.href = 'ADMIN_alumnos.html';
+        }, 4000);
+    } catch(err) {
+        document.getElementById('toastErrTxt').textContent = err.message;
+        const t = document.getElementById('toastErr');
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 4000);
+    }
 });
 
-    // ══ NOTIFICACIONES ══════════════════════════════════════════════
-        function abrirNotif(){document.getElementById('notifPanel').classList.add('open');document.getElementById('notifOverlay').classList.add('open');_nOpen=true;}
-    function cerrarNotif(){document.getElementById('notifPanel').classList.remove('open');document.getElementById('notifOverlay').classList.remove('open');_nOpen=false;}
-    function marcarLeida(item){if(!item.classList.contains('unread'))return;item.classList.remove('unread');_badge();}
-    function marcarTodasLeidas(){document.querySelectorAll('.notif-item.unread').forEach(i=>i.classList.remove('unread'));_badge();}
-    function _badge(){const n=document.querySelectorAll('.notif-item.unread').length;const b=document.getElementById('notifCount');if(b){b.textContent=n;b.style.display=n>0?'flex':'none';}const bt=document.getElementById('badgeTodas');if(bt)bt.textContent=n;}
-    function setNotifTab(tipo,btn){document.querySelectorAll('.notif-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.notif-item').forEach(i=>{i.style.display=(tipo==='todas'||i.dataset.tipo===tipo)?'':'none';});}
-    // ════════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
+// NOTIFICACIONES
+// ════════════════════════════════════════════════════════════════
 
-</script>
+let _nOpen = false;
+function toggleNotif() { _nOpen ? cerrarNotif() : abrirNotif(); }
+function abrirNotif()  { document.getElementById('notifPanel').classList.add('open'); document.getElementById('notifOverlay').classList.add('open'); _nOpen = true; }
+function cerrarNotif() { document.getElementById('notifPanel').classList.remove('open'); document.getElementById('notifOverlay').classList.remove('open'); _nOpen = false; }
+function marcarLeida(item) { if (!item.classList.contains('unread')) return; item.classList.remove('unread'); _badge(); }
+function marcarTodasLeidas() { document.querySelectorAll('.notif-item.unread').forEach(i => i.classList.remove('unread')); _badge(); }
+function _badge() {
+    const n = document.querySelectorAll('.notif-item.unread').length;
+    const b = document.getElementById('notifCount'); if (b) { b.textContent = n; b.style.display = n > 0 ? 'flex' : 'none'; }
+    const bt = document.getElementById('badgeTodas'); if (bt) bt.textContent = n;
+}
+function setNotifTab(tipo, btn) {
+    document.querySelectorAll('.notif-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.notif-item').forEach(i => { i.style.display = (tipo === 'todas' || i.dataset.tipo === tipo) ? '' : 'none'; });
+}
 
-<script>
-    let _nOpen = false;
-    function toggleNotif() { _nOpen ? cerrarNotif() : abrirNotif(); }
-    function abrirNotif()  { document.getElementById('notifPanel').classList.add('open');    document.getElementById('notifOverlay').classList.add('open');    _nOpen = true;  }
-    function cerrarNotif() { document.getElementById('notifPanel').classList.remove('open'); document.getElementById('notifOverlay').classList.remove('open'); _nOpen = false; }
-    function marcarLeida(item) { if (!item.classList.contains('unread')) return; item.classList.remove('unread'); _badge(); }
-    function marcarTodasLeidas() { document.querySelectorAll('.notif-item.unread').forEach(i => i.classList.remove('unread')); _badge(); }
-    function _badge() {
-        const n = document.querySelectorAll('.notif-item.unread').length;
-        const b = document.getElementById('notifCount');  if (b)  { b.textContent = n; b.style.display = n > 0 ? 'flex' : 'none'; }
-        const bt = document.getElementById('badgeTodas'); if (bt) bt.textContent = n;
-    }
-    function setNotifTab(tipo, btn) {
-        document.querySelectorAll('.notif-tab').forEach(t => t.classList.remove('active'));
-        btn.classList.add('active');
-        document.querySelectorAll('.notif-item').forEach(i => {
-            i.style.display = (tipo === 'todas' || i.dataset.tipo === tipo) ? '' : 'none';
-        });
-    }
+// ════════════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════════════
+
+document.addEventListener('DOMContentLoaded', () => {
+    iniciarInstitutos();
+    cargarURs();
+
+    // Fecha mínima = hoy
+    const hoy = new Date().toISOString().split('T')[0];
+    document.getElementById('fInicio').min = hoy;
+    document.getElementById('fInicio').value = hoy;
+    calcDur();
+});
 </script>
-<!-- ────── SIARHA scripts ────── -->
-<script src="../assets/js/api.js"></script>
-<script src="../assets/js/admin-guard.js"></script>
 </body>
 </html>

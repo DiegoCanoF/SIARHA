@@ -211,14 +211,13 @@
         </div>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
     </div>
-    <div class="offcanvas-body">
-        <ul class="navbar-nav gap-1">
-            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
-            <li><a class="nav-link active" href="ADMIN_dashboard-servicio.html"><i class="bi bi-people-fill"></i> Alumnos</a></li>
-            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html"><i class="bi bi-building"></i> Unidades Receptoras</a></li>
-            <li><a class="nav-link" href="ADMIN_gestion-administradores.html"><i class="bi bi-person-gear"></i> Administradores</a></li>
-            <li><a class="nav-link" href="ADMIN_reportes-globales.html"><i class="bi bi-bar-chart-fill"></i> Reportes Globales</a></li>
-            <li><a class="nav-link" href="ADMIN_mensajes-admin.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge">3</span></a></li>
+    <div class="offcanvas-body">        <ul class="navbar-nav gap-1">
+            <li><a class="nav-link " href="ADMIN_dashboard-servicio.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link active" href="ADMIN_alumnos.html"><i class="bi bi-people-fill"></i> Alumnos</a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link " href="ADMIN_gestion-ur.html"><i class="bi bi-building"></i> Unidades Receptoras</a></li>
+            <li data-visible="superadmin"><a class="nav-link " href="ADMIN_gestion-administradores.html"><i class="bi bi-person-gear"></i> Administradores</a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link " href="ADMIN_reportes-globales.html"><i class="bi bi-bar-chart-fill"></i> Reportes Globales</a></li>
+            <li><a class="nav-link " href="ADMIN_mensajes-admin.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge">3</span></a></li>
             <hr class="menu-divider">
             <li><a class="nav-link danger" href="../index.html"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
         </ul>
@@ -300,6 +299,39 @@
                     <div class="dato-item"><span class="dato-label">Responsable UR</span><span class="dato-value">Dr. Martínez</span></div>
                     <div class="dato-item"><span class="dato-label">Correo</span><span class="dato-value" style="font-size:.82rem;">jp2020123456@uaeh.edu.mx</span></div>
                     <div class="dato-item"><span class="dato-label">Teléfono</span><span class="dato-value">771 234 5678</span></div>
+                </div>
+            </div>
+
+            <!-- ACCESO AL SISTEMA -->
+            <div class="section-card">
+                <div class="section-header">
+                    <span class="title"><i class="bi bi-shield-lock-fill"></i> Acceso al sistema</span>
+                </div>
+                <div class="section-body">
+                    <p style="font-size:.8rem;color:var(--muted);margin-bottom:1rem;">
+                        El alumno usa su correo institucional para iniciar sesión. Aquí puedes restablecer su contraseña si la olvidó.
+                    </p>
+                    <div class="row g-2">
+                        <div class="col-12">
+                            <label class="form-label-sm">Nueva contraseña <span style="color:var(--primario);">*</span></label>
+                            <div style="position:relative;">
+                                <input type="password" id="nuevaContrasena" class="form-field"
+                                       placeholder="Mínimo 8 caracteres"
+                                       oninput="validarPassAlumno(this)"
+                                       style="padding-right:2.5rem;">
+                                <button type="button" onclick="togglePassAlumno()"
+                                        style="position:absolute;right:.6rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;">
+                                    <i class="bi bi-eye-fill" id="iconoOjoAlumno"></i>
+                                </button>
+                            </div>
+                            <span id="hintPassAlumno" style="font-size:.72rem;color:var(--muted);display:block;margin-top:.25rem;">Mínimo 8 caracteres.</span>
+                        </div>
+                        <div class="col-12" style="margin-top:.25rem;">
+                            <button class="btn-primary-custom w-100" onclick="cambiarContrasenaAlumno()">
+                                <i class="bi bi-key-fill"></i> Restablecer contraseña
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -641,5 +673,141 @@
 <!-- ────── SIARHA scripts ────── -->
 <script src="../assets/js/api.js"></script>
 <script src="../assets/js/admin-guard.js"></script>
+<script>
+// ── LEER no_cuenta DE LA URL ─────────────────────────────────
+const _params   = new URLSearchParams(window.location.search);
+const _noCuenta = _params.get('no_cuenta');
+
+// ── CARGAR DATOS REALES DEL ALUMNO ───────────────────────────
+async function cargarDetalleAlumno() {
+    if (!_noCuenta) {
+        document.querySelector('main').innerHTML =
+            '<p style="color:#991b1b;padding:2rem;">No se especificó número de cuenta.</p>';
+        return;
+    }
+
+    try {
+        const res  = await apiFetch(`/api/alumnos/${_noCuenta}`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Error al cargar datos');
+
+        const a = data.alumno || data;
+        const nombre = [a.nombre_alum, a.apellido_p_alum, a.apellido_m_alum].filter(Boolean).join(' ');
+        const carrera = a.nombre_licenciatura || '—';
+        const instituto = a.nombre_instituto || '—';
+        const pct = Math.round(parseFloat(a.avance_pct) || 0);
+        const horas = a.horas_realizadas ?? 0;
+        const horas_max = a.programa === 'pp' ? 240 : 480;
+        const ur = a.nombre_ur || '—';
+
+        // Avatar iniciales
+        const ini = ((a.nombre_alum||'')[0]||'') + ((a.apellido_p_alum||'')[0]||'');
+        const avatarEl = document.getElementById('heroAvatar');
+        if (avatarEl) avatarEl.textContent = ini.toUpperCase() || '?';
+
+        // Nombre y datos hero
+        const setTxt = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+        setTxt('heroNombre',   nombre);
+        setTxt('heroCuenta',   a.no_cuenta);
+        setTxt('heroPrograma', a.programa === 'pp' ? 'Prácticas Profesionales' : 'Servicio Social');
+        setTxt('heroUR',       ur);
+        setTxt('heroCarrera',  carrera);
+        setTxt('heroInstituto',instituto);
+        setTxt('heroCorreo',   a.correo || '—');
+        setTxt('heroHoras',    `${horas} / ${horas_max} hrs`);
+        setTxt('heroPct',      `${pct}%`);
+
+        // Barra de progreso
+        const barra = document.getElementById('heroBarra');
+        if (barra) barra.style.width = pct + '%';
+
+        // Stat cards
+        setTxt('statHoras', horas);
+        setTxt('statPct', pct + '%');
+        setTxt('statFaltantes', (horas_max - horas));
+
+        // Datos académicos (grid)
+        const setDato = (label, val) => {
+            document.querySelectorAll('.dato-item').forEach(el => {
+                if (el.querySelector('.dato-label')?.textContent.trim() === label) {
+                    const v = el.querySelector('.dato-value');
+                    if (v) v.textContent = val;
+                }
+            });
+        };
+        setDato('Nombre completo', nombre);
+        setDato('No. de cuenta',   a.no_cuenta);
+        setDato('Programa',        a.programa === 'pp' ? 'Prácticas Profesionales' : 'Servicio Social');
+        setDato('Carrera',         carrera);
+        setDato('Instituto',       instituto);
+        setDato('Unidad Receptora', ur);
+        setDato('Correo',          a.correo || '—');
+
+        // Título de la página
+        document.title = `SIARHA | ${nombre}`;
+
+        // Guardar no_cuenta para cambio de contraseña
+        window._alumnoNoCuenta = a.no_cuenta;
+
+    } catch(e) {
+        console.error('Error cargando detalle alumno:', e);
+        showToast('Error al cargar datos del alumno.', 'error');
+    }
+}
+
+// ── CAMBIAR CONTRASEÑA DEL ALUMNO ────────────────────────────
+async function cambiarContrasenaAlumno() {
+    const pass = document.getElementById('nuevaContrasena')?.value;
+    if (!pass || pass.length < 8) {
+        showToast('La contraseña debe tener al menos 8 caracteres.', 'error');
+        return;
+    }
+    const no_cuenta = window._alumnoNoCuenta || _noCuenta;
+    if (!no_cuenta) { showToast('Error: no se encontró el alumno.', 'error'); return; }
+
+    try {
+        const res  = await apiFetch(`/api/alumnos/${no_cuenta}/contrasena`, {
+            method: 'PATCH',
+            body: JSON.stringify({ contrasena: pass })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Error al cambiar contraseña');
+        document.getElementById('nuevaContrasena').value = '';
+        document.getElementById('hintPassAlumno').textContent = 'Mínimo 8 caracteres.';
+        document.getElementById('hintPassAlumno').style.color = 'var(--muted)';
+        document.getElementById('nuevaContrasena').classList.remove('pass-ok', 'pass-err');
+        showToast('Contraseña actualizada exitosamente.');
+    } catch(e) {
+        showToast(e.message || 'Error al cambiar contraseña.', 'error');
+    }
+}
+
+// ── VALIDACIÓN CONTRASEÑA ─────────────────────────────────────
+function validarPassAlumno(input) {
+    const ok = input.value.length >= 8;
+    input.classList.toggle('pass-ok', ok);
+    input.classList.toggle('pass-err', !ok && input.value.length > 0);
+    const hint = document.getElementById('hintPassAlumno');
+    if (hint) {
+        hint.textContent = !input.value ? 'Mínimo 8 caracteres.'
+                         : ok ? '✓ Contraseña válida.'
+                         : `${input.value.length}/8 caracteres mínimos.`;
+        hint.style.color = !input.value ? 'var(--muted)' : ok ? '#16a34a' : '#dc2626';
+    }
+}
+
+function togglePassAlumno() {
+    const inp = document.getElementById('nuevaContrasena');
+    const ico = document.getElementById('iconoOjoAlumno');
+    const show = inp.type === 'password';
+    inp.type = show ? 'text' : 'password';
+    ico.className = show ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill';
+}
+
+// ── INIT ─────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    cargarDetalleAlumno();
+});
+</script>
 </body>
 </html>

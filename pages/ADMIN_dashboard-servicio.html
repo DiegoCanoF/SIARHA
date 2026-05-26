@@ -322,14 +322,6 @@
         .pag-btn.active { background:var(--primario); color:#fff; border-color:var(--primario); }
         .pag-btn:disabled { opacity:.4; cursor:not-allowed; }
 
-        /* ── TAB NAVEGACIÓN ── */
-        .tab-nav { display:flex; gap:0; border-bottom:2px solid var(--border); margin-bottom:1.5rem; }
-        .tab-nav-btn { padding:.7rem 1.4rem; font-size:.88rem; font-weight:700; color:var(--muted); border:none; background:transparent; cursor:pointer; border-bottom:3px solid transparent; margin-bottom:-2px; transition:color .2s,border-color .2s; display:flex; align-items:center; gap:.45rem; }
-        .tab-nav-btn:hover { color:var(--primario); }
-        .tab-nav-btn.active { color:var(--primario); border-bottom-color:var(--primario); }
-        .tab-panel { display:none; }
-        .tab-panel.active { display:block; }
-
         /* ── FILTROS AVANZADOS ── */
         .filtros-bar { background:var(--bg); border-bottom:1px solid var(--border); padding:.9rem 1.4rem; }
         .filtros-bar .form-field { border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:.44rem .8rem; font-size:.82rem; font-family:inherit; color:var(--text); background:#fff; outline:none; transition:border-color .2s; }
@@ -427,6 +419,59 @@
         .menu-badge{margin-left:auto;background:#C9A24D;color:#fff;font-size:.68rem;font-weight:800;border-radius:20px;padding:.1rem .55rem;}
         @media(max-width:480px){.notif-panel{width:100%;border-radius:0;}}
 
+
+        /* ── ACCESOS RÁPIDOS ── */
+        .acceso-card { display:flex; flex-direction:column; background:var(--card-bg); border:1.5px solid var(--border); border-radius:var(--radius-card); padding:1.2rem 1.3rem; text-decoration:none; color:var(--text); transition:border-color .2s, box-shadow .2s, transform .2s; position:relative; overflow:hidden; }
+        .acceso-card:hover { border-color:var(--primario); box-shadow:var(--shadow-hover); transform:translateY(-2px); color:var(--text); }
+        .acceso-icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.15rem; margin-bottom:.85rem; flex-shrink:0; }
+        .acceso-label { font-size:.9rem; font-weight:800; margin-bottom:.25rem; }
+        .acceso-sub { font-size:.74rem; color:var(--muted); line-height:1.4; }
+        .acceso-arrow { position:absolute; bottom:.9rem; right:1rem; font-size:1.4rem; color:var(--primario); opacity:0; transition:opacity .2s, right .2s; }
+        .acceso-card:hover .acceso-arrow { opacity:1; right:.75rem; }
+        /* AREA BANNER */
+        .area-banner { background:var(--dorado-lt); border:1px solid rgba(201,162,77,.35); border-radius:var(--radius-sm); padding:.6rem 1rem; font-size:.82rem; color:#7a5a00; display:flex; align-items:center; gap:.6rem; margin-bottom:1rem; flex-wrap:wrap; }
+        .area-banner strong { color:#501013; }
+        /* STAT CARDS (si no están ya) */
+        .stat-card { background:var(--card-bg); border-radius:var(--radius-card); box-shadow:var(--shadow); padding:1.25rem 1.4rem; display:flex; align-items:center; gap:1rem; transition:box-shadow .25s,transform .25s; border:1px solid var(--border); }
+        .stat-card:hover { box-shadow:var(--shadow-hover); transform:translateY(-2px); }
+        .stat-icon { width:48px; height:48px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0; }
+        .si-vino   { background:var(--primario-lt); color:var(--primario); }
+        .si-dorado { background:var(--dorado-lt);   color:#8a6820; }
+        .si-vino2  { background:var(--primario-lt); color:var(--primario-mid); }
+        .si-gold2  { background:var(--dorado-lt);   color:var(--dorado); }
+        .stat-label { font-size:.73rem; font-weight:500; color:var(--muted); margin-bottom:.2rem; }
+        .stat-value { font-size:1.4rem; font-weight:800; color:var(--text); line-height:1; }
+        /* PAGE HEADER */
+        .page-header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.75rem; margin-bottom:1.75rem; }
+        .page-header h4 { font-size:1.3rem; font-weight:800; margin:0; }
+        .page-header p { font-size:.8rem; color:var(--muted); margin:.2rem 0 0; }
+        /* BADGES TABLA */
+        .badge-revision  { background:var(--primario-lt); color:var(--primario); border-radius:20px; font-size:.74rem; font-weight:700; padding:.28rem .7rem; }
+        .badge-activo    { background:var(--dorado-lt); color:#7a5a00; border-radius:20px; font-size:.74rem; font-weight:700; padding:.28rem .7rem; border:1px solid #C9A24D; }
+        .badge-pendiente { background:#fff3cd; color:#856404; border-radius:20px; font-size:.74rem; font-weight:700; padding:.28rem .7rem; }
+        .badge-finalizado{ background:#d1fae5; color:#065f46; border-radius:20px; font-size:.73rem; font-weight:700; padding:.26rem .68rem; }
+        .badge-baja      { background:#fee2e2; color:#991b1b; border-radius:20px; font-size:.73rem; font-weight:700; padding:.26rem .68rem; }
+        .badge-ss { background:var(--primario-lt); color:var(--primario); border-radius:20px; font-size:.71rem; font-weight:700; padding:.22rem .6rem; border:1px solid rgba(80,16,19,.18); }
+        .badge-pp { background:var(--dorado-lt); color:#7a5a00; border-radius:20px; font-size:.71rem; font-weight:700; padding:.22rem .6rem; border:1px solid rgba(201,162,77,.35); }
+        .avance-wrap { display:flex; align-items:center; gap:.5rem; min-width:90px; }
+        .avance-bar  { flex:1; height:6px; background:var(--border); border-radius:99px; overflow:hidden; }
+        .avance-fill { height:100%; background:var(--primario); border-radius:99px; }
+        .avance-pct  { font-size:.78rem; font-weight:700; color:var(--primario); min-width:30px; text-align:right; }
+        .af-low  { background:#e57373 !important; }
+        .af-mid  { background:var(--dorado) !important; }
+        .af-high { background:var(--primario-mid) !important; }
+        .af-done { background:var(--primario) !important; }
+        .section-card { background:var(--card-bg); border-radius:var(--radius-card); box-shadow:var(--shadow); border:1px solid var(--border); overflow:hidden; margin-bottom:1.5rem; }
+        .section-header { padding:1rem 1.4rem; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.5rem; }
+        .section-header .title { font-weight:700; font-size:.95rem; display:flex; align-items:center; gap:.5rem; color:var(--primario); }
+        .table-responsive { overflow-x:auto; }
+        table { margin:0; font-size:.83rem; width:100%; border-collapse:collapse; }
+        table thead th { background:var(--primario); color:#fff; font-weight:700; font-size:.75rem; text-transform:uppercase; letter-spacing:.05em; padding:.8rem 1rem; border:none; white-space:nowrap; }
+        table tbody td { padding:.7rem 1rem; border-bottom:1px solid var(--border); vertical-align:middle; color:var(--text); }
+        table tbody tr:last-child td { border-bottom:none; }
+        table tbody tr:hover { background:var(--primario-lt); }
+        .btn-outline-custom { border:1.5px solid var(--border); background:#fff; color:var(--muted); border-radius:var(--radius-sm); font-weight:600; font-size:.82rem; padding:.45rem .9rem; display:inline-flex; align-items:center; gap:.4rem; transition:border-color .2s,color .2s,background .2s; cursor:pointer; text-decoration:none; }
+        .btn-outline-custom:hover { border-color:var(--primario); color:var(--primario); background:var(--primario-lt); }
     </style>
 </head>
 
@@ -484,14 +529,13 @@
         <button type="button" class="btn-close btn-close-white"
                 data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
     </div>
-    <div class="offcanvas-body">
-        <ul class="navbar-nav gap-1">
+    <div class="offcanvas-body">        <ul class="navbar-nav gap-1">
             <li><a class="nav-link active" href="ADMIN_dashboard-servicio.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
-            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html#alumnos" onclick="setTimeout(()=>irATab('alumnos'),80);"><i class="bi bi-people-fill"></i> Alumnos</a></li>
-            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html#unidades" onclick="setTimeout(()=>irATab('unidades'),80);"><i class="bi bi-building"></i> Unidades Receptoras</a></li>
-            <li><a class="nav-link" href="ADMIN_gestion-administradores.html"><i class="bi bi-person-gear"></i> Administradores</a></li>
-            <li><a class="nav-link" href="ADMIN_reportes-globales.html"><i class="bi bi-bar-chart-fill"></i> Reportes Globales</a></li>
-            <li><a class="nav-link" href="ADMIN_mensajes-admin.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge">3</span></a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link " href="ADMIN_alumnos.html"><i class="bi bi-people-fill"></i> Alumnos</a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link " href="ADMIN_gestion-ur.html"><i class="bi bi-building"></i> Unidades Receptoras</a></li>
+            <li data-visible="superadmin"><a class="nav-link " href="ADMIN_gestion-administradores.html"><i class="bi bi-person-gear"></i> Administradores</a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link " href="ADMIN_reportes-globales.html"><i class="bi bi-bar-chart-fill"></i> Reportes Globales</a></li>
+            <li><a class="nav-link " href="ADMIN_mensajes-admin.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge">3</span></a></li>
             <hr class="menu-divider">
             <li><a class="nav-link danger" href="../index.html"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
         </ul>
@@ -508,7 +552,6 @@
             <p id="subtituloPanel">Gestión general del sistema SIARHA · Periodo Enero – Junio 2026</p>
         </div>
         <div class="d-flex align-items-center gap-2 flex-wrap">
-            <!-- El backend reemplaza este badge según el rol real -->
             <span class="rol-badge rol-superadmin" id="rolBadge">
                 <i class="bi bi-shield-fill"></i>
                 <span id="rolNombre">Superadministrador</span>
@@ -516,36 +559,11 @@
         </div>
     </div>
 
-    <!-- Banner visible solo para admin de área (el JS lo muestra según ADMIN_ROL) -->
-    <div class="area-banner" id="areaBanner" style="display:none;" data-visible="area">
+    <!-- Banner admin de área -->
+    <div class="area-banner" id="areaBanner" style="display:none;" data-visible="admin_area">
         <i class="bi bi-building-fill"></i>
         Estás gestionando:
-        <span id="institutosAsignados"><strong>ICBI</strong> · <strong>Actopan</strong></span>
-    </div>
-
-    <!-- Filtro de institutos — visible solo para superadmin -->
-    <div id="filtroInstitutos" data-visible="superadmin" style="display:none;">
-        <div class="filtro-instituto">
-            <span style="font-size:.76rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;">Filtrar por:</span>
-            <span class="inst-chip active" onclick="filtrarInstituto('todos',this)">Todos</span>
-            <span style="font-size:.72rem;color:var(--muted);font-weight:600;">— Institutos —</span>
-            <span class="inst-chip" onclick="filtrarInstituto('IDA',this)">Artes</span>
-            <span class="inst-chip" onclick="filtrarInstituto('ICAP',this)">Agropecuarias</span>
-            <span class="inst-chip" onclick="filtrarInstituto('ICBI',this)">ICBI</span>
-            <span class="inst-chip" onclick="filtrarInstituto('ICSa',this)">ICSa</span>
-            <span class="inst-chip" onclick="filtrarInstituto('ICEA',this)">ICEA</span>
-            <span class="inst-chip" onclick="filtrarInstituto('ICSHu',this)">ICSHu</span>
-            <span style="font-size:.72rem;color:var(--muted);font-weight:600;">— Escuelas —</span>
-            <span class="inst-chip" onclick="filtrarInstituto('ES-ACT',this)">Actopan</span>
-            <span class="inst-chip" onclick="filtrarInstituto('ES-APA',this)">Apan</span>
-            <span class="inst-chip" onclick="filtrarInstituto('ES-ATO',this)">Atotonilco</span>
-            <span class="inst-chip" onclick="filtrarInstituto('ES-SAH',this)">Cd. Sahagún</span>
-            <span class="inst-chip" onclick="filtrarInstituto('ES-HUE',this)">Huejutla</span>
-            <span class="inst-chip" onclick="filtrarInstituto('ES-TEP',this)">Tepeji</span>
-            <span class="inst-chip" onclick="filtrarInstituto('ES-TIZ',this)">Tizayuca</span>
-            <span class="inst-chip" onclick="filtrarInstituto('ES-TLA',this)">Tlahuelilpan</span>
-            <span class="inst-chip" onclick="filtrarInstituto('ES-ZIM',this)">Zimapán</span>
-        </div>
+        <span id="institutosAsignados"><strong>—</strong></span>
     </div>
 
     <!-- STAT CARDS -->
@@ -568,9 +586,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-md-3">
+        <div class="col-6 col-md-3" data-visible="superadmin">
             <div class="stat-card">
-                <div class="stat-icon si-vino2"><i class="bi bi-journal-check"></i></div>
+                <div class="stat-icon si-vino2"><i class="bi bi-person-gear"></i></div>
                 <div>
                     <div class="stat-label">Administradores</div>
                     <div class="stat-value" id="statAdmins">—</div>
@@ -588,510 +606,69 @@
         </div>
     </div>
 
-
-    <!-- ── TABS ALUMNOS / UNIDADES ── -->
-    <div class="tab-nav">
-        <button class="tab-nav-btn active" onclick="setTab('alumnos',this)" id="tabBtnAlumnos">
-            <i class="bi bi-people-fill"></i> Alumnos
-            <span style="background:var(--primario);color:#fff;border-radius:20px;font-size:.68rem;font-weight:700;padding:.15rem .55rem;margin-left:.2rem;" id="tabBadgeAlumnos">0</span>
-        </button>
-        <button class="tab-nav-btn" onclick="setTab('unidades',this)" id="tabBtnUnidades">
-            <i class="bi bi-building-fill"></i> Unidades Receptoras
-            <span style="background:var(--border);color:var(--muted);border-radius:20px;font-size:.68rem;font-weight:700;padding:.15rem .55rem;margin-left:.2rem;" id="tabBadgeURs">0</span>
-        </button>
+    <!-- ACCESOS RÁPIDOS (solo superadmin y admin_area) -->
+    <div class="row g-3 mb-4" data-visible="superadmin,admin_area">
+        <div class="col-12">
+            <div style="font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.75rem;">Accesos rápidos</div>
+        </div>
+        <div class="col-6 col-md-3">
+            <a href="ADMIN_alumnos.html" class="acceso-card">
+                <div class="acceso-icon si-vino"><i class="bi bi-people-fill"></i></div>
+                <div class="acceso-label">Ver alumnos</div>
+                <div class="acceso-sub">Tabla completa, filtros y expedientes</div>
+                <i class="bi bi-arrow-right-short acceso-arrow"></i>
+            </a>
+        </div>
+        <div class="col-6 col-md-3">
+            <a href="ADMIN_gestion-ur.html" class="acceso-card">
+                <div class="acceso-icon si-dorado"><i class="bi bi-building-fill"></i></div>
+                <div class="acceso-label">Unidades Receptoras</div>
+                <div class="acceso-sub">Gestionar convenios y ocupación</div>
+                <i class="bi bi-arrow-right-short acceso-arrow"></i>
+            </a>
+        </div>
+        <div class="col-6 col-md-3" data-visible="superadmin">
+            <a href="ADMIN_gestion-administradores.html" class="acceso-card">
+                <div class="acceso-icon si-vino2"><i class="bi bi-person-gear"></i></div>
+                <div class="acceso-label">Administradores</div>
+                <div class="acceso-sub">Cuentas y roles de acceso</div>
+                <i class="bi bi-arrow-right-short acceso-arrow"></i>
+            </a>
+        </div>
+        <div class="col-6 col-md-3">
+            <a href="ADMIN_reportes-globales.html" class="acceso-card">
+                <div class="acceso-icon si-gold2"><i class="bi bi-bar-chart-fill"></i></div>
+                <div class="acceso-label">Reportes Globales</div>
+                <div class="acceso-sub">Incidencias y mensajes al sistema</div>
+                <i class="bi bi-arrow-right-short acceso-arrow"></i>
+            </a>
+        </div>
     </div>
 
-    <!-- ══════════════════════════════════
-         PANEL ALUMNOS
-    ══════════════════════════════════ -->
-    <div id="panelAlumnos" class="tab-panel active">
-        <div class="section-card">
-
-            <!-- HEADER -->
-            <div class="section-header">
-                <span class="title"><i class="bi bi-people-fill"></i> Alumnos registrados</span>
-                <div class="d-flex gap-2 flex-wrap">
-                    <button class="btn-outline-custom" onclick="showToast('Exportando Excel…')"><i class="bi bi-file-earmark-excel"></i> Exportar</button>
-                    <a href="ADMIN_alta-alumno.html" class="btn-primary-custom" data-visible="superadmin,area"><i class="bi bi-person-plus-fill"></i> Nuevo alumno</a>
-                </div>
-            </div>
-
-            <!-- FILTROS ALUMNOS -->
-            <div class="filtros-bar">
-                <div class="row g-2 align-items-end">
-                    <div class="col-6 col-md-2">
-                        <div class="form-field" style="padding:0;border:none;">
-                            <input type="text" class="form-field" placeholder="🔍  Buscar alumno…">
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-2">
-                        <select class="form-field">
-                            <option value="">Programa</option>
-                            <option>Servicio Social</option>
-                            <option>Prácticas Prof.</option>
-                        </select>
-                    </div>
-                    <div class="col-6 col-md-2">
-                        <select class="form-field">
-                            <option value="">Estado</option>
-                            <option>Activo</option>
-                            <option>En revisión</option>
-                            <option>Finalizado</option>
-                            <option>Pendiente</option>
-                            <option>Baja</option>
-                        </select>
-                    </div>
-                    <div class="col-6 col-md-2">
-                        <select class="form-field" id="filtroAvance">
-                            <option value="">Avance</option>
-                            <option>0 – 25%</option>
-                            <option>26 – 50%</option>
-                            <option>51 – 75%</option>
-                            <option>76 – 99%</option>
-                            <option>100% (Terminado)</option>
-                        </select>
-                    </div>
-                    <div class="col-6 col-md-2">
-                        <select class="form-field">
-                            <option value="">Unidad Receptora</option>
-                            <option>Hospital General</option>
-                            <option>Secretaría Académica</option>
-                            <option>DIF Municipal</option>
-                            <option>IMSS Pachuca</option>
-                        </select>
-                    </div>
-                    <div class="col-6 col-md-2">
-                        <button class="btn-primary-custom w-100"><i class="bi bi-funnel-fill"></i> Filtrar</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- RESUMEN RÁPIDO ALUMNOS -->
-            <div class="resumen-strip">
-                <div class="resumen-item"><div class="r-val" id="resTotal">0</div><div class="r-lab">Total alumnos</div></div>
-                <div class="resumen-item"><div class="r-val" style="color:var(--primario);" id="resSS">0</div><div class="r-lab">Servicio Social</div></div>
-                <div class="resumen-item"><div class="r-val" style="color:#7a5a00;" id="resPP">0</div><div class="r-lab">Prácticas Prof.</div></div>
-                <div class="resumen-item"><div class="r-val">18</div><div class="r-lab">Finalizados</div></div>
-                <div class="resumen-item"><div class="r-val" style="color:#856404;">32</div><div class="r-lab">Pendientes revisar</div></div>
-            </div>
-
-            <!-- TABLA ALUMNOS -->
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Alumno</th>
-                            <th>No. Cuenta</th>
-                            <th>Programa</th>
-                            <th>Unidad Receptora</th>
-                            <th>Horas</th>
-                            <th>Avance</th>
-                            <th>Estado</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div style="font-weight:700;font-size:.86rem;">Juan Pérez García</div>
-                                <div style="font-size:.72rem;color:var(--muted);">Ing. en Computación · ICBI</div>
-                            </td>
-                            <td style="color:var(--muted);font-size:.82rem;">2020123456</td>
-                            <td><span class="badge-ss">Serv. Social</span></td>
-                            <td style="font-size:.82rem;">Hospital General</td>
-                            <td>
-                                <div style="font-weight:800;color:var(--primario);font-size:.88rem;">320 <span style="font-weight:500;color:var(--muted);font-size:.75rem;">/ 480 hrs</span></div>
-                            </td>
-                            <td>
-                                <div class="avance-wrap">
-                                    <div class="avance-bar"><div class="avance-fill af-high" style="width:80%;"></div></div>
-                                    <span class="avance-pct">80%</span>
-                                </div>
-                            </td>
-                            <td><span class="badge-revision">En revisión</span></td>
-                            <td><a href="ADMIN_detalle-alumno-admin.html" class="btn-outline-custom"><i class="bi bi-eye-fill"></i> Ver</a></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div style="font-weight:700;font-size:.86rem;">María González López</div>
-                                <div style="font-size:.72rem;color:var(--muted);">Lic. Administración · ICSA</div>
-                            </td>
-                            <td style="color:var(--muted);font-size:.82rem;">2021123478</td>
-                            <td><span class="badge-pp">Prácticas Prof.</span></td>
-                            <td style="font-size:.82rem;">Secretaría Académica</td>
-                            <td>
-                                <div style="font-weight:800;color:var(--primario);font-size:.88rem;">144 <span style="font-weight:500;color:var(--muted);font-size:.75rem;">/ 240 hrs</span></div>
-                            </td>
-                            <td>
-                                <div class="avance-wrap">
-                                    <div class="avance-bar"><div class="avance-fill af-mid" style="width:60%;"></div></div>
-                                    <span class="avance-pct">60%</span>
-                                </div>
-                            </td>
-                            <td><span class="badge-activo">Activo</span></td>
-                            <td><a href="ADMIN_detalle-alumno-admin.html" class="btn-outline-custom"><i class="bi bi-eye-fill"></i> Ver</a></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div style="font-weight:700;font-size:.86rem;">Carlos Ramírez Soto</div>
-                                <div style="font-size:.72rem;color:var(--muted);">Ing. Civil · ICBI</div>
-                            </td>
-                            <td style="color:var(--muted);font-size:.82rem;">2020987654</td>
-                            <td><span class="badge-ss">Serv. Social</span></td>
-                            <td style="font-size:.82rem;">Hospital General</td>
-                            <td>
-                                <div style="font-weight:800;color:var(--primario);font-size:.88rem;">480 <span style="font-weight:500;color:var(--muted);font-size:.75rem;">/ 480 hrs</span></div>
-                            </td>
-                            <td>
-                                <div class="avance-wrap">
-                                    <div class="avance-bar"><div class="avance-fill af-done" style="width:100%;"></div></div>
-                                    <span class="avance-pct" style="color:#065f46;">100%</span>
-                                </div>
-                            </td>
-                            <td><span class="badge-finalizado">Finalizado</span></td>
-                            <td><a href="ADMIN_detalle-alumno-admin.html" class="btn-outline-custom"><i class="bi bi-eye-fill"></i> Ver</a></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div style="font-weight:700;font-size:.86rem;">Ana López Ramírez</div>
-                                <div style="font-size:.72rem;color:var(--muted);">Lic. Enfermería · ICSa</div>
-                            </td>
-                            <td style="color:var(--muted);font-size:.82rem;">2022233445</td>
-                            <td><span class="badge-pp">Prácticas Prof.</span></td>
-                            <td style="font-size:.82rem;">DIF Municipal</td>
-                            <td>
-                                <div style="font-weight:800;color:var(--primario);font-size:.88rem;">84 <span style="font-weight:500;color:var(--muted);font-size:.75rem;">/ 240 hrs</span></div>
-                            </td>
-                            <td>
-                                <div class="avance-wrap">
-                                    <div class="avance-bar"><div class="avance-fill af-low" style="width:35%;"></div></div>
-                                    <span class="avance-pct">35%</span>
-                                </div>
-                            </td>
-                            <td><span class="badge-pendiente">Pendiente</span></td>
-                            <td><a href="ADMIN_detalle-alumno-admin.html" class="btn-outline-custom"><i class="bi bi-eye-fill"></i> Ver</a></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div style="font-weight:700;font-size:.86rem;">Daniel Torres Vega</div>
-                                <div style="font-size:.72rem;color:var(--muted);">Lic. Psicología · ICSHu</div>
-                            </td>
-                            <td style="color:var(--muted);font-size:.82rem;">2021345678</td>
-                            <td><span class="badge-ss">Serv. Social</span></td>
-                            <td style="font-size:.82rem;">IMSS Pachuca</td>
-                            <td>
-                                <div style="font-weight:800;color:var(--primario);font-size:.88rem;">96 <span style="font-weight:500;color:var(--muted);font-size:.75rem;">/ 480 hrs</span></div>
-                            </td>
-                            <td>
-                                <div class="avance-wrap">
-                                    <div class="avance-bar"><div class="avance-fill af-low" style="width:20%;"></div></div>
-                                    <span class="avance-pct">20%</span>
-                                </div>
-                            </td>
-                            <td><span class="badge-activo">Activo</span></td>
-                            <td><a href="ADMIN_detalle-alumno-admin.html" class="btn-outline-custom"><i class="bi bi-eye-fill"></i> Ver</a></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div style="font-weight:700;font-size:.86rem;">Laura Méndez Cruz</div>
-                                <div style="font-size:.72rem;color:var(--muted);">Ing. en Sistemas · ICBI</div>
-                            </td>
-                            <td style="color:var(--muted);font-size:.82rem;">2023112233</td>
-                            <td><span class="badge-pp">Prácticas Prof.</span></td>
-                            <td style="font-size:.82rem;">Secretaría Académica</td>
-                            <td>
-                                <div style="font-weight:800;color:var(--primario);font-size:.88rem;">210 <span style="font-weight:500;color:var(--muted);font-size:.75rem;">/ 240 hrs</span></div>
-                            </td>
-                            <td>
-                                <div class="avance-wrap">
-                                    <div class="avance-bar"><div class="avance-fill af-high" style="width:87%;"></div></div>
-                                    <span class="avance-pct">87%</span>
-                                </div>
-                            </td>
-                            <td><span class="badge-revision">En revisión</span></td>
-                            <td><a href="ADMIN_detalle-alumno-admin.html" class="btn-outline-custom"><i class="bi bi-eye-fill"></i> Ver</a></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div style="font-weight:700;font-size:.86rem;">Roberto Salinas Flores</div>
-                                <div style="font-size:.72rem;color:var(--muted);">Lic. Contaduría · ICSA</div>
-                            </td>
-                            <td style="color:var(--muted);font-size:.82rem;">2020778899</td>
-                            <td><span class="badge-ss">Serv. Social</span></td>
-                            <td style="font-size:.82rem;">DIF Municipal</td>
-                            <td>
-                                <div style="font-weight:800;color:#991b1b;font-size:.88rem;">0 <span style="font-weight:500;color:var(--muted);font-size:.75rem;">/ 480 hrs</span></div>
-                            </td>
-                            <td>
-                                <div class="avance-wrap">
-                                    <div class="avance-bar"><div class="avance-fill" style="width:0%;background:var(--border);"></div></div>
-                                    <span class="avance-pct">0%</span>
-                                </div>
-                            </td>
-                            <td><span class="badge-baja">Baja</span></td>
-                            <td><a href="ADMIN_detalle-alumno-admin.html" class="btn-outline-custom"><i class="bi bi-eye-fill"></i> Ver</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- PAGINACIÓN -->
-            <div class="pag-wrap">
-                <span class="pag-info" id="pagInfoAlumnos">Cargando…</span>
-                <div class="pag-btns">
-                    <button class="pag-btn" disabled><i class="bi bi-chevron-left"></i></button>
-                    <button class="pag-btn active">1</button>
-                    <button class="pag-btn">2</button>
-                    <button class="pag-btn">3</button>
-                    <span style="padding:0 .25rem;color:var(--muted);line-height:32px;">…</span>
-                    <button class="pag-btn">35</button>
-                    <button class="pag-btn"><i class="bi bi-chevron-right"></i></button>
-                </div>
-            </div>
-
-        </div><!-- /section-card alumnos -->
-    </div><!-- /panel alumnos -->
-
-
-    <!-- ══════════════════════════════════
-         PANEL UNIDADES RECEPTORAS
-    ══════════════════════════════════ -->
-    <div id="panelUnidades" class="tab-panel">
-        <div class="section-card">
-
-            <!-- HEADER -->
-            <div class="section-header">
-                <span class="title"><i class="bi bi-building-fill"></i> Unidades Receptoras registradas</span>
-                <div class="d-flex gap-2 flex-wrap">
-                    <button class="btn-outline-custom" onclick="showToast('Exportando PDF…')"><i class="bi bi-file-earmark-pdf"></i> Exportar</button>
-                    <a href="ADMIN_gestion-ur.html" class="btn-primary-custom" data-visible="superadmin"><i class="bi bi-plus-circle-fill"></i> Nueva unidad</a>
-                </div>
-            </div>
-
-            <!-- FILTROS UR -->
-            <div class="filtros-bar">
-                <div class="row g-2 align-items-end">
-                    <div class="col-6 col-md-3">
-                        <input type="text" class="form-field" placeholder="🔍  Buscar institución…">
-                    </div>
-                    <div class="col-6 col-md-2">
-                        <select class="form-field">
-                            <option value="">Sector</option>
-                            <option>Salud</option>
-                            <option>Educación</option>
-                            <option>Gobierno</option>
-                            <option>Empresa privada</option>
-                            <option>ONG / Social</option>
-                        </select>
-                    </div>
-                    <div class="col-6 col-md-2">
-                        <select class="form-field">
-                            <option value="">Estado</option>
-                            <option>Activa</option>
-                            <option>Inactiva</option>
-                            <option>Suspendida</option>
-                        </select>
-                    </div>
-                    <div class="col-6 col-md-2">
-                        <select class="form-field">
-                            <option value="">Programa</option>
-                            <option>Ambos</option>
-                            <option>Solo Serv. Social</option>
-                            <option>Solo Prácticas</option>
-                        </select>
-                    </div>
-                    <div class="col-6 col-md-2">
-                        <select class="form-field">
-                            <option value="">Ocupación</option>
-                            <option>Disponibles</option>
-                            <option>Llenas</option>
-                        </select>
-                    </div>
-                    <div class="col-6 col-md-1">
-                        <button class="btn-primary-custom w-100"><i class="bi bi-funnel-fill"></i></button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- RESUMEN RÁPIDO UR -->
-            <div class="resumen-strip">
-                <div class="resumen-item"><div class="r-val" id="resTotalUR">0</div><div class="r-lab">Total registradas</div></div>
-                <div class="resumen-item"><div class="r-val" style="color:#7a5a00;">31</div><div class="r-lab">Activas</div></div>
-                <div class="resumen-item"><div class="r-val" style="color:var(--muted);">5</div><div class="r-lab">Inactivas</div></div>
-                <div class="resumen-item"><div class="r-val" style="color:#991b1b;">2</div><div class="r-lab">Suspendidas</div></div>
-                <div class="resumen-item"><div class="r-val">245 / 420</div><div class="r-lab">Lugares ocupados</div></div>
-            </div>
-
-            <!-- TABLA UR -->
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Institución</th>
-                            <th>Sector</th>
-                            <th>Responsable</th>
-                            <th>Programas</th>
-                            <th>Ocupación</th>
-                            <th>Convenio hasta</th>
-                            <th>Estado</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div style="font-weight:700;font-size:.86rem;">Hospital General</div>
-                                <div style="font-size:.72rem;color:var(--muted);">hospital@institucion.mx · 771 200 0000</div>
-                            </td>
-                            <td style="font-size:.82rem;">Salud</td>
-                            <td style="font-size:.82rem;">Dr. R. Martínez</td>
-                            <td>
-                                <div style="display:flex;gap:.3rem;flex-wrap:wrap;">
-                                    <span class="badge-ss" style="font-size:.68rem;">SS</span>
-                                    <span class="badge-pp" style="font-size:.68rem;">PP</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="ocup-wrap">
-                                    <div class="ocup-bar"><div class="ocup-fill" style="width:80%;"></div></div>
-                                    <span class="ocup-txt">12 / 15</span>
-                                </div>
-                            </td>
-                            <td style="font-size:.82rem;color:var(--muted);">Dic 2026</td>
-                            <td><span class="badge-ur-act">Activa</span></td>
-                            <td><a href="ADMIN_gestion-ur.html" class="btn-outline-custom"><i class="bi bi-gear-fill"></i> Gestionar</a></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div style="font-weight:700;font-size:.86rem;">Secretaría Académica UAEH</div>
-                                <div style="font-size:.72rem;color:var(--muted);">academica@institucion.mx · 771 717 2000</div>
-                            </td>
-                            <td style="font-size:.82rem;">Educación</td>
-                            <td style="font-size:.82rem;">Lic. Hernández</td>
-                            <td>
-                                <div style="display:flex;gap:.3rem;flex-wrap:wrap;">
-                                    <span class="badge-pp" style="font-size:.68rem;">PP</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="ocup-wrap">
-                                    <div class="ocup-bar"><div class="ocup-fill" style="width:70%;"></div></div>
-                                    <span class="ocup-txt">7 / 10</span>
-                                </div>
-                            </td>
-                            <td style="font-size:.82rem;color:var(--muted);">Jun 2026</td>
-                            <td><span class="badge-ur-act">Activa</span></td>
-                            <td><a href="ADMIN_gestion-ur.html" class="btn-outline-custom"><i class="bi bi-gear-fill"></i> Gestionar</a></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div style="font-weight:700;font-size:.86rem;">DIF Municipal Pachuca</div>
-                                <div style="font-size:.72rem;color:var(--muted);">dif@municipal.mx · 771 300 1200</div>
-                            </td>
-                            <td style="font-size:.82rem;">Social</td>
-                            <td style="font-size:.82rem;">Lic. Torres</td>
-                            <td>
-                                <div style="display:flex;gap:.3rem;flex-wrap:wrap;">
-                                    <span class="badge-ss" style="font-size:.68rem;">SS</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="ocup-wrap">
-                                    <div class="ocup-bar"><div class="ocup-fill" style="width:40%;"></div></div>
-                                    <span class="ocup-txt">4 / 10</span>
-                                </div>
-                            </td>
-                            <td style="font-size:.82rem;color:var(--muted);">Mar 2027</td>
-                            <td><span class="badge-ur-act">Activa</span></td>
-                            <td><a href="ADMIN_gestion-ur.html" class="btn-outline-custom"><i class="bi bi-gear-fill"></i> Gestionar</a></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div style="font-weight:700;font-size:.86rem;">IMSS Delegación Hidalgo</div>
-                                <div style="font-size:.72rem;color:var(--muted);">imss.hidalgo@imss.gob.mx · 771 400 8000</div>
-                            </td>
-                            <td style="font-size:.82rem;">Salud</td>
-                            <td style="font-size:.82rem;">Dr. Ávila</td>
-                            <td>
-                                <div style="display:flex;gap:.3rem;flex-wrap:wrap;">
-                                    <span class="badge-ss" style="font-size:.68rem;">SS</span>
-                                    <span class="badge-pp" style="font-size:.68rem;">PP</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="ocup-wrap">
-                                    <div class="ocup-bar"><div class="ocup-fill" style="width:100%;"></div></div>
-                                    <span class="ocup-txt" style="color:#991b1b;">20 / 20</span>
-                                </div>
-                            </td>
-                            <td style="font-size:.82rem;color:var(--muted);">Dic 2026</td>
-                            <td><span class="badge-ur-act">Activa</span></td>
-                            <td><a href="ADMIN_gestion-ur.html" class="btn-outline-custom"><i class="bi bi-gear-fill"></i> Gestionar</a></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div style="font-weight:700;font-size:.86rem;">Presidencia Municipal Mineral de la Reforma</div>
-                                <div style="font-size:.72rem;color:var(--muted);">presidencia@mineral.gob.mx</div>
-                            </td>
-                            <td style="font-size:.82rem;">Gobierno</td>
-                            <td style="font-size:.82rem;">C. Directora López</td>
-                            <td>
-                                <div style="display:flex;gap:.3rem;flex-wrap:wrap;">
-                                    <span class="badge-pp" style="font-size:.68rem;">PP</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="ocup-wrap">
-                                    <div class="ocup-bar"><div class="ocup-fill" style="width:0%;"></div></div>
-                                    <span class="ocup-txt" style="color:var(--muted);">0 / 8</span>
-                                </div>
-                            </td>
-                            <td style="font-size:.82rem;color:#991b1b;font-weight:700;">Venc. Ene 2026</td>
-                            <td><span class="badge-ur-ina">Inactiva</span></td>
-                            <td><a href="ADMIN_gestion-ur.html" class="btn-outline-custom"><i class="bi bi-gear-fill"></i> Gestionar</a></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div style="font-weight:700;font-size:.86rem;">Cruz Roja Mexicana Pachuca</div>
-                                <div style="font-size:.72rem;color:var(--muted);">cruzroja.pachuca@cruzroja.mx</div>
-                            </td>
-                            <td style="font-size:.82rem;">Salud / ONG</td>
-                            <td style="font-size:.82rem;">Enf. Ramírez</td>
-                            <td>
-                                <div style="display:flex;gap:.3rem;flex-wrap:wrap;">
-                                    <span class="badge-ss" style="font-size:.68rem;">SS</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="ocup-wrap">
-                                    <div class="ocup-bar"><div class="ocup-fill" style="width:0%;"></div></div>
-                                    <span class="ocup-txt" style="color:var(--muted);">0 / 6</span>
-                                </div>
-                            </td>
-                            <td style="font-size:.82rem;color:var(--muted);">—</td>
-                            <td><span class="badge-ur-sus">Suspendida</span></td>
-                            <td><a href="ADMIN_gestion-ur.html" class="btn-outline-custom"><i class="bi bi-gear-fill"></i> Gestionar</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- PAGINACIÓN -->
-            <div class="pag-wrap">
-                <span class="pag-info">Mostrando 1–6 de 38 unidades</span>
-                <div class="pag-btns">
-                    <button class="pag-btn" disabled><i class="bi bi-chevron-left"></i></button>
-                    <button class="pag-btn active">1</button>
-                    <button class="pag-btn">2</button>
-                    <button class="pag-btn">3</button>
-                    <span style="padding:0 .25rem;color:var(--muted);line-height:32px;">…</span>
-                    <button class="pag-btn">7</button>
-                    <button class="pag-btn"><i class="bi bi-chevron-right"></i></button>
-                </div>
-            </div>
-
-        </div><!-- /section-card UR -->
-    </div><!-- /panel UR -->
+    <!-- ACTIVIDAD RECIENTE -->
+    <div class="section-card" data-visible="superadmin,admin_area">
+        <div class="section-header">
+            <span class="title"><i class="bi bi-clock-history"></i> Actividad reciente</span>
+            <a href="ADMIN_alumnos.html" class="btn-outline-custom"><i class="bi bi-people-fill"></i> Ver todos los alumnos</a>
+        </div>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Alumno</th>
+                        <th>Programa</th>
+                        <th>Unidad Receptora</th>
+                        <th>Avance</th>
+                        <th>Estado</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="tbReciente">
+                    <tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--muted);"><i class="bi bi-arrow-clockwise"></i> Cargando…</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 </main>
 
@@ -1148,149 +725,6 @@
      VARIABLES INYECTADAS POR EL BACKEND
      El backend debe reemplazar estos valores con los reales
 ══════════════════════════════════════════════════════════ -->
-<script>
-    // ── LEER SESIÓN REAL DESDE localStorage (guardada en login) ──
-    const _adminData    = JSON.parse(localStorage.getItem('admin_data') || '{}');
-    const ADMIN_ROL     = (_adminData.rol === 'admin_area')     ? 'area'
-                        : (_adminData.rol === 'admin_reportes') ? 'reportes'
-                        : 'superadmin';
-    const ADMIN_NOMBRE  = _adminData.nombre_admin || 'Administrador';
-    const ADMIN_INSTITUTOS = (_adminData.institutos || []).map(i => i.nombre_instituto || i);
-    // ────────────────────────────────────────────────────────────
-
-    // ── CATÁLOGO DE INSTITUTOS ───────────────────────────────────
-    const INSTITUTOS_CAT = {
-      'IDA':    'Instituto de Artes',
-      'ICAP':   'Instituto de Ciencias Agropecuarias',
-      'ICBI':   'Instituto de Ciencias Básicas e Ingeniería',
-      'ICSa':   'Instituto de Ciencias de la Salud',
-      'ICEA':   'Instituto de Ciencias Económico Administrativas',
-      'ICSHu':  'Instituto de Ciencias Sociales y Humanidades',
-      'ES-ACT': 'ES Actopan',
-      'ES-APA': 'ES Apan',
-      'ES-ATO': 'ES Atotonilco de Tula',
-      'ES-SAH': 'ES Ciudad Sahagún',
-      'ES-HUE': 'ES Huejutla',
-      'ES-TEP': 'ES Tepeji del Río',
-      'ES-TIZ': 'ES Tizayuca',
-      'ES-TLA': 'ES Tlahuelilpan',
-      'ES-ZIM': 'ES Zimapán',
-    };
-
-    // ── APLICAR VISIBILIDAD POR ROL ──────────────────────────────
-    function aplicarVisibilidad() {
-      const rolBadge = document.getElementById('rolBadge');
-      const rolNombre = document.getElementById('rolNombre');
-      const subtitulo = document.getElementById('subtituloPanel');
-
-      // Badge de rol
-      rolNombre.textContent = {
-        superadmin: 'Superadministrador',
-        area:       'Admin de área',
-        reportes:   'Coordinador de reportes'
-      }[ADMIN_ROL] || 'Administrador';
-
-      rolBadge.className = 'rol-badge ' + {
-        superadmin: 'rol-superadmin',
-        area:       'rol-area',
-        reportes:   'rol-reportes'
-      }[ADMIN_ROL];
-
-      // Subtítulo
-      if (ADMIN_ROL === 'area') {
-        const nombres = ADMIN_INSTITUTOS.map(id => INSTITUTOS_CAT[id] || id).join(' · ');
-        subtitulo.textContent = nombres || 'Sin institutos asignados';
-      } else if (ADMIN_ROL === 'reportes') {
-        subtitulo.textContent = 'Gestión de reportes e incidencias del sistema';
-      }
-
-      // Mostrar/ocultar elementos con data-visible
-      document.querySelectorAll('[data-visible]').forEach(el => {
-        const roles = el.dataset.visible.split(',').map(r => r.trim());
-        const visible = roles.includes(ADMIN_ROL);
-        if (el.tagName === 'A' || el.tagName === 'BUTTON' || el.tagName === 'LI') {
-          el.style.display = visible ? '' : 'none';
-        } else {
-          el.style.display = visible ? '' : 'none';
-        }
-      });
-
-      // Mostrar banner de área
-      if (ADMIN_ROL === 'area' && ADMIN_INSTITUTOS.length > 0) {
-        document.getElementById('areaBanner').style.display = 'flex';
-        const html = ADMIN_INSTITUTOS.map(id =>
-          `<strong>${INSTITUTOS_CAT[id] || id}</strong>`
-        ).join(' · ');
-        document.getElementById('institutosAsignados').innerHTML = html;
-      }
-
-      // Redirigir coordinador de reportes a su dashboard
-      if (ADMIN_ROL === 'reportes') {
-        window.location.href = 'ADMIN_dashboard-reportes.html';
-        return;
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', aplicarVisibilidad);
-
-    // ── FILTRO POR INSTITUTO ──────────────────────────────────────
-    let institutoActivo = 'todos';
-
-    function filtrarInstituto(id, chip) {
-      institutoActivo = id;
-      document.querySelectorAll('.inst-chip').forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      // El backend filtra los datos reales; aquí solo feedback visual
-      showToast(id === 'todos' ? 'Mostrando todos los institutos' : 'Filtrando: ' + (window.INSTITUTOS_CAT && INSTITUTOS_CAT[id] ? INSTITUTOS_CAT[id] : id));
-    }
-
-</script>
-
-<script>
-    function setTab(nombre, btn) {
-        document.querySelectorAll('.tab-nav-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById('panel' + nombre.charAt(0).toUpperCase() + nombre.slice(1)).classList.add('active');
-    }
-
-    // Navegación desde menú lateral
-    function irATab(nombre) {
-        const btn = document.getElementById('tabBtn' + nombre.charAt(0).toUpperCase() + nombre.slice(1));
-        if (btn) setTab(nombre, btn);
-        window.scrollTo({ top: document.querySelector('.tab-nav').offsetTop - 80, behavior: 'smooth' });
-    }
-
-    // Toast
-    function showToast(msg) {
-        let t = document.getElementById('_toast');
-        if (!t) {
-            t = document.createElement('div');
-            t.id = '_toast';
-            t.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;background:#501013;color:#fff;border-radius:10px;padding:.9rem 1.3rem;display:flex;align-items:center;gap:.6rem;font-size:.85rem;font-weight:600;box-shadow:0 8px 24px rgba(80,16,19,.25);transition:transform .35s ease,opacity .35s ease;z-index:9999;transform:translateY(80px);opacity:0;';
-            document.body.appendChild(t);
-        }
-        t.innerHTML = '<i class="bi bi-check-circle-fill" style="font-size:1.1rem;"></i>' + msg;
-        t.style.transform = 'translateY(0)'; t.style.opacity = '1';
-        setTimeout(() => { t.style.transform = 'translateY(80px)'; t.style.opacity = '0'; }, 3200);
-    }
-
-    // Activar tab según hash de la URL
-    document.addEventListener('DOMContentLoaded', function() {
-        if (window.location.hash === '#unidades') irATab('unidades');
-        else if (window.location.hash === '#alumnos') irATab('alumnos');
-    });
-
-    // ══ NOTIFICACIONES ══════════════════════════════════════════════
-        function abrirNotif(){document.getElementById('notifPanel').classList.add('open');document.getElementById('notifOverlay').classList.add('open');_nOpen=true;}
-    function cerrarNotif(){document.getElementById('notifPanel').classList.remove('open');document.getElementById('notifOverlay').classList.remove('open');_nOpen=false;}
-    function marcarLeida(item){if(!item.classList.contains('unread'))return;item.classList.remove('unread');_badge();}
-    function marcarTodasLeidas(){document.querySelectorAll('.notif-item.unread').forEach(i=>i.classList.remove('unread'));_badge();}
-    function _badge(){const n=document.querySelectorAll('.notif-item.unread').length;const b=document.getElementById('notifCount');if(b){b.textContent=n;b.style.display=n>0?'flex':'none';}const bt=document.getElementById('badgeTodas');if(bt)bt.textContent=n;}
-    function setNotifTab(tipo,btn){document.querySelectorAll('.notif-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.notif-item').forEach(i=>{i.style.display=(tipo==='todas'||i.dataset.tipo===tipo)?'':'none';});}
-    // ════════════════════════════════════════════════════════════════
-
-</script>
 
 
 <script>
@@ -1317,20 +751,49 @@
 <script src="../assets/js/api.js"></script>
 <script src="../assets/js/admin-guard.js"></script>
 
-<!-- ── SIARHA: Carga de datos reales del backend ── -->
+<!-- ── SIARHA: Carga de datos del dashboard ── -->
 <script>
-(async function cargarDashboard() {
-    // ── 1. Mostrar nombre del admin ──────────────────────────────
-    const nombre = _adminData.nombre_admin || 'Administrador';
-    document.querySelectorAll('#navNombre, #offNombre').forEach(el => {
-        if (el) el.textContent = nombre;
-    });
-    if (document.getElementById('statRol')) {
-        const labels = { superadmin: 'Superadmin', admin_area: 'Admin de área', admin_reportes: 'Coordinador' };
-        document.getElementById('statRol').textContent = labels[_adminData.rol] || _adminData.rol || '—';
+(async function() {
+    const _adminData = JSON.parse(localStorage.getItem('admin_data') || '{}');
+    const ADMIN_ROL  = _adminData.rol || 'superadmin';
+
+    // ── 0. Redirigir admin_reportes a su propio dashboard ────
+    if (ADMIN_ROL === 'admin_reportes') {
+        window.location.href = 'ADMIN_dashboard-reportes.html';
+        return;
     }
 
-    // ── 2. Cargar stats del dashboard ────────────────────────────
+    // ── 1. Nombre y rol ──────────────────────────────────────
+    const nombre = _adminData.nombre_admin || 'Administrador';
+    document.querySelectorAll('.navbar-custom span').forEach(el => {
+        if (el.textContent.trim() === 'Administrador') el.textContent = nombre;
+    });
+    document.querySelectorAll('.offcanvas-custom div').forEach(el => {
+        if (el.textContent.trim() === 'Administrador') el.textContent = nombre;
+    });
+
+    const ROL_LABELS = { superadmin:'Superadministrador', admin_area:'Admin de área', admin_reportes:'Coordinador de reportes' };
+    const ROL_CLASES = { superadmin:'rol-superadmin', admin_area:'rol-area', admin_reportes:'rol-reportes' };
+    document.getElementById('rolNombre').textContent = ROL_LABELS[ADMIN_ROL] || 'Administrador';
+    document.getElementById('rolBadge').className = 'rol-badge ' + (ROL_CLASES[ADMIN_ROL] || 'rol-superadmin');
+    if (document.getElementById('statRol'))
+        document.getElementById('statRol').textContent = { superadmin:'Superadmin', admin_area:'Admin de área', admin_reportes:'Coordinador' }[ADMIN_ROL] || '—';
+
+    // ── 2. Subtítulo ─────────────────────────────────────────
+    if (ADMIN_ROL === 'admin_area' && _adminData.institutos?.length) {
+        const institutos = _adminData.institutos.map(i => i.nombre_instituto || i).join(' · ');
+        document.getElementById('subtituloPanel').textContent = institutos + ' · Periodo Enero – Junio 2026';
+        document.getElementById('institutosAsignados').innerHTML =
+            _adminData.institutos.map(i => `<strong>${i.nombre_instituto || i}</strong>`).join(' · ');
+    }
+
+    // ── 3. Visibilidad por rol ────────────────────────────────
+    document.querySelectorAll('[data-visible]').forEach(el => {
+        const roles = el.dataset.visible.split(',').map(r => r.trim());
+        el.style.display = roles.includes(ADMIN_ROL) ? '' : 'none';
+    });
+
+    // ── 4. Stats ─────────────────────────────────────────────
     try {
         const res  = await apiFetch('/api/dashboard/admin');
         const data = await res.json();
@@ -1338,95 +801,50 @@
             const s = data.stats;
             document.getElementById('statAlumnos').textContent = s.total_alumnos ?? 0;
             document.getElementById('statURs').textContent     = s.total_urs     ?? 0;
-            document.getElementById('statAdmins').textContent  = s.total_admins  ?? 0;
-            if (document.getElementById('tabBadgeAlumnos')) document.getElementById('tabBadgeAlumnos').textContent = s.total_alumnos ?? 0;
-            if (document.getElementById('tabBadgeURs'))     document.getElementById('tabBadgeURs').textContent     = s.total_urs     ?? 0;
-            if (document.getElementById('resTotal'))        document.getElementById('resTotal').textContent        = s.total_alumnos ?? 0;
+            if (document.getElementById('statAdmins'))
+                document.getElementById('statAdmins').textContent = s.total_admins ?? 0;
         }
-    } catch(e) { console.error('Dashboard stats error:', e); }
+    } catch(e) { console.error('Stats error:', e); }
 
-    // ── 3. Cargar tabla de alumnos ───────────────────────────────
+    // ── 5. Actividad reciente (últimos 5 alumnos) ─────────────
+    if (ADMIN_ROL === 'admin_reportes') return; // el coordinador no ve esta sección
     try {
-        const res  = await apiFetch('/api/alumnos?por_pagina=10');
+        const res  = await apiFetch('/api/alumnos?por_pagina=5&pagina=1');
         const data = await res.json();
-        if (res.ok) {
-            const tbody = document.querySelector('#panelAlumnos tbody');
-            if (tbody) {
-                if (!data.alumnos || data.alumnos.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--muted);">No hay alumnos registrados aún.</td></tr>`;
-                } else {
-                    tbody.innerHTML = data.alumnos.map(a => {
-                        const nombre  = [a.nombre_alum, a.apellido_p_alum, a.apellido_m_alum].filter(Boolean).join(' ');
-                        const carrera = [a.nombre_licenciatura, a.nombre_instituto].filter(Boolean).join(' · ');
-                        const pct     = parseFloat(a.avance_pct) || 0;
-                        const color   = pct >= 100 ? 'af-done' : pct >= 50 ? 'af-high' : pct >= 25 ? 'af-mid' : 'af-low';
-                        const ur      = a.nombre_ur || '—';
-                        const hrs     = a.horas_realizadas ?? 0;
-                        return `<tr>
-                            <td>
-                                <div style="font-weight:700;font-size:.86rem;">${nombre}</div>
-                                <div style="font-size:.72rem;color:var(--muted);">${carrera || '—'}</div>
-                            </td>
-                            <td style="color:var(--muted);font-size:.82rem;">${a.no_cuenta}</td>
-                            <td><span class="badge-ss">Serv. Social</span></td>
-                            <td style="font-size:.82rem;">${ur}</td>
-                            <td>
-                                <div style="font-weight:800;color:var(--primario);font-size:.88rem;">${hrs}
-                                    <span style="font-weight:500;color:var(--muted);font-size:.75rem;">/ 480 hrs</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="avance-wrap">
-                                    <div class="avance-bar"><div class="avance-fill ${color}" style="width:${pct}%;"></div></div>
-                                    <span class="avance-pct">${pct}%</span>
-                                </div>
-                            </td>
-                            <td><span class="badge-activo">Activo</span></td>
-                            <td><a href="ADMIN_detalle-alumno-admin.html?no_cuenta=${a.no_cuenta}" class="btn-outline-custom"><i class="bi bi-eye-fill"></i> Ver</a></td>
-                        </tr>`;
-                    }).join('');
-                }
-                if (document.getElementById('pagInfoAlumnos')) {
-                    document.getElementById('pagInfoAlumnos').textContent =
-                        `Mostrando ${data.alumnos.length} de ${data.total} alumnos`;
-                }
-            }
+        const tbody = document.getElementById('tbReciente');
+        if (!tbody) return;
+        if (!res.ok || !data.alumnos?.length) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--muted);">No hay alumnos registrados aún.</td></tr>`;
+            return;
         }
-    } catch(e) { console.error('Error cargando alumnos:', e); }
-
-    // ── 4. Cargar tabla de URs ───────────────────────────────────
-    try {
-        const res  = await apiFetch('/api/unidades-receptoras');
-        const data = await res.json();
-        if (res.ok) {
-            const tbody = document.querySelector('#panelUnidades tbody');
-            if (document.getElementById('resTotalUR')) document.getElementById('resTotalUR').textContent = data.total ?? 0;
-            if (tbody) {
-                if (!data.unidades_receptoras || data.unidades_receptoras.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--muted);">No hay unidades receptoras registradas aún.</td></tr>`;
-                } else {
-                    tbody.innerHTML = data.unidades_receptoras.map(ur => `<tr>
-                        <td>
-                            <div style="font-weight:700;font-size:.86rem;">${ur.nombre_ur}</div>
-                            <div style="font-size:.72rem;color:var(--muted);">${ur.email_ur}${ur.telefono_ur ? ' · ' + ur.telefono_ur : ''}</div>
-                        </td>
-                        <td style="font-size:.82rem;">—</td>
-                        <td style="font-size:.82rem;">—</td>
-                        <td><span class="badge-ss" style="font-size:.68rem;">SS</span></td>
-                        <td>
-                            <div class="ocup-wrap">
-                                <div class="ocup-bar"><div class="ocup-fill" style="width:${ur.alumnos_activos > 0 ? '50' : '0'}%;"></div></div>
-                                <span class="ocup-txt">${ur.alumnos_activos ?? 0} alumnos</span>
-                            </div>
-                        </td>
-                        <td style="font-size:.82rem;color:var(--muted);">—</td>
-                        <td><span class="badge-ur-act">Activa</span></td>
-                        <td><a href="ADMIN_gestion-ur.html?id_ur=${ur.id_ur}" class="btn-outline-custom"><i class="bi bi-gear-fill"></i> Gestionar</a></td>
-                    </tr>`).join('');
-                }
-            }
-        }
-    } catch(e) { console.error('Error cargando URs:', e); }
+        tbody.innerHTML = data.alumnos.map(a => {
+            const nombre  = [a.nombre_alum, a.apellido_p_alum, a.apellido_m_alum].filter(Boolean).join(' ');
+            const carrera = [a.nombre_licenciatura, a.nombre_instituto].filter(Boolean).join(' · ');
+            const pct     = Math.round(parseFloat(a.avance_pct) || 0);
+            const color   = pct >= 100 ? 'af-done' : pct >= 51 ? 'af-high' : pct >= 26 ? 'af-mid' : 'af-low';
+            const prog    = a.programa === 'pp'
+                ? '<span class="badge-pp">PP</span>'
+                : '<span class="badge-ss">SS</span>';
+            const estado  = a.estado || 'activo';
+            const badges  = { activo:'<span class="badge-activo">Activo</span>', revision:'<span class="badge-revision">En revisión</span>', finalizado:'<span class="badge-finalizado">Finalizado</span>', pendiente:'<span class="badge-pendiente">Pendiente</span>', baja:'<span class="badge-baja">Baja</span>' };
+            return `<tr>
+                <td>
+                    <div style="font-weight:700;font-size:.86rem;">${nombre}</div>
+                    <div style="font-size:.72rem;color:var(--muted);">${carrera || '—'}</div>
+                </td>
+                <td>${prog}</td>
+                <td style="font-size:.82rem;">${a.nombre_ur || '—'}</td>
+                <td>
+                    <div class="avance-wrap">
+                        <div class="avance-bar"><div class="avance-fill ${color}" style="width:${pct}%;"></div></div>
+                        <span class="avance-pct">${pct}%</span>
+                    </div>
+                </td>
+                <td>${badges[estado] || `<span class="badge-activo">${estado}</span>`}</td>
+                <td><a href="ADMIN_detalle-alumno-admin.html?no_cuenta=${a.no_cuenta}" class="btn-outline-custom"><i class="bi bi-eye-fill"></i> Ver</a></td>
+            </tr>`;
+        }).join('');
+    } catch(e) { console.error('Actividad reciente error:', e); }
 })();
 </script>
 </body>

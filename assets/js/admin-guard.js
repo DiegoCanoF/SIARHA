@@ -13,8 +13,26 @@
         return;
     }
 
+    // Páginas permitidas para admin_reportes
+    // (solo su dashboard de reportes y mensajes)
+    const PAGINAS_REPORTES = [
+        'ADMIN_dashboard-reportes.html',
+        'ADMIN_mensajes-admin.html'
+    ];
+
+    // Redirigir admin_reportes si intenta entrar a una página no permitida
+    const paginaActual = window.location.pathname.split('/').pop();
+    const admin = getAdmin();
+
+    if (admin && admin.rol === 'admin_reportes') {
+        const permitida = PAGINAS_REPORTES.some(p => paginaActual === p || paginaActual === '');
+        if (!permitida) {
+            window.location.href = 'ADMIN_dashboard-reportes.html';
+            return;
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
-        const admin = getAdmin();
         if (!admin) return;
 
         const nombre = admin.nombre_admin || 'Administrador';
@@ -39,6 +57,14 @@
                 e.preventDefault();
                 logout('../index.html');
             });
+        });
+
+        // 4) Aplicar visibilidad por rol en TODOS los elementos con data-visible
+        const rolBack = admin.rol; // 'superadmin' | 'admin_area' | 'admin_reportes'
+
+        document.querySelectorAll('[data-visible]').forEach(el => {
+            const roles = el.dataset.visible.split(',').map(r => r.trim());
+            el.style.display = roles.includes(rolBack) ? '' : 'none';
         });
     });
 })();

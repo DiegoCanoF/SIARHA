@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SIARHA | Alumnos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/siarha.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primario:     #501013;
+            --primario-dk:  #3a0b0e;
+            --primario-lt:  #f7eaea;
+            --primario-mid: #7a1820;
+            --dorado:       #C9A24D;
+            --dorado-lt:    #fdf6e3;
+            --bg:           #F2F4F8;
+            --card-bg:      #ffffff;
+            --text:         #1F2933;
+            --muted:        #6b7280;
+            --border:       #E5E7EB;
+            --radius-card:  18px;
+            --radius-sm:    10px;
+            --shadow:       0 2px 16px rgba(80,16,19,.08);
+            --shadow-hover: 0 6px 28px rgba(80,16,19,.15);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+        /* NAVBAR */
+        .navbar-custom { background: var(--primario); padding: 0 1.5rem; height: 70px; box-shadow: 0 2px 16px rgba(0,0,0,.15); position: sticky; top: 0; z-index: 1050; display:flex; align-items:center; }
+        .brand-text { font-size: 1.5rem; font-weight: 800; letter-spacing: .04em; line-height: 1; }
+        .navbar-subtitle { font-size: .7rem; font-weight: 500; opacity: .85; letter-spacing: .02em; }
+        .navbar-toggler { border: none; color: #fff; font-size: 1.25rem; padding: .4rem .6rem; border-radius: var(--radius-sm); background: rgba(255,255,255,.12); transition: background .2s; }
+        .navbar-toggler:hover { background: rgba(255,255,255,.22); }
+        /* OFFCANVAS */
+        .offcanvas-custom { background: var(--primario-dk); color: #fff; width: 280px !important; border-radius: var(--radius-card) 0 0 var(--radius-card); }
+        .offcanvas-custom .offcanvas-header { border-color: rgba(255,255,255,.12) !important; padding: 1.25rem 1.5rem; }
+        .offcanvas-custom .nav-link { color: rgba(255,255,255,.8); font-weight: 500; font-size: .9rem; padding: .65rem 1rem; border-radius: var(--radius-sm); display: flex; align-items: center; gap: .6rem; transition: background .2s, color .2s; }
+        .offcanvas-custom .nav-link:hover, .offcanvas-custom .nav-link.active { background: rgba(255,255,255,.12); color: #fff; }
+        .offcanvas-custom .nav-link.active { font-weight: 700; }
+        .offcanvas-custom .nav-link.danger { color: #ff9090 !important; }
+        .offcanvas-custom .nav-link.danger:hover { background: rgba(255,80,80,.15); }
+        .menu-divider { border-color: rgba(255,255,255,.12); margin: .5rem 0; }
+        .menu-badge { margin-left: auto; background: var(--dorado); color: #fff; font-size: .68rem; font-weight: 800; border-radius: 20px; padding: .1rem .55rem; }
+        /* MAIN */
+        main { flex: 1; padding: 1.75rem 1.5rem; max-width: 1200px; width: 100%; margin: 0 auto; }
+        /* SECTION CARD */
+        .section-card { background: var(--card-bg); border-radius: var(--radius-card); box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden; margin-bottom: 1.5rem; }
+        .section-header { padding: 1rem 1.4rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem; }
+        .section-header .title { font-weight: 700; font-size: .95rem; display: flex; align-items: center; gap: .5rem; color: var(--primario); }
+        /* BOTONES */
+        .btn-outline-custom { border: 1.5px solid var(--border); background: #fff; color: var(--muted); border-radius: var(--radius-sm); font-weight: 600; font-size: .82rem; padding: .45rem .9rem; display: inline-flex; align-items: center; gap: .4rem; transition: border-color .2s, color .2s, background .2s; cursor: pointer; text-decoration: none; }
+        .btn-outline-custom:hover { border-color: var(--primario); color: var(--primario); background: var(--primario-lt); }
+        .btn-primary-custom { background: var(--primario); color: #fff; border: none; border-radius: var(--radius-sm); font-weight: 600; font-size: .82rem; padding: .45rem .9rem; display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; transition: background .2s; text-decoration: none; }
+        .btn-primary-custom:hover { background: var(--primario-dk); }
+        .btn-back { display: inline-flex; align-items: center; gap: .4rem; font-size: .83rem; font-weight: 600; color: var(--muted); background: var(--card-bg); border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: .45rem .9rem; text-decoration: none; margin-bottom: 1.4rem; transition: border-color .2s, color .2s, background .2s; }
+        .btn-back:hover { border-color: var(--primario); color: var(--primario); background: var(--primario-lt); }
+        /* FORM FIELDS */
+        .form-field { border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: .45rem .85rem; font-size: .83rem; font-family: inherit; color: var(--text); background: #fff; outline: none; transition: border-color .2s; width: 100%; }
+        .form-field:focus { border-color: var(--primario); box-shadow: 0 0 0 3px rgba(80,16,19,.1); }
+        .filtros-bar { background: var(--bg); border-bottom: 1px solid var(--border); padding: .9rem 1.4rem; }
+        /* TABLE */
+        .table-responsive { overflow-x: auto; }
+        table { margin: 0; font-size: .83rem; width: 100%; border-collapse: collapse; }
+        table thead th { background: var(--primario); color: #fff; font-weight: 700; font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; padding: .8rem 1rem; border: none; white-space: nowrap; }
+        table tbody td { padding: .7rem 1rem; border-bottom: 1px solid var(--border); vertical-align: middle; color: var(--text); }
+        table tbody tr:last-child td { border-bottom: none; }
+        table tbody tr:hover { background: var(--primario-lt); }
+        /* BADGES */
+        .badge-revision  { background: var(--primario-lt); color: var(--primario); border-radius: 20px; font-size: .74rem; font-weight: 700; padding: .28rem .7rem; }
+        .badge-activo    { background: var(--dorado-lt); color: #7a5a00; border-radius: 20px; font-size: .74rem; font-weight: 700; padding: .28rem .7rem; border: 1px solid #C9A24D; }
+        .badge-pendiente { background: #fff3cd; color: #856404; border-radius: 20px; font-size: .74rem; font-weight: 700; padding: .28rem .7rem; }
+        .badge-inactivo  { background: #f3f4f6; color: #6b7280; border-radius: 20px; font-size: .74rem; font-weight: 700; padding: .28rem .7rem; }
+        .badge-finalizado{ background: #d1fae5; color: #065f46; border-radius: 20px; font-size: .73rem; font-weight: 700; padding: .26rem .68rem; }
+        .badge-baja      { background: #fee2e2; color: #991b1b; border-radius: 20px; font-size: .73rem; font-weight: 700; padding: .26rem .68rem; }
+        .badge-ss  { background: var(--primario-lt); color: var(--primario); border-radius: 20px; font-size: .71rem; font-weight: 700; padding: .22rem .6rem; border: 1px solid rgba(80,16,19,.18); }
+        .badge-pp  { background: var(--dorado-lt); color: #7a5a00; border-radius: 20px; font-size: .71rem; font-weight: 700; padding: .22rem .6rem; border: 1px solid rgba(201,162,77,.35); }
+        /* AVANCE */
+        .avance-wrap { display: flex; align-items: center; gap: .5rem; min-width: 90px; }
+        .avance-bar  { flex: 1; height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+        .avance-fill { height: 100%; background: var(--primario); border-radius: 99px; }
+        .avance-pct  { font-size: .78rem; font-weight: 700; color: var(--primario); min-width: 30px; text-align: right; }
+        .af-low  { background: #e57373 !important; }
+        .af-mid  { background: var(--dorado) !important; }
+        .af-high { background: var(--primario-mid) !important; }
+        .af-done { background: var(--primario) !important; }
+        /* RESUMEN STRIP */
+        .resumen-strip { display: flex; border-bottom: 1px solid var(--border); }
+        .resumen-item { flex: 1; text-align: center; padding: .75rem .5rem; border-right: 1px solid var(--border); }
+        .resumen-item:last-child { border-right: none; }
+        .resumen-item .r-val { font-size: 1.05rem; font-weight: 800; color: var(--text); }
+        .resumen-item .r-lab { font-size: .68rem; color: var(--muted); font-weight: 500; margin-top: .12rem; }
+        /* PAGINACIÓN */
+        .pag-wrap { display: flex; align-items: center; justify-content: space-between; padding: .85rem 1.4rem; border-top: 1px solid var(--border); flex-wrap: wrap; gap: .5rem; }
+        .pag-info { font-size: .78rem; color: var(--muted); font-weight: 500; }
+        .pag-btns { display: flex; gap: .35rem; }
+        .pag-btn { width: 32px; height: 32px; border-radius: 8px; border: 1.5px solid var(--border); background: #fff; color: var(--muted); font-size: .82rem; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all .2s; }
+        .pag-btn:hover { border-color: var(--primario); color: var(--primario); background: var(--primario-lt); }
+        .pag-btn.active { background: var(--primario); color: #fff; border-color: var(--primario); }
+        .pag-btn:disabled { opacity: .4; cursor: not-allowed; }
+        /* FOOTER */
+        .footer-custom { background: var(--primario); color: rgba(255,255,255,.7); text-align: center; padding: .75rem; font-size: .75rem; letter-spacing: .02em; }
+        /* ROL BADGES */
+        .rol-badge { display: inline-flex; align-items: center; gap: .4rem; font-size: .75rem; font-weight: 700; padding: .32rem .85rem; border-radius: 20px; border: 1px solid; }
+        .rol-superadmin { background: #f7eaea; color: #501013; border-color: rgba(80,16,19,.25); }
+        .rol-area       { background: #fdf6e3; color: #7a5a00; border-color: rgba(201,162,77,.4); }
+        .rol-reportes   { background: #f0fdf4; color: #065f46; border-color: rgba(34,197,94,.35); }
+        /* FILTRO INSTITUTO CHIPS */
+        .filtro-instituto { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; padding: .75rem 1.4rem; border-bottom: 1px solid var(--border); background: #fff; }
+        .inst-chip { border: 1.5px solid var(--border); background: #fff; color: var(--muted); border-radius: 20px; font-size: .76rem; font-weight: 600; padding: .28rem .8rem; cursor: pointer; transition: all .2s; user-select: none; white-space: nowrap; }
+        .inst-chip:hover { border-color: var(--primario); color: var(--primario); background: var(--primario-lt); }
+        .inst-chip.active { background: var(--primario); color: #fff; border-color: var(--primario); }
+        .inst-sep { font-size: .7rem; color: var(--muted); font-weight: 600; white-space: nowrap; padding: 0 .2rem; }
+        /* NOTIFICACIONES */
+        .notif-btn { position: relative; background: rgba(255,255,255,.12); border: none; color: #fff; width: 40px; height: 40px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; cursor: pointer; transition: background .2s; flex-shrink: 0; }
+        .notif-btn:hover { background: rgba(255,255,255,.22); }
+        .notif-count { position: absolute; top: 4px; right: 4px; background: var(--dorado); color: #fff; font-size: .58rem; font-weight: 800; border-radius: 20px; min-width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; padding: 0 .25rem; border: 1.5px solid var(--primario); }
+        .notif-panel { position: fixed; top: 70px; right: 0; width: 360px; max-height: calc(100vh - 80px); background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-card) 0 0 var(--radius-card); box-shadow: -4px 8px 32px rgba(80,16,19,.18); z-index: 1049; display: flex; flex-direction: column; transform: translateX(110%); transition: transform .3s cubic-bezier(.4,0,.2,1); overflow: hidden; }
+        .notif-panel.open { transform: translateX(0); }
+        .notif-header { padding: 1rem 1.2rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--primario); color: #fff; flex-shrink: 0; }
+        .notif-header h6 { font-size: .92rem; font-weight: 800; margin: 0; }
+        .btn-mark-all { font-size: .72rem; font-weight: 700; color: rgba(255,255,255,.8); background: rgba(255,255,255,.12); border: none; border-radius: 20px; padding: .2rem .7rem; cursor: pointer; transition: background .2s; }
+        .btn-mark-all:hover { background: rgba(255,255,255,.22); }
+        .btn-close-notif { background: none; border: none; color: rgba(255,255,255,.7); font-size: 1rem; cursor: pointer; padding: .2rem; display: flex; align-items: center; border-radius: 6px; }
+        .btn-close-notif:hover { color: #fff; }
+        .notif-tabs { display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+        .notif-tab { flex: 1; padding: .6rem; font-size: .8rem; font-weight: 700; color: var(--muted); border: none; background: transparent; cursor: pointer; border-bottom: 2px solid transparent; transition: color .2s, border-color .2s; text-align: center; }
+        .notif-tab.active { color: var(--primario); border-bottom-color: var(--primario); }
+        .notif-list { overflow-y: auto; flex: 1; }
+        .notif-item { padding: .9rem 1.2rem; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: .75rem; cursor: pointer; transition: background .15s; position: relative; }
+        .notif-item:hover { background: var(--bg); }
+        .notif-item.unread { background: var(--primario-lt); }
+        .notif-item.unread::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--primario); }
+        .notif-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .85rem; flex-shrink: 0; }
+        .ni-msg { background: #dbeafe; color: #1e40af; } .ni-rec { background: var(--dorado-lt); color: #7a5a00; } .ni-sis { background: var(--primario-lt); color: var(--primario); }
+        .notif-title { font-size: .83rem; font-weight: 700; color: var(--text); margin-bottom: .15rem; }
+        .notif-item.unread .notif-title { color: var(--primario); }
+        .notif-desc { font-size: .76rem; color: var(--muted); line-height: 1.45; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .notif-time { font-size: .68rem; color: var(--muted); margin-top: .3rem; font-weight: 500; }
+        .notif-footer { padding: .75rem 1.2rem; border-top: 1px solid var(--border); text-align: center; flex-shrink: 0; }
+        .notif-footer a { font-size: .8rem; font-weight: 700; color: var(--primario); text-decoration: none; }
+        .notif-overlay { display: none; position: fixed; inset: 0; z-index: 1048; }
+        .notif-overlay.open { display: block; }
+        [data-visible] { transition: opacity .2s; }
+        @media (max-width: 767px) { main { padding: 1.25rem 1rem; } }
+        @media (max-width: 480px) { .notif-panel { width: 100%; border-radius: 0; } }
+</style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar-custom w-100">
+    <div class="container-fluid d-flex align-items-center" style="height:70px;">
+        <div class="d-flex align-items-center gap-2">
+            <a href="https://www.uaeh.edu.mx" target="_blank" rel="noopener noreferrer">
+                <img src="../assets/img/Logo_Login.svg" alt="Logo SIARHA" height="46">
+            </a>
+            <div class="d-flex flex-column">
+                <span class="brand-text text-white">SIARHA</span>
+                <span class="navbar-subtitle text-white d-none d-md-block">Dirección de Servicio Social y Prácticas Profesionales</span>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-2 ms-auto">
+            <div class="d-none d-md-flex align-items-center gap-2 text-white" style="font-size:.83rem;font-weight:600;opacity:.9;">
+                <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;"><i class="bi bi-person-fill"></i></div>
+                <span>Administrador</span>
+            </div>
+            <button class="notif-btn" id="btnNotif" onclick="toggleNotif()" title="Notificaciones">
+                <i class="bi bi-bell-fill"></i><span class="notif-count" id="notifCount">4</span>
+            </button>
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuAdmin" aria-label="Abrir menú">
+                <i class="bi bi-list"></i>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- ── OFFCANVAS ── -->
+<div class="offcanvas offcanvas-end offcanvas-custom" tabindex="-1" id="menuAdmin" aria-labelledby="menuAdminLabel">
+    <div class="offcanvas-header">
+        <div class="d-flex align-items-center gap-2">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;"><i class="bi bi-shield-fill"></i></div>
+            <div>
+                <div style="font-weight:700;font-size:.9rem;">Administrador</div>
+                <div style="font-size:.72rem;opacity:.7;">Panel de control</div>
+            </div>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="navbar-nav gap-1">
+            <li><a class="nav-link " href="ADMIN_dashboard-servicio.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link active" href="ADMIN_alumnos.html"><i class="bi bi-people-fill"></i> Alumnos</a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link " href="ADMIN_gestion-ur.html"><i class="bi bi-building"></i> Unidades Receptoras</a></li>
+            <li data-visible="superadmin"><a class="nav-link " href="ADMIN_gestion-administradores.html"><i class="bi bi-person-gear"></i> Administradores</a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link " href="ADMIN_reportes-globales.html"><i class="bi bi-bar-chart-fill"></i> Reportes Globales</a></li>
+            <li><a class="nav-link " href="ADMIN_mensajes-admin.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge">3</span></a></li>
+            <hr class="menu-divider">
+            <li><a class="nav-link danger" href="../index.html"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
+        </ul>
+    </div>
+</div>
+
+<main>
+    <a href="ADMIN_dashboard-servicio.html" class="btn-back"><i class="bi bi-arrow-left"></i> Volver al panel</a>
+
+    <!-- ENCABEZADO -->
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.75rem;margin-bottom:1.25rem;">
+        <div>
+            <h4 style="font-size:1.3rem;font-weight:800;margin:0;">Alumnos registrados</h4>
+            <p style="font-size:.8rem;color:var(--muted);margin-top:.25rem;" id="subtituloAlumnos">Gestión de alumnos · Periodo Enero – Junio 2026</p>
+        </div>
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            <button class="btn-outline-custom" id="btnExportar" onclick="exportarExcel()"><i class="bi bi-file-earmark-excel"></i> Exportar</button>
+            <a href="ADMIN_alta-alumno.html" class="btn-primary-custom" data-visible="superadmin,admin_area"><i class="bi bi-person-plus-fill"></i> Nuevo alumno</a>
+        </div>
+    </div>
+
+    <!-- FILTRO DE INSTITUTOS (solo superadmin y admin_area — chips rápidos) -->
+    <div id="filtroInstitutos" data-visible="superadmin,admin_area" style="display:none;">
+        <div class="filtro-instituto">
+            <span class="inst-sep" style="font-weight:700;text-transform:uppercase;letter-spacing:.05em;">Filtrar:</span>
+            <span class="inst-chip active" onclick="filtrarInstituto('',this)">Todos</span>
+            <span class="inst-sep">— Institutos —</span>
+            <span class="inst-chip" onclick="filtrarInstituto('Instituto de Artes',this)">Artes</span>
+            <span class="inst-chip" onclick="filtrarInstituto('Instituto de Ciencias Agropecuarias',this)">Agropecuarias</span>
+            <span class="inst-chip" onclick="filtrarInstituto('Instituto de Ciencias Básicas e Ingeniería',this)">ICBI</span>
+            <span class="inst-chip" onclick="filtrarInstituto('Instituto de Ciencias de la Salud',this)">ICSa</span>
+            <span class="inst-chip" onclick="filtrarInstituto('Instituto de Ciencias Económico Administrativas',this)">ICEA</span>
+            <span class="inst-chip" onclick="filtrarInstituto('Instituto de Ciencias Sociales y Humanidades',this)">ICSHu</span>
+            <span class="inst-sep">— Escuelas Superiores —</span>
+            <span class="inst-chip" onclick="filtrarInstituto('Escuela Superior de Actopan',this)">Actopan</span>
+            <span class="inst-chip" onclick="filtrarInstituto('Escuela Superior de Apan',this)">Apan</span>
+            <span class="inst-chip" onclick="filtrarInstituto('Escuela Superior de Atotonilco de Tula',this)">Atotonilco</span>
+            <span class="inst-chip" onclick="filtrarInstituto('Escuela Superior de Ciudad Sahagún',this)">Cd. Sahagún</span>
+            <span class="inst-chip" onclick="filtrarInstituto('Escuela Superior de Huejutla',this)">Huejutla</span>
+            <span class="inst-chip" onclick="filtrarInstituto('Escuela Superior de Tepeji del Río',this)">Tepeji</span>
+            <span class="inst-chip" onclick="filtrarInstituto('Escuela Superior de Tizayuca',this)">Tizayuca</span>
+            <span class="inst-chip" onclick="filtrarInstituto('Escuela Superior de Tlahuelilpan',this)">Tlahuelilpan</span>
+            <span class="inst-chip" onclick="filtrarInstituto('Escuela Superior de Zimapán',this)">Zimapán</span>
+        </div>
+    </div>
+
+    <div class="section-card">
+
+        <!-- FILTROS DETALLADOS -->
+        <div class="filtros-bar">
+            <div class="row g-2 align-items-end">
+                <div class="col-12 col-md-3">
+                    <input type="text" class="form-field" id="buscarAlumno" placeholder="🔍  Buscar por nombre o no. cuenta…" oninput="aplicarFiltros()">
+                </div>
+                <div class="col-6 col-md-2">
+                    <select class="form-field" id="filtroProgramaAl" onchange="aplicarFiltros()">
+                        <option value="">Programa</option>
+                        <option value="ss">Servicio Social</option>
+                        <option value="pp">Prácticas Prof.</option>
+                    </select>
+                </div>
+                <div class="col-6 col-md-2">
+                    <select class="form-field" id="filtroEstadoAl" onchange="aplicarFiltros()">
+                        <option value="">Estado</option>
+                        <option value="activo">Activo</option>
+                        <option value="revision">En revisión</option>
+                        <option value="finalizado">Finalizado</option>
+                        <option value="pendiente">Pendiente</option>
+                        <option value="baja">Baja</option>
+                    </select>
+                </div>
+                <div class="col-6 col-md-2">
+                    <select class="form-field" id="filtroAvanceAl" onchange="aplicarFiltros()">
+                        <option value="">Avance</option>
+                        <option value="0-25">0 – 25%</option>
+                        <option value="26-50">26 – 50%</option>
+                        <option value="51-75">51 – 75%</option>
+                        <option value="76-99">76 – 99%</option>
+                        <option value="100-100">100% (Terminado)</option>
+                    </select>
+                </div>
+                <div class="col-6 col-md-2">
+                    <button class="btn-outline-custom w-100" onclick="limpiarFiltros()"><i class="bi bi-x-circle"></i> Limpiar</button>
+                </div>
+                <div class="col-6 col-md-1">
+                    <button class="btn-primary-custom w-100" onclick="filtrarDOM()"><i class="bi bi-funnel-fill"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- RESUMEN RÁPIDO -->
+        <div class="resumen-strip">
+            <div class="resumen-item"><div class="r-val" id="resTotal">—</div><div class="r-lab">Total</div></div>
+            <div class="resumen-item"><div class="r-val" style="color:var(--primario);" id="resSS">—</div><div class="r-lab">Serv. Social</div></div>
+            <div class="resumen-item"><div class="r-val" style="color:#7a5a00;" id="resPP">—</div><div class="r-lab">Prácticas</div></div>
+            <div class="resumen-item"><div class="r-val" style="color:#065f46;" id="resFin">—</div><div class="r-lab">Finalizados</div></div>
+            <div class="resumen-item"><div class="r-val" style="color:#856404;" id="resPend">—</div><div class="r-lab">Pendientes</div></div>
+        </div>
+
+        <!-- TABLA -->
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Alumno</th>
+                        <th>No. Cuenta</th>
+                        <th>Programa</th>
+                        <th>Unidad Receptora</th>
+                        <th>Horas</th>
+                        <th>Avance</th>
+                        <th>Estado</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaAlumnos">
+                    <tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--muted);"><i class="bi bi-arrow-clockwise"></i> Cargando alumnos…</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- PAGINACIÓN -->
+        <div class="pag-wrap">
+            <span class="pag-info" id="pagInfo">—</span>
+            <div class="pag-btns" id="pagBtns"></div>
+        </div>
+
+    </div><!-- /section-card -->
+</main>
+
+<footer class="footer-custom">© 2026 SIARHA · Uso exclusivo institucional · UAEH</footer>
+
+<!-- ══ PANEL NOTIFICACIONES ══ -->
+<div class="notif-overlay" id="notifOverlay" onclick="cerrarNotif()"></div>
+<div class="notif-panel" id="notifPanel">
+    <div class="notif-header">
+        <h6><i class="bi bi-bell-fill me-2"></i>Notificaciones</h6>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn-mark-all" onclick="marcarTodasLeidas()">Marcar leídas</button>
+            <button class="btn-close-notif" onclick="cerrarNotif()"><i class="bi bi-x-lg"></i></button>
+        </div>
+    </div>
+    <div class="notif-tabs">
+        <button class="notif-tab active" onclick="setNotifTab('todas',this)">Todas <span id="badgeTodas" style="background:#501013;color:#fff;border-radius:20px;font-size:.65rem;padding:.08rem .45rem;margin-left:.25rem;">4</span></button>
+        <button class="notif-tab" onclick="setNotifTab('ni-msg',this)">Mensajes</button>
+        <button class="notif-tab" onclick="setNotifTab('ni-rec',this)">Reportes</button>
+        <button class="notif-tab" onclick="setNotifTab('ni-sis',this)">Sistema</button>
+    </div>
+    <div class="notif-list" id="notifList">
+        <div class="notif-item unread" data-tipo="ni-msg" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div>
+            <div><div class="notif-title">Mensaje de Juan Pérez García</div><div class="notif-desc">Solicitud de prórroga de 2 semanas</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 15 min</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-msg" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div>
+            <div><div class="notif-title">2 mensajes de Ana López</div><div class="notif-desc">Problema con acceso al sistema</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 30 min</div></div>
+        </div>
+        <div class="notif-item unread" data-tipo="ni-rec" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-rec"><i class="bi bi-flag-fill"></i></div>
+            <div><div class="notif-title">Reporte escalado #RPT-0042</div><div class="notif-desc">El coordinador te escaló un reporte</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 2 horas</div></div>
+        </div>
+        <div class="notif-item" data-tipo="ni-sis" onclick="marcarLeida(this)">
+            <div class="notif-icon ni-sis"><i class="bi bi-person-plus-fill"></i></div>
+            <div><div class="notif-title">Nuevo alumno dado de alta</div><div class="notif-desc">María González — Prácticas Profesionales</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer, 4:00 p.m.</div></div>
+        </div>
+    </div>
+    <div class="notif-footer"><a href="ADMIN_mensajes-admin.html">Ver todo →</a></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    let _nOpen = false;
+    function toggleNotif() { _nOpen ? cerrarNotif() : abrirNotif(); }
+    function abrirNotif()  { document.getElementById('notifPanel').classList.add('open'); document.getElementById('notifOverlay').classList.add('open'); _nOpen = true; }
+    function cerrarNotif() { document.getElementById('notifPanel').classList.remove('open'); document.getElementById('notifOverlay').classList.remove('open'); _nOpen = false; }
+    function marcarLeida(item) { if (!item.classList.contains('unread')) return; item.classList.remove('unread'); _badge(); }
+    function marcarTodasLeidas() { document.querySelectorAll('.notif-item.unread').forEach(i => i.classList.remove('unread')); _badge(); }
+    function _badge() {
+        const n = document.querySelectorAll('.notif-item.unread').length;
+        const b = document.getElementById('notifCount'); if (b) { b.textContent = n; b.style.display = n > 0 ? 'flex' : 'none'; }
+        const bt = document.getElementById('badgeTodas'); if (bt) bt.textContent = n;
+    }
+    function setNotifTab(tipo, btn) {
+        document.querySelectorAll('.notif-tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.notif-item').forEach(i => { i.style.display = (tipo === 'todas' || i.dataset.tipo === tipo) ? '' : 'none'; });
+    }
+    function showToast(msg) {
+        let t = document.getElementById('_toast');
+        if (!t) { t = document.createElement('div'); t.id = '_toast'; t.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;background:#501013;color:#fff;border-radius:10px;padding:.9rem 1.3rem;display:flex;align-items:center;gap:.6rem;font-size:.85rem;font-weight:600;box-shadow:0 8px 24px rgba(80,16,19,.25);transition:transform .35s ease,opacity .35s ease;z-index:9999;transform:translateY(80px);opacity:0;'; document.body.appendChild(t); }
+        t.innerHTML = '<i class="bi bi-check-circle-fill" style="font-size:1.1rem;"></i>' + msg;
+        t.style.transform = 'translateY(0)'; t.style.opacity = '1';
+        setTimeout(() => { t.style.transform = 'translateY(80px)'; t.style.opacity = '0'; }, 3200);
+    }
+</script>
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/admin-guard.js"></script>
+
+<script>
+// ── CATÁLOGO DE INSTITUTOS (nombre completo → código) ────────
+const INSTITUTOS_CAT = {
+    'Instituto de Artes':                              'IDA',
+    'Instituto de Ciencias Agropecuarias':             'ICAP',
+    'Instituto de Ciencias Básicas e Ingeniería':      'ICBI',
+    'Instituto de Ciencias de la Salud':               'ICSa',
+    'Instituto de Ciencias Económico Administrativas': 'ICEA',
+    'Instituto de Ciencias Sociales y Humanidades':    'ICSHu',
+    'Escuela Superior de Actopan':                     'ES-ACT',
+    'Escuela Superior de Apan':                        'ES-APA',
+    'Escuela Superior de Atotonilco de Tula':          'ES-ATO',
+    'Escuela Superior de Ciudad Sahagún':              'ES-SAH',
+    'Escuela Superior de Huejutla':                    'ES-HUE',
+    'Escuela Superior de Tepeji del Río':              'ES-TEP',
+    'Escuela Superior de Tizayuca':                    'ES-TIZ',
+    'Escuela Superior de Tlahuelilpan':                'ES-TLA',
+    'Escuela Superior de Zimapán':                     'ES-ZIM',
+};
+
+const _adminData = JSON.parse(localStorage.getItem('admin_data') || '{}');
+
+// Estado de filtros y paginación
+let paginaActual = 1;
+const POR_PAGINA = 200; // carga masiva para filtrado DOM
+let institutoFiltro = ''; // nombre completo del instituto activo
+
+// ── FILTRO POR INSTITUTO (chips) — filtra filas en DOM ──────
+function filtrarInstituto(nombreInstituto, chip) {
+    institutoFiltro = nombreInstituto;
+    document.querySelectorAll('.inst-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    filtrarDOM(); // no recarga del backend, solo oculta/muestra filas
+}
+
+// Aplica todos los filtros visuales sobre las filas ya cargadas en el DOM
+function filtrarDOM() {
+    const buscar  = (document.getElementById('buscarAlumno')?.value || '').toLowerCase().trim();
+    const prog    = document.getElementById('filtroProgramaAl')?.value || '';
+    const estado  = document.getElementById('filtroEstadoAl')?.value || '';
+    const avance  = document.getElementById('filtroAvanceAl')?.value || '';
+
+    let visibles = 0;
+    document.querySelectorAll('#tablaAlumnos tr[data-instituto]').forEach(tr => {
+        let ok = true;
+        // Filtro instituto (chip)
+        if (institutoFiltro && tr.dataset.instituto !== institutoFiltro) ok = false;
+        // Filtro programa
+        if (prog && tr.dataset.programa !== prog) ok = false;
+        // Filtro estado
+        if (estado && tr.dataset.estado !== estado) ok = false;
+        // Filtro búsqueda texto (nombre + no. cuenta)
+        if (buscar) {
+            const texto = tr.textContent.toLowerCase();
+            if (!texto.includes(buscar)) ok = false;
+        }
+        // Filtro avance
+        if (avance) {
+            const pctEl = tr.querySelector('.avance-pct');
+            const pct = pctEl ? parseInt(pctEl.textContent) : 0;
+            const [min, max] = avance.split('-').map(Number);
+            if (pct < min || pct > max) ok = false;
+        }
+        tr.style.display = ok ? '' : 'none';
+        if (ok) visibles++;
+    });
+
+    // Actualizar info de resultados visibles
+    const total = document.querySelectorAll('#tablaAlumnos tr[data-instituto]').length;
+    const infoEl = document.getElementById('pagInfo');
+    if (infoEl) {
+        infoEl.textContent = visibles === total
+            ? `Mostrando ${total} alumnos`
+            : `Mostrando ${visibles} de ${total} alumnos (filtrado)`;
+    }
+}
+
+// ── APLICAR FILTROS (texto/programa/estado/avance) — solo DOM ──
+function aplicarFiltros() {
+    filtrarDOM();
+}
+
+function limpiarFiltros() {
+    document.getElementById('buscarAlumno').value = '';
+    document.getElementById('filtroProgramaAl').value = '';
+    document.getElementById('filtroEstadoAl').value = '';
+    document.getElementById('filtroAvanceAl').value = '';
+    institutoFiltro = '';
+    document.querySelectorAll('.inst-chip').forEach(c => c.classList.remove('active'));
+    document.querySelector('.inst-chip')?.classList.add('active');
+    filtrarDOM(); // mostrar todo sin recargar
+}
+
+// ── RENDERIZAR FILA DE ALUMNO ────────────────────────────────
+function renderFila(a) {
+    const nombre  = [a.nombre_alum, a.apellido_p_alum, a.apellido_m_alum].filter(Boolean).join(' ');
+    const carrera = [a.nombre_licenciatura, a.nombre_instituto].filter(Boolean).join(' · ');
+    const pct     = Math.round(parseFloat(a.avance_pct) || 0);
+    const color   = pct >= 100 ? 'af-done' : pct >= 76 ? 'af-high' : pct >= 50 ? 'af-mid' : pct >= 25 ? 'af-mid' : 'af-low';
+    const ur      = a.nombre_ur || '—';
+    const hrs     = a.horas_realizadas ?? 0;
+    const hrsMax  = a.programa === 'pp' ? 240 : 480;
+    const prog    = a.programa === 'pp'
+        ? '<span class="badge-pp">Prácticas Prof.</span>'
+        : '<span class="badge-ss">Serv. Social</span>';
+    const estado  = a.estado || 'activo';
+    const badgeEstado = {
+        activo:     '<span class="badge-activo">Activo</span>',
+        revision:   '<span class="badge-revision">En revisión</span>',
+        finalizado: '<span class="badge-finalizado">Finalizado</span>',
+        pendiente:  '<span class="badge-pendiente">Pendiente</span>',
+        baja:       '<span class="badge-baja">Baja</span>',
+    }[estado] || `<span class="badge-inactivo">${estado}</span>`;
+
+    return `<tr data-instituto="${a.nombre_instituto || ''}" data-programa="${a.programa || ''}" data-estado="${estado}">
+        <td>
+            <div style="font-weight:700;font-size:.86rem;">${nombre}</div>
+            <div style="font-size:.72rem;color:var(--muted);">${carrera || '—'}</div>
+        </td>
+        <td style="color:var(--muted);font-size:.82rem;">${a.no_cuenta}</td>
+        <td>${prog}</td>
+        <td style="font-size:.82rem;">${ur}</td>
+        <td><div style="font-weight:800;color:var(--primario);font-size:.88rem;">${hrs} <span style="font-weight:500;color:var(--muted);font-size:.75rem;">/ ${hrsMax} hrs</span></div></td>
+        <td>
+            <div class="avance-wrap">
+                <div class="avance-bar"><div class="avance-fill ${color}" style="width:${pct}%;"></div></div>
+                <span class="avance-pct">${pct}%</span>
+            </div>
+        </td>
+        <td>${badgeEstado}</td>
+        <td><a href="ADMIN_detalle-alumno-admin.html?no_cuenta=${a.no_cuenta}" class="btn-outline-custom"><i class="bi bi-eye-fill"></i> Ver</a></td>
+    </tr>`;
+}
+
+// ── RENDERIZAR PAGINACIÓN ────────────────────────────────────
+function renderPaginacion(total, pagina, porPagina) {
+    const totalPags = Math.ceil(total / porPagina);
+    const wrap = document.getElementById('pagBtns');
+    if (!wrap) return;
+
+    let btns = '';
+    btns += `<button class="pag-btn" ${pagina <= 1 ? 'disabled' : ''} onclick="cargarAlumnos(${pagina-1})"><i class="bi bi-chevron-left"></i></button>`;
+    for (let i = 1; i <= totalPags; i++) {
+        if (i === 1 || i === totalPags || (i >= pagina-1 && i <= pagina+1)) {
+            btns += `<button class="pag-btn ${i === pagina ? 'active' : ''}" onclick="cargarAlumnos(${i})">${i}</button>`;
+        } else if (i === pagina-2 || i === pagina+2) {
+            btns += `<span style="padding:0 .25rem;color:var(--muted);line-height:32px;">…</span>`;
+        }
+    }
+    btns += `<button class="pag-btn" ${pagina >= totalPags ? 'disabled' : ''} onclick="cargarAlumnos(${pagina+1})"><i class="bi bi-chevron-right"></i></button>`;
+    wrap.innerHTML = btns;
+}
+
+// ── CARGA DE ALUMNOS DESDE API ───────────────────────────────
+async function cargarAlumnos(pagina = 1) {
+    paginaActual = pagina;
+    const tbody = document.getElementById('tablaAlumnos');
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--muted);"><i class="bi bi-arrow-clockwise"></i> Cargando…</td></tr>`;
+
+    const buscar   = document.getElementById('buscarAlumno')?.value.trim() || '';
+    const programa = document.getElementById('filtroProgramaAl')?.value || '';
+    const estado   = document.getElementById('filtroEstadoAl')?.value || '';
+    const avance   = document.getElementById('filtroAvanceAl')?.value || '';
+
+    // Construir query params
+    const params = new URLSearchParams({por_pagina: POR_PAGINA, pagina});
+    if (buscar)        params.set('buscar',    buscar);
+    if (programa)      params.set('programa',  programa);
+    if (estado)        params.set('estado',    estado);
+    if (avance)        params.set('avance',    avance);
+    if (institutoFiltro) params.set('instituto', institutoFiltro);
+
+    // Si el admin es admin_area, el backend ya filtra por sus institutos
+    // Si no, enviamos el filtro de instituto que eligió el superadmin
+
+    try {
+        const res  = await apiFetch(`/api/alumnos?${params.toString()}`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Error al cargar alumnos');
+
+        const alumnos = data.alumnos || [];
+        const total   = data.total   || 0;
+        const desde   = (pagina-1)*POR_PAGINA + 1;
+        const hasta   = Math.min(pagina*POR_PAGINA, total);
+
+        // Resumen
+        document.getElementById('resTotal').textContent = total;
+        document.getElementById('resSS').textContent    = data.total_ss   ?? alumnos.filter(a=>a.programa==='ss').length;
+        document.getElementById('resPP').textContent    = data.total_pp   ?? alumnos.filter(a=>a.programa==='pp').length;
+        document.getElementById('resFin').textContent   = data.total_fin  ?? '—';
+        document.getElementById('resPend').textContent  = data.total_pend ?? '—';
+
+        // Tabla
+        if (alumnos.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:2.5rem;color:var(--muted);"><i class="bi bi-people" style="font-size:1.5rem;display:block;margin-bottom:.5rem;"></i>No se encontraron alumnos con los filtros seleccionados.</td></tr>`;
+        } else {
+            tbody.innerHTML = alumnos.map(renderFila).join('');
+        }
+
+        // Info inicial
+        document.getElementById('pagInfo').textContent =
+            total === 0 ? 'Sin resultados' : `Mostrando ${total} alumnos`;
+        // Ocultar paginación (filtrado DOM, no server-side)
+        document.getElementById('pagBtns').innerHTML = '';
+        // Aplicar filtros DOM por si hay chips activos
+        filtrarDOM();
+
+    } catch(e) {
+        console.error('Error cargando alumnos:', e);
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:2rem;color:#991b1b;"><i class="bi bi-exclamation-triangle me-2"></i>Error al cargar alumnos. Intenta de nuevo.</td></tr>`;
+    }
+}
+
+// ── EXPORTAR ─────────────────────────────────────────────────
+function exportarExcel() {
+    showToast('Preparando exportación…');
+    // TODO: llamar al endpoint de exportación del backend
+    // window.open('/api/alumnos/exportar?...');
+}
+
+// ── INIT ─────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    // Subtítulo con nombre del admin si es admin_area
+    if (_adminData.rol === 'admin_area' && _adminData.institutos?.length) {
+        const institutos = _adminData.institutos.map(i => i.nombre_instituto || i).join(' · ');
+        document.getElementById('subtituloAlumnos').textContent = institutos + ' · Periodo Enero – Junio 2026';
+    }
+    cargarAlumnos(1);
+});
+</script>
+</body>
+</html>

@@ -115,6 +115,8 @@
         .notif-overlay.open{display:block;}
         @media(max-width:480px){.notif-panel{width:100%;border-radius:0;}}
 
+        .btn-back{display:inline-flex;align-items:center;gap:.4rem;font-size:.83rem;font-weight:600;color:var(--muted);background:var(--card-bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.45rem .9rem;text-decoration:none;margin-bottom:1.25rem;transition:border-color .2s,color .2s,background .2s;}
+        .btn-back:hover{border-color:var(--primario);color:var(--primario);background:var(--primario-lt);}
     </style>
 </head>
 <body>
@@ -145,13 +147,12 @@
         </div>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
     </div>
-    <div class="offcanvas-body">
-        <ul class="navbar-nav gap-1">
-            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
-            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html"><i class="bi bi-people-fill"></i> Alumnos</a></li>
-            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html"><i class="bi bi-building"></i> Unidades Receptoras</a></li>
-            <li><a class="nav-link" href="ADMIN_gestion-administradores.html"><i class="bi bi-person-gear"></i> Administradores</a></li>
-            <li><a class="nav-link" href="ADMIN_reportes-globales.html"><i class="bi bi-bar-chart-fill"></i> Reportes Globales</a></li>
+    <div class="offcanvas-body">        <ul class="navbar-nav gap-1">
+            <li><a class="nav-link " href="ADMIN_dashboard-servicio.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link " href="ADMIN_alumnos.html"><i class="bi bi-people-fill"></i> Alumnos</a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link " href="ADMIN_gestion-ur.html"><i class="bi bi-building"></i> Unidades Receptoras</a></li>
+            <li data-visible="superadmin"><a class="nav-link " href="ADMIN_gestion-administradores.html"><i class="bi bi-person-gear"></i> Administradores</a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link " href="ADMIN_reportes-globales.html"><i class="bi bi-bar-chart-fill"></i> Reportes Globales</a></li>
             <li><a class="nav-link active" href="ADMIN_mensajes-admin.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge">3</span></a></li>
             <hr class="menu-divider">
             <li><a class="nav-link danger" href="../index.html"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
@@ -160,6 +161,7 @@
 </div>
 
 <main>
+    <a href="ADMIN_dashboard-servicio.html" class="btn-back"><i class="bi bi-arrow-left"></i> Volver al panel</a>
     <div style="margin-bottom:1.25rem;">
         <h4 style="font-size:1.3rem;font-weight:800;margin:0;">Mensajes de alumnos</h4>
         <p style="font-size:.8rem;color:var(--muted);margin-top:.25rem;">Instituto de Ciencias de la Salud · <strong style="color:var(--primario);">3 sin leer</strong></p>
