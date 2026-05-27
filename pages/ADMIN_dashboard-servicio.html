@@ -472,6 +472,8 @@
         table tbody tr:hover { background:var(--primario-lt); }
         .btn-outline-custom { border:1.5px solid var(--border); background:#fff; color:var(--muted); border-radius:var(--radius-sm); font-weight:600; font-size:.82rem; padding:.45rem .9rem; display:inline-flex; align-items:center; gap:.4rem; transition:border-color .2s,color .2s,background .2s; cursor:pointer; text-decoration:none; }
         .btn-outline-custom:hover { border-color:var(--primario); color:var(--primario); background:var(--primario-lt); }
+        .banner-periodo{display:none;background:linear-gradient(135deg,var(--primario-lt),#fff);border:1.5px solid rgba(80,16,19,.2);border-radius:var(--radius-sm);padding:.65rem 1.1rem;font-size:.83rem;font-weight:600;color:var(--primario);display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;}
+        .banner-sin-periodo{background:#fef3c7;border-color:#f59e0b;color:#92400e;}
     </style>
 </head>
 
@@ -534,6 +536,7 @@
             <li data-visible="superadmin,admin_area"><a class="nav-link " href="ADMIN_alumnos.html"><i class="bi bi-people-fill"></i> Alumnos</a></li>
             <li data-visible="superadmin,admin_area"><a class="nav-link " href="ADMIN_gestion-ur.html"><i class="bi bi-building"></i> Unidades Receptoras</a></li>
             <li data-visible="superadmin"><a class="nav-link " href="ADMIN_gestion-administradores.html"><i class="bi bi-person-gear"></i> Administradores</a></li>
+            <li data-visible="superadmin"><a class="nav-link " href="ADMIN_periodos.html"><i class="bi bi-calendar-range-fill"></i> Periodos</a></li>
             <li data-visible="superadmin,admin_area"><a class="nav-link " href="ADMIN_reportes-globales.html"><i class="bi bi-bar-chart-fill"></i> Reportes Globales</a></li>
             <li><a class="nav-link " href="ADMIN_mensajes-admin.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge">3</span></a></li>
             <hr class="menu-divider">
@@ -544,6 +547,12 @@
 
 <!-- ── MAIN ── -->
 <main>
+
+    <!-- BANNER PERIODO -->
+    <div id="bannerPeriodo" class="banner-periodo" style="display:none;">
+        <i class="bi bi-calendar-check-fill"></i>
+        <span id="txtBannerPeriodo">Periodo en curso</span>
+    </div>
 
     <!-- ENCABEZADO -->
     <div class="page-header">
@@ -841,11 +850,31 @@
                     </div>
                 </td>
                 <td>${badges[estado] || `<span class="badge-activo">${estado}</span>`}</td>
-                <td><a href="ADMIN_detalle-alumno-admin.html?no_cuenta=${a.no_cuenta}" class="btn-outline-custom"><i class="bi bi-eye-fill"></i> Ver</a></td>
+                <td><a href="ADMIN_bitacora-alumno.html?no_cuenta=${a.no_cuenta}" class="btn-outline-custom" title="Ver bitácora"><i class="bi bi-journal-text"></i> Bitácora</a></td>
             </tr>`;
         }).join('');
     } catch(e) { console.error('Actividad reciente error:', e); }
 })();
+
+async function cargarPeriodoActivo() {
+    try {
+        const res  = await apiFetch('/api/periodos/activos');
+        const data = await res.json();
+        const banner = document.getElementById('bannerPeriodo');
+        const txt    = document.getElementById('txtBannerPeriodo');
+        if (!banner) return;
+        const periodos = data.periodos || [];
+        if (periodos.length === 0) {
+            banner.style.display = 'flex';
+            banner.classList.add('banner-sin-periodo');
+            txt.textContent = 'Sin periodo activo — No se pueden dar de alta alumnos hasta crear un periodo.';
+        } else {
+            banner.style.display = 'flex';
+            const nombres = periodos.map(p => p.nombre_periodo).join(' · ');
+            txt.textContent = `Periodo(s) en curso: ${nombres}`;
+        }
+    } catch(e) { /* silencioso */ }
+}
 </script>
 </body>
 </html>

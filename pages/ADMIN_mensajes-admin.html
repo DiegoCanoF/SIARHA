@@ -152,6 +152,7 @@
             <li data-visible="superadmin,admin_area"><a class="nav-link " href="ADMIN_alumnos.html"><i class="bi bi-people-fill"></i> Alumnos</a></li>
             <li data-visible="superadmin,admin_area"><a class="nav-link " href="ADMIN_gestion-ur.html"><i class="bi bi-building"></i> Unidades Receptoras</a></li>
             <li data-visible="superadmin"><a class="nav-link " href="ADMIN_gestion-administradores.html"><i class="bi bi-person-gear"></i> Administradores</a></li>
+            <li data-visible="superadmin"><a class="nav-link " href="ADMIN_periodos.html"><i class="bi bi-calendar-range-fill"></i> Periodos</a></li>
             <li data-visible="superadmin,admin_area"><a class="nav-link " href="ADMIN_reportes-globales.html"><i class="bi bi-bar-chart-fill"></i> Reportes Globales</a></li>
             <li><a class="nav-link active" href="ADMIN_mensajes-admin.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge">3</span></a></li>
             <hr class="menu-divider">
@@ -251,8 +252,8 @@
                         <span class="badge-pp-sm" id="chatPrograma">Prácticas Prof.</span>
                     </div>
                 </div>
-                <a href="ADMIN_detalle-alumno-admin.html" style="border:1.5px solid var(--border);background:#fff;color:var(--muted);border-radius:var(--radius-sm);font-size:.78rem;font-weight:600;padding:.35rem .8rem;text-decoration:none;display:flex;align-items:center;gap:.35rem;transition:all .2s;" onmouseover="this.style.borderColor='var(--primario)';this.style.color='var(--primario)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">
-                    <i class="bi bi-person-vcard-fill"></i> Ver expediente
+                <a id="linkVerExpediente" href="ADMIN_bitacora-alumno.html" style="border:1.5px solid var(--border);background:#fff;color:var(--muted);border-radius:var(--radius-sm);font-size:.78rem;font-weight:600;padding:.35rem .8rem;text-decoration:none;display:flex;align-items:center;gap:.35rem;transition:all .2s;" onmouseover="this.style.borderColor='var(--primario)';this.style.color='var(--primario)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">
+                    <i class="bi bi-journal-text"></i> Ver expediente
                 </a>
             </div>
 
@@ -341,6 +342,7 @@
         document.getElementById('chatAvatar').textContent=iniciales;
         document.getElementById('chatNombre').textContent=nombre;
         document.getElementById('chatCuenta').textContent=`No. cuenta: ${cuenta}`;
+        const linkExp=document.getElementById('linkVerExpediente'); if(linkExp) linkExp.href=`ADMIN_bitacora-alumno.html?no_cuenta=${cuenta}`;
         const pb=document.getElementById('chatPrograma'); pb.textContent=programa; pb.className=tipo==='ss'?'badge-ss-sm':'badge-pp-sm';
         const thread=document.getElementById('chatThread');
         const msgs=convs[nombre]||[];

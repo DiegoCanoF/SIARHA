@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIARHA | Gestión de Periodos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primario:#501013;--primario-dk:#3a0b0d;--primario-lt:#f9f0f0;
+            --dorado:#C9A24D;--dorado-lt:#fdf8ee;--text:#1a1a2e;
+            --muted:#6b7280;--border:#e5e7eb;--bg:#f8f9fb;
+            --radius-card:16px;--radius-sm:10px;
+        }
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);}
+        /* NAV */
+        .navbar-custom{background:var(--primario);padding:.75rem 1.25rem;display:flex;align-items:center;gap:.75rem;position:sticky;top:0;z-index:1000;}
+        .navbar-brand-text{color:#fff;font-weight:800;font-size:1.05rem;letter-spacing:-.01em;}
+        .navbar-subtitle{font-size:.72rem;color:rgba(255,255,255,.7);font-weight:400;}
+        .navbar-toggler{background:none;border:none;color:#fff;font-size:1.2rem;cursor:pointer;padding:.3rem .5rem;border-radius:8px;}
+        .navbar-toggler:hover{background:rgba(255,255,255,.1);}
+        .offcanvas-custom{background:var(--primario-dk);color:#fff;width:280px!important;border-radius:var(--radius-card) 0 0 var(--radius-card);}
+        .offcanvas-custom .offcanvas-header{border-color:rgba(255,255,255,.12)!important;padding:1.25rem 1.5rem;}
+        .offcanvas-custom .nav-link{color:rgba(255,255,255,.8);font-weight:500;font-size:.9rem;padding:.65rem 1rem;border-radius:var(--radius-sm);display:flex;align-items:center;gap:.6rem;transition:background .2s,color .2s;}
+        .offcanvas-custom .nav-link:hover,.offcanvas-custom .nav-link.active{background:rgba(255,255,255,.12);color:#fff;}
+        .offcanvas-custom .nav-link.active{font-weight:700;}
+        .offcanvas-custom .nav-link.danger{color:#ff9090!important;}
+        .offcanvas-custom .nav-link.danger:hover{background:rgba(255,80,80,.15);}
+        .menu-divider{border-color:rgba(255,255,255,.12);margin:.5rem 0;}
+        /* MAIN */
+        main{padding:1.75rem 1.5rem;max-width:1100px;margin:0 auto;}
+        .page-header{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.75rem;}
+        .page-header h4{font-size:1.35rem;font-weight:800;}
+        .page-header p{color:var(--muted);font-size:.87rem;margin-top:.2rem;}
+        /* BOTONES */
+        .btn-primary-custom{display:inline-flex;align-items:center;gap:.45rem;background:var(--primario);color:#fff;border:none;border-radius:var(--radius-sm);padding:.55rem 1.15rem;font-weight:700;font-size:.85rem;cursor:pointer;transition:background .2s;}
+        .btn-primary-custom:hover{background:var(--primario-dk);}
+        .btn-outline-custom{display:inline-flex;align-items:center;gap:.45rem;background:#fff;color:var(--primario);border:1.5px solid var(--primario);border-radius:var(--radius-sm);padding:.5rem 1rem;font-weight:700;font-size:.85rem;cursor:pointer;transition:all .2s;}
+        .btn-outline-custom:hover{background:var(--primario-lt);}
+        .btn-danger-outline{display:inline-flex;align-items:center;gap:.45rem;background:#fff;color:#991b1b;border:1.5px solid #fca5a5;border-radius:var(--radius-sm);padding:.5rem 1rem;font-weight:700;font-size:.85rem;cursor:pointer;transition:all .2s;}
+        .btn-danger-outline:hover{background:#fee2e2;}
+        /* PERIODOS GRID */
+        .periodos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.25rem;margin-bottom:2rem;}
+        .periodo-card{background:#fff;border-radius:var(--radius-card);border:1.5px solid var(--border);padding:1.3rem;transition:box-shadow .2s,border-color .2s;position:relative;overflow:hidden;}
+        .periodo-card:hover{box-shadow:0 4px 20px rgba(80,16,19,.1);border-color:rgba(80,16,19,.2);}
+        .periodo-card.activo{border-color:var(--dorado);background:linear-gradient(135deg,#fff 80%,var(--dorado-lt));}
+        .periodo-card.cerrado{opacity:.75;}
+        .periodo-tag{position:absolute;top:1rem;right:1rem;font-size:.68rem;font-weight:800;padding:.25rem .65rem;border-radius:20px;letter-spacing:.03em;text-transform:uppercase;}
+        .tag-activo{background:var(--dorado-lt);color:#7a5a00;border:1px solid var(--dorado);}
+        .tag-cerrado{background:#f3f4f6;color:#6b7280;}
+        .tag-ss{background:var(--primario-lt);color:var(--primario);border:1px solid rgba(80,16,19,.2);}
+        .tag-pp{background:var(--dorado-lt);color:#7a5a00;border:1px solid rgba(201,162,77,.35);}
+        .tag-ambos{background:#ede9fe;color:#5b21b6;border:1px solid #c4b5fd;}
+        .periodo-nombre{font-size:1.05rem;font-weight:800;margin-bottom:.35rem;padding-right:5rem;}
+        .periodo-fechas{font-size:.78rem;color:var(--muted);margin-bottom:.75rem;display:flex;align-items:center;gap:.4rem;}
+        .periodo-stats{display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1rem;}
+        .stat-pill{background:var(--bg);border-radius:8px;padding:.35rem .7rem;font-size:.75rem;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:.3rem;}
+        .stat-pill i{font-size:.8rem;}
+        .periodo-actions{display:flex;gap:.5rem;flex-wrap:wrap;}
+        /* PANEL LATERAL */
+        .panel-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.38);z-index:1060;}
+        .panel-overlay.open{display:block;}
+        .panel-lateral{position:fixed;top:0;right:0;bottom:0;width:520px;max-width:100vw;background:#fff;z-index:1061;box-shadow:-8px 0 40px rgba(80,16,19,.2);display:flex;flex-direction:column;transform:translateX(110%);transition:transform .35s cubic-bezier(.4,0,.2,1);}
+        .panel-lateral.open{transform:translateX(0);}
+        .panel-head{background:var(--primario);color:#fff;padding:1.1rem 1.4rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+        .panel-head h5{font-size:1rem;font-weight:800;margin:0;}
+        .panel-close{background:none;border:none;color:rgba(255,255,255,.8);font-size:1.2rem;cursor:pointer;border-radius:6px;padding:.2rem;}
+        .panel-body{flex:1;overflow-y:auto;padding:1.4rem;}
+        .panel-footer{border-top:1px solid var(--border);padding:1rem 1.4rem;display:flex;gap:.75rem;background:#fff;flex-shrink:0;}
+        /* FORMS */
+        .sep-label{font-size:.7rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:1.2rem 0 .7rem;}
+        .form-label-sm{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.35rem;display:block;}
+        .form-field{border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.55rem .9rem;font-size:.87rem;font-family:inherit;color:var(--text);background:#fff;width:100%;outline:none;transition:border-color .2s,box-shadow .2s;}
+        .form-field:focus{border-color:var(--primario);box-shadow:0 0 0 3px rgba(80,16,19,.08);}
+        /* MODAL CIERRE */
+        .modal-siarha{display:none;position:fixed;inset:0;z-index:2000;align-items:center;justify-content:center;padding:1rem;}
+        .modal-siarha.open{display:flex;}
+        .modal-backdrop-t{position:fixed;inset:0;background:transparent;pointer-events:none;}
+        .modal-box{background:#fff;border-radius:var(--radius-card);box-shadow:0 24px 64px rgba(80,16,19,.25);max-width:460px;width:100%;z-index:1;overflow:hidden;animation:modalIn .25s ease;pointer-events:all;}
+        @keyframes modalIn{from{opacity:0;transform:scale(.94) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
+        .modal-head{padding:1.2rem 1.4rem 1rem;display:flex;align-items:center;gap:.75rem;}
+        .modal-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+        .modal-icon.danger{background:#fee2e2;color:#991b1b;}
+        .modal-icon.warning{background:#fef3c7;color:#92400e;}
+        .modal-head h5{font-size:1rem;font-weight:800;margin:0;}
+        .modal-body-{padding:0 1.4rem 1.2rem;font-size:.87rem;color:var(--muted);line-height:1.6;}
+        .modal-strip{background:var(--bg);border-radius:var(--radius-sm);padding:.75rem 1rem;margin:.75rem 0;display:flex;align-items:flex-start;gap:.6rem;font-size:.82rem;}
+        .modal-strip i{color:var(--dorado);font-size:1rem;flex-shrink:0;margin-top:.1rem;}
+        .modal-input-confirm{margin-top:.75rem;}
+        .modal-foot{padding:.9rem 1.4rem;border-top:1px solid var(--border);display:flex;gap:.6rem;justify-content:flex-end;}
+        .btn-modal-cancel{background:#fff;color:var(--muted);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-weight:600;font-size:.85rem;padding:.5rem 1.1rem;cursor:pointer;}
+        .btn-modal-danger{background:#991b1b;color:#fff;border:none;border-radius:var(--radius-sm);font-weight:700;font-size:.85rem;padding:.5rem 1.2rem;cursor:pointer;}
+        .btn-modal-danger:hover{background:#7f1d1d;}
+        .btn-modal-danger:disabled{opacity:.5;cursor:not-allowed;}
+        /* EMPTY */
+        .empty-state{text-align:center;padding:3rem 1rem;color:var(--muted);}
+        .empty-state i{font-size:2.5rem;display:block;margin-bottom:.75rem;opacity:.4;}
+        /* TOAST */
+        .toast-custom{position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;background:var(--primario);color:#fff;padding:.85rem 1.2rem;border-radius:var(--radius-sm);font-size:.87rem;font-weight:600;box-shadow:0 8px 24px rgba(80,16,19,.25);display:none;max-width:340px;}
+        .toast-custom.show{display:flex;gap:.5rem;align-items:flex-start;}
+        /* PROG TAGS */
+        .prog-pill{display:inline-flex;align-items:center;gap:.3rem;font-size:.72rem;font-weight:700;padding:.2rem .6rem;border-radius:20px;}
+        @media(max-width:640px){.panel-lateral{width:100%;}.periodos-grid{grid-template-columns:1fr;}}
+        /* ── Modal URs inactivas (advertencia al crear periodo) ── */
+        .modal-siarha{display:none;position:fixed;inset:0;z-index:2000;align-items:center;justify-content:center;padding:1rem;background:rgba(0,0,0,.45);}
+        .modal-siarha.open{display:flex;}
+        .modal-box{background:#fff;border-radius:var(--radius-card);box-shadow:0 24px 64px rgba(80,16,19,.25);max-width:560px;width:100%;position:relative;z-index:1;overflow:hidden;max-height:90vh;display:flex;flex-direction:column;}
+        .modal-head{padding:1.2rem 1.4rem .8rem;border-bottom:1px solid #E5E7EB;}
+        .modal-head h5{font-size:1.05rem;font-weight:800;margin:0;color:var(--primario);display:flex;align-items:center;gap:.5rem;}
+        .modal-head p{font-size:.82rem;color:var(--muted);margin:.5rem 0 0;line-height:1.5;}
+        .modal-body{padding:1rem 1.4rem;overflow-y:auto;flex:1;}
+        .modal-foot{padding:1rem 1.4rem;border-top:1px solid #E5E7EB;display:flex;gap:.5rem;justify-content:flex-end;flex-wrap:wrap;}
+        .ur-row{display:flex;align-items:center;gap:.7rem;padding:.65rem .8rem;border:1px solid #E5E7EB;border-radius:var(--radius-sm);margin-bottom:.4rem;cursor:pointer;transition:all .15s;}
+        .ur-row:hover{border-color:var(--primario);background:var(--primario-lt);}
+        .ur-row.checked{border-color:var(--primario);background:var(--primario-lt);}
+        .ur-row input{cursor:pointer;width:18px;height:18px;accent-color:var(--primario);}
+        .ur-row .ur-info{flex:1;min-width:0;}
+        .ur-row .ur-nombre{font-weight:700;font-size:.88rem;color:var(--text);}
+        .ur-row .ur-meta{font-size:.74rem;color:var(--muted);margin-top:.15rem;}
+        .ur-row .ur-cupo{font-size:.72rem;background:#fff;border:1px solid #E5E7EB;border-radius:20px;padding:.15rem .55rem;font-weight:700;color:var(--muted);}
+        .modal-actions-sel{display:flex;gap:.4rem;margin-bottom:.7rem;font-size:.78rem;}
+        .link-sel{background:none;border:none;color:var(--primario);text-decoration:underline;cursor:pointer;padding:0;font-weight:600;font-size:.78rem;}
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="navbar-custom">
+    <div class="d-flex align-items-center gap-2 flex-grow-1">
+        <img src="../assets/img/logo-uaeh.png" alt="UAEH" height="36" onerror="this.style.display='none'">
+        <div>
+            <div class="navbar-brand-text">SIARHA</div>
+            <div class="navbar-subtitle d-none d-md-block">Dirección de Servicio Social y Prácticas Profesionales</div>
+        </div>
+    </div>
+    <div class="d-flex align-items-center gap-2 ms-auto">
+        <div class="d-none d-md-flex align-items-center gap-2 text-white" style="font-size:.83rem;font-weight:600;opacity:.9;">
+            <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;"><i class="bi bi-person-fill"></i></div>
+            <span>Administrador</span>
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuAdmin"><i class="bi bi-list"></i></button>
+    </div>
+</nav>
+
+<!-- OFFCANVAS -->
+<div class="offcanvas offcanvas-end offcanvas-custom" tabindex="-1" id="menuAdmin">
+    <div class="offcanvas-header">
+        <div class="d-flex align-items-center gap-2">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;"><i class="bi bi-shield-fill"></i></div>
+            <div><div style="font-weight:700;font-size:.9rem;">Administrador</div><div style="font-size:.72rem;opacity:.7;">Panel de control</div></div>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="navbar-nav gap-1">
+            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link" href="ADMIN_alumnos.html"><i class="bi bi-people-fill"></i> Alumnos</a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link" href="ADMIN_gestion-ur.html"><i class="bi bi-building"></i> Unidades Receptoras</a></li>
+            <li data-visible="superadmin"><a class="nav-link" href="ADMIN_gestion-administradores.html"><i class="bi bi-person-gear"></i> Administradores</a></li>
+            <li data-visible="superadmin"><a class="nav-link active" href="ADMIN_periodos.html"><i class="bi bi-calendar-range-fill"></i> Periodos</a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link" href="ADMIN_reportes-globales.html"><i class="bi bi-bar-chart-fill"></i> Reportes</a></li>
+            <li><a class="nav-link" href="ADMIN_mensajes-admin.html"><i class="bi bi-chat-dots-fill"></i> Mensajes</a></li>
+            <hr class="menu-divider">
+            <li><a class="nav-link danger" href="../index.html"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
+        </ul>
+    </div>
+</div>
+
+<!-- PANEL LATERAL CREAR/EDITAR -->
+<div class="panel-overlay" id="panelOverlay" onclick="cerrarPanel()"></div>
+<div class="panel-lateral" id="panelLateral">
+    <div class="panel-head">
+        <h5 id="panelTitulo"><i class="bi bi-calendar-plus-fill me-2"></i>Nuevo periodo</h5>
+        <button class="panel-close" onclick="cerrarPanel()"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="panel-body">
+        <form id="formPeriodo" novalidate>
+            <div class="sep-label">Identificación</div>
+            <div class="row g-3">
+                <div class="col-12">
+                    <label class="form-label-sm">Nombre del periodo *</label>
+                    <input type="text" id="pNombre" class="form-field" placeholder="Ej: Servicio Social Enero–Julio 2026">
+                </div>
+                <div class="col-12">
+                    <label class="form-label-sm">Programa *</label>
+                    <select id="pPrograma" class="form-field">
+                        <option value="">Selecciona…</option>
+                        <option value="ss">Servicio Social</option>
+                        <option value="pp">Prácticas Profesionales</option>
+                    </select>
+                    <span style="font-size:.72rem;color:var(--muted);display:block;margin-top:.3rem;">Cada periodo es para un programa específico. Crea un periodo para SS y otro para PP si los necesitas en paralelo.</span>
+                </div>
+            </div>
+            <div class="sep-label">Duración</div>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label-sm">Fecha de inicio *</label>
+                    <input type="date" id="pInicio" class="form-field" onchange="calcDuracion()">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label-sm">Fecha de término *</label>
+                    <input type="date" id="pFin" class="form-field" onchange="calcDuracion()">
+                </div>
+                <div class="col-12" id="infoDuracion" style="display:none;">
+                    <div style="background:var(--primario-lt);border-radius:var(--radius-sm);padding:.6rem 1rem;font-size:.8rem;color:var(--primario);font-weight:600;">
+                        <i class="bi bi-clock-fill me-1"></i><span id="txtDuracion"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="sep-label">Horas</div>
+            <div class="row g-3">
+                <div class="col-12">
+                    <label class="form-label-sm">Horas requeridas *</label>
+                    <input type="number" id="pHoras" class="form-field" placeholder="480" min="1" max="2000" value="480">
+                    <span style="font-size:.72rem;color:var(--muted);display:block;margin-top:.3rem;">SS típico: 480 hrs · PP típico: 240 hrs</span>
+                </div>
+            </div>
+            <div id="errorPeriodo" style="display:none;background:#fee2e2;border-radius:var(--radius-sm);padding:.6rem .9rem;font-size:.82rem;color:#991b1b;font-weight:600;margin-top:1rem;">
+                <i class="bi bi-exclamation-circle-fill me-1"></i><span id="errorPeriodoTxt"></span>
+            </div>
+        </form>
+    </div>
+    <div class="panel-footer">
+        <button class="btn-primary-custom" onclick="guardarPeriodo()"><i class="bi bi-floppy-fill"></i> Guardar</button>
+        <button class="btn-outline-custom" onclick="cerrarPanel()"><i class="bi bi-x-circle"></i> Cancelar</button>
+    </div>
+</div>
+
+<!-- MODAL VERIFICAR CIERRE -->
+<div class="modal-siarha" id="modalVerificar">
+    <div class="modal-backdrop-t"></div>
+    <div class="modal-box">
+        <div class="modal-head">
+            <div class="modal-icon warning"><i class="bi bi-exclamation-triangle-fill"></i></div>
+            <h5 id="modalVerTitle">Verificar cierre de periodo</h5>
+        </div>
+        <div class="modal-body-">
+            <p id="modalVerMsg"></p>
+            <div id="modalVerEstados" class="modal-strip" style="flex-direction:column;gap:.4rem;"></div>
+            <div id="modalVerBloqueo" style="display:none;background:#fee2e2;border-radius:var(--radius-sm);padding:.75rem 1rem;font-size:.82rem;color:#991b1b;font-weight:600;margin-top:.75rem;">
+                <i class="bi bi-lock-fill me-1"></i><span id="modalVerBloqueoTxt"></span>
+            </div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn-modal-cancel" onclick="cerrarModalVerificar()">Cancelar</button>
+            <button class="btn-modal-danger" id="btnConfirmarCierre" onclick="paso2Cierre()" disabled>
+                <i class="bi bi-arrow-right me-1"></i> Continuar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CONFIRMACION FINAL -->
+<div class="modal-siarha" id="modalCierre">
+    <div class="modal-backdrop-t"></div>
+    <div class="modal-box">
+        <div class="modal-head">
+            <div class="modal-icon danger"><i class="bi bi-calendar-x-fill"></i></div>
+            <h5>Confirmar cierre definitivo</h5>
+        </div>
+        <div class="modal-body-">
+            <p>Esta acción es <strong>irreversible</strong>. Al cerrar el periodo:</p>
+            <div class="modal-strip">
+                <i class="bi bi-trash-fill" style="color:#991b1b;"></i>
+                <span>Todos los alumnos del periodo serán eliminados permanentemente de la base de datos.</span>
+            </div>
+            <div class="modal-strip">
+                <i class="bi bi-building-slash"></i>
+                <span>Todas las Unidades Receptoras involucradas pasarán a estado <strong>Inactiva</strong>.</span>
+            </div>
+            <div class="modal-input-confirm">
+                <label class="form-label-sm">Escribe <strong>CERRAR PERIODO</strong> para confirmar</label>
+                <input type="text" id="inputConfirmar" class="form-field" placeholder="CERRAR PERIODO"
+                       oninput="validarConfirmacion(this)">
+            </div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn-modal-cancel" onclick="cerrarModalCierre()">Cancelar</button>
+            <button class="btn-modal-danger" id="btnCierreFinal" onclick="ejecutarCierre()" disabled>
+                <i class="bi bi-calendar-x-fill me-1"></i> Cerrar periodo definitivamente
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-custom" id="toastMsg"></div>
+
+<!-- MAIN -->
+<main>
+    <div class="page-header">
+        <div>
+            <h4><i class="bi bi-calendar-range-fill me-2" style="color:var(--primario);"></i>Gestión de periodos</h4>
+            <p>Crea, edita y cierra los periodos académicos de Servicio Social y Prácticas Profesionales.</p>
+        </div>
+        <button class="btn-primary-custom" onclick="abrirPanel(null)">
+            <i class="bi bi-plus-lg"></i> Nuevo periodo
+        </button>
+    </div>
+
+    <!-- ACTIVOS -->
+    <div class="sep-label" style="font-size:.78rem;">Periodos activos</div>
+    <div class="periodos-grid" id="gridActivos">
+        <div class="empty-state"><i class="bi bi-calendar2-x"></i><p>Cargando…</p></div>
+    </div>
+
+    <!-- CERRADOS -->
+    <div class="sep-label" style="font-size:.78rem;margin-top:1rem;">Periodos cerrados</div>
+    <div class="periodos-grid" id="gridCerrados">
+        <div class="empty-state"><i class="bi bi-archive"></i><p>Sin periodos cerrados.</p></div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/admin-guard.js"></script>
+<script>
+// ── ESTADO ──────────────────────────────────────────────────────
+let periodoEditandoId = null;
+let periodoCerrandoId = null;
+
+// ── CARGAR PERIODOS ──────────────────────────────────────────────
+async function cargarPeriodos() {
+    try {
+        const res  = await apiFetch('/api/periodos');
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Error');
+
+        const activos  = (data.periodos || []).filter(p => p.activo);
+        const cerrados = (data.periodos || []).filter(p => !p.activo);
+
+        renderGrid('gridActivos',  activos,  'No hay periodos activos. Crea uno nuevo.');
+        renderGrid('gridCerrados', cerrados, 'No hay periodos cerrados.');
+    } catch(e) {
+        showToast('Error al cargar periodos: ' + e.message, 'error');
+    }
+}
+
+function renderGrid(id, periodos, emptyMsg) {
+    const grid = document.getElementById(id);
+    if (!periodos.length) {
+        grid.innerHTML = `<div class="empty-state"><i class="bi bi-calendar2-x"></i><p>${emptyMsg}</p></div>`;
+        return;
+    }
+    grid.innerHTML = periodos.map(p => cardPeriodo(p)).join('');
+}
+
+function cardPeriodo(p) {
+    const progLabel = {ss:'Servicio Social',pp:'Prácticas Prof.',ambos:'SS y PP'};
+    const progClass = {ss:'tag-ss',pp:'tag-pp',ambos:'tag-ambos'};
+    const ini = new Date(p.fecha_inicio).toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'});
+    const fin = new Date(p.fecha_fin).toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'});
+    const acciones = p.activo ? `
+        <button class="btn-outline-custom" style="font-size:.78rem;padding:.35rem .75rem;" onclick="abrirPanel(${JSON.stringify(p).replace(/"/g,'&quot;')})">
+            <i class="bi bi-pencil-fill"></i> Editar
+        </button>
+        <button class="btn-danger-outline" style="font-size:.78rem;padding:.35rem .75rem;" onclick="iniciarCierre(${p.id_periodo})">
+            <i class="bi bi-calendar-x-fill"></i> Cerrar periodo
+        </button>` : `
+        <span style="font-size:.78rem;color:var(--muted);"><i class="bi bi-archive me-1"></i>Cerrado</span>
+        <button class="btn-danger-outline" style="font-size:.78rem;padding:.35rem .75rem;margin-left:.5rem;"
+                data-id="${p.id_periodo}" data-nombre="${escapeHTML(p.nombre_periodo)}"
+                onclick="confirmarEliminarPeriodo(this)">
+            <i class="bi bi-trash-fill"></i> Eliminar
+        </button>`;
+
+    return `<div class="periodo-card ${p.activo ? 'activo' : 'cerrado'}">
+        <span class="periodo-tag ${p.activo ? 'tag-activo' : 'tag-cerrado'}">${p.activo ? 'Activo' : 'Cerrado'}</span>
+        <div class="periodo-nombre">${p.nombre_periodo}</div>
+        <div class="periodo-fechas"><i class="bi bi-calendar3"></i> ${ini} → ${fin}</div>
+        <div class="periodo-stats">
+            <div class="stat-pill"><i class="bi bi-mortarboard-fill"></i> ${p.total_alumnos || 0} alumnos</div>
+            <div class="stat-pill"><i class="bi bi-clock-fill"></i> ${p.horas_requeridas} hrs</div>
+            <span class="prog-pill ${progClass[p.programa]}">${progLabel[p.programa]}</span>
+        </div>
+        <div class="periodo-actions">${acciones}</div>
+    </div>`;
+}
+
+// ── PANEL CREAR/EDITAR ───────────────────────────────────────────
+function abrirPanel(periodo) {
+    periodoEditandoId = periodo ? periodo.id_periodo : null;
+    document.getElementById('panelTitulo').innerHTML = periodo
+        ? '<i class="bi bi-pencil-fill me-2"></i>Editar periodo'
+        : '<i class="bi bi-calendar-plus-fill me-2"></i>Nuevo periodo';
+
+    document.getElementById('formPeriodo').reset();
+    document.getElementById('errorPeriodo').style.display = 'none';
+    document.getElementById('infoDuracion').style.display = 'none';
+
+    if (periodo) {
+        document.getElementById('pNombre').value   = periodo.nombre_periodo;
+        document.getElementById('pPrograma').value = periodo.programa;
+        document.getElementById('pInicio').value   = periodo.fecha_inicio?.substring(0,10) || '';
+        document.getElementById('pFin').value      = periodo.fecha_fin?.substring(0,10) || '';
+        document.getElementById('pHoras').value    = periodo.horas_requeridas;
+        calcDuracion();
+    } else {
+        const hoy = new Date().toISOString().substring(0,10);
+        document.getElementById('pInicio').min = hoy;
+    }
+
+    document.getElementById('panelOverlay').classList.add('open');
+    document.getElementById('panelLateral').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function cerrarPanel() {
+    document.getElementById('panelOverlay').classList.remove('open');
+    document.getElementById('panelLateral').classList.remove('open');
+    document.body.style.overflow = '';
+    periodoEditandoId = null;
+}
+
+function calcDuracion() {
+    const ini = document.getElementById('pInicio').value;
+    const fin = document.getElementById('pFin').value;
+    const div = document.getElementById('infoDuracion');
+    if (!ini || !fin) { div.style.display = 'none'; return; }
+    const dias = Math.round((new Date(fin) - new Date(ini)) / 86400000);
+    if (dias <= 0) { div.style.display = 'none'; return; }
+    const semanas = Math.floor(dias / 7);
+    document.getElementById('txtDuracion').textContent =
+        `${dias} días (${semanas} semanas)`;
+    div.style.display = 'block';
+}
+
+async function guardarPeriodo() {
+    const nombre   = document.getElementById('pNombre').value.trim();
+    const programa = document.getElementById('pPrograma').value;
+    const inicio   = document.getElementById('pInicio').value;
+    const fin      = document.getElementById('pFin').value;
+    const horas    = parseInt(document.getElementById('pHoras').value);
+    const errDiv   = document.getElementById('errorPeriodo');
+    const errTxt   = document.getElementById('errorPeriodoTxt');
+
+    const mostrarError = (msg) => { errTxt.textContent = msg; errDiv.style.display = 'block'; };
+    errDiv.style.display = 'none';
+
+    if (!nombre)   return mostrarError('El nombre del periodo es requerido.');
+    if (!programa) return mostrarError('Selecciona el programa.');
+    if (!inicio || !fin) return mostrarError('Las fechas de inicio y término son requeridas.');
+    if (new Date(fin) <= new Date(inicio)) return mostrarError('La fecha de término debe ser posterior a la de inicio.');
+    if (!horas || horas < 1) return mostrarError('Las horas requeridas deben ser mayores a 0.');
+
+    try {
+        const url    = periodoEditandoId ? `/api/periodos/${periodoEditandoId}` : '/api/periodos';
+        const method = periodoEditandoId ? 'PUT' : 'POST';
+        const res    = await apiFetch(url, { method, body: JSON.stringify({
+            nombre_periodo: nombre, programa, fecha_inicio: inicio,
+            fecha_fin: fin, horas_requeridas: horas
+        })});
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Error al guardar');
+
+        showToast(periodoEditandoId ? 'Periodo actualizado.' : 'Periodo creado.', 'success');
+        cerrarPanel();
+        cargarPeriodos();
+
+        // Si el backend devolvió advertencia con URs inactivas, abrir modal
+        if (!periodoEditandoId && data.advertencia && Array.isArray(data.advertencia.urs) && data.advertencia.urs.length > 0) {
+            abrirModalUrsInactivas(data.advertencia);
+        }
+    } catch(e) { mostrarError(e.message); }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// MODAL: URs INACTIVAS detectadas al crear periodo
+// ═══════════════════════════════════════════════════════════════════
+function abrirModalUrsInactivas(advertencia) {
+    const lista = document.getElementById('modalUrsLista');
+    const msg   = document.getElementById('modalUrsMsg');
+
+    msg.textContent = advertencia.mensaje || msg.textContent;
+
+    lista.innerHTML = advertencia.urs.map(u => {
+        const prog = u.programas_aceptados === 'ambos' ? 'SS + PP'
+                   : u.programas_aceptados === 'ss'    ? 'Servicio Social'
+                   : 'Prácticas Profesionales';
+        return `
+            <label class="ur-row" data-id="${u.id_ur}" onclick="toggleUrRow(this)">
+                <input type="checkbox" data-id="${u.id_ur}" checked onclick="event.stopPropagation();toggleUrRow(this.closest('.ur-row'),true)">
+                <div class="ur-info">
+                    <div class="ur-nombre">${escapeHTML(u.nombre_ur)}</div>
+                    <div class="ur-meta">Programa: ${prog}</div>
+                </div>
+                <span class="ur-cupo"><i class="bi bi-people-fill"></i> ${u.cupo_maximo} lugares</span>
+            </label>
+        `;
+    }).join('');
+
+    // Marcar visualmente todas como seleccionadas inicialmente
+    lista.querySelectorAll('.ur-row').forEach(r => r.classList.add('checked'));
+
+    document.getElementById('modalUrsInactivas').classList.add('open');
+}
+
+function cerrarModalUrs() {
+    document.getElementById('modalUrsInactivas').classList.remove('open');
+}
+
+function toggleUrRow(rowEl, fromCheckbox) {
+    const cb = rowEl.querySelector('input[type=checkbox]');
+    if (!fromCheckbox) cb.checked = !cb.checked;
+    rowEl.classList.toggle('checked', cb.checked);
+}
+
+function seleccionarTodasUrs(todas) {
+    document.querySelectorAll('#modalUrsLista .ur-row').forEach(row => {
+        row.querySelector('input[type=checkbox]').checked = todas;
+        row.classList.toggle('checked', todas);
+    });
+}
+
+async function activarUrsSeleccionadas(nuevoEstado) {
+    const ids = Array.from(document.querySelectorAll('#modalUrsLista input[type=checkbox]:checked'))
+        .map(cb => parseInt(cb.dataset.id))
+        .filter(x => !isNaN(x));
+
+    if (ids.length === 0) {
+        showToast('No has seleccionado ninguna UR.', 'error');
+        return;
+    }
+
+    try {
+        const res  = await apiFetch('/api/unidades-receptoras/activar-masivo', {
+            method: 'POST',
+            body: JSON.stringify({ id_urs: ids, nuevo_estado: nuevoEstado })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Error');
+
+        showToast(data.mensaje, 'success');
+        cerrarModalUrs();
+    } catch (e) {
+        showToast('Error al actualizar URs: ' + e.message, 'error');
+    }
+}
+
+function escapeHTML(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// ELIMINAR PERIODO CERRADO
+// ═══════════════════════════════════════════════════════════════════
+let periodoEliminandoId = null;
+
+function confirmarEliminarPeriodo(btn) {
+    const id     = parseInt(btn.dataset.id);
+    const nombre = btn.dataset.nombre || 'este periodo';
+    periodoEliminandoId = id;
+    document.getElementById('modalEliminarPeriodoMsg').textContent =
+        `¿Estás seguro de eliminar el periodo "${nombre}"? Esta acción no se puede deshacer.`;
+    document.getElementById('modalEliminarPeriodo').classList.add('open');
+}
+
+function cerrarModalEliminarPeriodo() {
+    document.getElementById('modalEliminarPeriodo').classList.remove('open');
+    periodoEliminandoId = null;
+}
+
+async function ejecutarEliminarPeriodo() {
+    if (!periodoEliminandoId) return;
+    const id = periodoEliminandoId;
+    cerrarModalEliminarPeriodo();
+    try {
+        const res  = await apiFetch(`/api/periodos/${id}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (!res.ok) {
+            showToast(data.error || 'Error al eliminar.', 'error');
+            return;
+        }
+        showToast(data.mensaje, 'success');
+        await cargarPeriodos();
+    } catch (e) {
+        console.error('ejecutarEliminarPeriodo:', e);
+        showToast('Error de conexión: ' + (e.message || 'desconocido'), 'error');
+    }
+}
+
+// ── CIERRE DE PERIODO — 3 PASOS ──────────────────────────────────
+async function iniciarCierre(id) {
+    periodoCerrandoId = id;
+    try {
+        const res  = await apiFetch(`/api/periodos/${id}/verificar-cierre`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Error');
+
+        document.getElementById('modalVerTitle').textContent = `Cerrar: ${data.periodo.nombre_periodo}`;
+        document.getElementById('modalVerMsg').textContent =
+            `Este periodo tiene ${data.total_alumnos} alumno(s) y afectará ${data.total_urs_afectadas} Unidad(es) Receptora(s).`;
+
+        // Conteos por estado
+        const estadoLabel = {activo:'Activos',revision:'En revisión',finalizado:'Finalizados',pendiente:'Pendientes',baja:'Dados de baja'};
+        const estadoIcon  = {activo:'bi-person-fill text-warning',revision:'bi-hourglass-split text-info',finalizado:'bi-check-circle-fill text-success',pendiente:'bi-clock-fill text-secondary',baja:'bi-x-circle-fill text-danger'};
+        const conteos = data.conteos || {};
+        const html = Object.entries(conteos).map(([k,v]) =>
+            `<div style="display:flex;align-items:center;gap:.5rem;"><i class="bi ${estadoIcon[k]||'bi-circle'}"></i><span><strong>${v}</strong> ${estadoLabel[k]||k}</span></div>`
+        ).join('');
+        document.getElementById('modalVerEstados').innerHTML = html || '<span>Sin alumnos registrados.</span>';
+
+        const bloq = document.getElementById('modalVerBloqueo');
+        const btnCont = document.getElementById('btnConfirmarCierre');
+        if (data.puede_cerrar) {
+            bloq.style.display = 'none';
+            btnCont.disabled = false;
+        } else {
+            document.getElementById('modalVerBloqueoTxt').textContent = data.bloqueo;
+            bloq.style.display = 'block';
+            btnCont.disabled = true;
+        }
+        document.getElementById('modalVerificar').classList.add('open');
+    } catch(e) { showToast(e.message, 'error'); }
+}
+
+function cerrarModalVerificar() {
+    document.getElementById('modalVerificar').classList.remove('open');
+}
+
+function paso2Cierre() {
+    cerrarModalVerificar();
+    document.getElementById('inputConfirmar').value = '';
+    document.getElementById('btnCierreFinal').disabled = true;
+    document.getElementById('modalCierre').classList.add('open');
+}
+
+function validarConfirmacion(input) {
+    document.getElementById('btnCierreFinal').disabled = input.value.trim() !== 'CERRAR PERIODO';
+}
+
+function cerrarModalCierre() {
+    document.getElementById('modalCierre').classList.remove('open');
+}
+
+async function ejecutarCierre() {
+    try {
+        const res  = await apiFetch(`/api/periodos/${periodoCerrandoId}/cerrar`, {
+            method: 'POST',
+            body: JSON.stringify({ confirmacion: 'CONFIRMAR_CIERRE' })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Error al cerrar');
+        cerrarModalCierre();
+        const r = data.reporte;
+        showToast(`Periodo cerrado. ${r.total_alumnos_eliminados} alumnos eliminados · ${r.urs_pasadas_a_inactiva} URs → inactivas.`, 'success');
+        cargarPeriodos();
+    } catch(e) { showToast(e.message, 'error'); }
+}
+
+// ── TOAST ────────────────────────────────────────────────────────
+function showToast(msg, tipo) {
+    const t = document.getElementById('toastMsg');
+    const icon = tipo === 'success' ? 'bi-check-circle-fill' : tipo === 'error' ? 'bi-exclamation-triangle-fill' : 'bi-info-circle-fill';
+    const bg   = tipo === 'success' ? '#1f6b3a' : tipo === 'error' ? '#9b1c1c' : '#501013';
+    t.style.background = bg;
+    t.innerHTML = `<i class="bi ${icon}" style="font-size:1rem;flex-shrink:0;"></i><span>${msg}</span>`;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 4500);
+}
+
+// ── INIT ─────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => { cargarPeriodos(); });
+</script>
+<!-- ── MODAL: URs INACTIVAS DETECTADAS AL CREAR PERIODO ── -->
+<div class="modal-siarha" id="modalUrsInactivas" onclick="if(event.target===this)cerrarModalUrs()">
+    <div class="modal-box">
+        <div class="modal-head">
+            <h5><i class="bi bi-exclamation-triangle-fill" style="color:#d97706;"></i> <span id="modalUrsTitulo">Unidades receptoras inactivas</span></h5>
+            <p id="modalUrsMsg">El periodo se creó correctamente, pero hay unidades receptoras en estado inactivo que aceptan este programa. Selecciona cuáles quieres reactivar para que participen.</p>
+        </div>
+        <div class="modal-body">
+            <div class="modal-actions-sel">
+                <button class="link-sel" onclick="seleccionarTodasUrs(true)">Seleccionar todas</button>
+                <span style="color:#cbd5e1;">·</span>
+                <button class="link-sel" onclick="seleccionarTodasUrs(false)">Quitar todas</button>
+            </div>
+            <div id="modalUrsLista"></div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn-outline-custom" onclick="cerrarModalUrs()">Omitir</button>
+            <button class="btn-outline-custom" onclick="activarUrsSeleccionadas('suspendida')" style="border-color:#d97706;color:#d97706;">
+                <i class="bi bi-pause-circle-fill"></i> Suspender seleccionadas
+            </button>
+            <button class="btn-primary-custom" onclick="activarUrsSeleccionadas('activa')">
+                <i class="bi bi-check-circle-fill"></i> Activar seleccionadas
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ── MODAL: CONFIRMAR ELIMINAR PERIODO ── -->
+<div class="modal-siarha" id="modalEliminarPeriodo" onclick="if(event.target===this)cerrarModalEliminarPeriodo()">
+    <div class="modal-box" style="max-width:440px;">
+        <div class="modal-head">
+            <h5><i class="bi bi-trash-fill" style="color:#991b1b;"></i> Eliminar periodo</h5>
+            <p id="modalEliminarPeriodoMsg">¿Estás seguro de eliminar este periodo cerrado? Esta acción no se puede deshacer.</p>
+        </div>
+        <div class="modal-foot">
+            <button class="btn-outline-custom" onclick="cerrarModalEliminarPeriodo()">Cancelar</button>
+            <button class="btn-primary-custom" style="background:#991b1b;" onclick="ejecutarEliminarPeriodo()">
+                <i class="bi bi-trash-fill"></i> Sí, eliminar
+            </button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -232,7 +232,7 @@
     </div>
 
 <!-- ── PANEL LATERAL ADMINISTRADOR ── -->
-<div class="panel-overlay" id="panelOverlay" onclick="cerrarForm()"></div>
+<div class="panel-overlay" id="panelOverlay" onclick="if(!document.querySelector('.modal-siarha.open'))cerrarForm()"></div>
 <div class="panel-lateral" id="panelLateral">
     <div class="panel-head">
         <h5 id="formTitle"><i class="bi bi-person-plus-fill me-2"></i>Nuevo administrador</h5>
@@ -876,6 +876,7 @@ let _modalAdminActivo = true;
 
 function abrirModalEliminar() {
     _modalAdminId = editandoId;
+    window._eliminarAdminId = editandoId;
     const nombre  = window._adminEditandoNombre || document.getElementById('aNombre')?.value || 'este administrador';
     document.getElementById('modalEliminarTitulo').textContent = 'Eliminar a ' + nombre;
     document.getElementById('modalEliminarMsg').textContent =
@@ -887,9 +888,11 @@ function cerrarModalEliminar() {
 }
 
 async function ejecutarEliminar() {
+    const idAEliminar = _modalAdminId || window._eliminarAdminId;
     cerrarModalEliminar();
+    if (!idAEliminar) { showToast('Error: no se encontró el administrador.', 'error'); return; }
     try {
-        const res  = await apiFetch('/api/admins/' + _modalAdminId, { method: 'DELETE' });
+        const res  = await apiFetch('/api/admins/' + idAEliminar, { method: 'DELETE' });
         const data = await res.json();
         if (!res.ok) { showToast(data.error || 'Error al eliminar.', 'error'); return; }
         cerrarForm();

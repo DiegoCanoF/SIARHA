@@ -75,6 +75,23 @@
         .badge-ur-sus{background:#fee2e2;color:#991b1b;border-radius:20px;font-size:.73rem;font-weight:700;padding:.26rem .68rem;}
         .badge-ss{background:var(--primario-lt);color:var(--primario);border-radius:20px;font-size:.71rem;font-weight:700;padding:.22rem .6rem;border:1px solid rgba(80,16,19,.18);}
         .badge-pp{background:var(--dorado-lt);color:#7a5a00;border-radius:20px;font-size:.71rem;font-weight:700;padding:.22rem .6rem;border:1px solid rgba(201,162,77,.35);}
+        /* Tarjetas de programa en el formulario UR */
+        .prog-ur-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.55rem;margin-top:.3rem;}
+        .prog-ur-card{border:2px solid var(--border);border-radius:var(--radius-sm);padding:.7rem .75rem;cursor:pointer;transition:all .2s;background:#fff;display:flex;align-items:center;gap:.6rem;position:relative;}
+        .prog-ur-card:hover{border-color:var(--primario-mid);}
+        .prog-ur-card.selected-ss{border-color:var(--primario);background:var(--primario-lt);}
+        .prog-ur-card.selected-pp{border-color:var(--dorado);background:var(--dorado-lt);}
+        .prog-ur-card.selected-ambos{border-color:var(--primario);background:var(--primario-lt);}
+        .prog-ur-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0;}
+        .prog-ur-icon.ss{background:var(--primario-lt);color:var(--primario);}
+        .prog-ur-icon.pp{background:var(--dorado-lt);color:#7a5a00;}
+        .prog-ur-icon.ambos{background:var(--primario-lt);color:var(--primario);}
+        .prog-ur-label{font-size:.8rem;font-weight:700;color:var(--text);}
+        .prog-ur-hrs{font-size:.68rem;color:var(--muted);margin-top:.1rem;}
+        .prog-ur-check{position:absolute;top:.35rem;right:.45rem;width:13px;height:13px;background:var(--primario);border-radius:50%;display:none;align-items:center;justify-content:center;}
+        .prog-ur-card.selected-ss .prog-ur-check,
+        .prog-ur-card.selected-pp .prog-ur-check,
+        .prog-ur-card.selected-ambos .prog-ur-check{display:flex;}
         /* OCUPACIÓN */
         .ocup-wrap{display:flex;align-items:center;gap:.5rem;min-width:110px;}
         .ocup-bar{flex:1;height:6px;background:var(--border);border-radius:99px;overflow:hidden;}
@@ -146,6 +163,24 @@
         @media(max-width:480px){.notif-panel{width:100%;border-radius:0;}}
         .campo-ok-ur{border-color:#16a34a!important;}
         .campo-err-ur{border-color:#dc2626!important;box-shadow:0 0 0 3px rgba(220,38,38,.1)!important;}
+
+        /* ── MODAL CUSTOM (z-index sobre el panel lateral) ── */
+        .modal-siarha{display:none;position:fixed;inset:0;z-index:2000;align-items:center;justify-content:center;padding:1rem;background:rgba(0,0,0,.45);}
+        .modal-siarha.open{display:flex;}
+        .modal-box{background:#fff;border-radius:var(--radius-card);box-shadow:0 24px 64px rgba(80,16,19,.25);max-width:440px;width:100%;overflow:hidden;animation:modalIn .25s ease;}
+        @keyframes modalIn{from{opacity:0;transform:scale(.94) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
+        .modal-box-head{padding:1.2rem 1.4rem 1rem;display:flex;align-items:center;gap:.75rem;}
+        .modal-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+        .modal-icon.danger{background:#fee2e2;color:#991b1b;}
+        .modal-box-head h5{font-size:1rem;font-weight:800;margin:0;color:var(--text);}
+        .modal-box-body{padding:0 1.4rem 1.2rem;font-size:.87rem;color:var(--muted);line-height:1.6;}
+        .modal-info-strip{background:var(--bg);border-radius:var(--radius-sm);padding:.75rem 1rem;margin-top:.75rem;display:flex;align-items:center;gap:.6rem;font-size:.82rem;}
+        .modal-info-strip i{color:var(--dorado);font-size:1rem;flex-shrink:0;}
+        .modal-box-foot{padding:.9rem 1.4rem;border-top:1px solid var(--border);display:flex;gap:.6rem;justify-content:flex-end;}
+        .btn-modal-cancel{background:#fff;color:var(--muted);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-weight:600;font-size:.85rem;padding:.5rem 1.1rem;cursor:pointer;transition:border-color .2s,color .2s;}
+        .btn-modal-cancel:hover{border-color:var(--primario);color:var(--primario);}
+        .btn-modal-danger{background:#991b1b;color:#fff;border:none;border-radius:var(--radius-sm);font-weight:700;font-size:.85rem;padding:.5rem 1.2rem;cursor:pointer;transition:background .2s;}
+        .btn-modal-danger:hover{background:#7f1d1d;}
     </style>
 </head>
 <body>
@@ -188,6 +223,7 @@
             <li data-visible="superadmin,admin_area"><a class="nav-link" href="ADMIN_alumnos.html"><i class="bi bi-people-fill"></i> Alumnos</a></li>
             <li data-visible="superadmin,admin_area"><a class="nav-link active" href="ADMIN_gestion-ur.html"><i class="bi bi-building"></i> Unidades Receptoras</a></li>
             <li data-visible="superadmin"><a class="nav-link" href="ADMIN_gestion-administradores.html"><i class="bi bi-person-gear"></i> Administradores</a></li>
+            <li data-visible="superadmin"><a class="nav-link" href="ADMIN_periodos.html"><i class="bi bi-calendar-range-fill"></i> Periodos</a></li>
             <li data-visible="superadmin,admin_area"><a class="nav-link" href="ADMIN_reportes-globales.html"><i class="bi bi-bar-chart-fill"></i> Reportes Globales</a></li>
             <li><a class="nav-link" href="ADMIN_mensajes-admin.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge">3</span></a></li>
             <hr class="menu-divider">
@@ -258,7 +294,7 @@
             <div class="resumen-item"><div class="r-val" style="color:#7a5a00;" id="resActivas">—</div><div class="r-lab">Activas</div></div>
             <div class="resumen-item"><div class="r-val" style="color:var(--muted);" id="resInactivas">—</div><div class="r-lab">Inactivas</div></div>
             <div class="resumen-item"><div class="r-val" style="color:#991b1b;" id="resSuspendidas">—</div><div class="r-lab">Suspendidas</div></div>
-            <div class="resumen-item"><div class="r-val" id="resLugares">—</div><div class="r-lab">Lugares ocupados</div></div>
+            <div class="resumen-item"><div class="r-val" id="resLugares">—</div><div class="r-lab" id="resLugaresLab">Lugares ocupados</div></div>
         </div>
 
         <!-- TABLA -->
@@ -325,57 +361,92 @@
             <div class="sep-label">Configuración</div>
 
             <div class="row g-3">
-                <div class="col-md-4">
+                <div class="col-12">
                     <label class="form-label-sm">Cupo máximo <span style="color:var(--primario);">*</span></label>
                     <input type="number" id="urCupo" class="form-field" value="15" min="1" max="200"
                            oninput="this.value=Math.max(1,Math.min(200,parseInt(this.value)||1))">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label-sm">Horas SS</label>
-                    <input type="number" id="urHoraSS" class="form-field" value="480" min="1" max="2000"
-                           oninput="this.value=Math.max(1,parseInt(this.value)||1)">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label-sm">Horas PP</label>
-                    <input type="number" id="urHoraPP" class="form-field" value="240" min="1" max="2000"
-                           oninput="this.value=Math.max(1,parseInt(this.value)||1)">
+                    <span style="font-size:.72rem;color:var(--muted);display:block;margin-top:.2rem;">Número total de alumnos que puede recibir esta UR.</span>
                 </div>
                 <div class="col-12">
                     <label class="form-label-sm">Programas aceptados <span style="color:var(--primario);">*</span></label>
-                    <select id="urProgramas" class="form-field">
-                        <option value="ambos">Ambos (SS y PP)</option>
-                        <option value="ss">Solo Servicio Social</option>
-                        <option value="pp">Solo Prácticas Prof.</option>
-                    </select>
+                    <input type="hidden" id="urProgramas" value="ambos">
+                    <div class="prog-ur-grid">
+                        <div class="prog-ur-card selected-ambos" id="puc-ambos" onclick="selProgUR('ambos')">
+                            <span class="prog-ur-check"><i class="bi bi-check-lg" style="color:#fff;font-size:.45rem;"></i></span>
+                            <div class="prog-ur-icon ambos"><i class="bi bi-journal-check"></i></div>
+                            <div>
+                                <div class="prog-ur-label">Ambos</div>
+                                <div class="prog-ur-hrs">SS · 480 h &nbsp;PP · 240 h</div>
+                            </div>
+                        </div>
+                        <div class="prog-ur-card" id="puc-ss" onclick="selProgUR('ss')">
+                            <span class="prog-ur-check"><i class="bi bi-check-lg" style="color:#fff;font-size:.45rem;"></i></span>
+                            <div class="prog-ur-icon ss"><i class="bi bi-journal-check"></i></div>
+                            <div>
+                                <div class="prog-ur-label">Servicio Social</div>
+                                <div class="prog-ur-hrs">480 horas mín.</div>
+                            </div>
+                        </div>
+                        <div class="prog-ur-card" id="puc-pp" onclick="selProgUR('pp')">
+                            <span class="prog-ur-check"><i class="bi bi-check-lg" style="color:#fff;font-size:.45rem;"></i></span>
+                            <div class="prog-ur-icon pp"><i class="bi bi-briefcase-fill"></i></div>
+                            <div>
+                                <div class="prog-ur-label">Prácticas Prof.</div>
+                                <div class="prog-ur-hrs">240 horas mín.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <span style="font-size:.72rem;color:var(--muted);display:block;margin-top:.4rem;">Las horas son fijas según el Reglamento UAEH (Art. 8 y 12).</span>
                 </div>
             </div>
 
-            <div class="sep-label">Acceso al sistema</div>
-
-            <div class="row g-3" id="seccionContrasena">
-                <div class="col-12" id="bloqueContrasena" style="display:none;">
-                    <!-- Al editar: cambio opcional de contraseña -->
-                    <label class="form-label-sm">Nueva contraseña <span style="color:var(--muted);font-weight:400;text-transform:none;">(dejar vacío para no cambiar)</span></label>
-                    <div style="position:relative;">
-                        <input type="password" id="urContrasena" class="form-field" placeholder="Mínimo 8 caracteres"
-                               oninput="validarContrasenaUR(this)" style="padding-right:2.5rem;">
-                        <button type="button" onclick="togglePassUR()" style="position:absolute;right:.6rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;">
-                            <i class="bi bi-eye-fill" id="iconoOjoUR"></i>
-                        </button>
-                    </div>
-                    <span class="field-hint-ur" id="hintPassUR" style="font-size:.72rem;color:var(--muted);display:block;margin-top:.2rem;">Mínimo 8 caracteres.</span>
+            <div class="sep-label">Encargado de área</div>
+            <div style="background:var(--primario-lt);border:1px solid rgba(80,16,19,.15);border-radius:var(--radius-sm);padding:.65rem .9rem;margin-bottom:.85rem;font-size:.78rem;color:var(--primario);display:flex;gap:.5rem;align-items:flex-start;">
+                <i class="bi bi-info-circle-fill" style="flex-shrink:0;margin-top:.05rem;"></i>
+                <span>Esta persona tendrá acceso al sistema para gestionar su UR. Sus credenciales se usarán para iniciar sesión.</span>
+            </div>
+            <div class="row g-3">
+                <div class="col-md-5">
+                    <label class="form-label-sm">Nombre <span style="color:var(--primario);">*</span></label>
+                    <input type="text" id="jefeNombre" class="form-field" placeholder="Nombre(s)">
                 </div>
-                <div class="col-12" id="bloqueNuevaUR" style="display:none;">
-                    <!-- Al crear: contraseña obligatoria -->
-                    <label class="form-label-sm">Contraseña <span style="color:var(--primario);">*</span></label>
+                <div class="col-md-4">
+                    <label class="form-label-sm">Apellido paterno</label>
+                    <input type="text" id="jefeApellidoP" class="form-field" placeholder="Apellido paterno">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label-sm">Apellido materno</label>
+                    <input type="text" id="jefeApellidoM" class="form-field" placeholder="Materno">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label-sm">Correo personal <span style="color:var(--primario);">*</span></label>
+                    <input type="email" id="jefeEmail" class="form-field" placeholder="encargado@correo.com"
+                           oninput="validarEmailUR(this)" onblur="validarEmailUR(this)">
+                    <span style="font-size:.72rem;color:var(--muted);display:block;margin-top:.2rem;">Correo de contacto y acceso al sistema.</span>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label-sm">Teléfono</label>
+                    <input type="tel" id="jefeTelefono" class="form-field" placeholder="7710000000"
+                           maxlength="10" inputmode="numeric"
+                           oninput="this.value=this.value.replace(/\D/g,'')">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label-sm">Cargo</label>
+                    <input type="text" id="jefeCargo" class="form-field" placeholder="Ej. Coordinador">
+                </div>
+                <input type="hidden" id="jefeId">
+                <!-- Contraseña del encargado — solo al crear; al editar es opcional -->
+                <div class="col-12" id="jefePassWrap">
+                    <label class="form-label-sm" id="jefePassLabel">Contraseña del encargado <span style="color:var(--primario);">*</span></label>
                     <div style="position:relative;">
-                        <input type="password" id="urContrasenaNew" class="form-field" placeholder="Mínimo 8 caracteres"
-                               oninput="validarContrasenaUR(this)" style="padding-right:2.5rem;">
-                        <button type="button" onclick="togglePassURNew()" style="position:absolute;right:.6rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;">
-                            <i class="bi bi-eye-fill" id="iconoOjoURNew"></i>
+                        <input type="password" id="jefeContrasena" class="form-field" placeholder="Mínimo 8 caracteres"
+                               style="padding-right:2.5rem;">
+                        <button type="button" onclick="togglePassJefe()"
+                                style="position:absolute;right:.6rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;">
+                            <i class="bi bi-eye-fill" id="iconoOjoJefe"></i>
                         </button>
                     </div>
-                    <span class="field-hint-ur" id="hintPassURNew" style="font-size:.72rem;color:var(--muted);display:block;margin-top:.2rem;">Mínimo 8 caracteres.</span>
+                    <span id="jefePassHint" style="font-size:.72rem;color:var(--muted);display:block;margin-top:.2rem;">Mínimo 8 caracteres.</span>
                 </div>
             </div>
 
@@ -428,22 +499,24 @@
 </div>
 
 <!-- MODAL CONFIRMAR ELIMINAR -->
-<div class="modal fade" id="modalEliminar" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius:var(--radius-card);border:none;overflow:hidden;">
-            <div class="modal-header" style="background:var(--primario);border:none;padding:1rem 1.4rem;">
-                <h6 class="modal-title text-white fw-bold" style="margin:0;"><i class="bi bi-exclamation-triangle-fill me-2"></i>Confirmar eliminación</h6>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+<div class="modal-siarha" id="modalEliminar" onclick="if(event.target===this)cerrarModalEliminar()">
+    <div class="modal-box">
+        <div class="modal-box-head">
+            <div class="modal-icon danger"><i class="bi bi-trash-fill"></i></div>
+            <h5>Eliminar Unidad Receptora</h5>
+        </div>
+        <div class="modal-box-body">
+            <p>¿Confirmas que deseas eliminar <strong id="nombreEliminar">esta UR</strong>?</p>
+            <div class="modal-info-strip">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <span>Esta acción es irreversible. Los alumnos activos asignados a esta UR quedarán sin unidad receptora.</span>
             </div>
-            <div class="modal-body" style="padding:1.4rem;">
-                <p style="font-size:.88rem;color:var(--text);margin:0;">
-                    ¿Eliminar <strong id="nombreEliminar">esta UR</strong>? Esta acción es irreversible y desvinculará a sus alumnos activos.
-                </p>
-            </div>
-            <div class="modal-footer" style="border-color:var(--border);padding:.9rem 1.4rem;gap:.6rem;">
-                <button type="button" class="btn-outline-custom" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn-danger-sm" onclick="ejecutarEliminar()"><i class="bi bi-trash-fill"></i> Sí, eliminar</button>
-            </div>
+        </div>
+        <div class="modal-box-foot">
+            <button class="btn-modal-cancel" onclick="cerrarModalEliminar()">Cancelar</button>
+            <button class="btn-modal-danger" onclick="ejecutarEliminar()">
+                <i class="bi bi-trash-fill me-1"></i> Sí, eliminar
+            </button>
         </div>
     </div>
 </div>
@@ -537,10 +610,18 @@ function abrirPanel(ur) {
     document.getElementById('urEmail').value     = ur?.email_ur || '';
     document.getElementById('urTelefono').value  = ur?.telefono_ur || '';
     document.getElementById('urCupo').value      = ur?.cupo_maximo ?? 15;
-    document.getElementById('urHoraSS').value    = ur?.horas_requeridas_ss ?? 480;
-    document.getElementById('urHoraPP').value    = ur?.horas_requeridas_pp ?? 240;
-    document.getElementById('urProgramas').value = ur?.programas_aceptados || 'ambos';
     document.getElementById('urEstado').value    = ur?.estado || 'activa';
+    selProgUR(ur?.programas_aceptados || 'ambos');
+
+    // Encargado de área
+    document.getElementById('jefeNombre').value    = ur?.nombre_jefe     || '';
+    document.getElementById('jefeApellidoP').value = ur?.apellido_p_jefe || '';
+    document.getElementById('jefeApellidoM').value = ur?.apellido_m_jefe || '';
+    document.getElementById('jefeEmail').value     = ur?.email_jefe      || '';
+    document.getElementById('jefeTelefono').value  = ur?.telefono_jefe   || '';
+    document.getElementById('jefeCargo').value     = ur?.cargo           || '';
+    document.getElementById('jefeId').value        = ur?.id_jefe_in      || '';
+    document.getElementById('jefeContrasena').value = '';
 
     // Estado visual
     document.querySelectorAll('.est-btn').forEach(b => b.classList.remove('selected'));
@@ -550,13 +631,13 @@ function abrirPanel(ur) {
     // Botón eliminar solo al editar
     document.getElementById('btnEliminarUR').style.display = esNueva ? 'none' : 'inline-flex';
 
-    // Contraseña: obligatoria al crear, opcional al editar
-    document.getElementById('bloqueNuevaUR').style.display  = esNueva ? 'block' : 'none';
-    document.getElementById('bloqueContrasena').style.display = esNueva ? 'none' : 'block';
-    if (esNueva) {
-        document.getElementById('urContrasenaNew').value = '';
-    } else {
-        document.getElementById('urContrasena').value = '';
+    // Contraseña del encargado: obligatoria al crear, opcional al editar
+    document.getElementById('jefeContrasena').value = '';
+    const jefePassLabel = document.getElementById('jefePassLabel');
+    if (jefePassLabel) {
+        jefePassLabel.innerHTML = esNueva
+            ? 'Contraseña del encargado <span style="color:var(--primario);">*</span>'
+            : 'Nueva contraseña del encargado <span style="color:var(--muted);font-weight:400;text-transform:none;">(dejar vacío para no cambiar)</span>';
     }
 
     // Sección de alumnos solo al editar
@@ -596,12 +677,14 @@ async function cargarAlumnosUR(ur) {
         tbody.innerHTML = alumnos.map(a => {
             const nombre = [a.nombre_alum, a.apellido_p_alum].filter(Boolean).join(' ');
             const pct    = Math.round(parseFloat(a.avance_pct) || 0);
-            const prog   = a.programa === 'pp' ? '<span class="badge-pp" style="font-size:.68rem;">PP</span>' : '<span class="badge-ss" style="font-size:.68rem;">SS</span>';
+            const prog   = a.programa === 'pp' ? '<span class="badge-pp" style="font-size:.68rem;"><i class="bi bi-briefcase-fill me-1"></i>PP</span>' : '<span class="badge-ss" style="font-size:.68rem;"><i class="bi bi-journal-check me-1"></i>SS</span>';
             return `<tr>
                 <td style="font-size:.82rem;font-weight:600;">${nombre}</td>
                 <td>${prog}</td>
                 <td style="font-size:.8rem;">${pct}%</td>
-                <td><a href="ADMIN_detalle-alumno-admin.html?no_cuenta=${a.no_cuenta}" class="btn-outline-custom" style="font-size:.72rem;padding:.25rem .55rem;"><i class="bi bi-eye-fill"></i></a></td>
+                <td style="display:flex;gap:.35rem;">
+                <a href="ADMIN_bitacora-alumno.html?no_cuenta=${a.no_cuenta}" class="btn-outline-custom" style="font-size:.72rem;padding:.25rem .55rem;" title="Ver expediente"><i class="bi bi-journal-text"></i></a>
+            </td>
             </tr>`;
         }).join('');
     } catch(e) {
@@ -615,11 +698,8 @@ async function guardarUR() {
     const nombre  = document.getElementById('urNombre').value.trim();
     const email   = document.getElementById('urEmail').value.trim();
     const tel     = document.getElementById('urTelefono').value.trim();
-    const pass    = esNueva
-        ? document.getElementById('urContrasenaNew').value
-        : document.getElementById('urContrasena').value;
 
-    // Validaciones
+    // Validaciones de la UR
     if (!nombre) { showToast('El nombre es requerido.', false); return; }
     if (!email)  { showToast('El correo es requerido.', false); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -628,16 +708,44 @@ async function guardarUR() {
     if (tel && !/^\d{10}$/.test(tel)) {
         showToast('El teléfono debe tener exactamente 10 dígitos.', false); return;
     }
-    if (esNueva && (!pass || pass.length < 8)) {
-        showToast('La contraseña debe tener al menos 8 caracteres.', false); return;
-    }
-    if (!esNueva && pass && pass.length < 8) {
-        showToast('La nueva contraseña debe tener al menos 8 caracteres.', false); return;
-    }
 
     const cupo = parseInt(document.getElementById('urCupo').value);
     if (!cupo || cupo < 1 || cupo > 200) {
         showToast('El cupo debe ser entre 1 y 200.', false); return;
+    }
+
+    // Datos del encargado
+    const jefeNombre  = document.getElementById('jefeNombre').value.trim();
+    const jefeEmail   = document.getElementById('jefeEmail').value.trim();
+    const jefeTel     = document.getElementById('jefeTelefono').value.trim();
+    const jefeCargo   = document.getElementById('jefeCargo').value.trim();
+    const jefeApP     = document.getElementById('jefeApellidoP').value.trim();
+    const jefeApM     = document.getElementById('jefeApellidoM').value.trim();
+    const jefePass    = document.getElementById('jefeContrasena').value;
+    const jefeId      = document.getElementById('jefeId').value;
+
+    // Al crear: encargado es obligatorio (es quien accede al sistema)
+    if (esNueva && !jefeNombre) {
+        showToast('El nombre del encargado es obligatorio al crear una UR.', false); return;
+    }
+    if (esNueva && !jefeEmail) {
+        showToast('El correo del encargado es obligatorio al crear una UR.', false); return;
+    }
+    if (esNueva && (!jefePass || jefePass.length < 8)) {
+        showToast('La contraseña del encargado es obligatoria y debe tener al menos 8 caracteres.', false); return;
+    }
+    // Al editar: solo validar si se llenaron campos del encargado
+    if (!esNueva && jefeNombre && !jefeEmail) {
+        showToast('El correo del encargado es obligatorio.', false); return;
+    }
+    if (jefeEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(jefeEmail)) {
+        showToast('El formato del correo del encargado no es válido.', false); return;
+    }
+    if (jefeTel && !/^\d{10}$/.test(jefeTel)) {
+        showToast('El teléfono del encargado debe tener 10 dígitos.', false); return;
+    }
+    if (jefePass && jefePass.length < 8) {
+        showToast('La nueva contraseña del encargado debe tener al menos 8 caracteres.', false); return;
     }
 
     const body = {
@@ -645,14 +753,22 @@ async function guardarUR() {
         email_ur:             email,
         telefono_ur:          tel || null,
         cupo_maximo:          cupo,
-        horas_requeridas_ss:  parseInt(document.getElementById('urHoraSS').value) || 480,
-        horas_requeridas_pp:  parseInt(document.getElementById('urHoraPP').value) || 240,
+        horas_requeridas_ss:  480,
+        horas_requeridas_pp:  240,
         programas_aceptados:  document.getElementById('urProgramas').value,
         estado:               document.getElementById('urEstado').value,
+        // Encargado (única contraseña del sistema)
+        jefe_nombre:      jefeNombre   || null,
+        jefe_apellido_p:  jefeApP      || null,
+        jefe_apellido_m:  jefeApM      || null,
+        jefe_email:       jefeEmail    || null,
+        jefe_telefono:    jefeTel      || null,
+        jefe_cargo:       jefeCargo    || null,
+        jefe_id:          jefeId       || null,
     };
 
-    // Incluir contraseña solo si se proporcionó
-    if (pass) body.contrasena = pass;
+    // Solo enviar contraseña si se ingresó
+    if (jefePass) body.jefe_contrasena = jefePass;
 
     try {
         const url    = urActualId ? `/api/unidades-receptoras/${urActualId}` : '/api/unidades-receptoras';
@@ -661,8 +777,7 @@ async function guardarUR() {
         const data   = await res.json();
         if (!res.ok) throw new Error(data.error || data.message || 'Error al guardar');
 
-        let msg = urActualId ? 'Unidad Receptora actualizada.' : 'Unidad Receptora creada.';
-        if (data.contrasena_temporal) msg += ` Contraseña: ${data.contrasena_temporal}`;
+        const msg = urActualId ? 'Unidad Receptora actualizada.' : 'Unidad Receptora creada.';
         showToast(msg, true);
         cerrarPanel();
         cargarURs();
@@ -675,11 +790,15 @@ async function guardarUR() {
 function confirmarEliminar() {
     const nombre = document.getElementById('urNombre').value || 'esta UR';
     document.getElementById('nombreEliminar').textContent = nombre;
-    bootstrap.Modal.getOrCreateInstance(document.getElementById('modalEliminar')).show();
+    document.getElementById('modalEliminar').classList.add('open');
+}
+
+function cerrarModalEliminar() {
+    document.getElementById('modalEliminar').classList.remove('open');
 }
 
 async function ejecutarEliminar() {
-    bootstrap.Modal.getInstance(document.getElementById('modalEliminar')).hide();
+    cerrarModalEliminar();
     try {
         const res = await apiFetch(`/api/unidades-receptoras/${urActualId}`, { method: 'DELETE' });
         if (!res.ok) { const d = await res.json(); throw new Error(d.message); }
@@ -692,6 +811,18 @@ async function ejecutarEliminar() {
 }
 
 // ── ESTADO ──────────────────────────────────────────────────
+function selProgUR(prog) {
+    // Limpiar todas las tarjetas
+    ['ambos','ss','pp'].forEach(p => {
+        const card = document.getElementById('puc-' + p);
+        if (card) card.className = 'prog-ur-card';
+    });
+    // Seleccionar la correcta
+    const sel = document.getElementById('puc-' + prog);
+    if (sel) sel.classList.add('selected-' + prog);
+    document.getElementById('urProgramas').value = prog;
+}
+
 function selEstado(el, val) {
     document.querySelectorAll('.est-btn').forEach(b => b.classList.remove('selected'));
     el.classList.add('selected');
@@ -723,29 +854,9 @@ function validarCampoUR(input, hintId, regex, msgError) {
     }
 }
 
-function validarContrasenaUR(input) {
-    const v = input.value;
-    const ok = v.length >= 8;
-    input.classList.toggle('campo-ok-ur',  ok);
-    input.classList.toggle('campo-err-ur', !ok && v.length > 0);
-    const hintId = input.id === 'urContrasena' ? 'hintPassUR' : 'hintPassURNew';
-    const hint = document.getElementById(hintId);
-    if (hint) {
-        hint.textContent = !v ? 'Mínimo 8 caracteres.' : ok ? '✓ Contraseña válida.' : `${v.length}/8 caracteres mínimos.`;
-        hint.style.color = !v ? 'var(--muted)' : ok ? '#16a34a' : '#dc2626';
-    }
-}
-
-function togglePassUR() {
-    const inp = document.getElementById('urContrasena');
-    const ico = document.getElementById('iconoOjoUR');
-    const show = inp.type === 'password';
-    inp.type = show ? 'text' : 'password';
-    ico.className = show ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill';
-}
-function togglePassURNew() {
-    const inp = document.getElementById('urContrasenaNew');
-    const ico = document.getElementById('iconoOjoURNew');
+function togglePassJefe() {
+    const inp = document.getElementById('jefeContrasena');
+    const ico = document.getElementById('iconoOjoJefe');
     const show = inp.type === 'password';
     inp.type = show ? 'text' : 'password';
     ico.className = show ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill';
@@ -795,16 +906,26 @@ function renderFilaUR(ur) {
     const pct       = cupo > 0 ? Math.round(alumnos / cupo * 100) : 0;
     const pctColor  = pct >= 90 ? '#991b1b' : pct >= 70 ? '#7a5a00' : 'var(--primario)';
     const prog      = ur.programas_aceptados;
-    const progBadge = prog === 'ss' ? '<span class="badge-ss">SS</span>' :
-                      prog === 'pp' ? '<span class="badge-pp">PP</span>' :
-                      '<span class="badge-ss">SS</span> <span class="badge-pp">PP</span>';
+    const progBadge = prog === 'ss'
+        ? '<span class="badge-ss"><i class="bi bi-journal-check me-1"></i>Servicio Social · 480 h</span>'
+        : prog === 'pp'
+        ? '<span class="badge-pp"><i class="bi bi-briefcase-fill me-1"></i>Prácticas Prof. · 240 h</span>'
+        : '<div style="display:flex;flex-direction:column;gap:.25rem;"><span class="badge-ss"><i class="bi bi-journal-check me-1"></i>Servicio Social · 480 h</span><span class="badge-pp"><i class="bi bi-briefcase-fill me-1"></i>Prácticas Prof. · 240 h</span></div>';
     const estado    = ur.estado || 'activa';
     const badgeEst  = { activa:'<span class="badge-ur-act">Activa</span>', inactiva:'<span class="badge-ur-ina">Inactiva</span>', suspendida:'<span class="badge-ur-sus">Suspendida</span>' }[estado] || '';
+
+    const jefeNombreCompleto = ur.nombre_jefe
+        ? [ur.nombre_jefe, ur.apellido_p_jefe].filter(Boolean).join(' ')
+        : null;
+    const jefeInfo = jefeNombreCompleto
+        ? `<div style="font-size:.71rem;color:var(--muted);margin-top:.15rem;"><i class="bi bi-person-fill me-1"></i>${jefeNombreCompleto} · ${ur.email_jefe || ''}</div>`
+        : `<div style="font-size:.71rem;color:#a16207;margin-top:.15rem;"><i class="bi bi-person-exclamation me-1"></i>Sin encargado registrado</div>`;
 
     return `<tr data-id="${ur.id_ur}" data-nombre="${nombre}" data-estado="${estado}" data-programas="${prog}" data-alumnos="${alumnos}" data-cupo="${cupo}">
         <td>
             <div style="font-weight:700;font-size:.86rem;">${nombre}</div>
             <div style="font-size:.72rem;color:var(--muted);">${email}${tel}</div>
+            ${jefeInfo}
         </td>
         <td>${progBadge}</td>
         <td>
@@ -846,7 +967,29 @@ async function cargarURs() {
         document.getElementById('resActivas').textContent    = activas;
         document.getElementById('resInactivas').textContent  = inactivas;
         document.getElementById('resSuspendidas').textContent= suspendidas;
-        document.getElementById('resLugares').textContent    = `${lugOcup} / ${lugTotal}`;
+
+        // Lugares ocupados — tres estados según contexto
+        const valLug  = document.getElementById('resLugares');
+        const labLug  = document.getElementById('resLugaresLab');
+        if (urs.length === 0) {
+            // Sin URs registradas
+            valLug.textContent  = '—';
+            valLug.style.color  = 'var(--muted)';
+            labLug.textContent  = 'Ninguna UR registrada';
+            labLug.style.color  = 'var(--muted)';
+        } else if (lugTotal > 0 && lugOcup >= lugTotal) {
+            // Todos los cupos ocupados
+            valLug.textContent  = `${lugOcup} / ${lugTotal}`;
+            valLug.style.color  = '#991b1b';
+            labLug.textContent  = 'Todos los lugares ocupados';
+            labLug.style.color  = '#991b1b';
+        } else {
+            // Normal: ocupados / totales con espacio disponible
+            valLug.textContent  = `${lugOcup} / ${lugTotal}`;
+            valLug.style.color  = '';
+            labLug.textContent  = 'Lugares ocupados';
+            labLug.style.color  = '';
+        }
 
         if (!urs.length) {
             tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2.5rem;color:var(--muted);"><i class="bi bi-building" style="font-size:1.5rem;display:block;margin-bottom:.5rem;"></i>No hay unidades receptoras registradas.</td></tr>';

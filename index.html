@@ -110,6 +110,8 @@
 
 <!-- SCRIPTS -->
 <script src="assets/js/api.js"></script>
+<script src="assets/js/ur-api.js"></script>
+<script src="assets/js/alu-api.js"></script>
 
 <script>
 function seleccionarRol(rol, boton) {
@@ -131,11 +133,11 @@ function seleccionarRol(rol, boton) {
         inputUsuario.placeholder = 'serviciosocial@institucion.mx';
         inputUsuario.pattern = '';
         inputUsuario.maxLength = 50;
-    } else {
-        labelUsuario.textContent = 'Usuario';
-        inputUsuario.placeholder = 'Correo o identificador asignado';
+    } else if (rol === 'ur') {
+        labelUsuario.textContent = 'Correo de la unidad receptora';
+        inputUsuario.placeholder = 'correo@institucion.com';
         inputUsuario.pattern = '';
-        inputUsuario.maxLength = 50;
+        inputUsuario.maxLength = 100;
     }
 }
 
@@ -158,8 +160,33 @@ document.getElementById('formLogin').addEventListener('submit', async (e) => {
         return;
     }
 
-    if (rol !== 'admin') {
-        showToast('Login para este rol aún no disponible.', 'info');
+    if (rol === 'alumno') {
+        btn.disabled = true;
+        btn.textContent = 'Ingresando…';
+        try {
+            const res  = await apiFetch('/api/alumnos/login', {
+                method: 'POST',
+                body: JSON.stringify({ no_cuenta: parseInt(usuario), contrasena: password })
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                showToast(data.error || 'Credenciales incorrectas.', 'error');
+                return;
+            }
+
+            saveSessionAlu({
+                token: data.token,
+                data:  data.alumno
+            });
+
+            window.location.href = 'pages/ALU_dashboard-alumno.html';
+        } catch (err) {
+            showToast(err.message || 'Error inesperado.', 'error');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Iniciar sesión';
+        }
         return;
     }
 
@@ -167,26 +194,51 @@ document.getElementById('formLogin').addEventListener('submit', async (e) => {
     btn.textContent = 'Ingresando…';
 
     try {
-        const res = await apiFetch('/api/admins/login', {
-            method: 'POST',
-            body: JSON.stringify({ email: usuario, contrasena: password })
-        });
+        // ── Login de Administrador ─────────────────────────────
+        if (rol === 'admin') {
+            const res  = await apiFetch('/api/admins/login', {
+                method: 'POST',
+                body: JSON.stringify({ email: usuario, contrasena: password })
+            });
+            const data = await res.json();
 
-        const data = await res.json();
+            if (!res.ok) {
+                showToast(data.error || 'Credenciales incorrectas.', 'error');
+                return;
+            }
 
-        if (!res.ok) {
-            showToast(data.error || 'Credenciales incorrectas.', 'error');
+            saveSession({
+                rol:   'admin',
+                token: data.token,
+                data:  data.administrador
+            });
+
+            window.location.href = 'pages/ADMIN_dashboard-servicio.html';
             return;
         }
 
-        saveSession({
-            rol: 'admin',
-            token: data.token,
-            data: data.administrador
-        });
+        // ── Login de Unidad Receptora ──────────────────────────
+        if (rol === 'ur') {
+            const res  = await apiFetch('/api/unidades-receptoras/login', {
+                method: 'POST',
+                body: JSON.stringify({ email_ur: usuario, contrasena: password })
+            });
+            const data = await res.json();
 
-        // Los ADMIN_*.html viven en la carpeta pages/
-window.location.href = 'pages/ADMIN_dashboard-servicio.html'; 
+            if (!res.ok) {
+                showToast(data.error || 'Credenciales incorrectas.', 'error');
+                return;
+            }
+
+            saveSessionUR({
+                token: data.token,
+                data:  data.unidad_receptora
+            });
+
+            window.location.href = 'pages/UR_dashboard-ur.html';
+            return;
+        }
+
     } catch (err) {
         showToast(err.message || 'Error inesperado.', 'error');
     } finally {

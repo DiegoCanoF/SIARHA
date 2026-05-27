@@ -195,6 +195,7 @@
             <li data-visible="superadmin,admin_area"><a class="nav-link active" href="ADMIN_alumnos.html"><i class="bi bi-people-fill"></i> Alumnos</a></li>
             <li data-visible="superadmin,admin_area"><a class="nav-link " href="ADMIN_gestion-ur.html"><i class="bi bi-building"></i> Unidades Receptoras</a></li>
             <li data-visible="superadmin"><a class="nav-link " href="ADMIN_gestion-administradores.html"><i class="bi bi-person-gear"></i> Administradores</a></li>
+            <li data-visible="superadmin"><a class="nav-link " href="ADMIN_periodos.html"><i class="bi bi-calendar-range-fill"></i> Periodos</a></li>
             <li data-visible="superadmin,admin_area"><a class="nav-link " href="ADMIN_reportes-globales.html"><i class="bi bi-bar-chart-fill"></i> Reportes Globales</a></li>
             <li><a class="nav-link " href="ADMIN_mensajes-admin.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge">3</span></a></li>
             <hr class="menu-divider">
@@ -496,8 +497,12 @@ function renderFila(a) {
     const hrs     = a.horas_realizadas ?? 0;
     const hrsMax  = a.programa === 'pp' ? 240 : 480;
     const prog    = a.programa === 'pp'
-        ? '<span class="badge-pp">Prácticas Prof.</span>'
-        : '<span class="badge-ss">Serv. Social</span>';
+        ? `<span class="badge-pp" style="display:inline-flex;align-items:center;gap:.3rem;white-space:nowrap;">
+               <i class="bi bi-briefcase-fill" style="font-size:.65rem;"></i>Prácticas Profesionales
+           </span>`
+        : `<span class="badge-ss" style="display:inline-flex;align-items:center;gap:.3rem;white-space:nowrap;">
+               <i class="bi bi-journal-check" style="font-size:.65rem;"></i>Servicio Social
+           </span>`;
     const estado  = a.estado || 'activo';
     const badgeEstado = {
         activo:     '<span class="badge-activo">Activo</span>',
@@ -523,7 +528,9 @@ function renderFila(a) {
             </div>
         </td>
         <td>${badgeEstado}</td>
-        <td><a href="ADMIN_detalle-alumno-admin.html?no_cuenta=${a.no_cuenta}" class="btn-outline-custom"><i class="bi bi-eye-fill"></i> Ver</a></td>
+        <td style="display:flex;gap:.4rem;">
+                <a href="ADMIN_bitacora-alumno.html?no_cuenta=${a.no_cuenta}" class="btn-outline-custom" title="Ver expediente"><i class="bi bi-journal-text"></i> Ver</a>
+            </td>
     </tr>`;
 }
 
@@ -621,7 +628,42 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('subtituloAlumnos').textContent = institutos + ' · Periodo Enero – Junio 2026';
     }
     cargarAlumnos(1);
+    verificarPeriodoActivo();
 });
+
+async function verificarPeriodoActivo() {
+    try {
+        const res  = await apiFetch('/api/periodos/activos');
+        const data = await res.json();
+        const periodos = data.periodos || [];
+        const btnNuevo = document.querySelector('[href="ADMIN_alta-alumno.html"], a[href*="alta-alumno"]');
+        const admin = getAdmin();
+        // Solo mostrar advertencia si el admin puede dar de alta (no reportes)
+        if (admin && admin.rol === 'admin_reportes') return;
+
+        if (periodos.length === 0) {
+            // Deshabilitar botón nuevo alumno
+            document.querySelectorAll('a[href="ADMIN_alta-alumno.html"], .btn-primary-custom[href*="alta"]').forEach(btn => {
+                btn.style.opacity = '.45';
+                btn.style.pointerEvents = 'none';
+                btn.title = 'No hay periodo activo';
+            });
+            // Mostrar aviso
+            const aviso = document.createElement('div');
+            aviso.style.cssText = 'background:#fef3c7;border:1px solid #f59e0b;border-radius:10px;padding:.65rem 1rem;font-size:.82rem;font-weight:600;color:#92400e;display:flex;align-items:center;gap:.5rem;margin-bottom:1rem;';
+            aviso.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i> Sin periodo activo. No es posible dar de alta nuevos alumnos hasta que el superadministrador cree un periodo.';
+            const main = document.querySelector('main');
+            if (main) main.insertBefore(aviso, main.firstChild);
+        } else {
+            // Mostrar periodo actual en el subtítulo
+            const sub = document.querySelector('.subtitle-institutos, .page-header p');
+            if (sub && !sub.textContent.includes('Periodo')) {
+                const nombres = periodos.map(p => p.nombre_periodo).join(' · ');
+                sub.textContent = sub.textContent + ' · ' + nombres;
+            }
+        }
+    } catch(e) { /* silencioso */ }
+}
 </script>
 </body>
 </html>

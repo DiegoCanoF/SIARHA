@@ -213,6 +213,51 @@
         .notif-overlay.open{display:block;}
         @media(max-width:480px){.notif-panel{width:100%;border-radius:0;}}
         @media (max-width: 767px) { main { padding: 1.25rem 1rem; } .info-card { flex-direction: column; } }
+    
+        /* ── DATO GRID ── */
+        .dato-grid { display: grid; grid-template-columns: 1fr; gap: .9rem; padding: 1.2rem 1.4rem; }
+        .dato-item { display: flex; flex-direction: column; gap: .15rem; }
+        .dato-label { font-size: .71rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+        .dato-value { font-size: .88rem; font-weight: 700; color: var(--text); }
+        .dato-value.accent { color: var(--primario); }
+
+        /* ── SECTION BODY ── */
+        .section-body { padding: 1.2rem 1.4rem; }
+
+        /* ── BTN DANGER ── */
+        .btn-danger-outline { border: 1.5px solid #fca5a5; background: #fff; color: #991b1b; border-radius: var(--radius-sm); font-weight: 600; font-size: .8rem; padding: .38rem .8rem; display: inline-flex; align-items: center; gap: .35rem; cursor: pointer; transition: background .2s; text-decoration: none; }
+        .btn-danger-outline:hover { background: #fee2e2; }
+
+        /* ── PASS INLINE ── */
+        .pass-ok  { border-color: #16a34a !important; }
+        .pass-err { border-color: #dc2626 !important; }
+
+        /* ── MODAL CUSTOM (z-index sobre navbar y panel) ── */
+        .modal-siarha{display:none;position:fixed;inset:0;z-index:2000;align-items:center;justify-content:center;padding:1rem;background:rgba(0,0,0,.48);}
+        .modal-siarha.open{display:flex;}
+        .modal-box{background:#fff;border-radius:var(--radius-card);box-shadow:0 24px 64px rgba(80,16,19,.25);width:100%;overflow:hidden;animation:modalIn .25s ease;}
+        @keyframes modalIn{from{opacity:0;transform:scale(.94) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
+        .modal-box-head{padding:1.2rem 1.4rem 1rem;display:flex;align-items:center;gap:.75rem;}
+        .modal-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+        .modal-icon.danger{background:#fee2e2;color:#991b1b;}
+        .modal-box-head h5{font-size:1rem;font-weight:800;margin:0;color:var(--text);}
+        .modal-box-body{padding:0 1.4rem 1.2rem;font-size:.87rem;color:var(--muted);line-height:1.6;}
+        .modal-info-strip{border-radius:var(--radius-sm);padding:.75rem 1rem;margin-top:.75rem;display:flex;align-items:flex-start;gap:.6rem;font-size:.82rem;}
+        .modal-box-foot{padding:.9rem 1.4rem;border-top:1px solid var(--border);display:flex;gap:.6rem;justify-content:flex-end;}
+        .btn-modal-cancel{background:#fff;color:var(--muted);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-weight:600;font-size:.85rem;padding:.5rem 1.1rem;cursor:pointer;transition:border-color .2s,color .2s;display:inline-flex;align-items:center;gap:.3rem;}
+        .btn-modal-cancel:hover{border-color:var(--primario);color:var(--primario);}
+        .btn-modal-danger{background:#991b1b;color:#fff;border:none;border-radius:var(--radius-sm);font-weight:700;font-size:.85rem;padding:.5rem 1.2rem;cursor:pointer;transition:background .2s,opacity .2s;display:inline-flex;align-items:center;gap:.3rem;}
+        .btn-modal-danger:hover:not(:disabled){background:#7f1d1d;}
+
+        /* ── BADGES DE ESTADO DEL ALUMNO ── */
+        .badge-est-activo     { background:#dcfce7; color:#166534; border:1px solid #86efac; border-radius:20px; font-size:.73rem; font-weight:700; padding:.25rem .7rem; display:inline-flex; align-items:center; gap:.3rem; }
+        .badge-est-revision   { background:var(--primario-lt); color:var(--primario); border:1px solid rgba(80,16,19,.2); border-radius:20px; font-size:.73rem; font-weight:700; padding:.25rem .7rem; display:inline-flex; align-items:center; gap:.3rem; }
+        .badge-est-finalizado { background:#e0e7ff; color:#3730a3; border:1px solid #a5b4fc; border-radius:20px; font-size:.73rem; font-weight:700; padding:.25rem .7rem; display:inline-flex; align-items:center; gap:.3rem; }
+        .badge-est-pendiente  { background:#fef9c3; color:#854d0e; border:1px solid #fde047; border-radius:20px; font-size:.73rem; font-weight:700; padding:.25rem .7rem; display:inline-flex; align-items:center; gap:.3rem; }
+        .badge-est-baja       { background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; border-radius:20px; font-size:.73rem; font-weight:700; padding:.25rem .7rem; display:inline-flex; align-items:center; gap:.3rem; }
+        .estado-select-wrap   { display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; margin-top:.25rem; }
+
+        @media (max-width: 767px) { main { padding: 1.25rem 1rem; } }
     </style>
 </head>
 <body>
@@ -271,6 +316,7 @@
             <li data-visible="superadmin,admin_area"><a class="nav-link active" href="ADMIN_alumnos.html"><i class="bi bi-people-fill"></i> Alumnos</a></li>
             <li data-visible="superadmin,admin_area"><a class="nav-link " href="ADMIN_gestion-ur.html"><i class="bi bi-building"></i> Unidades Receptoras</a></li>
             <li data-visible="superadmin"><a class="nav-link " href="ADMIN_gestion-administradores.html"><i class="bi bi-person-gear"></i> Administradores</a></li>
+            <li data-visible="superadmin"><a class="nav-link " href="ADMIN_periodos.html"><i class="bi bi-calendar-range-fill"></i> Periodos</a></li>
             <li data-visible="superadmin,admin_area"><a class="nav-link " href="ADMIN_reportes-globales.html"><i class="bi bi-bar-chart-fill"></i> Reportes Globales</a></li>
             <li><a class="nav-link " href="ADMIN_mensajes-admin.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge">3</span></a></li>
             <hr class="menu-divider">
@@ -283,45 +329,25 @@
 <main>
 
     <!-- VOLVER -->
-    <a href="ADMIN_detalle-alumno-admin.html" class="btn-back">
-        <i class="bi bi-arrow-left"></i> Volver al expediente del alumno
+    <a href="ADMIN_alumnos.html" id="linkVolver" class="btn-back">
+        <i class="bi bi-arrow-left"></i> Volver a la lista de alumnos
     </a>
 
-    <!-- AVISO SOLO LECTURA -->
-    <div class="aviso-lectura">
-        <i class="bi bi-eye-fill"></i>
-        Vista de solo lectura — Los registros son aprobados o rechazados por la Unidad Receptora. Aquí puedes consultarlos y exportarlos.
-    </div>
-
-    <!-- INFO ALUMNO -->
-    <div class="info-card">
-        <div class="avatar-circle">JP</div>
-        <div class="info-field">
-            <span class="info-label">Nombre</span>
-            <span class="info-value">Juan Pérez García</span>
-        </div>
-        <div class="info-field">
-            <span class="info-label">No. de cuenta</span>
-            <span class="info-value">2020123456</span>
-        </div>
-        <div class="info-field">
-            <span class="info-label">Programa</span>
-            <span class="badge-ss" style="margin-top:.2rem;">Servicio Social</span>
-        </div>
-        <div class="info-field">
-            <span class="info-label">Unidad Receptora</span>
-            <span class="info-value">Hospital General</span>
-        </div>
-        <div class="info-field">
-            <span class="info-label">Estado</span>
-            <span class="badge-revision" style="margin-top:.2rem;">En revisión</span>
-        </div>
-        <div class="info-field ms-auto">
-            <span class="info-label">Avance global</span>
-            <div class="prog-wrap" style="margin-top:.35rem;">
-                <div class="prog-bar"><div class="prog-fill" style="width:67%;"></div></div>
-                <span style="font-size:.85rem;font-weight:800;color:var(--primario);">67%</span>
+    <!-- HERO -->
+    <div class="info-card" style="margin-bottom:1.25rem;gap:1.25rem;flex-wrap:wrap;">
+        <div class="avatar-circle" id="alumAvatar" style="width:60px;height:60px;font-size:1.4rem;">—</div>
+        <div style="flex:1;min-width:180px;">
+            <div style="font-size:1.2rem;font-weight:800;color:var(--text);" id="alumNombre">Cargando…</div>
+            <div style="font-size:.82rem;color:var(--muted);margin-top:.2rem;" id="alumSubtitulo">—</div>
+            <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem;">
+                <span id="alumProgBadge">—</span>
             </div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.25rem;min-width:140px;">
+            <div style="font-size:.72rem;color:var(--muted);font-weight:600;">Avance global</div>
+            <div style="font-size:1.5rem;font-weight:800;color:var(--primario);" id="alumProgPct">0%</div>
+            <div class="prog-bar" style="width:140px;"><div class="prog-fill" id="alumProgFill" style="width:0%;"></div></div>
+            <div style="font-size:.72rem;color:var(--muted);" id="alumHorasResumen">0 / 480 hrs</div>
         </div>
     </div>
 
@@ -330,231 +356,262 @@
         <div class="col-6 col-md-3">
             <div class="stat-card">
                 <div class="stat-icon si-vino"><i class="bi bi-clock-fill"></i></div>
-                <div><div class="stat-label">Horas realizadas</div><div class="stat-value">320</div></div>
+                <div><div class="stat-label">Horas realizadas</div><div class="stat-value" id="statHorasReal">—</div></div>
             </div>
         </div>
         <div class="col-6 col-md-3">
             <div class="stat-card">
                 <div class="stat-icon si-dorado"><i class="bi bi-hourglass"></i></div>
-                <div><div class="stat-label">Horas requeridas</div><div class="stat-value">480</div></div>
+                <div><div class="stat-label">Horas requeridas</div><div class="stat-value" id="statHorasReq">—</div></div>
             </div>
         </div>
         <div class="col-6 col-md-3">
             <div class="stat-card">
                 <div class="stat-icon si-vino2"><i class="bi bi-graph-up-arrow"></i></div>
-                <div><div class="stat-label">% de avance</div><div class="stat-value">67%</div></div>
+                <div><div class="stat-label">% de avance</div><div class="stat-value" id="statPct">—</div></div>
             </div>
         </div>
         <div class="col-6 col-md-3">
             <div class="stat-card">
                 <div class="stat-icon si-warn"><i class="bi bi-exclamation-circle-fill"></i></div>
-                <div><div class="stat-label">Pendientes UR</div><div class="stat-value" style="color:#a16207;">3</div></div>
+                <div><div class="stat-label">Pendientes UR</div><div class="stat-value" id="statPend" style="color:#a16207;">—</div></div>
             </div>
         </div>
     </div>
 
-    <!-- TABLA BITÁCORA -->
-    <div class="section-card">
+    <div class="row g-4">
 
-        <!-- Header -->
-        <div class="section-header">
-            <span class="title"><i class="bi bi-journal-text"></i> Registros de horas — Bitácora completa</span>
-            <div class="d-flex gap-2 flex-wrap">
-                <button class="btn-outline-custom" onclick="showToast('Exportando Excel…')"><i class="bi bi-file-earmark-excel"></i> Exportar Excel</button>
-                <button class="btn-outline-custom" onclick="showToast('Exportando PDF…')"><i class="bi bi-file-earmark-pdf"></i> Exportar PDF</button>
+        <!-- ── COLUMNA IZQUIERDA ── -->
+        <div class="col-lg-4">
+
+            <!-- DATOS ACADÉMICOS -->
+            <div class="section-card">
+                <div class="section-header">
+                    <span class="title"><i class="bi bi-mortarboard-fill"></i> Datos académicos</span>
+                </div>
+                <div class="dato-grid">
+                    <div class="dato-item"><span class="dato-label">No. de cuenta</span><span class="dato-value accent" id="alumCuenta">—</span></div>
+                    <div class="dato-item"><span class="dato-label">Carrera</span><span class="dato-value" id="alumCarrera">—</span></div>
+                    <div class="dato-item"><span class="dato-label">Instituto</span><span class="dato-value" id="alumInstituto">—</span></div>
+                    <div class="dato-item"><span class="dato-label">Unidad Receptora</span><span class="dato-value" id="alumUR">—</span></div>
+                    <div class="dato-item"><span class="dato-label">Correo</span><span class="dato-value" id="alumCorreo" style="font-size:.8rem;word-break:break-all;">—</span></div>
+                    <div class="dato-item">
+                        <span class="dato-label">Estado en el programa</span>
+                        <div class="estado-select-wrap">
+                            <span id="alumEstadoBadge">—</span>
+                            <div id="alumEstadoEditWrap" style="display:none;">
+                                <select id="alumEstadoSel" class="form-control-custom" style="font-size:.78rem;padding:.3rem .6rem;width:auto;" onchange="cambiarEstadoAlumno(this.value)">
+                                    <option value="activo">Activo</option>
+                                    <option value="revision">En revisión</option>
+                                    <option value="finalizado">Finalizado</option>
+                                    <option value="pendiente">Pendiente</option>
+                                    <option value="baja">Baja</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <!-- Filtros -->
-        <div class="filtros-body">
-            <div class="row g-3 align-items-end">
-                <div class="col-6 col-md-3">
-                    <label class="form-label-sm">Vista</label>
-                    <select class="form-select-custom">
-                        <option>Por mes</option>
-                        <option>Por semana</option>
-                        <option>Todos</option>
-                    </select>
+            <!-- ENCARGADO DE ÁREA -->
+            <div class="section-card">
+                <div class="section-header">
+                    <span class="title"><i class="bi bi-shield-fill"></i> Encargado de área</span>
                 </div>
-                <div class="col-6 col-md-3">
-                    <label class="form-label-sm">Mes</label>
-                    <input type="month" class="form-control-custom" value="2026-02">
+                <div class="section-body">
+                    <div style="display:flex;align-items:center;gap:.85rem;margin-bottom:1rem;">
+                        <div style="width:40px;height:40px;border-radius:50%;background:var(--primario);display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:800;color:#fff;flex-shrink:0;" id="encAvatar">—</div>
+                        <div>
+                            <div style="font-size:.9rem;font-weight:700;color:var(--text);" id="encNombre">Sin asignar</div>
+                            <div style="font-size:.76rem;color:var(--muted);" id="encEmail"></div>
+                        </div>
+                    </div>
+                    <!-- Solo superadmin puede reasignar -->
+                    <div id="encBtnReasignar">
+                        <button class="btn-outline-custom w-100" style="justify-content:flex-start;" onclick="abrirModalReasignar()">
+                            <i class="bi bi-person-fill-gear"></i> Reasignar encargado
+                        </button>
+                    </div>
+                    <!-- admin_area: aviso de solo lectura -->
+                    <div id="encAvisoArea" style="display:none;background:var(--primario-lt);border:1px solid rgba(80,16,19,.15);border-radius:var(--radius-sm);padding:.6rem .85rem;font-size:.78rem;color:var(--primario);font-weight:600;">
+                        <i class="bi bi-person-check-fill me-1"></i> Eres el responsable de área de este alumno
+                    </div>
                 </div>
-                <div class="col-6 col-md-3">
-                    <label class="form-label-sm">Estado</label>
-                    <select class="form-select-custom">
-                        <option>Todos</option>
-                        <option>Pendiente</option>
-                        <option>Aprobado</option>
-                        <option>Rechazado</option>
-                    </select>
+            </div>
+
+            <!-- ACCESO AL SISTEMA -->
+            <div class="section-card">
+                <div class="section-header">
+                    <span class="title"><i class="bi bi-shield-lock-fill"></i> Acceso al sistema</span>
                 </div>
-                <div class="col-6 col-md-3">
-                    <button class="btn-primary-custom" style="margin-top:.1rem; width:100%;">
-                        <i class="bi bi-funnel-fill"></i> Aplicar filtro
+                <div class="section-body">
+                    <p style="font-size:.8rem;color:var(--muted);margin-bottom:.85rem;">
+                        Restablece la contraseña del alumno si la olvidó.
+                    </p>
+                    <div style="position:relative;margin-bottom:.6rem;">
+                        <input type="password" id="inputNuevaPass" class="form-control-custom"
+                               placeholder="Nueva contraseña (mín. 8 caracteres)"
+                               oninput="validarPassInline(this)"
+                               style="padding-right:2.5rem;">
+                        <button type="button" onclick="togglePassInline()"
+                                style="position:absolute;right:.65rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;">
+                            <i class="bi bi-eye-fill" id="iconoOjoPass"></i>
+                        </button>
+                    </div>
+                    <span id="hintPass" style="font-size:.72rem;color:var(--muted);display:block;margin-bottom:.6rem;">Mínimo 8 caracteres.</span>
+                    <button class="btn-primary-custom w-100" onclick="guardarContrasenaInline()">
+                        <i class="bi bi-key-fill"></i> Restablecer contraseña
                     </button>
                 </div>
             </div>
-        </div>
 
-        <!-- Resumen periodo -->
-        <div style="display:flex;border-bottom:1px solid var(--border);flex-wrap:wrap;">
-            <div style="flex:1;min-width:100px;text-align:center;padding:.85rem .75rem;border-right:1px solid var(--border);">
-                <div style="font-size:.72rem;color:var(--muted);font-weight:500;">Horas del periodo</div>
-                <div style="font-size:1.1rem;font-weight:800;">48:00</div>
+            <!-- JEFE INMEDIATO DE LA UR -->
+            <div class="section-card">
+                <div class="section-header">
+                    <span class="title"><i class="bi bi-person-badge-fill"></i> Jefe inmediato (UR)</span>
+                </div>
+                <div class="section-body">
+                    <div style="display:flex;align-items:center;gap:.85rem;margin-bottom:.75rem;">
+                        <div style="width:40px;height:40px;border-radius:50%;background:var(--dorado-lt);display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:800;color:#7a5a00;flex-shrink:0;" id="jefeAvatar">—</div>
+                        <div>
+                            <div style="font-size:.9rem;font-weight:700;color:var(--text);" id="jefeNombreDisplay">Sin asignar</div>
+                            <div style="font-size:.76rem;color:var(--muted);" id="jefeCargoDisplay"></div>
+                            <div style="font-size:.76rem;color:var(--muted);" id="jefeEmailDisplay"></div>
+                        </div>
+                    </div>
+                    <div id="jefeTelWrap" style="display:none;font-size:.78rem;color:var(--muted);display:flex;align-items:center;gap:.4rem;">
+                        <i class="bi bi-telephone-fill" style="font-size:.72rem;"></i>
+                        <span id="jefeTelDisplay"></span>
+                    </div>
+                </div>
             </div>
-            <div style="flex:1;min-width:100px;text-align:center;padding:.85rem .75rem;border-right:1px solid var(--border);">
-                <div style="font-size:.72rem;color:var(--muted);font-weight:500;">Días registrados</div>
-                <div style="font-size:1.1rem;font-weight:800;">10</div>
+
+            <!-- ACCIONES ADMINISTRATIVAS -->
+            <div class="section-card">
+                <div class="section-header">
+                    <span class="title"><i class="bi bi-tools"></i> Acciones administrativas</span>
+                </div>
+                <div class="section-body d-flex flex-column gap-2">
+                    <button class="btn-outline-custom w-100" style="justify-content:flex-start;" onclick="showToast('Correo de recordatorio enviado.','success')">
+                        <i class="bi bi-envelope-fill"></i> Enviar recordatorio al alumno
+                    </button>
+                    <button class="btn-outline-custom w-100" style="justify-content:flex-start;" onclick="showToast('Correo enviado a la UR.','success')">
+                        <i class="bi bi-building"></i> Notificar a la Unidad Receptora
+                    </button>
+                    <button class="btn-outline-custom w-100" style="justify-content:flex-start;" onclick="showToast('Exportando expediente…','info')">
+                        <i class="bi bi-file-earmark-pdf"></i> Exportar expediente PDF
+                    </button>
+                    <hr style="border-color:var(--border);margin:.1rem 0;">
+                    <button class="btn-danger-outline w-100" style="justify-content:flex-start;"
+                            onclick="abrirModalEliminar()">
+                        <i class="bi bi-trash3-fill"></i> Eliminar alumno del sistema
+                    </button>
+                </div>
             </div>
-            <div style="flex:1;min-width:100px;text-align:center;padding:.85rem .75rem;border-right:1px solid var(--border);">
-                <div style="font-size:.72rem;color:var(--muted);font-weight:500;">Aprobados</div>
-                <div style="font-size:1.1rem;font-weight:800;color:#7a5a00;">6</div>
+
+            <!-- NOTAS INTERNAS -->
+            <div class="section-card">
+                <div class="section-header">
+                    <span class="title"><i class="bi bi-sticky-fill"></i> Notas internas</span>
+                    <span style="font-size:.73rem;color:var(--muted);">Solo visibles para admins</span>
+                </div>
+                <div class="section-body">
+                    <textarea id="notaAlumno" class="form-control-custom" rows="3"
+                              placeholder="Escribe una nota sobre este alumno…"
+                              style="resize:vertical;width:100%;margin-bottom:.65rem;"></textarea>
+                    <button class="btn-primary-custom" onclick="showToast('Nota guardada.','success')">
+                        <i class="bi bi-floppy-fill"></i> Guardar nota
+                    </button>
+                </div>
             </div>
-            <div style="flex:1;min-width:100px;text-align:center;padding:.85rem .75rem;border-right:1px solid var(--border);">
-                <div style="font-size:.72rem;color:var(--muted);font-weight:500;">Pendientes</div>
-                <div style="font-size:1.1rem;font-weight:800;color:#a16207;">3</div>
-            </div>
-            <div style="flex:1;min-width:100px;text-align:center;padding:.85rem .75rem;">
-                <div style="font-size:.72rem;color:var(--muted);font-weight:500;">Rechazados</div>
-                <div style="font-size:1.1rem;font-weight:800;color:#991b1b;">1</div>
-            </div>
-        </div>
 
-        <!-- Tabla -->
-        <div class="table-responsive">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Día</th>
-                        <th>Entrada</th>
-                        <th>Salida</th>
-                        <th>Total</th>
-                        <th>Actividad</th>
-                        <th>Estado UR</th>
-                        <th>Detalle</th>
-                    </tr>
-                </thead>
-                <tbody>
+        </div><!-- /col-izq -->
 
-                    <tr>
-                        <td style="font-weight:600;">2026-02-01</td>
-                        <td style="color:var(--muted);">Lunes</td>
-                        <td>08:00</td><td>14:00</td>
-                        <td style="font-weight:700;color:var(--primario);">06:00</td>
-                        <td>Apoyo administrativo</td>
-                        <td><span class="badge-pendiente">Pendiente UR</span></td>
-                        <td><button class="btn-ver" onclick="verDetalle('2026-02-01','Lunes','08:00','14:00','06:00','Apoyo administrativo','Pendiente UR','—')"><i class="bi bi-eye"></i> Ver</button></td>
-                    </tr>
+        <!-- ── COLUMNA DERECHA: BITÁCORA ── -->
+        <div class="col-lg-8">
+            <div class="section-card">
 
-                    <tr>
-                        <td style="font-weight:600;">2026-02-02</td>
-                        <td style="color:var(--muted);">Martes</td>
-                        <td>09:00</td><td>15:00</td>
-                        <td style="font-weight:700;color:var(--primario);">06:00</td>
-                        <td>Digitalización de documentos</td>
-                        <td><span class="badge-aprobado">Aprobado</span></td>
-                        <td><button class="btn-ver" onclick="verDetalle('2026-02-02','Martes','09:00','15:00','06:00','Digitalización de documentos','Aprobado','Actividad cumplida correctamente.')"><i class="bi bi-eye"></i> Ver</button></td>
-                    </tr>
+                <!-- Header -->
+                <div class="section-header">
+                    <span class="title"><i class="bi bi-journal-text"></i> Bitácora de horas</span>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button class="btn-outline-custom" onclick="showToast('Exportando Excel…','info')"><i class="bi bi-file-earmark-excel"></i> Excel</button>
+                        <button class="btn-outline-custom" onclick="showToast('Exportando PDF…','info')"><i class="bi bi-file-earmark-pdf"></i> PDF</button>
+                    </div>
+                </div>
 
-                    <tr>
-                        <td style="font-weight:600;">2026-02-03</td>
-                        <td style="color:var(--muted);">Miércoles</td>
-                        <td>08:30</td><td>13:30</td>
-                        <td style="font-weight:700;color:var(--primario);">05:00</td>
-                        <td>Atención a usuarios</td>
-                        <td><span class="badge-aprobado">Aprobado</span></td>
-                        <td><button class="btn-ver" onclick="verDetalle('2026-02-03','Miércoles','08:30','13:30','05:00','Atención a usuarios','Aprobado','Sin observaciones.')"><i class="bi bi-eye"></i> Ver</button></td>
-                    </tr>
+                <!-- Filtros -->
+                <div class="filtros-body">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-6 col-md-4">
+                            <label class="form-label-sm">Mes</label>
+                            <input type="month" id="filtroMes" class="form-control-custom">
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <label class="form-label-sm">Estado</label>
+                            <select id="filtroEst" class="form-select-custom">
+                                <option value="">Todos</option>
+                                <option value="Pendiente">Pendiente</option>
+                                <option value="Aprobado">Aprobado</option>
+                                <option value="Rechazado">Rechazado</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <button id="btnFiltrar" class="btn-primary-custom" style="width:100%;">
+                                <i class="bi bi-funnel-fill"></i> Aplicar filtro
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
-                    <tr>
-                        <td style="font-weight:600;">2026-02-04</td>
-                        <td style="color:var(--muted);">Jueves</td>
-                        <td>08:00</td><td>12:00</td>
-                        <td style="font-weight:700;color:var(--primario);">04:00</td>
-                        <td>Organización de archivo físico</td>
-                        <td><span class="badge-rechazado">Rechazado</span></td>
-                        <td><button class="btn-ver" onclick="verDetalle('2026-02-04','Jueves','08:00','12:00','04:00','Organización de archivo físico','Rechazado','El horario registrado no coincide con la asistencia del día.')"><i class="bi bi-eye"></i> Ver</button></td>
-                    </tr>
+                <!-- Resumen periodo -->
+                <div style="display:flex;border-bottom:1px solid var(--border);flex-wrap:wrap;">
+                    <div style="flex:1;min-width:80px;text-align:center;padding:.85rem .5rem;border-right:1px solid var(--border);">
+                        <div style="font-size:.68rem;color:var(--muted);font-weight:500;">Horas aprobadas</div>
+                        <div style="font-size:1.05rem;font-weight:800;" id="resHoras">—</div>
+                    </div>
+                    <div style="flex:1;min-width:80px;text-align:center;padding:.85rem .5rem;border-right:1px solid var(--border);">
+                        <div style="font-size:.68rem;color:var(--muted);font-weight:500;">Registros</div>
+                        <div style="font-size:1.05rem;font-weight:800;" id="resDias">—</div>
+                    </div>
+                    <div style="flex:1;min-width:80px;text-align:center;padding:.85rem .5rem;border-right:1px solid var(--border);">
+                        <div style="font-size:.68rem;color:var(--muted);font-weight:500;">Aprobados</div>
+                        <div style="font-size:1.05rem;font-weight:800;color:#7a5a00;" id="resAprobados">—</div>
+                    </div>
+                    <div style="flex:1;min-width:80px;text-align:center;padding:.85rem .5rem;border-right:1px solid var(--border);">
+                        <div style="font-size:.68rem;color:var(--muted);font-weight:500;">Pendientes</div>
+                        <div style="font-size:1.05rem;font-weight:800;color:#a16207;" id="resPendientes">—</div>
+                    </div>
+                    <div style="flex:1;min-width:80px;text-align:center;padding:.85rem .5rem;">
+                        <div style="font-size:.68rem;color:var(--muted);font-weight:500;">Rechazados</div>
+                        <div style="font-size:1.05rem;font-weight:800;color:#991b1b;" id="resRechazados">—</div>
+                    </div>
+                </div>
 
-                    <tr>
-                        <td style="font-weight:600;">2026-02-05</td>
-                        <td style="color:var(--muted);">Viernes</td>
-                        <td>10:00</td><td>16:00</td>
-                        <td style="font-weight:700;color:var(--primario);">06:00</td>
-                        <td>Actualización de base de datos</td>
-                        <td><span class="badge-aprobado">Aprobado</span></td>
-                        <td><button class="btn-ver" onclick="verDetalle('2026-02-05','Viernes','10:00','16:00','06:00','Actualización de base de datos','Aprobado','Trabajo completado en tiempo.')"><i class="bi bi-eye"></i> Ver</button></td>
-                    </tr>
+                <!-- Tabla -->
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Día</th>
+                                <th>Entrada</th>
+                                <th>Salida</th>
+                                <th>Total</th>
+                                <th>Actividad</th>
+                                <th>Estado</th>
+                                <th>Detalle</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyBitacora">
+                        </tbody>
+                    </table>
+                </div>
 
-                    <tr>
-                        <td style="font-weight:600;">2026-02-08</td>
-                        <td style="color:var(--muted);">Lunes</td>
-                        <td>08:00</td><td>14:00</td>
-                        <td style="font-weight:700;color:var(--primario);">06:00</td>
-                        <td>Elaboración de reportes mensuales</td>
-                        <td><span class="badge-pendiente">Pendiente UR</span></td>
-                        <td><button class="btn-ver" onclick="verDetalle('2026-02-08','Lunes','08:00','14:00','06:00','Elaboración de reportes mensuales','Pendiente UR','—')"><i class="bi bi-eye"></i> Ver</button></td>
-                    </tr>
+            </div><!-- /section-card bitácora -->
+        </div><!-- /col-der -->
 
-                    <tr>
-                        <td style="font-weight:600;">2026-02-09</td>
-                        <td style="color:var(--muted);">Martes</td>
-                        <td>09:00</td><td>13:00</td>
-                        <td style="font-weight:700;color:var(--primario);">04:00</td>
-                        <td>Soporte técnico interno</td>
-                        <td><span class="badge-aprobado">Aprobado</span></td>
-                        <td><button class="btn-ver" onclick="verDetalle('2026-02-09','Martes','09:00','13:00','04:00','Soporte técnico interno','Aprobado','Sin observaciones.')"><i class="bi bi-eye"></i> Ver</button></td>
-                    </tr>
-
-                    <tr>
-                        <td style="font-weight:600;">2026-02-10</td>
-                        <td style="color:var(--muted);">Miércoles</td>
-                        <td>08:00</td><td>15:00</td>
-                        <td style="font-weight:700;color:var(--primario);">07:00</td>
-                        <td>Capacitación interna</td>
-                        <td><span class="badge-aprobado">Aprobado</span></td>
-                        <td><button class="btn-ver" onclick="verDetalle('2026-02-10','Miércoles','08:00','15:00','07:00','Capacitación interna','Aprobado','Participación completa.')"><i class="bi bi-eye"></i> Ver</button></td>
-                    </tr>
-
-                    <tr>
-                        <td style="font-weight:600;">2026-02-11</td>
-                        <td style="color:var(--muted);">Jueves</td>
-                        <td>08:00</td><td>12:30</td>
-                        <td style="font-weight:700;color:var(--primario);">04:30</td>
-                        <td>Revisión de expedientes</td>
-                        <td><span class="badge-pendiente">Pendiente UR</span></td>
-                        <td><button class="btn-ver" onclick="verDetalle('2026-02-11','Jueves','08:00','12:30','04:30','Revisión de expedientes','Pendiente UR','—')"><i class="bi bi-eye"></i> Ver</button></td>
-                    </tr>
-
-                    <tr>
-                        <td style="font-weight:600;">2026-02-12</td>
-                        <td style="color:var(--muted);">Viernes</td>
-                        <td>09:00</td><td>14:00</td>
-                        <td style="font-weight:700;color:var(--primario);">05:00</td>
-                        <td>Apoyo en evento institucional</td>
-                        <td><span class="badge-aprobado">Aprobado</span></td>
-                        <td><button class="btn-ver" onclick="verDetalle('2026-02-12','Viernes','09:00','14:00','05:00','Apoyo en evento institucional','Aprobado','Excelente desempeño.')"><i class="bi bi-eye"></i> Ver</button></td>
-                    </tr>
-
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Paginación -->
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.4rem;border-top:1px solid var(--border);flex-wrap:wrap;gap:.5rem;">
-            <span style="font-size:.78rem;color:var(--muted);font-weight:500;">Mostrando 1–10 de 52 registros</span>
-            <div style="display:flex;gap:.35rem;">
-                <button style="width:32px;height:32px;border-radius:8px;border:1.5px solid var(--border);background:#fff;color:var(--muted);font-size:.82rem;font-weight:600;display:flex;align-items:center;justify-content:center;cursor:pointer;" disabled><i class="bi bi-chevron-left"></i></button>
-                <button style="width:32px;height:32px;border-radius:8px;border:1.5px solid var(--primario);background:var(--primario);color:#fff;font-size:.82rem;font-weight:600;display:flex;align-items:center;justify-content:center;cursor:pointer;">1</button>
-                <button style="width:32px;height:32px;border-radius:8px;border:1.5px solid var(--border);background:#fff;color:var(--muted);font-size:.82rem;font-weight:600;display:flex;align-items:center;justify-content:center;cursor:pointer;">2</button>
-                <button style="width:32px;height:32px;border-radius:8px;border:1.5px solid var(--border);background:#fff;color:var(--muted);font-size:.82rem;font-weight:600;display:flex;align-items:center;justify-content:center;cursor:pointer;">3</button>
-                <button style="width:32px;height:32px;border-radius:8px;border:1.5px solid var(--border);background:#fff;color:var(--muted);font-size:.82rem;font-weight:600;display:flex;align-items:center;justify-content:center;cursor:pointer;"><i class="bi bi-chevron-right"></i></button>
-            </div>
-        </div>
-
-    </div><!-- /section-card -->
+    </div><!-- /row -->
 
 </main>
 
@@ -627,6 +684,120 @@
                 <button type="button" class="btn-outline-custom" data-bs-dismiss="modal">Cerrar</button>
                 <button type="button" class="btn-primary-custom" onclick="showToast('Exportando registro…')">
                     <i class="bi bi-file-earmark-pdf"></i> Exportar registro
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ELIMINAR ALUMNO -->
+<div class="modal-siarha" id="modalEliminarAlumno" onclick="if(event.target===this)cerrarModalEliminar()">
+    <div class="modal-box" style="max-width:480px;">
+
+        <!-- PASO 1: advertencia -->
+        <div id="elimPaso1">
+            <div class="modal-box-head">
+                <div class="modal-icon danger"><i class="bi bi-trash3-fill"></i></div>
+                <div>
+                    <h5 style="margin:0;">Eliminar alumno del sistema</h5>
+                    <div style="font-size:.78rem;color:var(--muted);margin-top:.15rem;" id="elimNombreHead">—</div>
+                </div>
+            </div>
+            <div class="modal-box-body">
+                <p style="color:var(--text);font-weight:600;margin-bottom:.75rem;">
+                    Esta acción es <span style="color:#991b1b;">permanente e irreversible</span>. Se eliminará:
+                </p>
+                <div style="display:flex;flex-direction:column;gap:.45rem;margin-bottom:1rem;">
+                    <div style="display:flex;align-items:center;gap:.6rem;font-size:.83rem;color:var(--muted);">
+                        <i class="bi bi-x-circle-fill" style="color:#ef4444;font-size:.85rem;flex-shrink:0;"></i>
+                        El registro completo del alumno
+                    </div>
+                    <div style="display:flex;align-items:center;gap:.6rem;font-size:.83rem;color:var(--muted);">
+                        <i class="bi bi-x-circle-fill" style="color:#ef4444;font-size:.85rem;flex-shrink:0;"></i>
+                        Toda su bitácora de horas y registros
+                    </div>
+                    <div style="display:flex;align-items:center;gap:.6rem;font-size:.83rem;color:var(--muted);">
+                        <i class="bi bi-x-circle-fill" style="color:#ef4444;font-size:.85rem;flex-shrink:0;"></i>
+                        Su progreso, asignaciones y reportes
+                    </div>
+                    <div style="display:flex;align-items:center;gap:.6rem;font-size:.83rem;color:var(--muted);">
+                        <i class="bi bi-x-circle-fill" style="color:#ef4444;font-size:.85rem;flex-shrink:0;"></i>
+                        Su acceso al sistema
+                    </div>
+                </div>
+                <div class="modal-info-strip" style="background:#fee2e2;border:1px solid #fca5a5;">
+                    <i class="bi bi-exclamation-triangle-fill" style="color:#991b1b;"></i>
+                    <span style="color:#7f1d1d;">Si solo deseas darlo de baja temporalmente, cambia su <strong>Estado</strong> a "Baja" en lugar de eliminarlo.</span>
+                </div>
+            </div>
+            <div class="modal-box-foot">
+                <button class="btn-modal-cancel" onclick="cerrarModalEliminar()">Cancelar</button>
+                <button class="btn-modal-danger" onclick="irPaso2()">
+                    Sí, entiendo — continuar <i class="bi bi-arrow-right ms-1"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- PASO 2: confirmación escribiendo el número de cuenta -->
+        <div id="elimPaso2" style="display:none;">
+            <div class="modal-box-head">
+                <div class="modal-icon danger"><i class="bi bi-shield-exclamation"></i></div>
+                <div>
+                    <h5 style="margin:0;">Confirma la eliminación</h5>
+                    <div style="font-size:.78rem;color:var(--muted);margin-top:.15rem;">Paso 2 de 2</div>
+                </div>
+            </div>
+            <div class="modal-box-body">
+                <p style="font-size:.86rem;color:var(--text);margin-bottom:.85rem;">
+                    Escribe el número de cuenta <strong id="elimCuentaLabel">—</strong> para confirmar:
+                </p>
+                <input type="text" id="elimConfirmInput"
+                       class="form-control-custom"
+                       placeholder="Número de cuenta"
+                       oninput="validarConfirmEliminar()"
+                       style="font-size:.95rem;font-weight:700;letter-spacing:.05em;">
+                <div id="elimInputHint" style="font-size:.73rem;color:var(--muted);margin-top:.4rem;">
+                    El número debe coincidir exactamente.
+                </div>
+            </div>
+            <div class="modal-box-foot">
+                <button class="btn-modal-cancel" onclick="volverPaso1()">
+                    <i class="bi bi-arrow-left me-1"></i> Atrás
+                </button>
+                <button class="btn-modal-danger" id="btnConfirmarEliminar" onclick="ejecutarEliminarAlumno()" disabled
+                        style="opacity:.5;cursor:not-allowed;">
+                    <i class="bi bi-trash3-fill me-1"></i> Eliminar definitivamente
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- MODAL REASIGNAR ENCARGADO -->
+<div class="modal fade" id="modalReasignar" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius:var(--radius-card);border:none;overflow:hidden;">
+            <div class="modal-header" style="background:var(--primario);border:none;padding:1rem 1.4rem;">
+                <h6 class="modal-title text-white fw-bold" style="margin:0;"><i class="bi bi-person-fill-gear me-2"></i>Reasignar encargado de área</h6>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" style="padding:1.4rem;">
+                <p style="font-size:.85rem;color:var(--muted);margin-bottom:1rem;">
+                    Selecciona un administrador de área asignado al mismo instituto del alumno.
+                </p>
+                <div id="listaEncargados" style="display:flex;flex-direction:column;gap:.65rem;">
+                    <div style="text-align:center;padding:1.5rem;color:var(--muted);font-size:.85rem;">
+                        <i class="bi bi-arrow-repeat" style="font-size:1.4rem;display:block;margin-bottom:.4rem;"></i>
+                        Cargando encargados…
+                    </div>
+                </div>
+                <div id="encError" style="font-size:.8rem;color:#991b1b;margin-top:.6rem;display:none;"></div>
+            </div>
+            <div class="modal-footer" style="border-color:var(--border);padding:.9rem 1.4rem;">
+                <button type="button" class="btn-outline-custom" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn-primary-custom" id="btnConfReasignar" onclick="confirmarReasignar()" disabled>
+                    <i class="bi bi-check-lg"></i> Confirmar reasignación
                 </button>
             </div>
         </div>
@@ -738,5 +909,555 @@
 <!-- ────── SIARHA scripts ────── -->
 <script src="../assets/js/api.js"></script>
 <script src="../assets/js/admin-guard.js"></script>
+<script>
+// ════════════════════════════════════════════════════════════════
+// SIARHA · ADMIN_bitacora-alumno.js
+// ════════════════════════════════════════════════════════════════
+
+let _noCuenta   = null;   // no_cuenta leído de la URL
+let _alumno     = null;   // datos del alumno cargados del backend
+let _encSelId   = null;   // id_administrador seleccionado en modal reasignar
+let _modalPass  = null;
+let _modalReas  = null;
+
+// ── Helpers ──────────────────────────────────────────────────────
+function fmtFecha(ts) {
+    if (!ts) return '—';
+    const d = new Date(ts);
+    return d.toLocaleDateString('es-MX', { day:'2-digit', month:'short', year:'numeric' });
+}
+function fmtHora(ts) {
+    if (!ts) return '—';
+    return new Date(ts).toLocaleTimeString('es-MX', { hour:'2-digit', minute:'2-digit' });
+}
+function fmtHoras(h) {
+    if (h == null) return '—';
+    const hrs  = Math.floor(h);
+    const mins = Math.round((h - hrs) * 60);
+    return `${hrs}h ${mins.toString().padStart(2,'0')}m`;
+}
+function diaSemana(ts) {
+    const DIAS = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+    return DIAS[new Date(ts).getDay()];
+}
+function iniciales(n, ap) {
+    return ((n||'')[0]||'').toUpperCase() + ((ap||'')[0]||'').toUpperCase() || '?';
+}
+
+// ── Cargar datos del alumno ───────────────────────────────────────
+async function cargarAlumno() {
+    try {
+        const res  = await apiFetch(`/api/alumnos/${_noCuenta}`);
+        const data = await res.json();
+        if (!res.ok) { showToast(data.error || 'Error al cargar alumno', 'error'); return; }
+
+        _alumno = data.alumno;
+        const a  = _alumno;
+        const s  = id => document.getElementById(id);
+
+        // Iniciales / avatar
+        const ini = iniciales(a.nombre_alum, a.apellido_p_alum);
+        s('alumAvatar').textContent = ini;
+
+        // Nombre completo
+        const nombreCompleto = [a.nombre_alum, a.apellido_p_alum, a.apellido_m_alum].filter(Boolean).join(' ');
+        s('alumNombre').textContent = nombreCompleto;
+
+        // Subtítulo hero: no_cuenta · correo
+        s('alumSubtitulo').textContent = `No. ${a.no_cuenta}  ·  ${a.correo || ''}`;
+
+        // Programa badge
+        const pb = s('alumProgBadge');
+        pb.outerHTML = a.programa === 'pp'
+            ? `<span id="alumProgBadge" class="badge-pp">Prácticas Profesionales</span>`
+            : `<span id="alumProgBadge" class="badge-ss">Servicio Social</span>`;
+
+        // Progreso hero
+        const pct      = parseFloat(a.avance_pct || 0);
+        const horasMax = a.programa === 'pp' ? 240 : 480;
+        const horasReal= parseInt(a.horas_realizadas || 0);
+        s('alumProgFill').style.width   = `${Math.min(pct, 100)}%`;
+        s('alumProgPct').textContent    = `${pct}%`;
+        s('alumHorasResumen').textContent = `${horasReal} / ${horasMax} hrs`;
+
+        // Datos académicos (columna izquierda)
+        s('alumCuenta').textContent   = a.no_cuenta;
+        s('alumCarrera').textContent  = a.nombre_licenciatura || '—';
+        s('alumInstituto').textContent= a.nombre_instituto    || '—';
+        s('alumUR').textContent       = a.nombre_ur           || 'Sin asignar';
+        s('alumCorreo').textContent   = a.correo              || '—';
+
+        // Estado del alumno
+        const estadoActual = a.estado || 'activo';
+        renderBadgeEstado(estadoActual);
+        // El selector solo se muestra para superadmin y admin_area (no admin_reportes)
+        const rolAdm = getAdmin()?.rol || 'superadmin';
+        const editWrap = s('alumEstadoEditWrap');
+        if (editWrap && rolAdm !== 'admin_reportes') {
+            editWrap.style.display = '';
+            s('alumEstadoSel').value = estadoActual;
+        }
+
+        // Stat cards
+        s('statHorasReal').textContent = horasReal;
+        s('statHorasReq').textContent  = horasMax;
+        s('statPct').textContent       = `${pct}%`;
+
+        // Título dinámico
+        document.title = `SIARHA | ${nombreCompleto}`;
+
+        // Nombre en modal de baja
+        const bajaNombre = s('bajaNombre');
+        if (bajaNombre) bajaNombre.textContent = nombreCompleto;
+
+        // Encargado de área
+        cargarEncargado(a);
+        // Jefe inmediato de la UR
+        cargarJefeInmediato(a);
+
+    } catch(e) {
+        showToast('No se pudo conectar con el servidor.', 'error');
+    }
+}
+
+// ── Mostrar encargado actual ──────────────────────────────────────
+function cargarJefeInmediato(alumno) {
+    const s = id => document.getElementById(id);
+    // Los datos del jefe vienen de detalleAlumno (JOIN con jefes_inmediatos via id_ur)
+    if (!alumno.id_jefe_in || !alumno.nombre_jefe) {
+        s('jefeNombreDisplay').textContent = 'Sin encargado registrado en la UR';
+        s('jefeCargoDisplay').textContent  = '';
+        s('jefeEmailDisplay').textContent  = '';
+        s('jefeAvatar').textContent        = '—';
+        if (s('jefeTelWrap')) s('jefeTelWrap').style.display = 'none';
+        return;
+    }
+    const nombre = [alumno.nombre_jefe, alumno.apellido_p_jefe].filter(Boolean).join(' ');
+    s('jefeAvatar').textContent        = ((alumno.nombre_jefe||'')[0]||'').toUpperCase() + ((alumno.apellido_p_jefe||'')[0]||'').toUpperCase() || '?';
+    s('jefeNombreDisplay').textContent = nombre;
+    s('jefeCargoDisplay').textContent  = alumno.cargo_jefe  || '';
+    s('jefeEmailDisplay').textContent  = alumno.email_jefe  || '';
+    if (alumno.telefono_jefe) {
+        const wrap = s('jefeTelWrap');
+        if (wrap) wrap.style.display = 'flex';
+        s('jefeTelDisplay').textContent = alumno.telefono_jefe;
+    }
+}
+
+function cargarEncargado(alumno) {
+    const s        = id => document.getElementById(id);
+    const _adm     = getAdmin();
+    const rolAdmin = _adm?.rol || 'superadmin';
+
+    // Visibilidad del botón reasignar / aviso según rol
+    const btnReas   = s('encBtnReasignar');
+    const avisoArea = s('encAvisoArea');
+    if (btnReas)   btnReas.style.display   = rolAdmin === 'superadmin' ? '' : 'none';
+    if (avisoArea) {
+        const esMio = parseInt(alumno.id_administrador) === parseInt(_adm?.id_administrador);
+        avisoArea.style.display = (rolAdmin !== 'superadmin' && esMio) ? '' : 'none';
+    }
+
+    // Los datos del encargado llegan desde detalleAlumno (enc_nombre, enc_apellido_p, enc_email)
+    if (!alumno.id_administrador || !alumno.enc_nombre) {
+        s('encNombre').textContent      = 'Sin asignar';
+        s('encEmail').textContent       = '';
+        s('encAvatar').textContent      = '—';
+        s('encAvatar').style.background = 'var(--primario)';
+        return;
+    }
+
+    const nombre = [alumno.enc_nombre, alumno.enc_apellido_p].filter(Boolean).join(' ');
+    s('encNombre').textContent      = nombre;
+    s('encEmail').textContent       = alumno.enc_email || '';
+    s('encAvatar').textContent      = iniciales(alumno.enc_nombre, alumno.enc_apellido_p);
+    s('encAvatar').style.background = 'var(--primario)';
+}
+
+// ── Cargar bitácora ───────────────────────────────────────────────
+async function cargarBitacora() {
+    const mes    = document.getElementById('filtroMes')?.value   || '';
+    const estado = document.getElementById('filtroEst')?.value   || '';
+
+    let url = `/api/alumnos/${_noCuenta}/bitacora`;
+    const params = [];
+    if (mes)    params.push(`mes=${mes}`);
+    if (estado && estado !== 'Todos') params.push(`estado=${estado}`);
+    if (params.length) url += '?' + params.join('&');
+
+    try {
+        const res  = await apiFetch(url);
+        const data = await res.json();
+        if (!res.ok) { showToast(data.error || 'Error al cargar bitácora', 'error'); return; }
+
+        // Resumen del período
+        const r = data.resumen;
+        document.getElementById('resHoras').textContent    = fmtHoras(parseFloat(r.horas_aprobadas||0));
+        document.getElementById('resDias').textContent     = r.total_registros;
+        document.getElementById('resAprobados').textContent= r.total_aprobados;
+        document.getElementById('resPendientes').textContent= r.total_pendientes;
+        document.getElementById('resRechazados').textContent= r.total_rechazados;
+
+        // Stat pendientes
+        document.getElementById('statPend').textContent = r.total_pendientes;
+
+        // Tabla
+        renderTabla(data.registros);
+
+    } catch(e) {
+        showToast('No se pudo cargar la bitácora.', 'error');
+    }
+}
+
+function renderTabla(registros) {
+    const tbody = document.getElementById('tbodyBitacora');
+    if (!tbody) return;
+    if (!registros || registros.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--muted);font-size:.88rem;">
+            <i class="bi bi-journal-x" style="font-size:1.6rem;display:block;margin-bottom:.5rem;"></i>
+            Sin registros para este período</td></tr>`;
+        return;
+    }
+    tbody.innerHTML = registros.map(reg => {
+        const estadoCls = reg.estado_fin === 'Aprobado'   ? 'badge-aprobado'
+                        : reg.estado_fin === 'Rechazado'  ? 'badge-rechazado'
+                        : 'badge-pendiente';
+        const horas = reg.horas_trabajadas ? fmtHoras(parseFloat(reg.horas_trabajadas)) : '—';
+        return `<tr>
+            <td>${fmtFecha(reg.hora_entrada)}</td>
+            <td>${diaSemana(reg.hora_entrada)}</td>
+            <td>${fmtHora(reg.hora_entrada)}</td>
+            <td>${fmtHora(reg.hora_salida)}</td>
+            <td>${horas}</td>
+            <td>${reg.tipo_actividad || '—'}</td>
+            <td><span class="${estadoCls}">${reg.estado_fin || 'Pendiente'}</span></td>
+            <td>
+                <button class="btn-outline-custom" style="padding:.3rem .65rem;font-size:.78rem;"
+                    onclick='verDetalle(
+                        "${fmtFecha(reg.hora_entrada)}",
+                        "${diaSemana(reg.hora_entrada)}",
+                        "${fmtHora(reg.hora_entrada)}",
+                        "${fmtHora(reg.hora_salida)}",
+                        "${horas}",
+                        "${reg.tipo_actividad||'—'}",
+                        "${reg.estado_fin||'Pendiente'}",
+                        ""
+                    )'>
+                    <i class="bi bi-eye"></i>
+                </button>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+// ── Modal contraseña ──────────────────────────────────────────────
+// ── Contraseña inline (columna izquierda) ────────────────────────
+function validarPassInline(input) {
+    const ok = input.value.length >= 8;
+    input.classList.toggle('pass-ok',  ok);
+    input.classList.toggle('pass-err', !ok && input.value.length > 0);
+    const hint = document.getElementById('hintPass');
+    if (hint) {
+        hint.textContent = !input.value     ? 'Mínimo 8 caracteres.'
+                         : ok               ? '✓ Contraseña válida.'
+                         : `${input.value.length}/8 caracteres mínimos.`;
+        hint.style.color = !input.value ? 'var(--muted)' : ok ? '#16a34a' : '#dc2626';
+    }
+}
+
+function togglePassInline() {
+    const inp = document.getElementById('inputNuevaPass');
+    const ico = document.getElementById('iconoOjoPass');
+    const show = inp.type === 'password';
+    inp.type = show ? 'text' : 'password';
+    ico.className = show ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill';
+}
+
+async function guardarContrasenaInline() {
+    const pass = document.getElementById('inputNuevaPass')?.value?.trim();
+    const hint = document.getElementById('hintPass');
+    if (!pass || pass.length < 8) {
+        if (hint) { hint.textContent = 'La contraseña debe tener al menos 8 caracteres.'; hint.style.color = '#dc2626'; }
+        return;
+    }
+    try {
+        const res  = await apiFetch(`/api/alumnos/${_noCuenta}/contrasena`, {
+            method: 'PATCH',
+            body: JSON.stringify({ contrasena: pass })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+            if (hint) { hint.textContent = data.error || 'Error al cambiar contraseña.'; hint.style.color = '#dc2626'; }
+            return;
+        }
+        document.getElementById('inputNuevaPass').value = '';
+        document.getElementById('inputNuevaPass').classList.remove('pass-ok','pass-err');
+        if (hint) { hint.textContent = 'Mínimo 8 caracteres.'; hint.style.color = 'var(--muted)'; }
+        showToast('Contraseña actualizada correctamente.', 'success');
+    } catch(e) {
+        if (hint) { hint.textContent = 'No se pudo conectar con el servidor.'; hint.style.color = '#dc2626'; }
+    }
+}
+
+// ── Modal reasignar encargado ─────────────────────────────────────
+async function abrirModalReasignar() {
+    _encSelId = null;
+    document.getElementById('btnConfReasignar').disabled = true;
+    document.getElementById('encError').style.display = 'none';
+    const lista = document.getElementById('listaEncargados');
+    lista.innerHTML = `<div style="text-align:center;padding:1.5rem;color:var(--muted);font-size:.85rem;">
+        <i class="bi bi-arrow-repeat" style="font-size:1.4rem;display:block;margin-bottom:.4rem;"></i>
+        Cargando encargados…</div>`;
+
+    if (!_modalReas) _modalReas = new bootstrap.Modal(document.getElementById('modalReasignar'));
+    _modalReas.show();
+
+    // Cargar admin_area del mismo instituto del alumno
+    try {
+        const instId = _alumno?.id_instituto;
+        let url = `/api/admins/area`;
+        if (instId) url += `?id_instituto=${instId}`;
+
+        const res  = await apiFetch(url);
+        const data = await res.json();
+
+        if (!res.ok || !data.administradores?.length) {
+            lista.innerHTML = `<div style="text-align:center;padding:1.5rem;color:var(--muted);font-size:.85rem;">
+                <i class="bi bi-person-x" style="font-size:1.4rem;display:block;margin-bottom:.4rem;"></i>
+                No hay encargados de área asignados a este instituto.</div>`;
+            return;
+        }
+
+        lista.innerHTML = data.administradores.map(a => {
+            const nombre   = [a.nombre_admin, a.apellido_p_admin].filter(Boolean).join(' ');
+            const esCurrent= parseInt(a.id_administrador) === parseInt(_alumno?.id_administrador);
+            return `<div class="enc-item ${esCurrent ? 'enc-current' : ''}"
+                        style="display:flex;align-items:center;gap:.85rem;padding:.75rem 1rem;
+                               border:2px solid ${esCurrent ? 'var(--primario)' : 'var(--border)'};
+                               border-radius:var(--radius-sm);cursor:pointer;transition:border-color .2s,background .2s;background:${esCurrent ? 'var(--primario-lt)' : '#fff'};"
+                        onclick="seleccionarEncargado(this, ${a.id_administrador})">
+                <div style="width:38px;height:38px;border-radius:50%;background:var(--primario);
+                            display:flex;align-items:center;justify-content:center;
+                            font-size:.85rem;font-weight:800;color:#fff;flex-shrink:0;">
+                    ${iniciales(a.nombre_admin, a.apellido_p_admin)}
+                </div>
+                <div style="flex:1;">
+                    <div style="font-size:.88rem;font-weight:700;color:var(--text);">${nombre}</div>
+                    <div style="font-size:.75rem;color:var(--muted);">${a.email}</div>
+                </div>
+                ${esCurrent ? '<span style="font-size:.72rem;font-weight:700;color:var(--primario);background:var(--primario-lt);padding:.2rem .6rem;border-radius:20px;">Actual</span>' : ''}
+            </div>`;
+        }).join('');
+
+    } catch(e) {
+        lista.innerHTML = `<div style="text-align:center;padding:1.5rem;color:#991b1b;font-size:.85rem;">
+            Error al cargar encargados.</div>`;
+    }
+}
+
+function seleccionarEncargado(el, idAdmin) {
+    document.querySelectorAll('#listaEncargados .enc-item').forEach(i => {
+        i.style.borderColor = 'var(--border)';
+        i.style.background  = '#fff';
+    });
+    el.style.borderColor = 'var(--primario)';
+    el.style.background  = 'var(--primario-lt)';
+    _encSelId = idAdmin;
+    document.getElementById('btnConfReasignar').disabled = false;
+}
+
+async function confirmarReasignar() {
+    if (!_encSelId) return;
+    const errEl = document.getElementById('encError');
+    errEl.style.display = 'none';
+
+    try {
+        const res  = await apiFetch(`/api/alumnos/${_noCuenta}/encargado`, {
+            method: 'PATCH',
+            body: JSON.stringify({ id_administrador: _encSelId })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+            errEl.textContent = data.error || 'Error al reasignar encargado.';
+            errEl.style.display = 'block'; return;
+        }
+        _modalReas.hide();
+        // Actualizar _alumno con el encargado recién seleccionado
+        // (leer nombre y email del item seleccionado en el modal)
+        _alumno.id_administrador = _encSelId;
+        const itemSel = document.querySelector('#listaEncargados .enc-item[onclick*="' + _encSelId + '"]');
+        if (itemSel) {
+            const divNombre = itemSel.querySelectorAll('div > div')[0];
+            const divEmail  = itemSel.querySelectorAll('div > div')[1];
+            const partes    = (divNombre?.textContent || '').trim().split(' ');
+            _alumno.enc_nombre     = partes[0] || '';
+            _alumno.enc_apellido_p = partes[1] || '';
+            _alumno.enc_email      = divEmail?.textContent?.trim() || '';
+        }
+        showToast('Encargado reasignado correctamente.', 'success');
+        cargarEncargado(_alumno);
+    } catch(e) {
+        errEl.textContent = 'No se pudo conectar con el servidor.';
+        errEl.style.display = 'block';
+    }
+}
+
+// ── Eliminar alumno ───────────────────────────────────────────────
+function abrirModalEliminar() {
+    // Rellenar nombre y número de cuenta
+    const nombre = _alumno ? [_alumno.nombre_alum, _alumno.apellido_p_alum, _alumno.apellido_m_alum].filter(Boolean).join(' ') : '—';
+    document.getElementById('elimNombreHead').textContent  = nombre;
+    document.getElementById('elimCuentaLabel').textContent = _noCuenta || '—';
+    document.getElementById('elimConfirmInput').value      = '';
+    document.getElementById('elimInputHint').textContent   = 'El número debe coincidir exactamente.';
+    document.getElementById('elimInputHint').style.color   = 'var(--muted)';
+    const btnConf = document.getElementById('btnConfirmarEliminar');
+    btnConf.disabled = true;
+    btnConf.style.opacity = '.5';
+    btnConf.style.cursor  = 'not-allowed';
+    // Mostrar paso 1
+    document.getElementById('elimPaso1').style.display = '';
+    document.getElementById('elimPaso2').style.display = 'none';
+    document.getElementById('modalEliminarAlumno').classList.add('open');
+}
+
+function cerrarModalEliminar() {
+    document.getElementById('modalEliminarAlumno').classList.remove('open');
+}
+
+function irPaso2() {
+    document.getElementById('elimPaso1').style.display = 'none';
+    document.getElementById('elimPaso2').style.display = '';
+    document.getElementById('elimConfirmInput').focus();
+}
+
+function volverPaso1() {
+    document.getElementById('elimPaso1').style.display = '';
+    document.getElementById('elimPaso2').style.display = 'none';
+}
+
+function validarConfirmEliminar() {
+    const input   = document.getElementById('elimConfirmInput').value.trim();
+    const hint    = document.getElementById('elimInputHint');
+    const btn     = document.getElementById('btnConfirmarEliminar');
+    const correcto = String(input) === String(_noCuenta);
+
+    if (correcto) {
+        hint.textContent   = '✓ Número de cuenta confirmado.';
+        hint.style.color   = '#16a34a';
+        btn.disabled       = false;
+        btn.style.opacity  = '1';
+        btn.style.cursor   = 'pointer';
+    } else {
+        hint.textContent   = input.length > 0 ? 'El número no coincide.' : 'El número debe coincidir exactamente.';
+        hint.style.color   = input.length > 0 ? '#dc2626' : 'var(--muted)';
+        btn.disabled       = true;
+        btn.style.opacity  = '.5';
+        btn.style.cursor   = 'not-allowed';
+    }
+}
+
+async function ejecutarEliminarAlumno() {
+    const btn = document.getElementById('btnConfirmarEliminar');
+    btn.disabled      = true;
+    btn.innerHTML     = '<i class="bi bi-arrow-repeat me-1"></i> Eliminando…';
+    btn.style.opacity = '.7';
+
+    try {
+        const res  = await apiFetch(`/api/alumnos/${_noCuenta}`, { method: 'DELETE' });
+        const data = await res.json();
+
+        if (!res.ok) {
+            cerrarModalEliminar();
+            showToast(data.error || 'Error al eliminar el alumno.', 'error');
+            btn.disabled  = false;
+            btn.innerHTML = '<i class="bi bi-trash3-fill me-1"></i> Eliminar definitivamente';
+            btn.style.opacity = '1';
+            return;
+        }
+
+        cerrarModalEliminar();
+        showToast('Alumno eliminado correctamente.', 'success');
+        // Redirigir a la lista de alumnos después de un momento
+        setTimeout(() => { window.location.href = 'ADMIN_alumnos.html'; }, 1500);
+    } catch(e) {
+        cerrarModalEliminar();
+        showToast('No se pudo conectar con el servidor.', 'error');
+    }
+}
+
+// ── Estado del alumno ─────────────────────────────────────────────
+const ESTADO_CFG = {
+    activo:     { cls:'badge-est-activo',     icon:'bi-circle-fill',        label:'Activo'       },
+    revision:   { cls:'badge-est-revision',   icon:'bi-hourglass-split',    label:'En revisión'  },
+    finalizado: { cls:'badge-est-finalizado', icon:'bi-patch-check-fill',   label:'Finalizado'   },
+    pendiente:  { cls:'badge-est-pendiente',  icon:'bi-clock-fill',         label:'Pendiente'    },
+    baja:       { cls:'badge-est-baja',       icon:'bi-x-circle-fill',      label:'Baja'         },
+};
+
+function renderBadgeEstado(estado) {
+    const cfg = ESTADO_CFG[estado] || ESTADO_CFG.activo;
+    const el = document.getElementById('alumEstadoBadge');
+    if (!el) return;
+    el.className = cfg.cls;
+    el.innerHTML = `<i class="bi ${cfg.icon}" style="font-size:.65rem;"></i>${cfg.label}`;
+}
+
+async function cambiarEstadoAlumno(nuevoEstado) {
+    if (!nuevoEstado || !_noCuenta) return;
+    try {
+        const res  = await apiFetch(`/api/alumnos/${_noCuenta}/estado`, {
+            method: 'PATCH',
+            body: JSON.stringify({ estado: nuevoEstado })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+            showToast(data.error || 'Error al cambiar el estado.', 'error');
+            // Revertir el selector al valor anterior
+            if (_alumno?.estado) document.getElementById('alumEstadoSel').value = _alumno.estado;
+            return;
+        }
+        _alumno.estado = nuevoEstado;
+        renderBadgeEstado(nuevoEstado);
+        showToast(`Estado actualizado a "${ESTADO_CFG[nuevoEstado]?.label}".`, 'success');
+    } catch(e) {
+        showToast('No se pudo conectar con el servidor.', 'error');
+    }
+}
+
+// ── Init ──────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', async () => {
+    const params   = new URLSearchParams(window.location.search);
+    _noCuenta      = params.get('no_cuenta');
+
+    if (!_noCuenta) {
+        showToast('No se especificó un alumno.', 'error');
+        setTimeout(() => window.location.href = 'ADMIN_alumnos.html', 1500);
+        return;
+    }
+
+    // Agregar IDs a los elementos del resumen de período si no los tienen
+    // (se agregan dinámicamente porque el HTML los tiene sin ID)
+    const divResumen = document.querySelector('[style*="display:flex;border-bottom"]');
+    if (divResumen) {
+        const celdas = divResumen.querySelectorAll('div > div:first-child + div');
+        // Se manejan por ID desde cargarBitacora()
+    }
+
+    await cargarAlumno();
+
+    // Inicializar filtros
+    const hoy = new Date();
+    const mesActual = `${hoy.getFullYear()}-${String(hoy.getMonth()+1).padStart(2,'0')}`;
+    const filtroMes = document.getElementById('filtroMes');
+    if (filtroMes) filtroMes.value = mesActual;
+
+    await cargarBitacora();
+
+    // Evento botón filtrar
+    document.querySelector('.btn-primary-custom[onclick]')?.removeAttribute('onclick');
+    document.getElementById('btnFiltrar')?.addEventListener('click', cargarBitacora);
+});
+</script>
 </body>
 </html>

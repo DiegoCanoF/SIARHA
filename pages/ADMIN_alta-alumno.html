@@ -57,6 +57,12 @@
         .prog-card .pn{font-size:.85rem;font-weight:700;color:var(--text);}
         .prog-card .ps{font-size:.75rem;color:var(--muted);margin-top:.15rem;}
         .prog-card .ph{font-size:.8rem;font-weight:700;color:var(--primario);margin-top:.3rem;}
+        .prog-card.disabled{opacity:.4;cursor:not-allowed;pointer-events:none;filter:grayscale(.6);}
+        .prog-card.disabled:hover{border-color:var(--border);}
+        .ur-item.inactivo{opacity:.38;cursor:not-allowed;filter:grayscale(.7);}
+        .ur-item.inactivo:hover{background:transparent;}
+        .prog-card-wrap{position:relative;}
+        .prog-card-badge{position:absolute;top:-8px;right:-8px;font-size:.65rem;font-weight:800;background:var(--primario);color:#fff;border-radius:20px;padding:.15rem .55rem;z-index:1;}
         /* INSTITUTO BADGE */
         .inst-auto-badge{background:var(--primario-lt);color:var(--primario);border:1px solid rgba(80,16,19,.2);border-radius:var(--radius-sm);padding:.55rem .9rem;font-size:.88rem;font-weight:600;display:flex;align-items:center;gap:.5rem;}
         /* UR SELECT */
@@ -137,41 +143,119 @@ const INSTITUTOS = [
 ];
 
 // ── OFERTA EDUCATIVA POR INSTITUTO ───────────────────────────────
-// Fuente: UAEH oferta académica oficial
+// Fuente: Programas Educativos UAEH (documento oficial)
+// Cada campus lista SOLO las carreras que imparte según el PDF
 const CARRERAS = {
-    // ── Institutos (Pachuca / Tulancingo / Mineral del Monte) ──
-    'IDA':   ['Artes Visuales', 'Danza', 'Música', 'Teatro'],
-    'ICAP':  ['Alimentación Sustentable', 'Gestión de Negocios Agropecuarios',
-              'Ingeniería Agroindustrial', 'Ingeniería en Agronomía para la Producción Sustentable',
-              'Ingeniería en Biotecnología', 'Medicina Veterinaria y Zootecnia'],
-    'ICBI':  ['Arquitectura', 'Biología', 'Ciencias Computacionales',
-              'Física y Tecnología Avanzada', 'Geociencias', 'Ingeniería Civil',
-              'Ingeniería de Materiales', 'Ingeniería en Control Automático y Robótica',
-              'Ingeniería en Electrónica', 'Ingeniería en Nanotecnología',
-              'Ingeniería en Software', 'Ingeniería en Tecnologías de la Información',
-              'Ingeniería Industrial', 'Ingeniería Mecánica'],
-    'ICSa':  ['Cirujano Dentista', 'Enfermería', 'Farmacia', 'Gerontología',
-              'Médico Cirujano', 'Nutrición', 'Psicología', 'Trabajo Social'],
-    'ICEA':  ['Administración', 'Comercio Exterior', 'Contaduría', 'Economía',
-              'Gastronomía', 'Mercadotecnia', 'Turismo'],
-    'ICSHu': ['Antropología Social', 'Ciencia Política y Administración Pública',
-              'Ciencias de la Comunicación', 'Ciencias de la Educación', 'Derecho',
-              'Enseñanza de la Lengua Inglesa', 'Historia de México',
-              'Sociología', 'Trabajo Social'],
-    // ── Escuelas Superiores ──
-    'ES-ACT': ['Administración', 'Ciencias Computacionales', 'Creación y Desarrollo de Empresas',
-               'Derecho', 'Diseño Gráfico', 'Enfermería', 'Psicología'],
-    'ES-APA': ['Ingeniería Económica', 'Ingeniería en Biociencias',
-               'Ingeniería en Nanotecnología', 'Ingeniería en Tecnología del Frío'],
-    'ES-ATO': ['Ingeniería en Automatización Industrial', 'Ingeniería Industrial', 'Ingeniería Mecánica'],
-    'ES-SAH': ['Ingeniería en Automatización Industrial', 'Ingeniería Industrial', 'Ingeniería Mecánica'],
-    'ES-HUE': ['Administración', 'Derecho', 'Enfermería', 'Médico Cirujano', 'Sistemas Computacionales'],
-    'ES-TEP': ['Administración', 'Derecho', 'Ingeniería de Software', 'Ingeniería Industrial', 'Psicología'],
-    'ES-TIZ': ['Ciencias de la Educación', 'Contaduría', 'Ingeniería en Software',
-               'Ingeniería en Telecomunicaciones', 'Psicología', 'Seguridad Ciudadana',
-               'Tecnologías de la Información'],
-    'ES-TLA': ['Administración', 'Enfermería', 'Ingeniería de Software', 'Médico Cirujano'],
-    'ES-ZIM': ['Derecho', 'Ingeniería en Procesamiento de Recursos Minerales', 'Ingeniería Industrial'],
+    'IDA': [
+        'Arte Dramático',
+        'Artes Visuales',
+        'Danza',
+        'Música',
+    ],
+    'ICAP': [
+        'Alimentación Sustentable',
+        'Ingeniería Agroindustrial',
+        'Ingeniería en Agronomía para la Producción Sustentable',
+        'Ingeniería en Alimentos',
+        'Ingeniería Forestal',
+        'Medicina Veterinaria y Zootecnia',
+    ],
+    'ICBI': [
+        'Arquitectura',
+        'Biología',
+        'Ciencias Computacionales',
+        'Física y Tecnología Avanzada',
+        'Ingeniería Civil',
+        'Ingeniería de Materiales',
+        'Ingeniería en Electrónica',
+        'Ingeniería en Geología Ambiental',
+        'Ingeniería en Telecomunicaciones',
+        'Ingeniería Industrial',
+        'Matemáticas Aplicadas',
+        'Química',
+        'Química de Alimentos',
+    ],
+    'ICSa': [
+        'Cirujano Dentista',
+        'Enfermería',
+        'Farmacia',
+        'Gerontología',
+        'Médico Cirujano',
+        'Nutrición',
+        'Psicología',
+    ],
+    'ICEA': [
+        'Administración',
+        'Comercio Exterior',
+        'Contaduría',
+        'Economía',
+        'Gastronomía',
+        'Mercadotecnia',
+        'Turismo',
+    ],
+    'ICSHu': [
+        'Antropología Social',
+        'Ciencia Política y Administración Pública',
+        'Ciencias de la Educación',
+        'Comunicación',
+        'Derecho',
+        'Enseñanza de la Lengua Inglesa',
+        'Historia de México',
+        'Planeación y Desarrollo Regional',
+        'Sociología',
+        'Trabajo Social',
+    ],
+    'ES-ACT': [
+        'Creación y Desarrollo de Empresas',
+        'Derecho',
+        'Diseño Gráfico',
+        'Psicología',
+    ],
+    'ES-APA': [
+        'Ingeniería Económica y Financiera',
+        'Ingeniería en Biociencias',
+        'Ingeniería en Nanotecnología',
+        'Ingeniería en Tecnología del Frío',
+    ],
+    'ES-ATO': [
+        'Inteligencia de Mercados',
+        'Psicología',
+    ],
+    'ES-SAH': [
+        'Contaduría',
+        'Ingeniería Industrial',
+        'Ingeniería Mecánica',
+        'Ingeniería en Minero Metalúrgica',
+    ],
+    'ES-HUE': [
+        'Administración',
+        'Ciencias Computacionales',
+        'Derecho',
+        'Enfermería',
+        'Médico Cirujano',
+    ],
+    'ES-TEP': [
+        'Administración',
+        'Ingeniería Industrial',
+        'Médico Cirujano',
+    ],
+    'ES-TIZ': [
+        'Gestión Tecnológica',
+        'Ingeniería en Automatización Industrial',
+        'Tecnologías de la Información',
+        'Turismo',
+    ],
+    'ES-TLA': [
+        'Administración',
+        'Enfermería',
+        'Ingeniería de Software',
+        'Médico Cirujano',
+    ],
+    'ES-ZIM': [
+        'Contaduría',
+        'Derecho',
+        'Ingeniería en Procesamiento de Recursos Minerales',
+    ],
 };
 
 // ── URs: se cargan del backend al iniciar ─────────────────────────
@@ -213,7 +297,8 @@ let urSelId = '';
             <li><a class="nav-link" href="ADMIN_dashboard-servicio.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
             <li data-visible="superadmin,admin_area"><a class="nav-link active" href="ADMIN_alumnos.html"><i class="bi bi-people-fill"></i> Alumnos</a></li>
             <li data-visible="superadmin,admin_area"><a class="nav-link" href="ADMIN_gestion-ur.html"><i class="bi bi-building"></i> Unidades Receptoras</a></li>
-            <li data-visible="superadmin"><a class="nav-link" href="ADMIN_gestion-administradores.html"><i class="bi bi-person-gear"></i> Administradores</a></li>
+            <li data-visible="superadmin\"><a class="nav-link" href="ADMIN_gestion-administradores.html"><i class="bi bi-person-gear"></i> Administradores</a></li>
+            <li data-visible="superadmin"><a class="nav-link" href="ADMIN_periodos.html"><i class="bi bi-calendar-range-fill"></i> Periodos</a></li>
             <li data-visible="superadmin,admin_area"><a class="nav-link" href="ADMIN_reportes-globales.html"><i class="bi bi-bar-chart-fill"></i> Reportes Globales</a></li>
             <li><a class="nav-link" href="ADMIN_mensajes-admin.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge">3</span></a></li>
             <hr class="menu-divider">
@@ -325,23 +410,27 @@ let urSelId = '';
     <div class="section-card">
         <div class="section-header"><span class="title"><i class="bi bi-journal-check"></i> Programa</span></div>
         <div class="section-body">
-            <div class="prog-grid">
-                <div class="prog-card" data-prog="ss" onclick="selProg(this)">
-                    <span class="check"><i class="bi bi-check-lg" style="color:#fff;font-size:.6rem;"></i></span>
-                    <div class="prog-icon prog-ss"><i class="bi bi-journal-check"></i></div>
-                    <div>
-                        <div class="pn">Servicio Social</div>
-                        <div class="ps">Modalidad obligatoria de vinculación comunitaria.</div>
-                        <div class="ph"><i class="bi bi-clock me-1"></i>480 horas</div>
+            <div class="prog-grid" id="progGrid">
+                <div class="prog-card-wrap" id="wrapSS">
+                    <div class="prog-card" id="cardSS" data-prog="ss" onclick="selProg(this)">
+                        <span class="check"><i class="bi bi-check-lg" style="color:#fff;font-size:.6rem;"></i></span>
+                        <div class="prog-icon prog-ss"><i class="bi bi-journal-check"></i></div>
+                        <div>
+                            <div class="pn">Servicio Social</div>
+                            <div class="ps">Modalidad obligatoria de vinculación comunitaria.</div>
+                            <div class="ph"><i class="bi bi-clock me-1"></i>480 horas</div>
+                        </div>
                     </div>
                 </div>
-                <div class="prog-card" data-prog="pp" onclick="selProg(this)">
-                    <span class="check"><i class="bi bi-check-lg" style="color:#fff;font-size:.6rem;"></i></span>
-                    <div class="prog-icon prog-pp"><i class="bi bi-briefcase-fill"></i></div>
-                    <div>
-                        <div class="pn">Prácticas Profesionales</div>
-                        <div class="ps">Aplicación de conocimientos en entorno laboral.</div>
-                        <div class="ph"><i class="bi bi-clock me-1"></i>240 horas</div>
+                <div class="prog-card-wrap" id="wrapPP">
+                    <div class="prog-card" id="cardPP" data-prog="pp" onclick="selProg(this)">
+                        <span class="check"><i class="bi bi-check-lg" style="color:#fff;font-size:.6rem;"></i></span>
+                        <div class="prog-icon prog-pp"><i class="bi bi-briefcase-fill"></i></div>
+                        <div>
+                            <div class="pn">Prácticas Profesionales</div>
+                            <div class="ps">Aplicación de conocimientos en entorno laboral.</div>
+                            <div class="ph"><i class="bi bi-clock me-1"></i>240 horas</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -355,12 +444,15 @@ let urSelId = '';
         <div class="section-body">
             <div class="row g-3">
                 <div class="col-md-4">
-                    <label class="form-label-sm">Fecha de inicio *</label>
-                    <input type="date" id="fInicio" class="form-field" onchange="calcDur()">
+                    <label class="form-label-sm">Periodo *</label>
+                    <select id="fPeriodo" class="form-field" onchange="actualizarInfoPeriodo()">
+                        <option value="">Cargando periodos…</option>
+                    </select>
+                    <span id="infoPeriodo" style="font-size:.75rem;color:var(--muted);display:block;margin-top:.25rem;"></span>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label-sm">Fecha estimada de término *</label>
-                    <input type="date" id="fFin" class="form-field" onchange="calcDur()">
+<!-- fecha_fin viene del periodo seleccionado -->
                 </div>
                 <div class="col-md-4">
                     <label class="form-label-sm">Duración calculada</label>
@@ -374,9 +466,9 @@ let urSelId = '';
     <div class="section-card">
         <div class="section-header"><span class="title"><i class="bi bi-building-fill"></i> Unidad Receptora</span></div>
         <div class="section-body">
-            <div class="aviso-info">
+            <div class="aviso-info" id="avisoURs">
                 <i class="bi bi-info-circle-fill" style="flex-shrink:0;margin-top:.05rem;"></i>
-                <span>Solo se muestran las URs dadas de alta con lugares disponibles. Para agregar una nueva ve a <strong>Unidades Receptoras</strong>.</span>
+                <span id="avisoURsTxt">Cargando…</span>
             </div>
             <label class="form-label-sm">Buscar Unidad Receptora *</label>
             <input type="text" id="urBuscar" class="form-field" placeholder="Buscar por nombre…"
@@ -398,7 +490,7 @@ let urSelId = '';
                 <i class="bi bi-exclamation-circle-fill me-1"></i><span id="formErrorTxt"></span>
             </div>
             <div class="d-flex gap-3 flex-wrap align-items-center">
-                <button type="submit" class="btn-save"><i class="bi bi-person-check-fill"></i> Dar de alta alumno</button>
+                <button type="submit" id="btnGuardar" class="btn-save"><i class="bi bi-person-check-fill"></i> Dar de alta alumno</button>
                 <a href="ADMIN_alumnos.html" class="btn-cancel-sm"><i class="bi bi-x-circle"></i> Cancelar</a>
             </div>
         </div>
@@ -513,9 +605,29 @@ async function iniciarInstitutos() {
     // Determinar qué institutos puede ver este admin
     let instPermitidos;
     if (rolAdmin === 'admin_area' && _admin.institutos?.length) {
-        // Solo sus institutos asignados (por id_instituto)
-        const idsAsignados = _admin.institutos.map(i => i.id_instituto ?? i.id);
+        // Los institutos del backend vienen como {id_instituto, nombre_instituto}
+        // Normalizar con parseInt para evitar mismatch string vs número
+        const idsAsignados = _admin.institutos.map(i =>
+            parseInt(i.id_instituto ?? i.id, 10)
+        );
         instPermitidos = INSTITUTOS.filter(i => idsAsignados.includes(i.id));
+
+        // Fallback por nombre si los IDs no coinciden
+        if (instPermitidos.length === 0) {
+            const nombresAsignados = _admin.institutos
+                .map(i => (i.nombre_instituto ?? i.nombre ?? '').toLowerCase());
+            instPermitidos = INSTITUTOS.filter(i =>
+                nombresAsignados.some(n =>
+                    i.nombre.toLowerCase().includes(n) || n.includes(i.nombre.toLowerCase())
+                )
+            );
+        }
+
+        // Último recurso: mostrar todos para no bloquear al admin
+        if (instPermitidos.length === 0) {
+            console.warn('[SIARHA] No se pudieron mapear los institutos del admin_area; mostrando todos.');
+            instPermitidos = INSTITUTOS;
+        }
     } else {
         instPermitidos = INSTITUTOS; // superadmin ve todos
     }
@@ -531,6 +643,9 @@ async function iniciarInstitutos() {
         // Varios → llenar select con optgroups
         const grpInst = document.getElementById('grpInstitutos');
         const grpEsc  = document.getElementById('grpEscuelas');
+        // Limpiar opciones previas para evitar duplicados en recargas
+        grpInst.innerHTML = '';
+        grpEsc.innerHTML  = '';
         instPermitidos.forEach(inst => {
             const opt = document.createElement('option');
             opt.value = inst.codigo;
@@ -552,46 +667,121 @@ async function poblarCarreras(codigo) {
     sel.disabled = true;
     if (!codigo) return;
 
-    // Intentar cargar del backend (licenciaturas por instituto)
+    // Base: catálogo estático completo (fuente de verdad de la oferta UAEH)
+    const listaEstatica = CARRERAS[codigo] || [];
+    // Usar un Set para deduplicar; el catálogo estático tiene prioridad
+    const nombresSet = new Set(listaEstatica.map(c => c.toLowerCase()));
+    const listaFinal = [...listaEstatica];
+
+    // Enriquecer con cualquier carrera extra registrada en la BD
+    // (p. ej. licenciaturas creadas manualmente por el admin)
     const instObj = INSTITUTOS.find(i => i.codigo === codigo);
     if (instObj) {
         try {
             const res  = await apiFetch(`/api/licenciaturas?id_instituto=${instObj.id}`);
             const data = await res.json();
-            if (res.ok && data.licenciaturas?.length > 0) {
-                sel.innerHTML = '<option value="">Selecciona una carrera…</option>';
+            if (res.ok && Array.isArray(data.licenciaturas)) {
                 data.licenciaturas.forEach(l => {
-                    const opt = document.createElement('option');
-                    opt.value = l.nombre_licenciatura;
-                    opt.textContent = l.nombre_licenciatura;
-                    sel.appendChild(opt);
+                    if (!nombresSet.has(l.nombre_licenciatura.toLowerCase())) {
+                        listaFinal.push(l.nombre_licenciatura);
+                    }
                 });
-                sel.disabled = false;
-                return;
             }
-        } catch(e) { /* fall through to static catalog */ }
+        } catch(e) { /* sin conexión o error: usar solo el catálogo estático */ }
     }
 
-    // Fallback: catálogo estático
-    const lista = CARRERAS[codigo] || [];
+    listaFinal.sort();
     sel.innerHTML = '<option value="">Selecciona una carrera…</option>';
-    lista.sort().forEach(c => {
+    listaFinal.forEach(c => {
         const opt = document.createElement('option');
         opt.value = c;
         opt.textContent = c;
         sel.appendChild(opt);
     });
-    sel.disabled = lista.length === 0;
+    sel.disabled = listaFinal.length === 0;
 }
 
 // ════════════════════════════════════════════════════════════════
 // PROGRAMA
 // ════════════════════════════════════════════════════════════════
 
+/**
+ * Configura las tarjetas de programa según el programa asignado al admin.
+ *   - 'ss'    → solo SS seleccionada y fija, PP deshabilitada
+ *   - 'pp'    → solo PP seleccionada y fija, SS deshabilitada
+ *   - 'ambos' → ambas habilitadas, ninguna preseleccionada (el admin elige)
+ *   - superadmin → igual que 'ambos'
+ */
+function iniciarPrograma() {
+    const _admin   = JSON.parse(localStorage.getItem('admin_data') || '{}');
+    const programa = _admin.programa || 'ambos';   // 'ss' | 'pp' | 'ambos'
+    const rol      = _admin.rol      || 'superadmin';
+
+    const cardSS = document.getElementById('cardSS');
+    const cardPP = document.getElementById('cardPP');
+
+    // superadmin siempre puede elegir ambos
+    if (rol === 'superadmin' || programa === 'ambos') {
+        // Ambas habilitadas — sin preselección
+        cardSS.classList.remove('disabled', 'selected');
+        cardPP.classList.remove('disabled', 'selected');
+        document.getElementById('fProg').value = '';
+        return;
+    }
+
+    if (programa === 'ss') {
+        // Solo SS: seleccionada y bloqueada; PP deshabilitada
+        cardSS.classList.add('selected');
+        cardSS.classList.remove('disabled');
+        cardPP.classList.add('disabled');
+        cardPP.classList.remove('selected');
+        document.getElementById('fProg').value = 'ss';
+    } else if (programa === 'pp') {
+        // Solo PP: seleccionada y bloqueada; SS deshabilitada
+        cardPP.classList.add('selected');
+        cardPP.classList.remove('disabled');
+        cardSS.classList.add('disabled');
+        cardSS.classList.remove('selected');
+        document.getElementById('fProg').value = 'pp';
+    }
+}
+
 function selProg(card) {
+    if (card.classList.contains('disabled')) return;
+
+    const _admin   = JSON.parse(localStorage.getItem('admin_data') || '{}');
+    const programa = _admin.programa || 'ambos';
+    const rol      = _admin.rol      || 'superadmin';
+    // Admin de programa fijo no puede cambiar la selección
+    if (rol !== 'superadmin' && programa !== 'ambos') return;
+
     document.querySelectorAll('.prog-card').forEach(c => c.classList.remove('selected'));
     card.classList.add('selected');
     document.getElementById('fProg').value = card.dataset.prog;
+
+    // Recargar periodos filtrados por el programa recién elegido
+    cargarPeriodos();
+
+    // Re-renderizar URs para aplicar/quitar grises según el programa elegido
+    if (URS.length) renderURs(URS);
+
+    // Limpiar UR seleccionada si ya no es compatible con el nuevo programa
+    const urActual = document.getElementById('fUR').value;
+    if (urActual) {
+        const ur = URS.find(u => String(u.id_ur) === String(urActual));
+        if (ur) {
+            const prog = card.dataset.prog;
+            const incompatible = ur.programas_aceptados !== prog && ur.programas_aceptados !== 'ambos';
+            if (incompatible) {
+                // Deseleccionar UR incompatible
+                document.getElementById('fUR').value = '';
+                document.getElementById('urSeleccionada').style.display = 'none';
+                document.getElementById('urNombreSelec').textContent = '';
+                urSelId = '';
+                showToast('La UR seleccionada no acepta este programa. Elige otra.', 'info');
+            }
+        }
+    }
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -599,20 +789,21 @@ function selProg(card) {
 // ════════════════════════════════════════════════════════════════
 
 function calcDur() {
-    const ini = document.getElementById('fInicio').value;
-    const fin = document.getElementById('fFin').value;
+    // Duración se calcula desde el periodo seleccionado
+    const sel    = document.getElementById('fPeriodo');
     const divDur = document.getElementById('duracion');
-    if (!ini || !fin) return;
-    const dias = Math.round((new Date(fin) - new Date(ini)) / 86400000);
-    if (dias <= 0) {
-        divDur.textContent = 'Fecha inválida';
-        divDur.style.color = '#dc2626';
-        return;
-    }
+    if (!divDur) return;
+    if (!sel || !sel.value) { divDur.textContent = '— semanas'; return; }
+    const opt = sel.options[sel.selectedIndex];
+    if (!opt || !opt.dataset.inicio) { divDur.textContent = '— semanas'; return; }
+    const ini  = new Date(opt.dataset.inicio);
+    const fin  = new Date(opt.dataset.fin);
+    const dias = Math.round((fin - ini) / 86400000);
+    if (dias <= 0) { divDur.textContent = 'Fechas inválidas'; return; }
     const semanas = Math.round(dias / 7);
-    divDur.textContent = `${semanas} semanas (${dias} días)`;
+    divDur.textContent = semanas + ' semanas (' + dias + ' días)';
     divDur.style.color = 'var(--muted)';
-    document.getElementById('fFin').min = ini;
+    document.getElementById('fFin')?.setAttribute('min', ini);
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -620,10 +811,38 @@ function calcDur() {
 // ════════════════════════════════════════════════════════════════
 
 async function cargarURs() {
+    const _admin    = JSON.parse(localStorage.getItem('admin_data') || '{}');
+    const rolAdmin  = _admin.rol      || 'superadmin';
+    const progAdmin = _admin.programa || 'ambos';
+
+    // Aviso según rol
+    const avisoTxt = document.getElementById('avisoURsTxt');
+    if (avisoTxt) {
+        if (rolAdmin === 'superadmin' || progAdmin === 'ambos') {
+            avisoTxt.innerHTML = 'Solo se muestran URs activas con lugares disponibles. Las URs que no aceptan el programa seleccionado aparecen en gris. Para agregar una nueva ve a <a href="ADMIN_gestion-ur.html" style="color:var(--primario);font-weight:700;">Unidades Receptoras</a>.';
+        } else {
+            avisoTxt.innerHTML = 'Solo aparecen las URs correspondientes a tu programa. Si no encuentras la UR, puede no estar registrada — notifica a un superadministrador.';
+        }
+    }
+
     try {
         const res  = await apiFetch('/api/unidades-receptoras?por_pagina=200');
         const data = await res.json();
-        URS = (data.unidades_receptoras || []).filter(ur => ur.estado === 'activa');
+
+        // Guardar activas + suspendidas; inactivas se excluyen completamente
+        // Las suspendidas se muestran al final en gris (no seleccionables)
+        if (rolAdmin === 'superadmin' || progAdmin === 'ambos') {
+            URS = (data.unidades_receptoras || []).filter(ur =>
+                ur.estado === 'activa' || ur.estado === 'suspendida'
+            );
+        } else {
+            // Admin de un solo programa: solo URs compatibles (activas o suspendidas del programa)
+            URS = (data.unidades_receptoras || []).filter(ur => {
+                if (ur.estado !== 'activa' && ur.estado !== 'suspendida') return false;
+                return ur.programas_aceptados === progAdmin || ur.programas_aceptados === 'ambos';
+            });
+        }
+
         renderURs(URS);
     } catch(e) {
         console.error('Error cargando URs:', e);
@@ -633,31 +852,67 @@ async function cargarURs() {
 }
 
 function renderURs(lista) {
-    const div = document.getElementById('urLista');
-    if (!lista.length) {
-        div.innerHTML = '<p style="padding:.75rem 1rem;font-size:.82rem;color:var(--muted);">Sin unidades receptoras disponibles.</p>';
+    const div       = document.getElementById('urLista');
+    const _admin    = JSON.parse(localStorage.getItem('admin_data') || '{}');
+    const rolAdmin  = _admin.rol      || 'superadmin';
+    const progAdmin = _admin.programa || 'ambos';
+    const progElegido = document.getElementById('fProg').value; // 'ss' | 'pp' | ''
+    const q = (document.getElementById('urBuscar')?.value || '').toLowerCase();
+
+    const listaFiltrada = q ? lista.filter(u => u.nombre_ur.toLowerCase().includes(q)) : lista;
+
+    if (!listaFiltrada.length) {
+        const msgVacia = (rolAdmin === 'superadmin' || progAdmin === 'ambos')
+            ? 'Sin unidades receptoras activas disponibles.'
+            : 'No hay URs registradas para tu programa. Notifica a un superadministrador.';
+        div.innerHTML = `<p style="padding:.75rem 1rem;font-size:.82rem;color:var(--muted);">${msgVacia}</p>`;
         return;
     }
-    div.innerHTML = lista.map(ur => {
-        const ocupados = ur.alumnos_activos ?? 0;
-        const cupo     = ur.cupo_maximo ?? 0;
-        const llena    = ocupados >= cupo;
-        const pct      = cupo > 0 ? Math.round(ocupados / cupo * 100) : 0;
-        return `<div class="ur-item${llena ? '' : ''}"
-                     onclick="${llena ? '' : `selUR(${ur.id_ur},'${ur.nombre_ur.replace(/'/g,"\\'")}',this)`}"
-                     style="${llena ? 'opacity:.45;cursor:not-allowed;' : ''}">
+
+    // Ordenar: activas primero, suspendidas al final
+    const listaOrdenada = [...listaFiltrada].sort((a, b) => {
+        const ord = e => e.estado === 'activa' ? 0 : 1;
+        return ord(a) - ord(b) || a.nombre_ur.localeCompare(b.nombre_ur);
+    });
+
+    div.innerHTML = listaOrdenada.map(ur => {
+        const ocupados    = parseInt(ur.alumnos_activos ?? 0);
+        const cupo        = parseInt(ur.cupo_maximo    ?? 0);
+        const llena       = ocupados >= cupo;
+        const suspendida  = ur.estado === 'suspendida';
+
+        // Para superadmin y admin 'ambos': poner en gris las URs incompatibles con el programa elegido
+        let incompatible = false;
+        if ((rolAdmin === 'superadmin' || progAdmin === 'ambos') && progElegido) {
+            incompatible = ur.programas_aceptados !== progElegido && ur.programas_aceptados !== 'ambos';
+        }
+
+        const bloqueada = llena || incompatible || suspendida;
+        const etiqueta  = ur.programas_aceptados === 'ss' ? 'Solo Servicio Social'
+                        : ur.programas_aceptados === 'pp' ? 'Solo Prácticas Prof.'
+                        : 'SS y Prácticas Prof.';
+
+        let razonGris = '';
+        if (suspendida)   razonGris = 'UR Suspendida';
+        else if (incompatible) razonGris = `No acepta ${progElegido === 'ss' ? 'Servicio Social' : 'Prácticas Prof.'}`;
+        else if (llena)   razonGris = 'Sin lugares';
+
+        const razonColor = suspendida ? '#b45309' : '#a16207';
+
+        return `<div class="ur-item${bloqueada ? ' inactivo' : ''}"
+                     title="${suspendida ? 'Esta UR está suspendida y no puede recibir alumnos' : ''}"
+                     onclick="${bloqueada ? 'void(0)' : `selUR(${ur.id_ur},'${ur.nombre_ur.replace(/'/g,"\\'")}',this)`}">
             <div>
-                <div style="font-weight:600;font-size:.84rem;">${ur.nombre_ur}</div>
-                <div style="font-size:.73rem;color:var(--muted);">${ur.programas_aceptados === 'ss' ? 'Solo SS' : ur.programas_aceptados === 'pp' ? 'Solo PP' : 'SS y PP'}</div>
+                <div style="font-weight:600;font-size:.84rem;${suspendida ? 'color:var(--muted);' : ''}">${ur.nombre_ur}</div>
+                <div style="font-size:.73rem;color:var(--muted);">${etiqueta}${razonGris ? ` · <span style="color:${razonColor};font-weight:600;">${razonGris}</span>` : ''}</div>
             </div>
-            <span class="ur-ocup${llena ? ' full' : ''}">${ocupados}/${cupo} lugares${llena ? ' <i class="bi bi-lock-fill"></i>' : ''}</span>
+            <span class="ur-ocup${llena && !suspendida ? ' full' : ''}">${suspendida ? '<i class="bi bi-slash-circle" style="color:#b45309;"></i>' : `${ocupados}/${cupo}${llena ? ' <i class="bi bi-lock-fill"></i>' : ''}`}</span>
         </div>`;
     }).join('');
 }
 
 function filtrarURs() {
-    const q = document.getElementById('urBuscar').value.toLowerCase();
-    renderURs(URS.filter(u => u.nombre_ur.toLowerCase().includes(q)));
+    renderURs(URS); // El filtro de texto y de programa están dentro de renderURs
 }
 
 function selUR(id, nombre, el) {
@@ -693,8 +948,6 @@ document.getElementById('formAlta').addEventListener('submit', async e => {
     const inst    = document.getElementById('fInstituto').value || document.getElementById('instAutoNombre').textContent;
     const carrera = document.getElementById('fCarrera').value;
     const prog    = document.getElementById('fProg').value;
-    const inicio  = document.getElementById('fInicio').value;
-    const fin     = document.getElementById('fFin').value;
     const ur      = document.getElementById('fUR').value;
 
     // Validaciones
@@ -706,8 +959,7 @@ document.getElementById('formAlta').addEventListener('submit', async e => {
     if (curp && !/^[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z0-9]\d$/.test(curp)) return mostrarError('El formato de la CURP es inválido.');
     if (!carrera) return mostrarError('Selecciona la carrera del alumno.');
     if (!prog)    return mostrarError('Selecciona el programa (Servicio Social o Prácticas Profesionales).');
-    if (!inicio || !fin) return mostrarError('Define el periodo de inicio y término.');
-    if (new Date(fin) <= new Date(inicio)) return mostrarError('La fecha de término debe ser posterior a la de inicio.');
+    if (!document.getElementById('fPeriodo').value) return mostrarError('Selecciona un periodo.');
     if (!ur) return mostrarError('Asigna una Unidad Receptora al alumno.');
 
     // Construir payload para el backend
@@ -729,8 +981,7 @@ document.getElementById('formAlta').addEventListener('submit', async e => {
         nombre_licenciatura: carrera,
         id_instituto:        instObj?.id || null,
         id_ur:               parseInt(ur),
-        fecha_inicio:        inicio,
-        fecha_fin:           fin,
+        id_periodo:          document.getElementById('fPeriodo').value || null,
     };
 
     try {
@@ -781,16 +1032,127 @@ function setNotifTab(tipo, btn) {
 // INIT
 // ════════════════════════════════════════════════════════════════
 
-document.addEventListener('DOMContentLoaded', () => {
-    iniciarInstitutos();
-    cargarURs();
-
-    // Fecha mínima = hoy
-    const hoy = new Date().toISOString().split('T')[0];
-    document.getElementById('fInicio').min = hoy;
-    document.getElementById('fInicio').value = hoy;
+document.addEventListener('DOMContentLoaded', async () => {
+    // Orden importante:
+    // 1. Programa primero (define qué institutos y URs mostrar)
+    iniciarPrograma();
+    // 2. Institutos: async — esperar a que llene el select antes de continuar
+    await iniciarInstitutos();
+    // 3. URs y periodos en paralelo (no dependen entre sí)
+    await Promise.all([cargarURs(), cargarPeriodos()]);
     calcDur();
+
+    // Recargar periodos y URs cuando el admin cambia de programa manualmente
+    const fProg = document.getElementById('fProg');
+    if (fProg) fProg.addEventListener('change', () => {
+        cargarPeriodos();
+        cargarURs();
+    });
 });
+// ── CARGA DE PERIODOS ──────────────────────────────────────────
+async function cargarPeriodos() {
+    const prog = document.getElementById('fProg')?.value || ''; // 'ss' | 'pp' | ''
+    const sel  = document.getElementById('fPeriodo');
+    if (!sel) return;
+    sel.innerHTML = '<option value="">Cargando periodos…</option>';
+    try {
+        const res  = await apiFetch('/api/periodos/activos');
+        const data = await res.json();
+        const todos = data.periodos || [];
+
+        // Filtrar según el programa elegido:
+        // - Sin programa elegido aún: mostrar TODOS los activos
+        // - Con programa 'ss': periodos de 'ss' o 'ambos'
+        // - Con programa 'pp': periodos de 'pp' o 'ambos'
+        const periodos = !prog
+            ? todos
+            : todos.filter(p => p.programa === prog || p.programa === 'ambos');
+
+        if (periodos.length === 0) {
+            const progLabel = !prog ? 'ningún programa'
+                : prog === 'ss' ? 'Servicio Social' : 'Prácticas Profesionales';
+            sel.innerHTML = `<option value="">Sin periodos activos${prog ? ' de ' + progLabel : ''}</option>`;
+            document.getElementById('infoPeriodo').textContent = '';
+            document.getElementById('duracion').textContent = '— semanas';
+            if (prog) bloquearFormSinPeriodo(progLabel);
+        } else {
+            sel.innerHTML = '<option value="">Selecciona un periodo…</option>' +
+                periodos.map(p => {
+                    const ini = new Date(p.fecha_inicio).toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'});
+                    const fin = new Date(p.fecha_fin).toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'});
+                    // Etiqueta de programa junto al nombre (útil cuando no hay programa elegido)
+                    const etiqProg = p.programa === 'ss' ? ' [SS]'
+                                   : p.programa === 'pp' ? ' [PP]'
+                                   : ' [SS y PP]';
+                    return `<option value="${p.id_periodo}"`
+                        + ` data-inicio="${p.fecha_inicio}"`
+                        + ` data-fin="${p.fecha_fin}"`
+                        + ` data-horas="${p.horas_requeridas}"`
+                        + ` data-prog="${p.programa}">`
+                        + p.nombre_periodo + etiqProg + ' · ' + ini + ' → ' + fin
+                        + '</option>';
+                }).join('');
+            desbloquearForm();
+        }
+        actualizarInfoPeriodo();
+    } catch(e) {
+        sel.innerHTML = '<option value="">Error al cargar periodos</option>';
+    }
+}
+
+// Bloquea el botón de submit y muestra aviso cuando no hay periodo activo
+function bloquearFormSinPeriodo(progLabel) {
+    const btn = document.getElementById('btnGuardar');
+    if (btn) {
+        btn.disabled = true;
+        btn.title = `No hay un periodo activo de ${progLabel}. Crea uno en Periodos antes de dar de alta alumnos.`;
+    }
+    let aviso = document.getElementById('avisoPeriodoInactivo');
+    if (!aviso) {
+        aviso = document.createElement('div');
+        aviso.id = 'avisoPeriodoInactivo';
+        aviso.style.cssText = 'background:#fef3c7;border:1.5px solid #f59e0b;border-radius:10px;padding:.7rem 1rem;font-size:.82rem;color:#92400e;font-weight:600;margin-top:.6rem;display:flex;align-items:center;gap:.5rem;';
+        aviso.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i> <span id="avisoPeriodoTxt"></span>';
+        document.getElementById('fPeriodo')?.parentNode?.appendChild(aviso);
+    }
+    const span = document.getElementById('avisoPeriodoTxt');
+    if (span) span.textContent = `No hay un periodo activo de ${progLabel}. Créalo en la sección Periodos antes de registrar alumnos.`;
+    aviso.style.display = 'flex';
+}
+
+function desbloquearForm() {
+    const btn = document.getElementById('btnGuardar');
+    if (btn) { btn.disabled = false; btn.title = ''; }
+    const aviso = document.getElementById('avisoPeriodoInactivo');
+    if (aviso) aviso.style.display = 'none';
+}
+
+function actualizarInfoPeriodo() {
+    const sel  = document.getElementById('fPeriodo');
+    const info = document.getElementById('infoPeriodo');
+    if (!sel || !info) return;
+    const opt  = sel.options[sel.selectedIndex];
+    if (!opt || !opt.dataset.inicio) {
+        info.textContent = '';
+        info.style.cssText = '';
+        calcDur();
+        return;
+    }
+    const fmt = d => new Date(d).toLocaleDateString('es-MX', {day:'2-digit',month:'long',year:'numeric'});
+    const ini  = fmt(opt.dataset.inicio);
+    const fin  = fmt(opt.dataset.fin);
+    const horas = opt.dataset.horas;
+    const prog  = opt.dataset.prog === 'ss' ? 'Servicio Social'
+                : opt.dataset.prog === 'pp' ? 'Prácticas Profesionales'
+                : 'SS y Prácticas Profesionales';
+    info.innerHTML = '<i class="bi bi-calendar3" style="margin-right:.3rem;"></i>'
+        + '<strong>' + ini + '</strong> → <strong>' + fin + '</strong>'
+        + ' &nbsp;·&nbsp; ' + horas + ' hrs &nbsp;·&nbsp; ' + prog;
+    info.style.cssText = 'font-size:.78rem;color:var(--primario);font-weight:600;display:block;margin-top:.35rem;background:var(--primario-lt);padding:.4rem .8rem;border-radius:8px;';
+    calcDur();
+}
+
+// ── Fin del script ──
 </script>
 </body>
 </html>
