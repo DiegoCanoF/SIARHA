@@ -175,11 +175,26 @@
             <div class="dato-item"><span class="dato-label">Nombre completo</span><span class="dato-value" id="dNombre">—</span></div>
             <div class="dato-item"><span class="dato-label">Número de cuenta</span><span class="dato-value accent" id="dCuenta">—</span></div>
             <div class="dato-item"><span class="dato-label">Correo institucional</span><span class="dato-value" id="dCorreo">—</span></div>
-            <div class="dato-item"><span class="dato-label">Programa</span><span class="dato-value" id="dPrograma">—</span></div>
+            <div class="dato-item"><span class="dato-label">CURP</span><span class="dato-value" id="dCurp">—</span></div>
             <div class="dato-item"><span class="dato-label">Carrera</span><span class="dato-value" id="dCarrera">—</span></div>
             <div class="dato-item"><span class="dato-label">Instituto / Área</span><span class="dato-value" id="dInstituto">—</span></div>
             <div class="dato-item"><span class="dato-label">Periodo activo</span><span class="dato-value" id="dPeriodo">—</span></div>
-            <div class="dato-item"><span class="dato-label">Unidad Receptora</span><span class="dato-value" id="dUR">—</span></div>
+            <div class="dato-item"><span class="dato-label">Teléfono</span><span class="dato-value" id="dTelefono">—</span></div>
+        </div>
+        <!-- Programa y UR remarcados -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;padding:1rem 1.4rem;border-top:1px solid var(--border);margin-top:.25rem;">
+            <div style="background:var(--primario-lt);border:1.5px solid rgba(80,16,19,.2);border-radius:var(--radius-sm);padding:.85rem 1rem;">
+                <div style="font-size:.68rem;font-weight:700;color:var(--primario);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.35rem;">
+                    <i class="bi bi-mortarboard-fill me-1"></i>Programa
+                </div>
+                <span id="dProgBadge" style="font-size:.92rem;font-weight:800;color:var(--primario);">—</span>
+            </div>
+            <div style="background:var(--dorado-lt);border:1.5px solid rgba(201,162,77,.3);border-radius:var(--radius-sm);padding:.85rem 1rem;">
+                <div style="font-size:.68rem;font-weight:700;color:#7a5a00;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.35rem;">
+                    <i class="bi bi-building-fill me-1"></i>Unidad Receptora
+                </div>
+                <span id="dURBadge" style="font-size:.92rem;font-weight:800;color:#7a5a00;">—</span>
+            </div>
         </div>
     </div>
 
@@ -204,20 +219,36 @@
         </div>
     </div>
 
-    <!-- DATOS EDITABLES -->
+    <!-- DATOS DE CONTACTO -->
     <div class="section-card">
         <div class="section-header">
-            <span class="title"><i class="bi bi-pencil-fill"></i> Datos de contacto</span>
-            <span style="font-size:.75rem;color:var(--muted);">Puedes actualizar teléfono y CURP</span>
+            <span class="title"><i class="bi bi-person-fill"></i> Datos de contacto</span>
+            <button id="btnEditarContacto" class="btn-outline-custom" style="padding:.3rem .75rem;font-size:.78rem;" onclick="toggleEditarContacto()">
+                <i class="bi bi-pencil-fill"></i> Editar
+            </button>
         </div>
-        <div class="section-body">
+
+        <!-- Vista (solo lectura) -->
+        <div id="vistaContacto" class="dato-grid" style="grid-template-columns:1fr 1fr;">
+            <div class="dato-item">
+                <span class="dato-label">Teléfono celular</span>
+                <span class="dato-value" id="vTelefono">No registrado</span>
+            </div>
+            <div class="dato-item">
+                <span class="dato-label">CURP</span>
+                <span class="dato-value" id="vCurp">No registrada</span>
+            </div>
+        </div>
+
+        <!-- Formulario de edición (oculto por defecto) -->
+        <div id="formContactoWrap" style="display:none;" class="section-body">
             <form id="formPerfil" novalidate>
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
                         <label class="form-label-sm">Teléfono celular</label>
                         <input type="tel" id="fTelefono" class="form-field" placeholder="7710000000"
                                maxlength="10" inputmode="numeric"
-                               oninput="this.value=this.value.replace(/\D/g,'')">
+                               oninput="this.value=this.value.replace(/[^0-9]/g,'')">
                         <span class="field-hint">10 dígitos, sin espacios ni guiones.</span>
                     </div>
                     <div class="col-md-6">
@@ -234,7 +265,7 @@
                 </div>
                 <div class="d-flex gap-3 flex-wrap">
                     <button type="submit" class="btn-save"><i class="bi bi-floppy-fill"></i> Guardar cambios</button>
-                    <button type="button" class="btn-cancel-sm" onclick="resetFormPerfil()"><i class="bi bi-x-circle"></i> Cancelar</button>
+                    <button type="button" class="btn-cancel-sm" onclick="toggleEditarContacto()"><i class="bi bi-x-circle"></i> Cancelar</button>
                 </div>
             </form>
         </div>
@@ -370,10 +401,19 @@
             s('dNombre').textContent   = nombreCompleto;
             s('dCuenta').textContent   = p.no_cuenta;
             s('dCorreo').textContent   = p.correo;
-            s('dPrograma').textContent = progLabel;
+            s('dCurp').textContent     = p.curp     || '—';
+            s('dTelefono').textContent = p.telefono  || '—';
             s('dCarrera').textContent  = p.nombre_licenciatura || '—';
             s('dInstituto').textContent= p.nombre_instituto    || '—';
-            s('dUR').textContent       = p.nombre_ur           || 'Sin asignar';
+
+            // Badges remarcados de Programa y UR
+            const progIcon = p.programa === 'pp' ? 'bi-briefcase-fill' : 'bi-journal-check';
+            s('dProgBadge').innerHTML = `<i class="bi ${progIcon} me-1"></i>${progLabel}`;
+            s('dURBadge').textContent  = p.nombre_ur || 'Sin asignar';
+
+            // Vista de contacto (solo lectura)
+            if (s('vTelefono')) s('vTelefono').textContent = p.telefono || 'No registrado';
+            if (s('vCurp'))     s('vCurp').textContent     = p.curp     || 'No registrada';
 
             // Periodo
             if (p.nombre_periodo) {
@@ -412,11 +452,34 @@
         }
     }
 
+    function toggleEditarContacto() {
+        const wrap = document.getElementById('formContactoWrap');
+        const vista = document.getElementById('vistaContacto');
+        const btn   = document.getElementById('btnEditarContacto');
+        const abierto = wrap.style.display !== 'none';
+        if (abierto) {
+            wrap.style.display  = 'none';
+            vista.style.display = '';
+            btn.innerHTML = '<i class="bi bi-pencil-fill"></i> Editar';
+            document.getElementById('perfilError').style.display = 'none';
+            // Revertir valores
+            if (_perfil) {
+                document.getElementById('fTelefono').value = _perfil.telefono || '';
+                document.getElementById('fCurp').value     = _perfil.curp     || '';
+            }
+        } else {
+            wrap.style.display  = '';
+            vista.style.display = 'none';
+            btn.innerHTML = '<i class="bi bi-x-lg"></i> Cerrar';
+            if (_perfil) {
+                document.getElementById('fTelefono').value = _perfil.telefono || '';
+                document.getElementById('fCurp').value     = _perfil.curp     || '';
+            }
+        }
+    }
+
     function resetFormPerfil() {
-        if (!_perfil) return;
-        document.getElementById('fTelefono').value = _perfil.telefono || '';
-        document.getElementById('fCurp').value     = _perfil.curp     || '';
-        document.getElementById('perfilError').style.display = 'none';
+        toggleEditarContacto();
     }
 
     // ── Guardar teléfono y CURP ───────────────────────────────────
@@ -449,6 +512,16 @@
                 errEl.style.display = 'block'; return;
             }
             if (_perfil) { _perfil.telefono = tel; _perfil.curp = curp; }
+            // Actualizar vista de solo lectura
+            const vTel = document.getElementById('vTelefono');
+            const vCurp = document.getElementById('vCurp');
+            const dTel  = document.getElementById('dTelefono');
+            const dCurp = document.getElementById('dCurp');
+            if (vTel)  vTel.textContent  = tel  || 'No registrado';
+            if (vCurp) vCurp.textContent = curp || 'No registrada';
+            if (dTel)  dTel.textContent  = tel  || '—';
+            if (dCurp) dCurp.textContent = curp || '—';
+            toggleEditarContacto();
             showToastPerfil('Datos de contacto actualizados correctamente.');
         } catch(err) {
             errTxt.textContent = 'No se pudo conectar con el servidor.';

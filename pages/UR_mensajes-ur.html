@@ -8,322 +8,95 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-
     <style>
-        :root {
-            --primario:     #501013;
-            --primario-dk:  #3a0b0e;
-            --primario-lt:  #f7eaea;
-            --primario-mid: #7a1820;
-            --dorado:       #C9A24D;
-            --dorado-lt:    #fdf6e3;
-            --bg:           #F2F4F8;
-            --card-bg:      #ffffff;
-            --text:         #1F2933;
-            --muted:        #6b7280;
-            --border:       #E5E7EB;
-            --radius-card:  18px;
-            --radius-sm:    10px;
-            --shadow:       0 2px 16px rgba(80,16,19,.08);
-            --shadow-hover: 0 6px 28px rgba(80,16,19,.15);
-        }
+        :root{--primario:#501013;--primario-dk:#3a0b0e;--primario-lt:#f7eaea;--primario-mid:#7a1820;--dorado:#C9A24D;--dorado-lt:#fdf6e3;--bg:#F2F4F8;--card-bg:#fff;--text:#1F2933;--muted:#6b7280;--border:#E5E7EB;--radius-card:18px;--radius-sm:10px;--shadow:0 2px 16px rgba(80,16,19,.08);}
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+        .navbar-custom{background:var(--primario);padding:0 1.5rem;height:70px;box-shadow:0 2px 16px rgba(0,0,0,.15);position:sticky;top:0;z-index:1050;display:flex;align-items:center;}
+        .brand-text{font-size:1.5rem;font-weight:800;letter-spacing:.04em;}
+        .navbar-subtitle{font-size:.7rem;font-weight:500;opacity:.85;}
+        .navbar-toggler{border:none;color:#fff;font-size:1.25rem;padding:.4rem .6rem;border-radius:var(--radius-sm);background:rgba(255,255,255,.12);transition:background .2s;}
+        .navbar-toggler:hover{background:rgba(255,255,255,.22);}
+        .offcanvas-custom{background:var(--primario-dk);color:#fff;width:280px!important;border-radius:var(--radius-card) 0 0 var(--radius-card);}
+        .offcanvas-custom .offcanvas-header{border-color:rgba(255,255,255,.12)!important;padding:1.25rem 1.5rem;}
+        .offcanvas-custom .nav-link{color:rgba(255,255,255,.8);font-weight:500;font-size:.9rem;padding:.65rem 1rem;border-radius:var(--radius-sm);display:flex;align-items:center;gap:.6rem;transition:background .2s,color .2s;}
+        .offcanvas-custom .nav-link:hover,.offcanvas-custom .nav-link.active{background:rgba(255,255,255,.12);color:#fff;}
+        .offcanvas-custom .nav-link.active{font-weight:700;}
+        .offcanvas-custom .nav-link.danger{color:#ff9090!important;}
+        .offcanvas-custom .nav-link.danger:hover{background:rgba(255,80,80,.15);}
+        .menu-divider{border-color:rgba(255,255,255,.12);margin:.5rem 0;}
+        .menu-badge{margin-left:auto;background:var(--dorado);color:#fff;font-size:.68rem;font-weight:800;border-radius:20px;padding:.1rem .55rem;}
+        main{flex:1;padding:1.75rem 1.5rem;max-width:1200px;width:100%;margin:0 auto;}
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* ── NAVBAR ── */
-        .navbar-custom { background: var(--primario); padding: 0 1.5rem; height: 70px; box-shadow: 0 2px 16px rgba(0,0,0,.15); position: sticky; top: 0; z-index: 1050; display: flex; align-items: center; }
-        .brand-text { font-size: 1.5rem; font-weight: 800; letter-spacing: .04em; line-height: 1; }
-        .navbar-subtitle { font-size: .7rem; font-weight: 500; opacity: .85; }
-        .navbar-toggler { border: none; color: #fff; font-size: 1.25rem; padding: .4rem .6rem; border-radius: var(--radius-sm); background: rgba(255,255,255,.12); transition: background .2s; }
-        .navbar-toggler:hover { background: rgba(255,255,255,.22); }
-
-        /* ── OFFCANVAS ── */
-        .offcanvas-custom { background: var(--primario-dk); color: #fff; width: 280px !important; border-radius: var(--radius-card) 0 0 var(--radius-card); }
-        .offcanvas-custom .offcanvas-header { border-color: rgba(255,255,255,.12) !important; padding: 1.25rem 1.5rem; }
-        .offcanvas-custom .nav-link { color: rgba(255,255,255,.8); font-weight: 500; font-size: .9rem; padding: .65rem 1rem; border-radius: var(--radius-sm); display: flex; align-items: center; gap: .6rem; transition: background .2s, color .2s; }
-        .offcanvas-custom .nav-link:hover,
-        .offcanvas-custom .nav-link.active { background: rgba(255,255,255,.12); color: #fff; }
-        .offcanvas-custom .nav-link.active { font-weight: 700; }
-        .offcanvas-custom .nav-link.danger { color: #ff9090 !important; }
-        .offcanvas-custom .nav-link.danger:hover { background: rgba(255,80,80,.15); }
-        .menu-divider { border-color: rgba(255,255,255,.12); margin: .5rem 0; }
-        .menu-badge { margin-left: auto; background: var(--dorado); color: #fff; font-size: .68rem; font-weight: 800; border-radius: 20px; padding: .1rem .55rem; }
-
-        /* ── MAIN ── */
-        main { flex: 1; padding: 1.75rem 1.5rem; max-width: 1200px; width: 100%; margin: 0 auto; }
+        /* ── TABS CANAL ── */
+        .canal-tabs{display:flex;gap:0;margin-bottom:0;border-bottom:2px solid var(--border);}
+        .canal-tab{padding:.65rem 1.4rem;font-size:.86rem;font-weight:700;color:var(--muted);border:none;background:transparent;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .2s,border-color .2s;display:flex;align-items:center;gap:.4rem;}
+        .canal-tab:hover{color:var(--primario);}
+        .canal-tab.active{color:var(--primario);border-bottom-color:var(--primario);}
+        .canal-badge{background:var(--primario);color:#fff;border-radius:20px;font-size:.65rem;font-weight:800;padding:.1rem .45rem;}
 
         /* ── LAYOUT CHAT ── */
-        .chat-layout {
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 0;
-            background: var(--card-bg);
-            border-radius: var(--radius-card);
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-            overflow: hidden;
-            height: calc(100vh - 200px);
-            min-height: 520px;
-        }
+        .chat-layout{display:grid;grid-template-columns:300px 1fr;background:var(--card-bg);border-radius:0 var(--radius-card) var(--radius-card) var(--radius-card);box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden;height:calc(100vh - 215px);min-height:520px;}
+        .chat-sidebar{border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+        .sidebar-header{padding:1rem 1.2rem;border-bottom:1px solid var(--border);background:var(--bg);flex-shrink:0;}
+        .sidebar-header h6{font-size:.9rem;font-weight:800;margin:0 0 .6rem;}
+        .search-input{border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.45rem .8rem;font-size:.82rem;font-family:inherit;color:var(--text);background:#fff;width:100%;outline:none;transition:border-color .2s;}
+        .search-input:focus{border-color:var(--primario);}
+        .contact-list{overflow-y:auto;flex:1;}
+        .contact-item{padding:.85rem 1.2rem;cursor:pointer;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:.75rem;transition:background .15s;position:relative;}
+        .contact-item:hover{background:var(--bg);}
+        .contact-item.active{background:var(--primario-lt);}
+        .contact-item.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--primario);}
+        .contact-avatar{width:40px;height:40px;border-radius:50%;background:var(--primario);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;flex-shrink:0;}
+        .contact-avatar.dir{background:#7a5a00;}
+        .contact-name{font-size:.84rem;font-weight:700;}
+        .contact-preview{font-size:.75rem;color:var(--muted);margin-top:.1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:170px;}
+        .contact-time{font-size:.7rem;color:var(--muted);white-space:nowrap;}
+        .unread-badge{background:var(--primario);color:#fff;border-radius:50%;width:18px;height:18px;font-size:.65rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+        .badge-ss-sm{background:var(--primario-lt);color:var(--primario);border-radius:20px;font-size:.68rem;font-weight:700;padding:.15rem .5rem;border:1px solid rgba(80,16,19,.15);}
+        .badge-pp-sm{background:var(--dorado-lt);color:#7a5a00;border-radius:20px;font-size:.68rem;font-weight:700;padding:.15rem .5rem;border:1px solid rgba(201,162,77,.3);}
+        .badge-dir-sm{background:var(--dorado-lt);color:#7a5a00;border-radius:20px;font-size:.68rem;font-weight:700;padding:.15rem .5rem;border:1px solid var(--dorado);}
 
-        /* ── SIDEBAR ── */
-        .chat-sidebar {
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        .sidebar-header {
-            padding: 1rem 1.2rem;
-            border-bottom: 1px solid var(--border);
-            background: var(--bg);
-            flex-shrink: 0;
-        }
-        .sidebar-header h6 { font-size: .9rem; font-weight: 800; margin: 0 0 .6rem; color: var(--text); }
-        .search-input {
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: .45rem .8rem;
-            font-size: .82rem;
-            font-family: inherit;
-            color: var(--text);
-            background: #fff;
-            width: 100%;
-            outline: none;
-            transition: border-color .2s;
-        }
-        .search-input:focus { border-color: var(--primario); }
+        /* ── CHAT MAIN ── */
+        .chat-main{display:flex;flex-direction:column;overflow:hidden;}
+        .chat-header{padding:.9rem 1.4rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.85rem;background:#fff;flex-shrink:0;}
+        .chat-header-avatar{width:40px;height:40px;border-radius:50%;background:var(--primario);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:800;flex-shrink:0;}
+        .chat-header-avatar.dir{background:#7a5a00;}
+        .chat-header-name{font-weight:800;font-size:.92rem;}
+        .chat-header-sub{font-size:.74rem;color:var(--muted);}
+        .chat-thread{flex:1;overflow-y:auto;padding:1.25rem 1.4rem;display:flex;flex-direction:column;gap:.9rem;background:var(--bg);}
+        .date-sep{text-align:center;font-size:.72rem;color:var(--muted);font-weight:600;display:flex;align-items:center;gap:.6rem;}
+        .date-sep::before,.date-sep::after{content:'';flex:1;height:1px;background:var(--border);}
+        .msg-bubble{max-width:70%;padding:.75rem 1rem;border-radius:14px;font-size:.84rem;line-height:1.55;}
+        .msg-bubble.recv{background:#fff;border:1px solid var(--border);align-self:flex-start;border-bottom-left-radius:4px;}
+        .msg-bubble.sent{background:var(--primario);color:#fff;align-self:flex-end;border-bottom-right-radius:4px;}
+        .msg-meta{font-size:.68rem;margin-top:.3rem;opacity:.65;}
+        .msg-bubble.recv .msg-meta{color:var(--muted);}
+        .msg-bubble.sent .msg-meta{color:rgba(255,255,255,.8);}
+        .chat-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--muted);background:var(--bg);gap:.5rem;}
+        .chat-empty i{font-size:2.5rem;opacity:.3;}
+        .chat-empty p{font-size:.85rem;font-weight:500;}
+        .chat-compose{border-top:1px solid var(--border);padding:.9rem 1.2rem;background:#fff;flex-shrink:0;}
+        .compose-inner{display:flex;gap:.6rem;align-items:flex-end;}
+        .compose-textarea{flex:1;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.55rem .85rem;font-size:.84rem;font-family:inherit;resize:none;outline:none;min-height:44px;max-height:120px;transition:border-color .2s;line-height:1.5;}
+        .compose-textarea:focus{border-color:var(--primario);box-shadow:0 0 0 3px rgba(80,16,19,.08);}
+        .btn-send-msg{background:var(--primario);color:#fff;border:none;border-radius:var(--radius-sm);width:42px;height:42px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;transition:background .2s;flex-shrink:0;}
+        .btn-send-msg:hover{background:var(--primario-dk);}
+        .compose-hint{font-size:.72rem;color:var(--muted);margin-top:.4rem;}
 
-        .contact-list { overflow-y: auto; flex: 1; }
+        /* ── EMPTY SIDEBAR ── */
+        .sidebar-empty{padding:2rem 1.2rem;text-align:center;color:var(--muted);font-size:.82rem;}
+        .sidebar-empty i{font-size:2rem;display:block;margin-bottom:.5rem;opacity:.35;}
 
-        .contact-item {
-            padding: .85rem 1.2rem;
-            cursor: pointer;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: flex-start;
-            gap: .75rem;
-            transition: background .15s;
-            position: relative;
-        }
-        .contact-item:hover { background: var(--bg); }
-        .contact-item.active { background: var(--primario-lt); }
-        .contact-item.active::before {
-            content: '';
-            position: absolute;
-            left: 0; top: 0; bottom: 0;
-            width: 3px;
-            background: var(--primario);
-        }
+        /* ── DIRECCIÓN STRIP ── */
+        .dir-strip{background:var(--dorado-lt);border-bottom:1px solid rgba(201,162,77,.25);padding:.75rem 1.4rem;font-size:.78rem;color:#7a5a00;font-weight:600;display:flex;align-items:center;gap:.5rem;flex-shrink:0;}
 
-        .contact-avatar {
-            width: 40px; height: 40px; border-radius: 50%;
-            background: var(--primario); color: #fff;
-            display: flex; align-items: center; justify-content: center;
-            font-size: .8rem; font-weight: 800; flex-shrink: 0;
-        }
-        .contact-avatar.unread { background: var(--primario-mid); box-shadow: 0 0 0 3px var(--primario-lt); }
+        .toast-custom{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--primario);color:#fff;border-radius:var(--radius-sm);padding:.9rem 1.3rem;display:flex;align-items:center;gap:.6rem;font-size:.85rem;font-weight:600;box-shadow:0 8px 24px rgba(80,16,19,.25);transform:translateY(80px);opacity:0;transition:transform .35s,opacity .35s;z-index:9999;}
+        .toast-custom.show{transform:translateY(0);opacity:1;}
+        .footer-custom{background:var(--primario);color:rgba(255,255,255,.7);text-align:center;padding:.75rem;font-size:.75rem;}
+        @media(max-width:767px){main{padding:1rem;}.chat-layout{grid-template-columns:1fr;height:auto;}.chat-sidebar{height:260px;border-right:none;border-bottom:1px solid var(--border);}.chat-main{height:460px;}}
 
-        .contact-name { font-size: .84rem; font-weight: 700; color: var(--text); }
-        .contact-preview { font-size: .75rem; color: var(--muted); margin-top: .1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 170px; }
-        .contact-time { font-size: .7rem; color: var(--muted); white-space: nowrap; }
-        .unread-badge { background: var(--primario); color: #fff; border-radius: 50%; width: 18px; height: 18px; font-size: .65rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-
-        /* ── PANEL CHAT ── */
-        .chat-main {
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .chat-header {
-            padding: .9rem 1.4rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: .85rem;
-            background: #fff;
-            flex-shrink: 0;
-        }
-        .chat-header-avatar {
-            width: 40px; height: 40px; border-radius: 50%;
-            background: var(--primario); color: #fff;
-            display: flex; align-items: center; justify-content: center;
-            font-size: .85rem; font-weight: 800; flex-shrink: 0;
-        }
-        .chat-header-name { font-weight: 800; font-size: .92rem; }
-        .chat-header-sub { font-size: .74rem; color: var(--muted); }
-
-        /* badge programa en header */
-        .badge-ss-sm { background: var(--primario-lt); color: var(--primario); border-radius: 20px; font-size: .68rem; font-weight: 700; padding: .15rem .5rem; border: 1px solid rgba(80,16,19,.15); }
-        .badge-pp-sm { background: var(--dorado-lt); color: #7a5a00; border-radius: 20px; font-size: .68rem; font-weight: 700; padding: .15rem .5rem; border: 1px solid rgba(201,162,77,.3); }
-
-        /* ── HILO MENSAJES ── */
-        .chat-thread {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1.25rem 1.4rem;
-            display: flex;
-            flex-direction: column;
-            gap: .9rem;
-            background: var(--bg);
-        }
-
-        /* separador de fecha */
-        .date-sep {
-            text-align: center;
-            font-size: .72rem;
-            color: var(--muted);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: .6rem;
-        }
-        .date-sep::before, .date-sep::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-        .msg-bubble {
-            max-width: 70%;
-            padding: .75rem 1rem;
-            border-radius: 14px;
-            font-size: .84rem;
-            line-height: 1.55;
-            position: relative;
-        }
-        .msg-bubble.recv {
-            background: #fff;
-            border: 1px solid var(--border);
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
-        }
-        .msg-bubble.sent {
-            background: var(--primario);
-            color: #fff;
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
-        }
-        .msg-meta {
-            font-size: .68rem;
-            margin-top: .3rem;
-            opacity: .65;
-        }
-        .msg-bubble.recv .msg-meta { color: var(--muted); }
-        .msg-bubble.sent .msg-meta { color: rgba(255,255,255,.8); }
-
-        /* archivo adjunto en burbuja */
-        .msg-attachment {
-            display: flex;
-            align-items: center;
-            gap: .5rem;
-            background: rgba(0,0,0,.06);
-            border-radius: 8px;
-            padding: .45rem .7rem;
-            margin-top: .5rem;
-            font-size: .78rem;
-        }
-        .msg-bubble.sent .msg-attachment { background: rgba(255,255,255,.15); color: rgba(255,255,255,.9); }
-
-        /* ── COMPOSE ── */
-        .chat-compose {
-            border-top: 1px solid var(--border);
-            padding: .9rem 1.2rem;
-            background: #fff;
-            flex-shrink: 0;
-        }
-        .compose-inner {
-            display: flex;
-            gap: .6rem;
-            align-items: flex-end;
-        }
-        .compose-textarea {
-            flex: 1;
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: .55rem .85rem;
-            font-size: .84rem;
-            font-family: inherit;
-            resize: none;
-            outline: none;
-            min-height: 44px;
-            max-height: 120px;
-            transition: border-color .2s;
-            line-height: 1.5;
-        }
-        .compose-textarea:focus { border-color: var(--primario); box-shadow: 0 0 0 3px rgba(80,16,19,.08); }
-
-        .btn-send-msg {
-            background: var(--primario);
-            color: #fff;
-            border: none;
-            border-radius: var(--radius-sm);
-            width: 42px;
-            height: 42px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            flex-shrink: 0;
-            transition: background .2s;
-            font-size: 1rem;
-        }
-        .btn-send-msg:hover { background: var(--primario-dk); }
-
-        .btn-attach {
-            border: 1.5px solid var(--border);
-            background: #fff;
-            color: var(--muted);
-            border-radius: var(--radius-sm);
-            width: 42px;
-            height: 42px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            flex-shrink: 0;
-            transition: border-color .2s, color .2s;
-            font-size: 1rem;
-        }
-        .btn-attach:hover { border-color: var(--primario); color: var(--primario); }
-
-        .compose-hint { font-size: .72rem; color: var(--muted); margin-top: .4rem; }
-
-        /* ── EMPTY CHAT ── */
-        .chat-empty {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: var(--muted);
-            background: var(--bg);
-            gap: .5rem;
-        }
-        .chat-empty i { font-size: 2.5rem; opacity: .3; }
-        .chat-empty p { font-size: .85rem; font-weight: 500; }
-
-        /* ── TOAST ── */
-        .toast-custom { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--primario); color: #fff; border-radius: var(--radius-sm); padding: .9rem 1.3rem; display: flex; align-items: center; gap: .6rem; font-size: .85rem; font-weight: 600; box-shadow: 0 8px 24px rgba(80,16,19,.25); transform: translateY(80px); opacity: 0; transition: transform .35s ease, opacity .35s ease; z-index: 9999; }
-        .toast-custom.show { transform: translateY(0); opacity: 1; }
-
-        /* ── FOOTER ── */
-        .footer-custom { background: var(--primario); color: rgba(255,255,255,.7); text-align: center; padding: .75rem; font-size: .75rem; }
-
-        @media (max-width: 767px) {
-            main { padding: 1rem; }
-            .chat-layout { grid-template-columns: 1fr; height: auto; min-height: unset; }
-            .chat-sidebar { height: 260px; border-right: none; border-bottom: 1px solid var(--border); }
-            .chat-main { height: 460px; }
-        }
-    
-        /* ══ NOTIFICACIONES ══ */
+        /* NOTIFICACIONES */
         .notif-btn{position:relative;background:rgba(255,255,255,.12);border:none;color:#fff;width:40px;height:40px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;transition:background .2s;flex-shrink:0;}
         .notif-btn:hover{background:rgba(255,255,255,.22);}
         .notif-count{position:absolute;top:4px;right:4px;background:var(--dorado);color:#fff;font-size:.58rem;font-weight:800;border-radius:20px;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0 .25rem;border:1.5px solid var(--primario);}
@@ -331,9 +104,9 @@
         .notif-panel.open{transform:translateX(0);}
         .notif-header{padding:1rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--primario);color:#fff;flex-shrink:0;}
         .notif-header h6{font-size:.92rem;font-weight:800;margin:0;}
-        .btn-mark-all{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.8);background:rgba(255,255,255,.12);border:none;border-radius:20px;padding:.2rem .7rem;cursor:pointer;transition:background .2s;}
+        .btn-mark-all{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.8);background:rgba(255,255,255,.12);border:none;border-radius:20px;padding:.2rem .7rem;cursor:pointer;}
         .btn-mark-all:hover{background:rgba(255,255,255,.22);}
-        .btn-close-notif{background:none;border:none;color:rgba(255,255,255,.7);font-size:1rem;cursor:pointer;padding:.2rem;display:flex;align-items:center;justify-content:center;border-radius:6px;transition:color .2s;}
+        .btn-close-notif{background:none;border:none;color:rgba(255,255,255,.7);font-size:1rem;cursor:pointer;padding:.2rem;display:flex;align-items:center;border-radius:6px;}
         .btn-close-notif:hover{color:#fff;}
         .notif-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;}
         .notif-tab{flex:1;padding:.6rem;font-size:.8rem;font-weight:700;color:var(--muted);border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;text-align:center;}
@@ -344,23 +117,21 @@
         .notif-item.unread{background:var(--primario-lt);}
         .notif-item.unread::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--primario);}
         .notif-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
-        .ni-ap{background:#d1fae5;color:#065f46;} .ni-re{background:#fee2e2;color:#991b1b;} .ni-msg{background:#dbeafe;color:#1e40af;} .ni-sis{background:var(--primario-lt);color:var(--primario);} .ni-rec{background:var(--dorado-lt);color:#7a5a00;}
+        .ni-msg{background:#dbeafe;color:#1e40af;} .ni-sis{background:var(--primario-lt);color:var(--primario);} .ni-rec{background:var(--dorado-lt);color:#7a5a00;}
         .notif-title{font-size:.83rem;font-weight:700;color:var(--text);margin-bottom:.15rem;}
         .notif-item.unread .notif-title{color:var(--primario);}
         .notif-desc{font-size:.76rem;color:var(--muted);line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
         .notif-time{font-size:.68rem;color:var(--muted);margin-top:.3rem;font-weight:500;}
         .notif-footer{padding:.75rem 1.2rem;border-top:1px solid var(--border);text-align:center;flex-shrink:0;}
         .notif-footer a{font-size:.8rem;font-weight:700;color:var(--primario);text-decoration:none;}
-        .notif-footer a:hover{text-decoration:underline;}
         .notif-overlay{display:none;position:fixed;inset:0;z-index:1048;}
         .notif-overlay.open{display:block;}
         @media(max-width:480px){.notif-panel{width:100%;border-radius:0;}}
-
     </style>
 </head>
 <body>
 
-<!-- ── NAVBAR ── -->
+<!-- NAVBAR -->
 <nav class="navbar-custom w-100">
     <div class="container-fluid d-flex align-items-center" style="height:70px;">
         <div class="d-flex align-items-center gap-2">
@@ -374,31 +145,22 @@
         </div>
         <div class="d-flex align-items-center gap-2 ms-auto">
             <div class="d-none d-md-flex align-items-center gap-2 text-white" style="font-size:.83rem;font-weight:600;opacity:.9;">
-                <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;">
-                    <i class="bi bi-building-fill"></i>
-                </div>
-                <span>Hospital General</span>
+                <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;"><i class="bi bi-building-fill"></i></div>
+                <span id="nombreURNav">—</span>
             </div>
-                        <button class="notif-btn" id="btnNotif" onclick="toggleNotif()" title="Notificaciones">
-                <i class="bi bi-bell-fill"></i>
-                <span class="notif-count" id="notifCount">5</span>
-            </button>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuUR" aria-label="Abrir menú">
-                <i class="bi bi-list"></i>
-            </button>
+            <button class="notif-btn" id="btnNotif" onclick="toggleNotif()"><i class="bi bi-bell-fill"></i><span class="notif-count" id="notifCount" style="display:none;">0</span></button>
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuUR"><i class="bi bi-list"></i></button>
         </div>
     </div>
 </nav>
 
-<!-- ── OFFCANVAS ── -->
+<!-- OFFCANVAS -->
 <div class="offcanvas offcanvas-end offcanvas-custom" tabindex="-1" id="menuUR">
     <div class="offcanvas-header">
         <div class="d-flex align-items-center gap-2">
-            <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;">
-                <i class="bi bi-building-fill"></i>
-            </div>
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;"><i class="bi bi-building-fill"></i></div>
             <div>
-                <div style="font-weight:700;font-size:.9rem;">Hospital General</div>
+                <div style="font-weight:700;font-size:.9rem;" id="nombreURMenu">—</div>
                 <div style="font-size:.72rem;opacity:.7;">Unidad Receptora</div>
             </div>
         </div>
@@ -407,10 +169,9 @@
     <div class="offcanvas-body">
         <ul class="navbar-nav gap-1">
             <li><a class="nav-link" href="UR_dashboard-ur.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
-            <li><a class="nav-link" href="UR_aprobaciones-ur.html"><i class="bi bi-people-fill"></i> Alumnos asignados <span class="menu-badge">4</span></a></li>
-            <li><a class="nav-link active" href="UR_mensajes-ur.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge">2</span></a></li>
+            <li><a class="nav-link" href="UR_aprobaciones-ur.html"><i class="bi bi-people-fill"></i> Alumnos asignados</a></li>
+            <li><a class="nav-link active" href="UR_mensajes-ur.html"><i class="bi bi-chat-dots-fill"></i> Mensajes <span class="menu-badge" id="badgeMenuMsg">—</span></a></li>
             <li><a class="nav-link" href="UR_reportes-ur.html"><i class="bi bi-bar-chart-fill"></i> Reportes generales</a></li>
-            <li><a class="nav-link" href="UR_reporte-ur-direccion.html"><i class="bi bi-flag-fill"></i> Reportar a Dirección</a></li>
             <li><a class="nav-link" href="UR_perfil-ur.html"><i class="bi bi-gear-fill"></i> Configuración</a></li>
             <hr class="menu-divider">
             <li><a class="nav-link danger" href="../index.html"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
@@ -418,214 +179,85 @@
     </div>
 </div>
 
-<!-- ── MAIN ── -->
+<!-- MAIN -->
 <main>
-
-    <div style="margin-bottom:1.25rem;">
-        <h4 style="font-size:1.3rem;font-weight:800;margin:0;">Mensajes de alumnos</h4>
-        <p style="font-size:.8rem;color:var(--muted);margin-top:.25rem;">Bandeja de entrada · <strong style="color:var(--primario);">2 sin leer</strong></p>
+    <div style="margin-bottom:1rem;">
+        <h4 style="font-size:1.3rem;font-weight:800;margin:0;">Mensajes</h4>
+        <p style="font-size:.8rem;color:var(--muted);margin-top:.25rem;" id="subHeaderMsg">Bandeja de entrada</p>
     </div>
 
+    <!-- TABS CANAL -->
+    <div class="canal-tabs">
+        <button class="canal-tab active" id="tabAlumnos" onclick="setCanal('alumnos',this)">
+            <i class="bi bi-people-fill"></i> Mis alumnos
+            <span class="canal-badge" id="badgeTabAlumnos" style="display:none;">0</span>
+        </button>
+        <button class="canal-tab" id="tabDireccion" onclick="setCanal('direccion',this)">
+            <i class="bi bi-person-badge-fill"></i> Dirección SSPP
+            <span class="canal-badge" id="badgeTabDir" style="display:none;">0</span>
+        </button>
+    </div>
+
+    <!-- LAYOUT CHAT -->
     <div class="chat-layout">
 
-        <!-- ── SIDEBAR CONTACTOS ── -->
+        <!-- SIDEBAR -->
         <div class="chat-sidebar">
             <div class="sidebar-header">
-                <h6>Conversaciones</h6>
-                <input type="text" class="search-input" placeholder="Buscar alumno…" oninput="filtrarContactos(this.value)">
+                <h6 id="sidebarTitle">Conversaciones</h6>
+                <input type="text" class="search-input" id="searchInput" placeholder="Buscar…" oninput="filtrarContactos(this.value)">
             </div>
-
             <div class="contact-list" id="contactList">
-
-                <!-- Sin leer -->
-                <div class="contact-item active" onclick="abrirChat(this,'Juan Pérez García','JP','2020123456','Serv. Social','ss')">
-                    <div class="contact-avatar unread">JP</div>
-                    <div style="flex:1;min-width:0;">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="contact-name" style="color:var(--primario);">Juan Pérez García</span>
-                            <span class="contact-time">10:32</span>
-                        </div>
-                        <div class="contact-preview" style="color:var(--text);font-weight:600;">¿Qué actividades tendré asignadas…</div>
-                        <div style="margin-top:.3rem;"><span class="badge-ss-sm">Serv. Social</span></div>
-                    </div>
-                    <span class="unread-badge ms-1">1</span>
-                </div>
-
-                <div class="contact-item" onclick="abrirChat(this,'Ana López Ramírez','AL','2022233445','Prácticas Prof.','pp')">
-                    <div class="contact-avatar unread">AL</div>
-                    <div style="flex:1;min-width:0;">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="contact-name" style="color:var(--primario);">Ana López Ramírez</span>
-                            <span class="contact-time">09:15</span>
-                        </div>
-                        <div class="contact-preview" style="color:var(--text);font-weight:600;">Solicitud de carta de término</div>
-                        <div style="margin-top:.3rem;"><span class="badge-pp-sm">Prácticas Prof.</span></div>
-                    </div>
-                    <span class="unread-badge ms-1">1</span>
-                </div>
-
-                <!-- Leídos -->
-                <div class="contact-item" onclick="abrirChat(this,'María González López','MG','2021123478','Prácticas Prof.','pp')">
-                    <div class="contact-avatar">MG</div>
-                    <div style="flex:1;min-width:0;">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="contact-name">María González López</span>
-                            <span class="contact-time">Ayer</span>
-                        </div>
-                        <div class="contact-preview">Gracias, nos vemos el lunes puntual…</div>
-                        <div style="margin-top:.3rem;"><span class="badge-pp-sm">Prácticas Prof.</span></div>
-                    </div>
-                </div>
-
-                <div class="contact-item" onclick="abrirChat(this,'Carlos Ramírez Soto','CR','2020987654','Serv. Social','ss')">
-                    <div class="contact-avatar">CR</div>
-                    <div style="flex:1;min-width:0;">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="contact-name">Carlos Ramírez Soto</span>
-                            <span class="contact-time">20 feb</span>
-                        </div>
-                        <div class="contact-preview">Justificación de inasistencia recibida</div>
-                        <div style="margin-top:.3rem;"><span class="badge-ss-sm">Serv. Social</span></div>
-                    </div>
-                </div>
-
-                <div class="contact-item" onclick="abrirChat(this,'Daniel Torres Vega','DT','2021345678','Serv. Social','ss')">
-                    <div class="contact-avatar">DT</div>
-                    <div style="flex:1;min-width:0;">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="contact-name">Daniel Torres Vega</span>
-                            <span class="contact-time">18 feb</span>
-                        </div>
-                        <div class="contact-preview">Solicitud de cambio de horario</div>
-                        <div style="margin-top:.3rem;"><span class="badge-ss-sm">Serv. Social</span></div>
-                    </div>
-                </div>
-
+                <div class="sidebar-empty"><i class="bi bi-chat-dots"></i>Cargando…</div>
             </div>
         </div>
 
-        <!-- ── CHAT PRINCIPAL ── -->
-        <div class="chat-main">
-
-            <!-- Header del chat -->
-            <div class="chat-header" id="chatHeader">
-                <div class="chat-header-avatar" id="chatAvatar">JP</div>
-                <div style="flex:1;">
-                    <div class="chat-header-name" id="chatNombre">Juan Pérez García</div>
-                    <div class="d-flex align-items-center gap-2 mt-1">
-                        <span class="chat-header-sub" id="chatCuenta">No. cuenta: 2020123456</span>
-                        <span class="badge-ss-sm" id="chatPrograma">Serv. Social</span>
+        <!-- CHAT PRINCIPAL -->
+        <div class="chat-main" id="chatMain">
+            <div class="chat-empty" id="chatEmpty">
+                <i class="bi bi-chat-dots-fill"></i>
+                <p>Selecciona una conversación</p>
+            </div>
+            <div id="chatContenido" style="display:none;flex:1;display:none;flex-direction:column;overflow:hidden;">
+                <div class="chat-header" id="chatHeader">
+                    <div class="chat-header-avatar" id="chatAvatar">?</div>
+                    <div style="flex:1;">
+                        <div class="chat-header-name" id="chatNombre">—</div>
+                        <div class="chat-header-sub" id="chatSub">—</div>
                     </div>
+                    <a id="btnBitacora" href="#" style="border:1.5px solid var(--border);background:#fff;color:var(--muted);border-radius:var(--radius-sm);font-size:.78rem;font-weight:600;padding:.35rem .8rem;text-decoration:none;display:none;align-items:center;gap:.35rem;transition:border-color .2s,color .2s;" onmouseover="this.style.borderColor='var(--primario)';this.style.color='var(--primario)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">
+                        <i class="bi bi-journal-text"></i> Ver bitácora
+                    </a>
                 </div>
-                <a href="UR_ur-bitacora-alumno.html" style="border:1.5px solid var(--border);background:#fff;color:var(--muted);border-radius:var(--radius-sm);font-size:.78rem;font-weight:600;padding:.35rem .8rem;text-decoration:none;display:flex;align-items:center;gap:.35rem;transition:border-color .2s,color .2s;" onmouseover="this.style.borderColor='var(--primario)';this.style.color='var(--primario)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">
-                    <i class="bi bi-journal-text"></i> Ver bitácora
-                </a>
-            </div>
-
-            <!-- Hilo de mensajes -->
-            <div class="chat-thread" id="chatThread">
-
-                <div class="date-sep">19 feb 2026</div>
-
-                <div class="msg-bubble recv">
-                    Buen día, quisiera saber qué actividades tendré asignadas la próxima semana para prepararme con anticipación.
-                    <div class="msg-meta">Juan Pérez · 19 feb · 4:35 p.m.</div>
-                </div>
-
-                <div class="msg-bubble sent">
-                    Buenos días Juan. La próxima semana continuarás con el apoyo en archivo y digitalización de documentos del área de admisiones. Por favor llega puntual a las 8:00.
-                    <div class="msg-meta">Tú · 20 feb · 11:20 a.m.</div>
-                </div>
-
-                <div class="date-sep">Hoy</div>
-
-                <div class="msg-bubble recv">
-                    ¿Qué actividades tendré asignadas esta semana? Quiero prepararme bien.
-                    <div class="msg-attachment">
-                        <i class="bi bi-paperclip"></i> cronograma_feb.pdf · 128 KB
+                <div class="chat-thread" id="chatThread"></div>
+                <div class="chat-compose">
+                    <div class="compose-inner">
+                        <textarea id="composeInput" class="compose-textarea" placeholder="Escribe tu mensaje…" rows="1"
+                            onkeydown="if(event.ctrlKey&&event.key==='Enter')enviarMensaje()"
+                            oninput="autoResize(this)"></textarea>
+                        <button class="btn-send-msg" onclick="enviarMensaje()"><i class="bi bi-send-fill"></i></button>
                     </div>
-                    <div class="msg-meta">Juan Pérez · hoy · 10:32 a.m.</div>
+                    <div class="compose-hint"><i class="bi bi-info-circle me-1"></i>Ctrl + Enter para enviar</div>
                 </div>
-
             </div>
-
-            <!-- Compose -->
-            <div class="chat-compose">
-                <div class="compose-inner">
-                    <button class="btn-attach" title="Adjuntar archivo" onclick="showToast('Selecciona un archivo para adjuntar.')">
-                        <i class="bi bi-paperclip"></i>
-                    </button>
-                    <textarea
-                        id="composeInput"
-                        class="compose-textarea"
-                        placeholder="Escribe tu respuesta…"
-                        rows="1"
-                        onkeydown="if(event.ctrlKey && event.key==='Enter') enviarMensaje()"
-                        oninput="autoResize(this)"
-                    ></textarea>
-                    <button class="btn-send-msg" onclick="enviarMensaje()" title="Enviar (Ctrl + Enter)">
-                        <i class="bi bi-send-fill"></i>
-                    </button>
-                </div>
-                <div class="compose-hint"><i class="bi bi-info-circle me-1"></i>Ctrl + Enter para enviar</div>
-            </div>
-
         </div>
     </div>
-
 </main>
 
-<div class="toast-custom" id="toastMsg">
-    <i class="bi bi-check-circle-fill" style="font-size:1.1rem;"></i>
-    <span id="toastTxt"></span>
-</div>
-
+<div class="toast-custom" id="toastMsg"><i class="bi bi-check-circle-fill" style="font-size:1.1rem;"></i><span id="toastTxt"></span></div>
 <footer class="footer-custom">© 2026 SIARHA · Uso exclusivo institucional · UAEH</footer>
 
-
-<!-- ══ PANEL NOTIFICACIONES ══ -->
+<!-- NOTIFICACIONES -->
 <div class="notif-overlay" id="notifOverlay" onclick="cerrarNotif()"></div>
 <div class="notif-panel" id="notifPanel">
     <div class="notif-header">
         <h6><i class="bi bi-bell-fill me-2"></i>Notificaciones</h6>
-        <div class="d-flex align-items-center gap-2">
-            <button class="btn-mark-all" onclick="marcarTodasLeidas()">Marcar leídas</button>
-            <button class="btn-close-notif" onclick="cerrarNotif()"><i class="bi bi-x-lg"></i></button>
-        </div>
-    </div>
-    <div class="notif-tabs">
-        <button class="notif-tab active" onclick="setNotifTab('todas',this)">Todas <span id="badgeTodas" style="background:#501013;color:#fff;border-radius:20px;font-size:.65rem;padding:.08rem .45rem;margin-left:.25rem;">5</span></button>
-        <button class="notif-tab" onclick="setNotifTab('ni-ap',this)">Registros</button>
-        <button class="notif-tab" onclick="setNotifTab('ni-msg',this)">Mensajes</button>
-        <button class="notif-tab" onclick="setNotifTab('ni-sis',this)">Sistema</button>
+        <div class="d-flex gap-2"><button class="btn-mark-all" onclick="marcarTodasLeidas()">Marcar leídas</button><button class="btn-close-notif" onclick="cerrarNotif()"><i class="bi bi-x-lg"></i></button></div>
     </div>
     <div class="notif-list" id="notifList">
-        <div class="notif-item unread" data-tipo="ni-ap" onclick="marcarLeida(this)">
-            <div class="notif-icon ni-ap"><i class="bi bi-hourglass-split"></i></div>
-            <div><div class="notif-title">4 registros pendientes</div><div class="notif-desc">Juan Pérez, Ana López y 2 más esperan aprobación</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 5 min</div></div>
-        </div>
-        <div class="notif-item unread" data-tipo="ni-msg" onclick="marcarLeida(this)">
-            <div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div>
-            <div><div class="notif-title">Nuevo mensaje de Juan Pérez</div><div class="notif-desc">¿Qué actividades tendré asignadas esta semana?</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 22 min</div></div>
-        </div>
-        <div class="notif-item unread" data-tipo="ni-msg" onclick="marcarLeida(this)">
-            <div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div>
-            <div><div class="notif-title">Nuevo mensaje de Ana López</div><div class="notif-desc">Solicitud de carta de término de prácticas</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 1 hora</div></div>
-        </div>
-        <div class="notif-item unread" data-tipo="ni-sis" onclick="marcarLeida(this)">
-            <div class="notif-icon ni-sis"><i class="bi bi-person-plus-fill"></i></div>
-            <div><div class="notif-title">Nuevo alumno asignado</div><div class="notif-desc">Sofía Mendoza Ruiz — Prácticas Profesionales</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Hace 3 horas</div></div>
-        </div>
-        <div class="notif-item unread" data-tipo="ni-sis" onclick="marcarLeida(this)">
-            <div class="notif-icon ni-rec"><i class="bi bi-info-circle-fill"></i></div>
-            <div><div class="notif-title">Recordatorio Dirección SSPP</div><div class="notif-desc">Tienes registros sin revisar por más de 5 días</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer, 9:00 a.m.</div></div>
-        </div>
-        <div class="notif-item" data-tipo="ni-ap" onclick="marcarLeida(this)">
-            <div class="notif-icon ni-ap"><i class="bi bi-check-circle-fill"></i></div>
-            <div><div class="notif-title">Registro corregido — Daniel Torres</div><div class="notif-desc">Reenvió el registro del 04 feb tras rechazo</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ayer, 3:45 p.m.</div></div>
-        </div>
+        <div class="notif-item unread" data-tipo="ni-msg"><div class="notif-icon ni-msg"><i class="bi bi-chat-dots-fill"></i></div><div><div class="notif-title">Nuevo mensaje</div><div class="notif-desc">Tienes mensajes sin leer</div><div class="notif-time"><i class="bi bi-clock me-1"></i>Ahora</div></div></div>
     </div>
-    <div class="notif-footer"><a href="UR_mensajes-ur.html">Ver mensajes →</a></div>
+    <div class="notif-footer"><a href="#">Ver todo →</a></div>
 </div>
 
 <script src="../assets/js/api.js"></script>
@@ -633,155 +265,289 @@
 <script src="../assets/js/ur-guard.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+// ══════════════════════════════════════════════════════════════
+// ESTADO
+// ══════════════════════════════════════════════════════════════
+let _canal       = 'alumnos'; // 'alumnos' | 'direccion'
+let _convActiva  = null;      // { tipo, id } — tipo=alumno|dir
+let _pollingInt  = null;
 
-    // ── CONVERSACIONES ────────────────────────────────────────────────
-    const conversaciones = {
-        'Juan Pérez García': [
-            { tipo: 'sep', texto: '19 feb 2026' },
-            { tipo: 'recv', texto: 'Buen día, quisiera saber qué actividades tendré asignadas la próxima semana para prepararme con anticipación.', meta: 'Juan Pérez · 19 feb · 4:35 p.m.' },
-            { tipo: 'sent', texto: 'Buenos días Juan. La próxima semana continuarás con el apoyo en archivo y digitalización. Por favor llega puntual a las 8:00.', meta: 'Tú · 20 feb · 11:20 a.m.' },
-            { tipo: 'sep', texto: 'Hoy' },
-            { tipo: 'recv', texto: '¿Qué actividades tendré asignadas esta semana? Quiero prepararme bien.', adjunto: 'cronograma_feb.pdf · 128 KB', meta: 'Juan Pérez · hoy · 10:32 a.m.' },
-        ],
-        'Ana López Ramírez': [
-            { tipo: 'sep', texto: 'Hoy' },
-            { tipo: 'recv', texto: 'Buenos días, me gustaría solicitar mi carta de término de prácticas profesionales, ya que estoy por completar mis horas requeridas.', meta: 'Ana López · hoy · 9:15 a.m.' },
-        ],
-        'María González López': [
-            { tipo: 'sep', texto: '20 feb 2026' },
-            { tipo: 'recv', texto: '¿Podría confirmarme si el próximo lunes hay actividades?', meta: 'María González · 20 feb · 3:10 p.m.' },
-            { tipo: 'sent', texto: 'Sí María, el lunes hay actividades normales. Nos vemos a las 9:00 en el área de recursos humanos.', meta: 'Tú · 20 feb · 4:00 p.m.' },
-            { tipo: 'recv', texto: 'Gracias, nos vemos el lunes puntual.', meta: 'María González · 20 feb · 4:05 p.m.' },
-        ],
-        'Carlos Ramírez Soto': [
-            { tipo: 'sep', texto: '18 feb 2026' },
-            { tipo: 'recv', texto: 'Buen día, le envío mi justificación de inasistencia del día 15 por cita médica de urgencia.', adjunto: 'justificacion_15feb.pdf · 342 KB', meta: 'Carlos Ramírez · 18 feb · 9:00 a.m.' },
-            { tipo: 'sent', texto: 'Justificación recibida y registrada. No habrá problema, nos vemos el próximo lunes.', meta: 'Tú · 18 feb · 10:05 a.m.' },
-        ],
-        'Daniel Torres Vega': [
-            { tipo: 'sep', texto: '18 feb 2026' },
-            { tipo: 'recv', texto: 'Estimado(a) responsable, quisiera solicitar un cambio de horario a partir de la próxima semana. Por mis clases en la universidad me es difícil llegar a las 8:00.', meta: 'Daniel Torres · 18 feb · 8:30 a.m.' },
-            { tipo: 'sent', texto: 'Hola Daniel, podemos ajustarlo a las 9:00. Confirma si te funciona ese horario.', meta: 'Tú · 18 feb · 11:00 a.m.' },
-            { tipo: 'recv', texto: 'Perfecto, muchas gracias. Confirmo que sí me funciona.', meta: 'Daniel Torres · 18 feb · 11:15 a.m.' },
-        ],
-    };
+function ini(id, val, prop='textContent'){const e=document.getElementById(id);if(e)e[prop]=val;}
+function iniciales(n,a){return [(n||'').charAt(0),(a||'').charAt(0)].join('').toUpperCase()||'?';}
+function fmtHora(ts){if(!ts)return '';const d=new Date(ts);return d.toLocaleString('es-MX',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',hour12:true});}
 
-    function abrirChat(item, nombre, iniciales, cuenta, programa, tipo) {
-        // Quitar activo de todos y poner en el seleccionado
-        document.querySelectorAll('.contact-item').forEach(c => c.classList.remove('active'));
-        item.classList.add('active');
+// ── TABS ──────────────────────────────────────────────────────
+function setCanal(canal, btn){
+    _canal = canal;
+    _convActiva = null;
+    document.querySelectorAll('.canal-tab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    ini('sidebarTitle', canal==='alumnos' ? 'Mis alumnos' : 'Dirección SSPP');
+    document.getElementById('searchInput').value='';
+    ocultarChat();
+    if(canal==='alumnos') cargarConversacionesAlumnos();
+    else cargarCanalDireccion();
+}
 
-        // Quitar badge de no leídos
-        const badge = item.querySelector('.unread-badge');
-        if (badge) badge.remove();
-        const av = item.querySelector('.contact-avatar');
-        if (av) av.classList.remove('unread');
-        const name = item.querySelector('.contact-name');
-        if (name) name.style.color = '';
-        const preview = item.querySelector('.contact-preview');
-        if (preview) { preview.style.fontWeight = ''; preview.style.color = ''; }
+// ── CHAT visible/oculto ───────────────────────────────────────
+function mostrarChat(){
+    document.getElementById('chatEmpty').style.display='none';
+    const c=document.getElementById('chatContenido');
+    c.style.display='flex';c.style.flexDirection='column';c.style.overflow='hidden';c.style.flex='1';
+}
+function ocultarChat(){
+    document.getElementById('chatEmpty').style.display='flex';
+    document.getElementById('chatContenido').style.display='none';
+}
 
-        // Actualizar header
-        document.getElementById('chatAvatar').textContent = iniciales;
-        document.getElementById('chatNombre').textContent = nombre;
-        document.getElementById('chatCuenta').textContent = `No. cuenta: ${cuenta}`;
-        const progBadge = document.getElementById('chatPrograma');
-        progBadge.textContent = programa;
-        progBadge.className = tipo === 'ss' ? 'badge-ss-sm' : 'badge-pp-sm';
-
-        // Renderizar mensajes
-        const thread = document.getElementById('chatThread');
-        const msgs = conversaciones[nombre] || [];
-        thread.innerHTML = msgs.map(m => {
-            if (m.tipo === 'sep') return `<div class="date-sep">${m.texto}</div>`;
-            const adjunto = m.adjunto
-                ? `<div class="msg-attachment"><i class="bi bi-paperclip"></i> ${m.adjunto}</div>`
-                : '';
-            return `<div class="msg-bubble ${m.tipo}">${m.texto}${adjunto}<div class="msg-meta">${m.meta}</div></div>`;
-        }).join('');
-        thread.scrollTop = thread.scrollHeight;
-
-        document.getElementById('composeInput').focus();
+// ══════════════════════════════════════════════════════════════
+// CANAL ALUMNOS
+// ══════════════════════════════════════════════════════════════
+async function cargarConversacionesAlumnos(){
+    ini('contactList','<div class="sidebar-empty"><i class="bi bi-arrow-repeat"></i>Cargando…</div>','innerHTML');
+    try{
+        const res=await apiFetchUR('/api/ur/mensajes');
+        const data=await res.json();
+        if(!res.ok)throw new Error(data.error);
+        renderContactosAlumnos(data.conversaciones);
+    }catch(e){
+        ini('contactList',`<div class="sidebar-empty"><i class="bi bi-exclamation-circle"></i>${e.message}</div>`,'innerHTML');
     }
+}
 
-    // ── ENVIAR MENSAJE ────────────────────────────────────────────────
-    function enviarMensaje() {
-        const input = document.getElementById('composeInput');
-        const txt = input.value.trim();
-        if (!txt) return;
+function renderContactosAlumnos(convs){
+    const cont=document.getElementById('contactList');
+    if(!convs.length){
+        cont.innerHTML='<div class="sidebar-empty"><i class="bi bi-people"></i>Sin alumnos asignados aún</div>';return;
+    }
+    cont.innerHTML=convs.map(c=>{
+        const nombre=[c.nombre_alum,c.apellido_p_alum,c.apellido_m_alum].filter(Boolean).join(' ');
+        const ini2=iniciales(c.nombre_alum,c.apellido_p_alum);
+        const nr=parseInt(c.no_leidos,10);
+        const prog=c.programa==='pp'?`<span class="badge-pp-sm">Prácticas Prof.</span>`:`<span class="badge-ss-sm">Serv. Social</span>`;
+        const tiempo=c.ultimo_ts?fmtHora(c.ultimo_ts):'—';
+        const preview=c.ultimo_msg?c.ultimo_msg.substring(0,45)+'…':'Sin mensajes aún';
+        const unreadCls=nr>0?'style="color:var(--primario);font-weight:700;"':'';
+        const badgeHTML=nr>0?`<span class="unread-badge ms-1">${nr}</span>`:'';
+        return `<div class="contact-item" data-no="${c.no_cuenta}" onclick="abrirChatAlumno(this,${c.no_cuenta},'${nombre.replace(/'/g,"\\'")}','${ini2}','${c.programa}')">
+            <div class="contact-avatar">${ini2}</div>
+            <div style="flex:1;min-width:0;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="contact-name" ${unreadCls}>${nombre}</span>
+                    <span class="contact-time">${tiempo}</span>
+                </div>
+                <div class="contact-preview" ${nr>0?'style="font-weight:600;color:var(--text);"':''}>${preview}</div>
+                <div style="margin-top:.3rem;">${prog}</div>
+            </div>${badgeHTML}</div>`;
+    }).join('');
+}
 
-        const thread = document.getElementById('chatThread');
-        const burbuja = document.createElement('div');
-        burbuja.className = 'msg-bubble sent';
-        burbuja.innerHTML = `${txt}<div class="msg-meta">Tú · ahora</div>`;
-        thread.appendChild(burbuja);
-        thread.scrollTop = thread.scrollHeight;
-        input.value = '';
-        input.style.height = '';
-    }
+async function abrirChatAlumno(item, no_cuenta, nombre, ini2, programa){
+    document.querySelectorAll('.contact-item').forEach(i=>i.classList.remove('active'));
+    item.classList.add('active');
+    item.querySelector('.unread-badge')?.remove();
+    item.querySelector('.contact-name').style.color='';
+    item.querySelector('.contact-name').style.fontWeight='';
+    item.querySelector('.contact-preview').style.fontWeight='';
 
-    // ── FILTRAR CONTACTOS ─────────────────────────────────────────────
-    function filtrarContactos(q) {
-        q = q.toLowerCase();
-        document.querySelectorAll('.contact-item').forEach(item => {
-            const nombre = item.querySelector('.contact-name').textContent.toLowerCase();
-            item.style.display = nombre.includes(q) ? '' : 'none';
-        });
-    }
+    _convActiva={tipo:'alumno',id:no_cuenta};
 
-    // ── AUTO RESIZE TEXTAREA ──────────────────────────────────────────
-    function autoResize(el) {
-        el.style.height = '';
-        el.style.height = Math.min(el.scrollHeight, 120) + 'px';
-    }
+    const progBadge=programa==='pp'?`<span class="badge-pp-sm">Prácticas Prof.</span>`:`<span class="badge-ss-sm">Serv. Social</span>`;
+    ini('chatAvatar',ini2);
+    ini('chatNombre',nombre);
+    ini('chatSub',`No. cuenta: ${no_cuenta} · `,'innerHTML');
+    document.getElementById('chatSub').innerHTML=`No. cuenta: ${no_cuenta} · ${progBadge}`;
+    document.getElementById('chatAvatar').className='chat-header-avatar';
 
-    // ── TOAST ─────────────────────────────────────────────────────────
-    function showToast(msg) {
-        document.getElementById('toastTxt').textContent = msg;
-        const t = document.getElementById('toastMsg');
-        t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 3200);
-    }
+    const btnB=document.getElementById('btnBitacora');
+    btnB.style.display='inline-flex';
+    btnB.href=`UR_ur-bitacora-alumno.html?no_cuenta=${no_cuenta}`;
 
-</script>
-<script>
-    // ══ NOTIFICACIONES ══════════════════════════════════════════════
-    let _nOpen = false;
-    function toggleNotif() { _nOpen ? cerrarNotif() : abrirNotif(); }
-    function abrirNotif() {
-        document.getElementById('notifPanel').classList.add('open');
-        document.getElementById('notifOverlay').classList.add('open');
-        _nOpen = true;
+    mostrarChat();
+    await cargarHiloAlumno(no_cuenta);
+    iniciarPolling(()=>cargarHiloAlumno(no_cuenta,false));
+}
+
+async function cargarHiloAlumno(no_cuenta, scroll=true){
+    try{
+        const res=await apiFetchUR(`/api/ur/mensajes/${no_cuenta}`);
+        const data=await res.json();
+        if(!res.ok)return;
+        renderHilo(data.mensajes,'ur');
+        if(scroll)scrollBottom();
+    }catch(e){}
+}
+
+// ══════════════════════════════════════════════════════════════
+// CANAL DIRECCIÓN
+// ══════════════════════════════════════════════════════════════
+async function cargarCanalDireccion(){
+    ini('contactList','<div class="sidebar-empty"><i class="bi bi-arrow-repeat"></i>Cargando…</div>','innerHTML');
+    try{
+        const res=await apiFetchUR('/api/ur/mensajes/admin');
+        const data=await res.json();
+        if(!res.ok)throw new Error(data.error);
+
+        const nr=document.getElementById('badgeTabDir');
+        const noLeidos=data.mensajes.filter(m=>m.remitente==='admin'&&!m.leido).length;
+
+        // Mostrar el único contacto: Dirección SSPP
+        const admins=data.superadmins||[];
+        const adminNombre=admins.length?[admins[0].nombre_admin,admins[0].apellido_p_admin].filter(Boolean).join(' '):'Dirección SSPP';
+        const ultimoMsg=data.mensajes.length?data.mensajes[data.mensajes.length-1]:null;
+
+        const cont=document.getElementById('contactList');
+        cont.innerHTML=`<div class="contact-item active" onclick="abrirChatDireccion(this)">
+            <div class="contact-avatar dir"><i class="bi bi-person-badge-fill" style="font-size:1rem;"></i></div>
+            <div style="flex:1;min-width:0;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="contact-name" style="color:var(--primario);">${adminNombre}</span>
+                </div>
+                <div class="contact-preview">${ultimoMsg?ultimoMsg.contenido.substring(0,45)+'…':'Sin mensajes aún'}</div>
+                <div style="margin-top:.3rem;"><span class="badge-dir-sm">Dirección SSPP</span></div>
+            </div></div>`;
+
+        // Abrir directamente
+        _convActiva={tipo:'direccion',id:null};
+        ini('chatAvatar','<i class="bi bi-person-badge-fill"></i>','innerHTML');
+        document.getElementById('chatAvatar').className='chat-header-avatar dir';
+        ini('chatNombre','Dirección SSPP');
+        ini('chatSub','Administración · SIARHA');
+        document.getElementById('btnBitacora').style.display='none';
+        mostrarChat();
+        renderHilo(data.mensajes,'ur');
+        scrollBottom();
+        iniciarPolling(cargarHiloDireccion);
+    }catch(e){
+        ini('contactList',`<div class="sidebar-empty"><i class="bi bi-exclamation-circle"></i>${e.message}</div>`,'innerHTML');
     }
-    function cerrarNotif() {
-        document.getElementById('notifPanel').classList.remove('open');
-        document.getElementById('notifOverlay').classList.remove('open');
-        _nOpen = false;
-    }
-    function marcarLeida(item) {
-        if (!item.classList.contains('unread')) return;
-        item.classList.remove('unread');
-        _badge();
-    }
-    function marcarTodasLeidas() {
-        document.querySelectorAll('.notif-item.unread').forEach(i => i.classList.remove('unread'));
-        _badge();
-    }
-    function _badge() {
-        const n = document.querySelectorAll('.notif-item.unread').length;
-        const b = document.getElementById('notifCount');
-        if (b) { b.textContent = n; b.style.display = n > 0 ? 'flex' : 'none'; }
-        const bt = document.getElementById('badgeTodas');
-        if (bt) bt.textContent = n;
-    }
-    function setNotifTab(tipo, btn) {
-        document.querySelectorAll('.notif-tab').forEach(t => t.classList.remove('active'));
-        btn.classList.add('active');
-        document.querySelectorAll('.notif-item').forEach(i => {
-            i.style.display = (tipo === 'todas' || i.dataset.tipo === tipo) ? '' : 'none';
-        });
-    }
-    // ════════════════════════════════════════════════════════════════
+}
+
+async function abrirChatDireccion(item){
+    document.querySelectorAll('.contact-item').forEach(i=>i.classList.remove('active'));
+    item.classList.add('active');
+    _convActiva={tipo:'direccion',id:null};
+    document.getElementById('btnBitacora').style.display='none';
+    mostrarChat();
+    await cargarHiloDireccion();
+    iniciarPolling(cargarHiloDireccion);
+}
+
+async function cargarHiloDireccion(scroll=true){
+    try{
+        const res=await apiFetchUR('/api/ur/mensajes/admin');
+        const data=await res.json();
+        if(!res.ok)return;
+        renderHilo(data.mensajes,'ur');
+        if(scroll)scrollBottom();
+    }catch(e){}
+}
+
+// ══════════════════════════════════════════════════════════════
+// RENDER HILO COMÚN
+// ══════════════════════════════════════════════════════════════
+function renderHilo(msgs, llaveMia){
+    const thread=document.getElementById('chatThread');
+    if(!msgs||!msgs.length){thread.innerHTML='<div style="text-align:center;color:var(--muted);padding:2rem;font-size:.84rem;">Aún no hay mensajes. ¡Empieza la conversación!</div>';return;}
+
+    let lastDate='';
+    thread.innerHTML=msgs.map(m=>{
+        const d=new Date(m.created_at);
+        const dStr=d.toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'});
+        let sep='';
+        if(dStr!==lastDate){lastDate=dStr;sep=`<div class="date-sep">${dStr}</div>`;}
+        const esMio=m.remitente===llaveMia||m.remitente==='admin'&&llaveMia==='admin';
+        const cls=m.remitente===llaveMia?'sent':'recv';
+        const hora=d.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit',hour12:true});
+        const quien=m.remitente===llaveMia?'Tú':m.remitente==='ur'?'UR':'Dirección';
+        return `${sep}<div class="msg-bubble ${cls}">${m.contenido}<div class="msg-meta">${quien} · ${hora}</div></div>`;
+    }).join('');
+}
+
+function scrollBottom(){const t=document.getElementById('chatThread');if(t)t.scrollTop=t.scrollHeight;}
+
+// ══════════════════════════════════════════════════════════════
+// ENVIAR MENSAJE
+// ══════════════════════════════════════════════════════════════
+async function enviarMensaje(){
+    const input=document.getElementById('composeInput');
+    const txt=input.value.trim();
+    if(!txt||!_convActiva)return;
+    input.value='';input.style.height='';
+
+    try{
+        let url;
+        if(_convActiva.tipo==='alumno') url=`/api/ur/mensajes/${_convActiva.id}`;
+        else url='/api/ur/mensajes/admin';
+
+        const res=await apiFetchUR(url,{method:'POST',body:JSON.stringify({contenido:txt})});
+        if(!res.ok){const d=await res.json();showToast(d.error||'Error al enviar');return;}
+
+        // Refrescar hilo
+        if(_convActiva.tipo==='alumno') await cargarHiloAlumno(_convActiva.id);
+        else await cargarHiloDireccion();
+        scrollBottom();
+    }catch(e){showToast('Error de conexión');}
+}
+
+// ══════════════════════════════════════════════════════════════
+// BADGES y POLLING
+// ══════════════════════════════════════════════════════════════
+async function cargarBadges(){
+    try{
+        const res=await apiFetchUR('/api/ur/mensajes/badges');
+        const data=await res.json();
+        if(!res.ok)return;
+        const nA=data.no_leidos_alumnos||0;
+        const nD=data.no_leidos_admin||0;
+        const total=nA+nD;
+
+        const bA=document.getElementById('badgeTabAlumnos');
+        if(nA>0){bA.textContent=nA;bA.style.display='';}else bA.style.display='none';
+        const bD=document.getElementById('badgeTabDir');
+        if(nD>0){bD.textContent=nD;bD.style.display='';}else bD.style.display='none';
+
+        const bM=document.getElementById('badgeMenuMsg');
+        bM.textContent=total>0?total:'';
+        const nc=document.getElementById('notifCount');
+        if(nc){nc.textContent=total;nc.style.display=total>0?'flex':'none';}
+    }catch(e){}
+}
+
+function iniciarPolling(fn){
+    if(_pollingInt)clearInterval(_pollingInt);
+    _pollingInt=setInterval(async()=>{
+        if(_convActiva){const prevLen=document.getElementById('chatThread').children.length;await fn(false);const newLen=document.getElementById('chatThread').children.length;if(newLen>prevLen)scrollBottom();}
+        cargarBadges();
+    },10000);
+}
+
+function filtrarContactos(q){
+    q=q.toLowerCase();
+    document.querySelectorAll('.contact-item').forEach(i=>{
+        const n=(i.querySelector('.contact-name')?.textContent||'').toLowerCase();
+        i.style.display=n.includes(q)?'':'none';
+    });
+}
+function autoResize(el){el.style.height='';el.style.height=Math.min(el.scrollHeight,120)+'px';}
+function showToast(msg){document.getElementById('toastTxt').textContent=msg;const t=document.getElementById('toastMsg');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200);}
+
+// ══════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════
+window.addEventListener('load',async()=>{
+    // Nombre UR del guard
+    try{const res=await apiFetchUR('/api/ur/dashboard');const d=await res.json();if(d.ur){ini('nombreURNav',d.ur.nombre_ur);ini('nombreURMenu',d.ur.nombre_ur);}}catch(e){}
+    cargarBadges();
+    cargarConversacionesAlumnos();
+});
+
+// NOTIFICACIONES
+let _nOpen=false;
+function toggleNotif(){_nOpen?cerrarNotif():abrirNotif();}
+function abrirNotif(){document.getElementById('notifPanel').classList.add('open');document.getElementById('notifOverlay').classList.add('open');_nOpen=true;}
+function cerrarNotif(){document.getElementById('notifPanel').classList.remove('open');document.getElementById('notifOverlay').classList.remove('open');_nOpen=false;}
+function marcarTodasLeidas(){document.querySelectorAll('.notif-item.unread').forEach(i=>i.classList.remove('unread'));}
 </script>
 </body>
 </html>

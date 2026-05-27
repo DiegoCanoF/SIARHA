@@ -445,8 +445,8 @@
     <!-- ENCABEZADO -->
     <div class="page-header">
         <div>
-            <h4>Unidad Receptora: <span id="nombreUR">Hospital General</span></h4>
-            <p>Gestión de alumnos de Servicio Social y Prácticas Profesionales · Periodo Enero – Junio 2026</p>
+            <h4>Unidad Receptora: <span id="nombreUR">—</span></h4>
+            <p id="subHeaderUR">Gestión de alumnos de Servicio Social y Prácticas Profesionales</p>
         </div>
         <span class="badge-ur">
             <i class="bi bi-building-fill"></i> Unidad Receptora
@@ -460,7 +460,7 @@
                 <div class="stat-icon si-vino"><i class="bi bi-people-fill"></i></div>
                 <div>
                     <div class="stat-label">Total alumnos</div>
-                    <div class="stat-value">12</div>
+                    <div class="stat-value" id="statTotal">—</div>
                 </div>
             </div>
         </div>
@@ -469,7 +469,7 @@
                 <div class="stat-icon si-vino2"><i class="bi bi-journal-check"></i></div>
                 <div>
                     <div class="stat-label">Servicio Social</div>
-                    <div class="stat-value">7</div>
+                    <div class="stat-value" id="statSS">—</div>
                 </div>
             </div>
         </div>
@@ -478,7 +478,7 @@
                 <div class="stat-icon si-dorado"><i class="bi bi-briefcase-fill"></i></div>
                 <div>
                     <div class="stat-label">Prácticas Prof.</div>
-                    <div class="stat-value">5</div>
+                    <div class="stat-value" id="statPP">—</div>
                 </div>
             </div>
         </div>
@@ -486,8 +486,8 @@
             <div class="stat-card">
                 <div class="stat-icon si-warn"><i class="bi bi-hourglass-split"></i></div>
                 <div>
-                    <div class="stat-label">Registros pendientes</div>
-                    <div class="stat-value warn">4</div>
+                    <div class="stat-label">Cupos disponibles</div>
+                    <div class="stat-value warn" id="statCupos">—</div>
                 </div>
             </div>
         </div>
@@ -499,18 +499,20 @@
             <div class="row g-3 align-items-end">
                 <div class="col-md-4">
                     <label class="form-label-sm">Programa</label>
-                    <select class="form-select-custom">
-                        <option>Todos los programas</option>
-                        <option>Servicio Social</option>
-                        <option>Prácticas Profesionales</option>
+                    <select id="filtroProg" class="form-select-custom" onchange="filtrarTabla()">
+                        <option value="">Todos los programas</option>
+                        <option value="ss">Servicio Social</option>
+                        <option value="pp">Prácticas Profesionales</option>
                     </select>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label-sm">Buscar alumno</label>
-                    <input type="text" class="form-control-custom" placeholder="Nombre o número de cuenta…">
+                    <input type="text" id="filtroBuscar" class="form-control-custom"
+                           placeholder="Nombre o número de cuenta…"
+                           oninput="filtrarTabla()">
                 </div>
                 <div class="col-md-2">
-                    <button class="btn-primary-custom" style="margin-top:.1rem;">
+                    <button class="btn-primary-custom" style="margin-top:.1rem;" onclick="filtrarTabla()">
                         <i class="bi bi-funnel-fill"></i> Filtrar
                     </button>
                 </div>
@@ -527,7 +529,7 @@
     <div class="section-card">
         <div class="section-header">
             <span class="title"><i class="bi bi-people-fill"></i> Alumnos asignados</span>
-            <span style="font-size:.78rem;color:var(--muted);font-weight:500;">5 registros</span>
+            <span style="font-size:.78rem;color:var(--muted);font-weight:500;" id="conteoAlumnos">—</span>
         </div>
 
         <div class="table-responsive">
@@ -543,83 +545,7 @@
                         <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody>
-
-                    <tr>
-                        <td style="font-weight:600;">Juan Pérez</td>
-                        <td style="color:var(--muted);">2020123456</td>
-                        <td><span class="badge-ss">Servicio Social</span></td>
-                        <td style="font-weight:700;color:var(--primario);">320 hrs</td>
-                        <td>
-                            <div class="avance-wrap">
-                                <div class="avance-bar"><div class="avance-fill high" style="width:80%;"></div></div>
-                                <span class="avance-pct">80%</span>
-                            </div>
-                        </td>
-                        <td><span class="badge-revision">En revisión</span></td>
-                        <td><a href="UR_ur-bitacora-alumno.html" class="btn-outline-custom"><i class="bi bi-journal-text"></i> Ver bitácora</a></td>
-                    </tr>
-
-                    <tr>
-                        <td style="font-weight:600;">María González</td>
-                        <td style="color:var(--muted);">2021123478</td>
-                        <td><span class="badge-pp">Prácticas Prof.</span></td>
-                        <td style="font-weight:700;color:var(--primario);">180 hrs</td>
-                        <td>
-                            <div class="avance-wrap">
-                                <div class="avance-bar"><div class="avance-fill mid" style="width:45%;"></div></div>
-                                <span class="avance-pct">45%</span>
-                            </div>
-                        </td>
-                        <td><span class="badge-aprobado">Aprobado</span></td>
-                        <td><a href="UR_ur-bitacora-alumno.html" class="btn-outline-custom"><i class="bi bi-journal-text"></i> Ver bitácora</a></td>
-                    </tr>
-
-                    <tr>
-                        <td style="font-weight:600;">Carlos Ramírez</td>
-                        <td style="color:var(--muted);">2020987654</td>
-                        <td><span class="badge-ss">Servicio Social</span></td>
-                        <td style="font-weight:700;color:var(--primario);">400 hrs</td>
-                        <td>
-                            <div class="avance-wrap">
-                                <div class="avance-bar"><div class="avance-fill done" style="width:100%;"></div></div>
-                                <span class="avance-pct">100%</span>
-                            </div>
-                        </td>
-                        <td><span class="badge-finalizado">Finalizado</span></td>
-                        <td><a href="UR_ur-bitacora-alumno.html" class="btn-outline-custom"><i class="bi bi-journal-text"></i> Ver bitácora</a></td>
-                    </tr>
-
-                    <tr>
-                        <td style="font-weight:600;">Ana López</td>
-                        <td style="color:var(--muted);">2022233445</td>
-                        <td><span class="badge-pp">Prácticas Prof.</span></td>
-                        <td style="font-weight:700;color:var(--primario);">250 hrs</td>
-                        <td>
-                            <div class="avance-wrap">
-                                <div class="avance-bar"><div class="avance-fill mid" style="width:62%;"></div></div>
-                                <span class="avance-pct">62%</span>
-                            </div>
-                        </td>
-                        <td><span class="badge-revision">En revisión</span></td>
-                        <td><a href="UR_ur-bitacora-alumno.html" class="btn-outline-custom"><i class="bi bi-journal-text"></i> Ver bitácora</a></td>
-                    </tr>
-
-                    <tr>
-                        <td style="font-weight:600;">Daniel Torres</td>
-                        <td style="color:var(--muted);">2021345678</td>
-                        <td><span class="badge-ss">Servicio Social</span></td>
-                        <td style="font-weight:700;color:var(--primario);">120 hrs</td>
-                        <td>
-                            <div class="avance-wrap">
-                                <div class="avance-bar"><div class="avance-fill low" style="width:30%;"></div></div>
-                                <span class="avance-pct">30%</span>
-                            </div>
-                        </td>
-                        <td><span class="badge-observaciones">Observaciones</span></td>
-                        <td><a href="UR_ur-bitacora-alumno.html" class="btn-outline-custom"><i class="bi bi-journal-text"></i> Ver bitácora</a></td>
-                    </tr>
-
+                <tbody id="tbodyAlumnos">
                 </tbody>
             </table>
 
@@ -696,6 +622,110 @@
 <script src="../assets/js/ur-guard.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    // ══ DATOS DEL DASHBOARD ══════════════════════════════════════════
+    let _todosAlumnos = [];
+
+    function set(id, val, prop = 'textContent') {
+        const el = document.getElementById(id);
+        if (el) el[prop] = val;
+    }
+
+    const ESTADO_CFG = {
+        activo:     { cls: 'badge-activo',     label: 'Activo'        },
+        revision:   { cls: 'badge-revision',   label: 'En revisión'   },
+        finalizado: { cls: 'badge-finalizado', label: 'Finalizado'    },
+        pendiente:  { cls: 'badge-pendiente',  label: 'Pendiente'     },
+        baja:       { cls: 'badge-baja',       label: 'Baja'          },
+    };
+
+    function renderFila(a) {
+        const nombre   = [a.nombre_alum, a.apellido_p_alum, a.apellido_m_alum].filter(Boolean).join(' ');
+        const pct      = parseFloat(a.avance_pct || 0);
+        const horasMax = a.programa === 'pp' ? 240 : 480;
+        const progBadge = a.programa === 'pp'
+            ? `<span class="badge-pp"><i class="bi bi-briefcase-fill me-1"></i>Prácticas Prof.</span>`
+            : `<span class="badge-ss"><i class="bi bi-journal-check me-1"></i>Servicio Social</span>`;
+
+        const fillCls = pct >= 100 ? 'done' : pct >= 60 ? 'high' : pct >= 30 ? 'mid' : 'low';
+        const est     = ESTADO_CFG[a.estado] || { cls: 'badge-pendiente', label: a.estado };
+
+        return `<tr>
+            <td>
+                <div style="font-weight:700;font-size:.86rem;">${nombre}</div>
+                <div style="font-size:.73rem;color:var(--muted);">${a.nombre_licenciatura || '—'}</div>
+            </td>
+            <td style="color:var(--muted);font-size:.83rem;">${a.no_cuenta}</td>
+            <td>${progBadge}</td>
+            <td style="font-weight:700;color:var(--primario);">${a.horas_realizadas} / ${horasMax} h</td>
+            <td>
+                <div class="avance-wrap">
+                    <div class="avance-bar"><div class="avance-fill ${fillCls}" style="width:${Math.min(pct,100)}%;"></div></div>
+                    <span class="avance-pct">${pct}%</span>
+                </div>
+            </td>
+            <td><span class="${est.cls}">${est.label}</span></td>
+            <td>
+                <a href="UR_ur-bitacora-alumno.html?no_cuenta=${a.no_cuenta}"
+                   class="btn-outline-custom" style="font-size:.78rem;padding:.3rem .6rem;">
+                    <i class="bi bi-journal-text"></i> Bitácora
+                </a>
+            </td>
+        </tr>`;
+    }
+
+    function filtrarTabla() {
+        const prog   = document.getElementById('filtroProg')?.value || '';
+        const buscar = (document.getElementById('filtroBuscar')?.value || '').toLowerCase();
+
+        const filtrados = _todosAlumnos.filter(a => {
+            const nombre = [a.nombre_alum, a.apellido_p_alum, a.apellido_m_alum].filter(Boolean).join(' ').toLowerCase();
+            const matchProg   = !prog   || a.programa === prog;
+            const matchBuscar = !buscar || nombre.includes(buscar) || String(a.no_cuenta).includes(buscar);
+            return matchProg && matchBuscar;
+        });
+
+        const tbody = document.getElementById('tbodyAlumnos');
+        if (!tbody) return;
+
+        if (filtrados.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:2rem;">
+                Sin alumnos que coincidan con los filtros.</td></tr>`;
+        } else {
+            tbody.innerHTML = filtrados.map(renderFila).join('');
+        }
+        set('conteoAlumnos', `${filtrados.length} registro${filtrados.length !== 1 ? 's' : ''}`);
+    }
+
+    async function cargarDashboard() {
+        try {
+            const res = await apiFetchUR('/api/ur/dashboard');
+            const data = await res.json();
+            if (!res.ok) { console.error('[UR Dashboard]', data.error); return; }
+
+            const { ur, stats, alumnos } = data;
+
+            // Encabezado
+            set('nombreUR',      ur.nombre_ur);
+            set('nombreURNav',   ur.nombre_ur);
+            set('subHeaderUR',   `${ur.email_ur}${ur.telefono_ur ? ' · ' + ur.telefono_ur : ''} · Cupo: ${stats.total}/${ur.cupo_maximo}`);
+
+            // Stats
+            set('statTotal',  stats.total);
+            set('statSS',     stats.totalSS);
+            set('statPP',     stats.totalPP);
+            set('statCupos',  stats.cuposLib);
+
+            // Tabla
+            _todosAlumnos = alumnos;
+            filtrarTabla();
+
+        } catch(e) {
+            console.error('[UR Dashboard] Error:', e.message || e);
+        }
+    }
+
+    window.addEventListener('load', cargarDashboard);
+
     // ══ NOTIFICACIONES ══════════════════════════════════════════════
     let _nOpen = false;
     function toggleNotif() { _nOpen ? cerrarNotif() : abrirNotif(); }
