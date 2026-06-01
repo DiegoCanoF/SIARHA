@@ -537,62 +537,42 @@
 
     <!-- BITÁCORA -->
     <div class="section-card">
-
-        <!-- Header -->
         <div class="section-header">
-            <span class="title"><i class="bi bi-journal-text"></i> Bitácora de horas</span>
-            <div class="d-flex gap-2">
-                <button class="btn-outline-custom"><i class="bi bi-file-earmark-excel"></i> Excel</button>
-                <button class="btn-outline-custom"><i class="bi bi-file-earmark-pdf"></i> PDF</button>
+            <span class="title"><i class="bi bi-journal-text"></i> Mis últimas actividades</span>
+            <div class="d-flex gap-2 align-items-center">
+                <span style="font-size:.78rem;color:var(--muted);" id="bitacoraConteo"></span>
+                <button onclick="cargarBitacora()" title="Actualizar"
+                    style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:.95rem;">
+                    <i class="bi bi-arrow-clockwise"></i>
+                </button>
+                <a href="ALU_registro-horas.html" class="btn-primary-custom"
+                   style="font-size:.78rem;padding:.35rem .9rem;">
+                    <i class="bi bi-plus-lg me-1"></i> Registrar horas
+                </a>
             </div>
         </div>
 
-        <!-- Filtros -->
-        <div style="padding:1.1rem 1.4rem;border-bottom:1px solid var(--border);background:var(--bg);">
-            <div class="row g-3 align-items-end">
-                <div class="col-6 col-md-3">
-                    <label class="form-label">Vista</label>
-                    <select class="form-select">
-                        <option value="mes">Por mes</option>
-                        <option value="semana">Por semana</option>
-                        <option value="dia">Por día</option>
-                    </select>
-                </div>
-                <div class="col-6 col-md-3">
-                    <label class="form-label">Mes</label>
-                    <input type="month" class="form-control" value="2026-02">
-                </div>
-                <div class="col-6 col-md-3">
-                    <label class="form-label">Semana / Fecha</label>
-                    <input type="week" class="form-control">
-                </div>
-                <div class="col-6 col-md-3">
-                    <button class="btn-primary-custom w-100" style="height:38px;">
-                        <i class="bi bi-funnel-fill me-1"></i> Aplicar filtro
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Resumen del periodo -->
+        <!-- Resumen rápido -->
         <div class="periodo-summary">
             <div class="periodo-item">
-                <div class="p-label">Horas del periodo</div>
-                <div class="p-value">24:00</div>
+                <div class="p-label">Aprobadas</div>
+                <div class="p-value" id="bitResAprobados" style="color:#065f46;">—</div>
             </div>
             <div class="periodo-item">
-                <div class="p-label">Días registrados</div>
-                <div class="p-value">5</div>
+                <div class="p-label">Pendientes</div>
+                <div class="p-value" id="bitResPendientes" style="color:#854d0e;">—</div>
             </div>
             <div class="periodo-item">
-                <div class="p-label">Estado general</div>
-                <div class="p-value">
-                    <span class="badge-revision">En revisión</span>
-                </div>
+                <div class="p-label">Rechazadas</div>
+                <div class="p-value" id="bitResRechazados" style="color:#991b1b;">—</div>
+            </div>
+            <div class="periodo-item">
+                <div class="p-label">Horas aprobadas</div>
+                <div class="p-value" id="bitResHoras" style="color:var(--primario);">—</div>
             </div>
         </div>
 
-        <!-- Tabla -->
+        <!-- Tabla dinámica -->
         <div class="table-responsive">
             <table class="table table-borderless mb-0">
                 <thead>
@@ -607,37 +587,9 @@
                         <th>Detalle</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr style="cursor:pointer;" onclick="window.location='detalle-registro.html'">
-                        <td style="font-weight:600;">2026-02-01</td>
-                        <td>Lunes</td>
-                        <td>08:00</td>
-                        <td>14:00</td>
-                        <td style="font-weight:700;color:var(--verde);">06:00</td>
-                        <td>Apoyo administrativo</td>
-                        <td><span class="badge-pendiente">Pendiente</span></td>
-                        <td><a href="ALU_detalle-registro.html" class="btn-ver-detalle"><i class="bi bi-eye"></i></a></td>
-                    </tr>
-                    <tr style="cursor:pointer;" onclick="window.location='detalle-registro.html'">
-                        <td style="font-weight:600;">2026-02-03</td>
-                        <td>Miércoles</td>
-                        <td>09:00</td>
-                        <td>15:00</td>
-                        <td style="font-weight:700;color:var(--verde);">06:00</td>
-                        <td>Atención a usuarios</td>
-                        <td><span class="badge-aprobado">Aprobado</span></td>
-                        <td><a href="ALU_detalle-registro.html" class="btn-ver-detalle"><i class="bi bi-eye"></i></a></td>
-                    </tr>
-                    <tr style="cursor:pointer;" onclick="window.location='detalle-registro.html'">
-                        <td style="font-weight:600;">2026-02-05</td>
-                        <td>Viernes</td>
-                        <td>08:00</td>
-                        <td>12:00</td>
-                        <td style="font-weight:700;color:var(--verde);">04:00</td>
-                        <td>Archivo documental</td>
-                        <td><span class="badge-revision">En revisión</span></td>
-                        <td><a href="ALU_detalle-registro.html" class="btn-ver-detalle"><i class="bi bi-eye"></i></a></td>
-                    </tr>
+                <tbody id="tbodyBitacora">
+                    <tr><td colspan="8" style="text-align:center;color:var(--muted);padding:2rem;">
+                        <i class="bi bi-arrow-repeat"></i> Cargando…</td></tr>
                 </tbody>
             </table>
         </div>
@@ -750,7 +702,84 @@
 
     // Los scripts están al final del body — el DOM ya está listo.
     // Usar window.onload para asegurarse de que alu-guard.js ya terminó.
-    window.addEventListener('load', cargarDashboard);
+    // ── Cargar bitácora (últimas actividades) ─────────────────────
+    const DIAS_DASH = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+    function _fmtF(iso) {
+        if (!iso) return '—';
+        return new Date(iso).toLocaleDateString('es-MX',{day:'2-digit',month:'short'});
+    }
+    function _fmtT(iso) {
+        if (!iso) return '—';
+        return new Date(iso).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit',hour12:false});
+    }
+    function _fmtH(h) {
+        if (!h) return '—';
+        const hh=Math.floor(parseFloat(h)), mm=Math.round((parseFloat(h)-hh)*60);
+        return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
+    }
+
+    async function cargarBitacora() {
+        const tbody = document.getElementById('tbodyBitacora');
+        if (!tbody) return;
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:1.5rem;">
+            <i class="bi bi-arrow-repeat"></i> Cargando…</td></tr>`;
+        try {
+            const res  = await apiFetchAlu('/api/alumno/registros');
+            const data = await res.json();
+            if (!res.ok) return;
+
+            const { registros, resumen } = data;
+
+            // Resumen
+            set('bitResAprobados',  resumen.aprobados);
+            set('bitResPendientes', resumen.pendientes);
+            set('bitResRechazados', resumen.rechazados);
+            set('bitResHoras',      `${resumen.horas_aprobadas}h`);
+            set('bitacoraConteo',   `${resumen.total} registro${resumen.total !== 1 ? 's' : ''}`);
+
+            if (!registros || registros.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:2rem;">
+                    <i class="bi bi-inbox" style="font-size:1.3rem;display:block;margin-bottom:.4rem;"></i>
+                    Aún no tienes registros. <a href="ALU_registro-horas.html" style="color:var(--primario);font-weight:600;">Registra tus primeras horas →</a></td></tr>`;
+                return;
+            }
+
+            const BADGE_D = {
+                'Aprobado':  'badge-aprobado',
+                'Pendiente': 'badge-pendiente',
+                'Rechazado': 'badge-rechazado',
+            };
+
+            tbody.innerHTML = registros.slice(0, 10).map(r => {
+                const cls    = BADGE_D[r.estado_fin] || 'badge-pendiente';
+                const dia    = DIAS_DASH[new Date(r.hora_entrada).getDay()];
+                const motivo = r.estado_fin === 'Rechazado' && r.motivo_rechazo
+                    ? `<div style="font-size:.7rem;color:#991b1b;margin-top:.15rem;">${r.motivo_rechazo}</div>` : '';
+                const href   = `ALU_detalle-registro.html?id=${r.id_registro}`;
+                return `<tr style="cursor:pointer;" onclick="window.location='${href}'">
+                    <td style="font-weight:600;">${_fmtF(r.hora_entrada)}</td>
+                    <td style="color:var(--muted);">${dia}</td>
+                    <td>${_fmtT(r.hora_entrada)}</td>
+                    <td>${_fmtT(r.hora_salida)}</td>
+                    <td style="font-weight:700;color:var(--verde);">${_fmtH(r.horas_trabajadas)}</td>
+                    <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"
+                        title="${(r.actividad_desc||'').replace(/"/g,'')}">${r.actividad_desc || '—'}</td>
+                    <td><span class="${cls}">${r.estado_fin}</span>${motivo}</td>
+                    <td><a href="${href}" class="btn-ver-detalle" onclick="event.stopPropagation()">
+                        <i class="bi bi-eye"></i></a></td>
+                </tr>`;
+            }).join('');
+
+        } catch(e) {
+            if (tbody) tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:1.5rem;">
+                Error al cargar los registros.</td></tr>`;
+        }
+    }
+
+    window.addEventListener('load', () => {
+        cargarDashboard();
+        cargarBitacora();
+    });
 
     // ══ NOTIFICACIONES ══════════════════════════════════════════════
     let _nOpen = false;

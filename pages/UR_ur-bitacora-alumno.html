@@ -478,26 +478,31 @@
     <div class="info-card">
         <div class="info-field">
             <span class="info-label">Nombre</span>
-            <span class="info-value">Juan Pérez López</span>
+            <span class="info-value" id="nombreAlumnoHeader">—</span>
         </div>
         <div class="info-field">
             <span class="info-label">Número de cuenta</span>
-            <span class="info-value">2020123456</span>
+            <span class="info-value" id="cuentaHeader">—</span>
+        </div>
+        <div class="info-field">
+            <span class="info-label">Carrera</span>
+            <span class="info-value" id="carreraHeader">—</span>
         </div>
         <div class="info-field">
             <span class="info-label">Programa</span>
-            <span class="badge-ss" style="margin-top:.2rem;">Servicio Social</span>
+            <span id="programaBadgeHeader" class="badge-ss" style="margin-top:.2rem;">—</span>
         </div>
         <div class="info-field">
-            <span class="info-label">Estado general</span>
-            <span class="badge-revision" style="margin-top:.2rem;">En revisión</span>
+            <span class="info-label">Estado</span>
+            <span id="estadoBadgeHeader" class="badge-revision" style="margin-top:.2rem;">—</span>
         </div>
-        <div class="info-field ms-auto">
+        <div class="info-field ms-auto" style="min-width:160px;">
             <span class="info-label">Avance global</span>
             <div class="prog-wrap" style="margin-top:.35rem;">
-                <div class="prog-bar"><div class="prog-fill" style="width:67%;"></div></div>
-                <span style="font-size:.85rem;font-weight:800;color:var(--primario);">67%</span>
+                <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%;"></div></div>
+                <span id="progPct" style="font-size:.85rem;font-weight:800;color:var(--primario);">0%</span>
             </div>
+            <span id="progDetalle" style="font-size:.72rem;color:var(--muted);margin-top:.25rem;">— hrs de — requeridas</span>
         </div>
     </div>
 
@@ -508,7 +513,7 @@
                 <div class="stat-icon si-vino"><i class="bi bi-clock-fill"></i></div>
                 <div>
                     <div class="stat-label">Horas realizadas</div>
-                    <div class="stat-value">320</div>
+                    <div class="stat-value" id="statHorasRealizadas">—</div>
                 </div>
             </div>
         </div>
@@ -517,7 +522,7 @@
                 <div class="stat-icon si-dorado"><i class="bi bi-hourglass"></i></div>
                 <div>
                     <div class="stat-label">Horas requeridas</div>
-                    <div class="stat-value">480</div>
+                    <div class="stat-value" id="statHorasRequeridas">—</div>
                 </div>
             </div>
         </div>
@@ -526,7 +531,7 @@
                 <div class="stat-icon si-vino2"><i class="bi bi-graph-up-arrow"></i></div>
                 <div>
                     <div class="stat-label">% de avance</div>
-                    <div class="stat-value">67%</div>
+                    <div class="stat-value" id="statAvance">—</div>
                 </div>
             </div>
         </div>
@@ -535,7 +540,7 @@
                 <div class="stat-icon si-warn"><i class="bi bi-exclamation-circle-fill"></i></div>
                 <div>
                     <div class="stat-label">Pendientes</div>
-                    <div class="stat-value warn">3</div>
+                    <div class="stat-value warn" id="statPendientes">—</div>
                 </div>
             </div>
         </div>
@@ -557,7 +562,7 @@
                 </div>
                 <div class="col-6 col-md-3">
                     <label class="form-label-sm">Mes</label>
-                    <input type="month" class="form-control-custom" value="2026-02">
+                    <input type="month" id="filtroMes" class="form-control-custom">
                 </div>
                 <div class="col-6 col-md-3">
                     <button class="btn-primary-custom" style="margin-top:.1rem;">
@@ -575,7 +580,7 @@
         <!-- Header tabla -->
         <div class="section-header">
             <span class="title"><i class="bi bi-journal-text"></i> Registros de horas</span>
-            <span style="font-size:.78rem;color:var(--muted);font-weight:500;">10 registros · Febrero 2026</span>
+            <span style="font-size:.78rem;color:var(--muted);font-weight:500;"><span id="conteoRegistros">—</span></span>
         </div>
 
         <!-- Tabla -->
@@ -593,7 +598,7 @@
                         <th>Acción</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="tbodyBitacora">
 
                     <tr>
                         <td style="font-weight:600;">2026-02-01</td>
@@ -778,14 +783,11 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <!-- ── MODAL APROBAR ── -->
-<div class="modal fade" id="modalAprobar" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius:18px;border:none;overflow:hidden;">
-            <div class="modal-header" style="background:#501013;border:none;padding:1rem 1.4rem;">
-                <h6 class="modal-title text-white fw-bold" style="margin:0;">
-                    <i class="bi bi-check-circle-fill me-2"></i>Confirmar aprobación
-                </h6>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+<div style="display:none;position:fixed;inset:0;z-index:2000;align-items:center;justify-content:center;padding:1rem;background:rgba(0,0,0,.48);" id="modalAprobar" onclick="if(event.target===this)cerrarModalAprobar()">
+    <div style="background:#fff;border-radius:12px;max-width:420px;width:100%;overflow:hidden;box-shadow:0 24px 64px rgba(80,16,19,.25);">
+        <div style="background:#501013;padding:1rem 1.4rem;display:flex;align-items:center;justify-content:space-between;">
+            <h6 style="color:#fff;font-weight:700;margin:0;"><i class="bi bi-check-circle-fill me-2"></i>Confirmar aprobación</h6>
+            <button onclick="cerrarModalAprobar()" style="background:none;border:none;color:#fff;font-size:1.1rem;cursor:pointer;"><i class="bi bi-x-lg"></i></button>
             </div>
             <div class="modal-body" style="padding:1.4rem;">
                 <p style="font-size:.88rem;margin:0 0 .75rem;">¿Confirmas que las horas del registro <strong id="aprobFecha"></strong> son correctas y las apruebas?</p>
@@ -794,24 +796,20 @@
                 </div>
             </div>
             <div class="modal-footer" style="border-color:#E5E7EB;padding:.9rem 1.4rem;gap:.6rem;">
-                <button type="button" class="btn-ver" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn-ver" >Cancelar</button>
                 <button type="button" class="btn-aprobar" onclick="confirmarAprobar()" style="padding:.45rem 1.1rem;">
                     <i class="bi bi-check-lg"></i> Sí, aprobar
                 </button>
             </div>
-        </div>
     </div>
 </div>
 
 <!-- ── MODAL RECHAZAR ── -->
-<div class="modal fade" id="modalRechazar" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius:18px;border:none;overflow:hidden;">
-            <div class="modal-header" style="background:#501013;border:none;padding:1rem 1.4rem;">
-                <h6 class="modal-title text-white fw-bold" style="margin:0;">
-                    <i class="bi bi-x-circle-fill me-2"></i>Rechazar registro
-                </h6>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+<div style="display:none;position:fixed;inset:0;z-index:2000;align-items:center;justify-content:center;padding:1rem;background:rgba(0,0,0,.48);" id="modalRechazar" onclick="if(event.target===this)cerrarModalRechazar()">
+    <div style="background:#fff;border-radius:12px;max-width:420px;width:100%;overflow:hidden;box-shadow:0 24px 64px rgba(80,16,19,.25);">
+        <div style="background:#501013;padding:1rem 1.4rem;display:flex;align-items:center;justify-content:space-between;">
+            <h6 style="color:#fff;font-weight:700;margin:0;"><i class="bi bi-x-circle-fill me-2"></i>Rechazar registro</h6>
+            <button onclick="cerrarModalRechazar()" style="background:none;border:none;color:#fff;font-size:1.1rem;cursor:pointer;"><i class="bi bi-x-lg"></i></button>
             </div>
             <div class="modal-body" style="padding:1.4rem;">
                 <p style="font-size:.88rem;margin:0 0 1rem;">Estás rechazando el registro del <strong id="rechFecha"></strong>. Escribe el motivo para que el alumno pueda corregirlo.</p>
@@ -828,12 +826,11 @@
                 </div>
             </div>
             <div class="modal-footer" style="border-color:#E5E7EB;padding:.9rem 1.4rem;gap:.6rem;">
-                <button type="button" class="btn-ver" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn-ver" >Cancelar</button>
                 <button type="button" class="btn-rechazar" onclick="confirmarRechazar()" style="padding:.45rem 1.1rem;">
                     <i class="bi bi-x-lg"></i> Rechazar registro
                 </button>
             </div>
-        </div>
     </div>
 </div>
 
@@ -843,68 +840,195 @@
 </div>
 
 <script>
-    let filaActiva = null;
+    // ─── Helpers ─────────────────────────────────────────────
+    const DIAS2 = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+    function fmtH(iso) { if(!iso) return '—'; return new Date(iso).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit',hour12:false}); }
+    function fmtF(iso) { if(!iso) return '—'; return new Date(iso).toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'}); }
+    function fmtHrs(h) { if(!h) return '—'; const hh=Math.floor(h),mm=Math.round((h-hh)*60); return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`; }
+    function set(id,v,p='textContent'){const e=document.getElementById(id);if(e)e[p]=v;}
 
-    function abrirAprobar(btn) {
-        filaActiva = btn.closest('tr');
-        const fecha = filaActiva.querySelector('td:first-child').textContent.trim();
-        document.getElementById('aprobFecha').textContent = fecha;
-        new bootstrap.Modal(document.getElementById('modalAprobar')).show();
-    }
+    // ─── Estado ───────────────────────────────────────────────
+    let _noCuenta = null;
+    let _regIdActivo = null;
 
-    function confirmarAprobar() {
-        bootstrap.Modal.getInstance(document.getElementById('modalAprobar')).hide();
-        if (filaActiva) {
-            const badge = filaActiva.querySelector('.badge-pendiente, .badge-rechazado');
-            if (badge) {
-                badge.className = 'badge-aprobado';
-                badge.textContent = 'Aprobado';
+    // ─── Cargar bitácora del alumno ───────────────────────────
+    async function cargarBitacora() {
+        const p = new URLSearchParams(window.location.search);
+        _noCuenta = p.get('no_cuenta');
+        if (!_noCuenta) return;
+
+        const mes    = document.getElementById('filtroMes')?.value || '';
+        const estado = document.getElementById('filtroEstado')?.value || '';
+        const qs     = [mes && `mes=${mes}`, estado && `estado=${estado}`].filter(Boolean).join('&');
+
+        try {
+            const res  = await apiFetchUR(`/api/ur/alumno/${_noCuenta}/bitacora${qs ? '?'+qs : ''}`);
+            const data = await res.json();
+            if (!res.ok) return;
+
+            const { alumno, resumen, registros } = data;
+
+            // ── Datos del alumno ──────────────────────────────────
+            if (alumno) {
+                const nombre = [alumno.nombre_alum, alumno.apellido_p_alum, alumno.apellido_m_alum].filter(Boolean).join(' ');
+                set('nombreAlumnoHeader', nombre);
+                set('cuentaHeader', alumno.no_cuenta ? `No. ${alumno.no_cuenta}` : '—');
+                set('carreraHeader', alumno.nombre_licenciatura || '—');
+
+                // Badge programa
+                const progBadge = document.getElementById('programaBadgeHeader');
+                if (progBadge) {
+                    progBadge.textContent = alumno.programa === 'pp' ? 'Prácticas Profesionales' : 'Servicio Social';
+                    progBadge.className   = alumno.programa === 'pp' ? 'badge-revision' : 'badge-ss';
+                    progBadge.style.marginTop = '.2rem';
+                }
+
+                // Badge estado alumno
+                const estadoBadge = document.getElementById('estadoBadgeHeader');
+                if (estadoBadge) {
+                    const ESTADO_LABELS = { activo:'Activo', revision:'En revisión', pendiente:'Pendiente', finalizado:'Finalizado', baja:'Baja' };
+                    const ESTADO_CLS    = { activo:'badge-aprobado', revision:'badge-revision', pendiente:'badge-pendiente', finalizado:'badge-aprobado', baja:'badge-rechazado' };
+                    const est = alumno.estado || 'activo';
+                    estadoBadge.textContent = ESTADO_LABELS[est] || est;
+                    estadoBadge.className   = ESTADO_CLS[est] || 'badge-revision';
+                    estadoBadge.style.marginTop = '.2rem';
+                }
+
+                // Progreso
+                const maxH    = alumno.programa === 'pp' ? 240 : 480;
+                const realiz  = parseFloat(alumno.horas_realizadas) || 0;
+                const pct     = Math.min(Math.round((realiz / maxH) * 100), 100);
+                const faltantes = Math.max(maxH - realiz, 0);
+
+                const fill = document.getElementById('progFill');
+                const pctEl = document.getElementById('progPct');
+                const detEl = document.getElementById('progDetalle');
+                if (fill)  fill.style.width  = `${pct}%`;
+                if (pctEl) pctEl.textContent  = `${pct}%`;
+                if (detEl) detEl.textContent  = `${realiz} hrs de ${maxH} requeridas · faltan ${faltantes.toFixed(1)} hrs`;
+
+                // Stat cards de progreso
+                set('statHorasRealizadas', `${realiz} h`);
+                set('statHorasRequeridas', `${maxH} h`);
+                set('statAvance', `${pct}%`);
             }
-            const acciones = filaActiva.querySelector('td:last-child');
-            acciones.innerHTML = '<button class="btn-ver"><i class="bi bi-eye"></i> Ver</button>';
+
+            // ── Stats de registros ────────────────────────────────
+            set('statAprobados',  resumen.aprobados);
+            set('statPendientes', resumen.pendientes);
+            set('statRechazados', resumen.rechazados);
+            set('statHorasAprobadas', `${resumen.horas_aprobadas} h`);
+            set('conteoRegistros', `${resumen.total} registros`);
+
+            // ── Tabla ─────────────────────────────────────────────
+            const tbody = document.getElementById('tbodyBitacora');
+            if (!tbody) return;
+
+            if (registros.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:2rem;">Sin registros para los filtros seleccionados.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = registros.map(r => {
+                const estado = r.estado_fin || 'Pendiente';
+                const esCls  = {Aprobado:'badge-aprobado',Pendiente:'badge-pendiente',Rechazado:'badge-rechazado'}[estado] || 'badge-pendiente';
+                const acciones = estado === 'Pendiente'
+                    ? `<div style="display:flex;gap:.4rem;flex-wrap:wrap;">
+                           <button class="btn-aprobar" onclick="abrirAprobar(${r.id_registro},'${fmtF(r.hora_entrada)}')"><i class="bi bi-check-lg"></i> Aprobar</button>
+                           <button class="btn-rechazar" onclick="abrirRechazar(${r.id_registro},'${fmtF(r.hora_entrada)}')"><i class="bi bi-x-lg"></i> Rechazar</button>
+                       </div>`
+                    : `<button class="btn-ver" onclick="verDetalle(${r.id_registro})"><i class="bi bi-eye"></i> Ver</button>`;
+
+                const motivo = r.motivo_rechazo
+                    ? `<div style="font-size:.7rem;color:#991b1b;margin-top:.2rem;">${r.motivo_rechazo}</div>` : '';
+
+                return `<tr data-id="${r.id_registro}">
+                    <td style="font-weight:600;">${fmtF(r.hora_entrada)}</td>
+                    <td style="color:var(--muted);">${DIAS2[new Date(r.hora_entrada).getDay()]}</td>
+                    <td>${fmtH(r.hora_entrada)}</td>
+                    <td>${fmtH(r.hora_salida)}</td>
+                    <td style="font-weight:700;color:var(--primario);">${fmtHrs(r.horas_trabajadas)}</td>
+                    <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"
+                        title="${r.actividad_desc||''}">${r.actividad_desc || '—'}</td>
+                    <td><span class="${esCls}">${estado}</span>${motivo}</td>
+                    <td>${acciones}</td>
+                </tr>`;
+            }).join('');
+
+        } catch(e) {
+            console.error('[UR Bitácora]', e.message);
         }
-        showToast('Registro aprobado correctamente.');
     }
 
-    function abrirRechazar(btn) {
-        filaActiva = btn.closest('tr');
-        const fecha = filaActiva.querySelector('td:first-child').textContent.trim();
+    // ─── Ver detalle ──────────────────────────────────────────
+    function verDetalle(id) {
+        window.location.href = `UR_detalle-registro.html?id=${id}&no_cuenta=${_noCuenta}`;
+    }
+
+    // ─── APROBAR ──────────────────────────────────────────────
+    function abrirAprobar(id, fecha) {
+        _regIdActivo = id;
+        document.getElementById('aprobFecha').textContent = fecha;
+        document.getElementById('modalAprobar').style.display = 'flex';
+    }
+    function cerrarModalAprobar() { document.getElementById('modalAprobar').style.display = 'none'; }
+
+    async function confirmarAprobar() {
+        cerrarModalAprobar();
+        if (!_regIdActivo) return;
+        try {
+            const res = await apiFetchUR(`/api/ur/registro/${_regIdActivo}/validar`, {
+                method: 'PATCH',
+                body: JSON.stringify({ accion: 'aprobar' })
+            });
+            const d = await res.json();
+            if (!res.ok) { showToast(d.error || 'Error al aprobar.', true); return; }
+            showToast('Registro aprobado. Las horas han sido sumadas al progreso del alumno.');
+            cargarBitacora();
+        } catch(e) { showToast('Error de conexión.', true); }
+    }
+
+    // ─── RECHAZAR ─────────────────────────────────────────────
+    function abrirRechazar(id, fecha) {
+        _regIdActivo = id;
         document.getElementById('rechFecha').textContent = fecha;
         document.getElementById('motivoRechazo').value = '';
         document.getElementById('motivoError').style.display = 'none';
-        new bootstrap.Modal(document.getElementById('modalRechazar')).show();
+        document.getElementById('modalRechazar').style.display = 'flex';
     }
+    function cerrarModalRechazar() { document.getElementById('modalRechazar').style.display = 'none'; }
 
-    function confirmarRechazar() {
+    async function confirmarRechazar() {
         const motivo = document.getElementById('motivoRechazo').value.trim();
-        if (!motivo) {
-            document.getElementById('motivoError').style.display = 'block';
-            return;
-        }
-        bootstrap.Modal.getInstance(document.getElementById('modalRechazar')).hide();
-        if (filaActiva) {
-            const badge = filaActiva.querySelector('.badge-pendiente, .badge-aprobado');
-            if (badge) {
-                badge.className = 'badge-rechazado';
-                badge.textContent = 'Rechazado';
-            }
-            const acciones = filaActiva.querySelector('td:last-child');
-            acciones.innerHTML = '<div style="display:flex;gap:.4rem;flex-wrap:wrap;"><button class="btn-aprobar" onclick="abrirAprobar(this)"><i class="bi bi-check-lg"></i> Aprobar</button></div>';
-        }
-        showToast('Registro rechazado. El alumno fue notificado.');
+        if (!motivo) { document.getElementById('motivoError').style.display = 'block'; return; }
+        cerrarModalRechazar();
+        try {
+            const res = await apiFetchUR(`/api/ur/registro/${_regIdActivo}/validar`, {
+                method: 'PATCH',
+                body: JSON.stringify({ accion: 'rechazar', motivo_rechazo: motivo })
+            });
+            const d = await res.json();
+            if (!res.ok) { showToast(d.error || 'Error al rechazar.', true); return; }
+            showToast('Registro rechazado. El alumno recibirá el motivo indicado.');
+            cargarBitacora();
+        } catch(e) { showToast('Error de conexión.', true); }
     }
 
-    function showToast(msg) {
+    function showToast(msg, error=false) {
         document.getElementById('toastURTxt').textContent = msg;
         const t = document.getElementById('toastUR');
+        t.style.background = error ? '#991b1b' : '#501013';
         t.classList.add('show');
-        setTimeout(() => { t.style.transform=''; t.style.opacity=''; t.classList.remove('show'); }, 3500);
+        setTimeout(() => t.classList.remove('show'), 3500);
     }
-    // Añadir clase show al toast
     const style = document.createElement('style');
     style.textContent = '#toastUR.show { transform: translateY(0) !important; opacity: 1 !important; }';
     document.head.appendChild(style);
 
+    // Filtros
+    document.getElementById('filtroMes')?.addEventListener('change', cargarBitacora);
+
+    window.addEventListener('load', cargarBitacora);
 </script>
 
 </body>

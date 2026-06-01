@@ -17,6 +17,7 @@
     // (solo su dashboard de reportes y mensajes)
     const PAGINAS_REPORTES = [
         'ADMIN_dashboard-reportes.html',
+        'ADMIN_reportes-globales.html',
         'ADMIN_mensajes-admin.html'
     ];
 

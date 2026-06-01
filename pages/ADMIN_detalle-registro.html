@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SIARHA | Detalle de Registro - Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/siarha.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root{--primario:#501013;--primario-dk:#3a0b0e;--primario-lt:#f7eaea;--primario-mid:#7a1820;--dorado:#C9A24D;--dorado-lt:#fdf6e3;--bg:#F2F4F8;--card-bg:#fff;--text:#1F2933;--muted:#6b7280;--border:#E5E7EB;--radius-card:18px;--radius-sm:10px;--shadow:0 2px 16px rgba(80,16,19,.08);}
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+        .navbar-custom{background:var(--primario);padding:0 1.5rem;height:70px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:1050;box-shadow:0 2px 16px rgba(0,0,0,.15);}
+        main{max-width:820px;margin:0 auto;padding:2rem 1.5rem;}
+        .section-card{background:#fff;border-radius:var(--radius-card);box-shadow:var(--shadow);margin-bottom:1.5rem;overflow:hidden;}
+        .section-header{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+        .section-header .title{font-weight:700;font-size:.95rem;display:flex;align-items:center;gap:.5rem;}
+        .section-body{padding:1.2rem 1.4rem;}
+        .dato-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;padding:1.2rem 1.4rem;}
+        .dato-item{display:flex;flex-direction:column;gap:.2rem;}
+        .dato-label{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;}
+        .dato-value{font-size:.9rem;font-weight:600;color:var(--text);}
+        .dato-value.accent{color:var(--primario);font-size:1rem;font-weight:800;}
+        .dato-value.highlight{color:#065f46;font-size:1.1rem;font-weight:800;}
+        .status-banner{display:flex;align-items:flex-start;gap:1rem;padding:1.25rem 1.4rem;border-radius:var(--radius-card);margin-bottom:1.5rem;}
+        .status-banner.aprobado{background:#dcfce7;border:1.5px solid #86efac;}
+        .status-banner.pendiente{background:#fef9c3;border:1.5px solid #fde047;}
+        .status-banner.rechazado{background:#fee2e2;border:1.5px solid #fca5a5;}
+        .status-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+        .status-icon.aprobado{background:#bbf7d0;color:#065f46;} .status-icon.pendiente{background:#fef08a;color:#854d0e;} .status-icon.rechazado{background:#fecaca;color:#991b1b;}
+        .status-label{font-size:.75rem;font-weight:600;color:var(--muted);}
+        .status-value{font-size:1rem;font-weight:800;}
+        .status-value.aprobado{color:#065f46;} .status-value.pendiente{color:#854d0e;} .status-value.rechazado{color:#991b1b;}
+        .status-desc{font-size:.82rem;color:var(--muted);margin-top:.2rem;}
+        .badge-aprobado{background:#dcfce7;color:#065f46;border-radius:20px;font-size:.73rem;font-weight:700;padding:.25rem .7rem;}
+        .badge-pendiente{background:#fef9c3;color:#854d0e;border-radius:20px;font-size:.73rem;font-weight:700;padding:.25rem .7rem;}
+        .badge-rechazado{background:#fee2e2;color:#991b1b;border-radius:20px;font-size:.73rem;font-weight:700;padding:.25rem .7rem;}
+        .btn-back{background:#fff;color:var(--muted);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-weight:600;font-size:.83rem;padding:.45rem 1rem;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;text-decoration:none;}
+        .btn-back:hover{border-color:var(--primario);color:var(--primario);}
+        .btn-cambiar{background:var(--dorado);color:#fff;border:none;border-radius:var(--radius-sm);font-weight:700;font-size:.85rem;padding:.6rem 1.3rem;cursor:pointer;display:inline-flex;align-items:center;gap:.5rem;}
+        .btn-cambiar:hover{background:#a07c2e;}
+        /* Modal */
+        .modal-siarha{display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.48);align-items:center;justify-content:center;padding:1rem;}
+        .modal-box{background:#fff;border-radius:14px;max-width:460px;width:100%;overflow:hidden;box-shadow:0 24px 64px rgba(80,16,19,.25);}
+        .modal-box-head{padding:1.2rem 1.4rem 1rem;display:flex;align-items:center;gap:.75rem;}
+        .modal-icon-w{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;background:#fef9c3;color:#854d0e;}
+        .modal-box-body{padding:0 1.4rem 1.2rem;font-size:.87rem;color:var(--muted);}
+        .modal-box-foot{padding:.9rem 1.4rem;border-top:1px solid var(--border);display:flex;gap:.6rem;justify-content:flex-end;}
+        .form-field{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.6rem .8rem;font-family:inherit;font-size:.88rem;outline:none;transition:border-color .2s;color:var(--text);}
+        .form-field:focus{border-color:var(--primario);}
+        .form-label-sm{font-size:.78rem;font-weight:700;color:var(--text);display:block;margin-bottom:.3rem;}
+    </style>
+</head>
+<body>
+<nav class="navbar-custom">
+    <span style="font-size:1.3rem;font-weight:800;color:#fff;letter-spacing:.03em;">SIARHA</span>
+    <a id="btnVolver" href="ADMIN_bitacora-alumno.html" class="btn-back">
+        <i class="bi bi-arrow-left"></i> Volver a bitácora
+    </a>
+</nav>
+
+<main>
+    <div style="margin-bottom:1.25rem;">
+        <h5 style="font-weight:800;font-size:1.15rem;margin-bottom:.2rem;" id="tituloDetalle">Cargando…</h5>
+        <div style="font-size:.82rem;color:var(--muted);" id="subtituloInfo"></div>
+    </div>
+
+    <!-- Banner estado -->
+    <div class="status-banner pendiente" id="statusBanner">
+        <div class="status-icon pendiente"><i class="bi bi-hourglass-split"></i></div>
+        <div>
+            <div class="status-label">Estado actual</div>
+            <div class="status-value pendiente" id="statusTexto">Pendiente</div>
+            <div class="status-desc" id="statusDesc">—</div>
+        </div>
+    </div>
+
+    <!-- Alumno y UR -->
+    <div class="section-card">
+        <div class="section-header">
+            <span class="title"><i class="bi bi-person-fill"></i> Alumno y Unidad Receptora</span>
+        </div>
+        <div class="dato-grid" style="grid-template-columns:1fr 1fr 1fr;">
+            <div class="dato-item"><span class="dato-label">Alumno</span><span class="dato-value accent" id="dNombreAlumno">—</span></div>
+            <div class="dato-item"><span class="dato-label">No. cuenta</span><span class="dato-value" id="dCuenta">—</span></div>
+            <div class="dato-item"><span class="dato-label">Programa</span><span class="dato-value" id="dPrograma">—</span></div>
+            <div class="dato-item"><span class="dato-label">Carrera</span><span class="dato-value" id="dCarrera">—</span></div>
+            <div class="dato-item" style="grid-column:2/-1;"><span class="dato-label">Unidad Receptora</span><span class="dato-value" id="dUR">—</span></div>
+        </div>
+    </div>
+
+    <!-- Datos jornada -->
+    <div class="section-card">
+        <div class="section-header">
+            <span class="title"><i class="bi bi-calendar-check"></i> Datos de la jornada</span>
+            <span id="badgeEstado" class="badge-pendiente">Pendiente</span>
+        </div>
+        <div class="dato-grid">
+            <div class="dato-item"><span class="dato-label">Fecha</span><span class="dato-value accent" id="dFecha">—</span></div>
+            <div class="dato-item"><span class="dato-label">Día</span><span class="dato-value" id="dDia">—</span></div>
+            <div class="dato-item"><span class="dato-label">Hora entrada</span><span class="dato-value" id="dEntrada">—</span></div>
+            <div class="dato-item"><span class="dato-label">Hora salida</span><span class="dato-value" id="dSalida">—</span></div>
+            <div class="dato-item" style="grid-column:1/-1;"><span class="dato-label">Total de horas</span><span class="dato-value highlight" id="dTotal">—</span></div>
+        </div>
+        <div style="padding:0 1.4rem 1.2rem;">
+            <div class="dato-label" style="margin-bottom:.4rem;">Descripción de la actividad</div>
+            <div id="dActividad" style="font-size:.9rem;line-height:1.7;color:var(--text);background:var(--bg);border-radius:var(--radius-sm);padding:.75rem 1rem;border:1px solid var(--border);">—</div>
+        </div>
+    </div>
+
+    <!-- Observaciones -->
+    <div class="section-card" id="obsWrap" style="display:none;">
+        <div class="section-header"><span class="title"><i class="bi bi-chat-left-text"></i> Observaciones de la UR</span></div>
+        <div class="section-body">
+            <div id="obsBox" class="status-banner rechazado" style="margin-bottom:0;border-radius:var(--radius-sm);">
+                <div class="status-icon rechazado" style="width:36px;height:36px;font-size:1rem;"><i class="bi bi-x-circle-fill"></i></div>
+                <div><div class="status-label">Motivo del rechazo</div><div id="obsMotivo" style="font-size:.87rem;color:var(--text);margin-top:.2rem;">—</div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Acciones admin -->
+    <div class="section-card">
+        <div class="section-header"><span class="title"><i class="bi bi-shield-check"></i> Gestión del administrador</span></div>
+        <div class="section-body">
+            <div style="background:#fef9c3;border:1px solid #fde047;border-radius:var(--radius-sm);padding:.75rem 1rem;margin-bottom:1rem;font-size:.81rem;color:#854d0e;display:flex;gap:.5rem;">
+                <i class="bi bi-exclamation-triangle-fill" style="flex-shrink:0;margin-top:.1rem;"></i>
+                <span>Como administrador puedes <strong>mediar</strong> entre el alumno y la UR. Si cambias un registro de <strong>Aprobado</strong> a otro estado, las horas se restarán del progreso del alumno.</span>
+            </div>
+            <button class="btn-cambiar" onclick="abrirCambioEstado()">
+                <i class="bi bi-arrow-repeat"></i> Cambiar estado del registro
+            </button>
+        </div>
+    </div>
+</main>
+
+<!-- MODAL CAMBIO DE ESTADO -->
+<div id="modalCambio" class="modal-siarha" onclick="if(event.target===this)cerrarModalCambio()">
+    <div class="modal-box">
+        <div class="modal-box-head">
+            <div class="modal-icon-w"><i class="bi bi-arrow-repeat"></i></div>
+            <div>
+                <h5 style="font-size:1rem;font-weight:800;margin:0;">Cambiar estado del registro</h5>
+                <div style="font-size:.75rem;color:var(--muted);margin-top:.1rem;" id="modalCambioInfo"></div>
+            </div>
+        </div>
+        <div class="modal-box-body">
+            <label class="form-label-sm" style="margin-bottom:.4rem;">Nuevo estado</label>
+            <select id="nuevoEstado" class="form-field" style="margin-bottom:.75rem;" onchange="toggleMotivoAdmin()">
+                <option value="Pendiente">Pendiente</option>
+                <option value="Aprobado">Aprobado</option>
+                <option value="Rechazado">Rechazado</option>
+            </select>
+            <div id="motivoWrap" style="display:none;">
+                <label class="form-label-sm">Motivo del rechazo <span style="color:var(--primario);">*</span></label>
+                <textarea id="motivoAdmin" class="form-field" rows="3" placeholder="Indica el motivo…"></textarea>
+            </div>
+            <div id="cambioError" style="font-size:.78rem;color:#991b1b;margin-top:.4rem;display:none;"></div>
+        </div>
+        <div class="modal-box-foot">
+            <button onclick="cerrarModalCambio()" class="btn-back">Cancelar</button>
+            <button onclick="confirmarCambio()" class="btn-cambiar" id="btnConfirmarCambio">Confirmar cambio</button>
+        </div>
+    </div>
+</div>
+
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/admin-guard.js"></script>
+<script src="../assets/js/admin-scope.js"></script>
+<script>
+    const DIAS_A = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+    function fmtF(iso){if(!iso)return'—';return new Date(iso).toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'});}
+    function fmtT(iso){if(!iso)return'—';return new Date(iso).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit',hour12:false});}
+    function fmtH(h){if(!h)return'—';const hh=Math.floor(parseFloat(h)),mm=Math.round((parseFloat(h)-hh)*60);return`${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')} hrs`;}
+    function set(id,v,p='textContent'){const e=document.getElementById(id);if(e)e[p]=v;}
+
+    let _reg = null;
+
+    async function cargarDetalle() {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        const noCuenta = params.get('no_cuenta');
+        if (noCuenta) document.getElementById('btnVolver').href = `ADMIN_bitacora-alumno.html?no_cuenta=${noCuenta}`;
+        if (!id) { history.back(); return; }
+
+        try {
+            const res  = await apiFetch(`/api/admin/registro/${id}`);
+            const data = await res.json();
+            if (!res.ok || !data.registro) { alert('Registro no encontrado.'); history.back(); return; }
+
+            const r = data.registro;
+            _reg = r;
+            const estado = r.estado_fin || 'Pendiente';
+
+            set('tituloDetalle', `Registro #REG-${String(r.id_registro).padStart(8,'0')} — ${fmtF(r.hora_entrada)}`);
+            set('subtituloInfo', `Alumno: ${[r.nombre_alum,r.apellido_p_alum,r.apellido_m_alum].filter(Boolean).join(' ')} · UR: ${r.nombre_ur||'—'}`);
+
+            const cfg = {
+                Aprobado:  {cls:'aprobado', ico:'bi-check-circle-fill', txt:'Aprobado por la UR', desc:'Las horas ya fueron sumadas al progreso del alumno.'},
+                Pendiente: {cls:'pendiente',ico:'bi-hourglass-split',   txt:'Pendiente de revisión', desc:'La UR aún no ha validado este registro.'},
+                Rechazado: {cls:'rechazado',ico:'bi-x-circle-fill',     txt:'Rechazado por la UR', desc:'El alumno recibió el motivo de rechazo.'},
+            };
+            const c = cfg[estado] || cfg.Pendiente;
+            document.getElementById('statusBanner').className = `status-banner ${c.cls}`;
+            document.getElementById('statusBanner').innerHTML = `<div class="status-icon ${c.cls}"><i class="bi ${c.ico}"></i></div>
+                <div><div class="status-label">Estado actual</div><div class="status-value ${c.cls}">${c.txt}</div><div class="status-desc">${c.desc}</div></div>`;
+            const b=document.getElementById('badgeEstado'); b.className=`badge-${c.cls}`;b.textContent=estado;
+
+            const prog = r.programa === 'pp' ? 'Prácticas Profesionales' : 'Servicio Social';
+            set('dNombreAlumno', [r.nombre_alum,r.apellido_p_alum,r.apellido_m_alum].filter(Boolean).join(' '));
+            set('dCuenta',   r.no_cuenta);
+            set('dPrograma', prog);
+            set('dCarrera',  r.nombre_licenciatura || '—');
+            set('dUR',       r.nombre_ur           || '—');
+            set('dFecha',    fmtF(r.hora_entrada));
+            set('dDia',      DIAS_A[new Date(r.hora_entrada).getDay()]);
+            set('dEntrada',  fmtT(r.hora_entrada));
+            set('dSalida',   fmtT(r.hora_salida));
+            set('dTotal',    fmtH(r.horas_trabajadas));
+            set('dActividad', r.actividad_desc || '—');
+
+            const obs = document.getElementById('obsWrap');
+            if (r.motivo_rechazo) { obs.style.display=''; set('obsMotivo',r.motivo_rechazo); }
+            else obs.style.display='none';
+
+            set('nuevoEstado', estado, 'value');
+            set('modalCambioInfo', `ID #REG-${String(r.id_registro).padStart(8,'0')} — ${r.actividad_desc?.substring(0,40)||''}`, 'textContent');
+
+        } catch(e) { console.error('[Admin Detalle]', e.message); }
+    }
+
+    function abrirCambioEstado() {
+        if (!_reg) return;
+        document.getElementById('nuevoEstado').value = _reg.estado_fin || 'Pendiente';
+        document.getElementById('motivoAdmin').value = _reg.motivo_rechazo || '';
+        document.getElementById('cambioError').style.display = 'none';
+        toggleMotivoAdmin();
+        document.getElementById('modalCambio').style.display = 'flex';
+    }
+    function cerrarModalCambio() { document.getElementById('modalCambio').style.display = 'none'; }
+    function toggleMotivoAdmin() {
+        const v = document.getElementById('nuevoEstado').value;
+        document.getElementById('motivoWrap').style.display = v === 'Rechazado' ? '' : 'none';
+    }
+
+    async function confirmarCambio() {
+        const estado = document.getElementById('nuevoEstado').value;
+        const motivo = document.getElementById('motivoAdmin').value.trim();
+        const errEl  = document.getElementById('cambioError');
+        errEl.style.display = 'none';
+        if (estado === 'Rechazado' && !motivo) {
+            errEl.textContent = 'El motivo de rechazo es obligatorio.';
+            errEl.style.display = 'block'; return;
+        }
+        const btn = document.getElementById('btnConfirmarCambio');
+        btn.disabled = true; btn.textContent = 'Guardando…';
+        try {
+            const res  = await apiFetch(`/api/admin/registro/${_reg.id_registro}/estado`, {
+                method: 'PATCH', body: JSON.stringify({ estado, motivo_rechazo: motivo || null })
+            });
+            const data = await res.json();
+            if (!res.ok) { errEl.textContent = data.error || 'Error.'; errEl.style.display='block'; return; }
+            cerrarModalCambio();
+            if (data.advertencia) alert(data.advertencia);
+            cargarDetalle();
+        } catch(e) {
+            errEl.textContent = 'Error de conexión.'; errEl.style.display = 'block';
+        } finally { btn.disabled = false; btn.textContent = 'Confirmar cambio'; }
+    }
+
+    window.addEventListener('load', cargarDetalle);
+</script>
+</body>
+</html>

@@ -164,6 +164,21 @@
         .campo-ok-ur{border-color:#16a34a!important;}
         .campo-err-ur{border-color:#dc2626!important;box-shadow:0 0 0 3px rgba(220,38,38,.1)!important;}
 
+        /* ── SELECCIÓN MÚLTIPLE ── */
+        .cb-ur{width:16px;height:16px;cursor:pointer;accent-color:var(--primario);}
+        th.th-cb,td.td-cb{width:40px;text-align:center;padding:.7rem .5rem!important;}
+        table tbody tr.selected-row{background:var(--primario-lt)!important;}
+        .bulk-bar{display:none;background:var(--primario);color:#fff;padding:.75rem 1.4rem;align-items:center;gap:.75rem;flex-wrap:wrap;border-top:3px solid var(--primario-dk);}
+        .bulk-bar.visible{display:flex;}
+        .bulk-count{font-size:.85rem;font-weight:700;}
+        .bulk-sep{width:1px;height:20px;background:rgba(255,255,255,.25);}
+        .btn-bulk{border:1.5px solid rgba(255,255,255,.35);background:transparent;color:#fff;border-radius:var(--radius-sm);font-weight:600;font-size:.8rem;padding:.38rem .9rem;display:inline-flex;align-items:center;gap:.35rem;cursor:pointer;transition:background .2s;}
+        .btn-bulk:hover{background:rgba(255,255,255,.15);}
+        .btn-bulk-danger{border-color:#fca5a5;color:#fca5a5;}
+        .btn-bulk-danger:hover{background:rgba(220,38,38,.25);}
+        .bulk-est-sel{border:1.5px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1);color:#fff;border-radius:var(--radius-sm);font-size:.8rem;font-family:inherit;padding:.35rem .7rem;cursor:pointer;outline:none;}
+        .btn-bulk-close{margin-left:auto;background:none;border:none;color:rgba(255,255,255,.7);font-size:1.1rem;cursor:pointer;padding:.2rem;}
+
         /* ── MODAL CUSTOM (z-index sobre el panel lateral) ── */
         .modal-siarha{display:none;position:fixed;inset:0;z-index:2000;align-items:center;justify-content:center;padding:1rem;background:rgba(0,0,0,.45);}
         .modal-siarha.open{display:flex;}
@@ -302,6 +317,7 @@
             <table>
                 <thead>
                     <tr>
+                        <th class="th-cb"><input type="checkbox" class="cb-ur" id="cbAll" onchange="toggleTodas(this)" title="Seleccionar todas"></th>
                         <th>Institución</th>
                         <th>Programas</th>
                         <th>Cupo / Ocupación</th>
@@ -311,9 +327,25 @@
                     </tr>
                 </thead>
                 <tbody id="tablaUR">
-                    <tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--muted);"><i class="bi bi-arrow-clockwise"></i> Cargando…</td></tr>
+                    <tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--muted);"><i class="bi bi-arrow-clockwise"></i> Cargando…</td></tr>
                 </tbody>
             </table>
+        </div>
+
+        <!-- BARRA ACCIONES MASIVAS -->
+        <div class="bulk-bar" id="bulkBar">
+            <span class="bulk-count" id="bulkCount">0 seleccionadas</span>
+            <div class="bulk-sep"></div>
+            <span style="font-size:.8rem;opacity:.85;">Cambiar estado a:</span>
+            <select class="bulk-est-sel" id="bulkEstado">
+                <option value="activa">Activa</option>
+                <option value="inactiva">Inactiva</option>
+                <option value="suspendida">Suspendida</option>
+            </select>
+            <button class="btn-bulk" onclick="bulkCambiarEstado()"><i class="bi bi-check-circle-fill"></i> Aplicar estado</button>
+            <div class="bulk-sep"></div>
+            <button class="btn-bulk btn-bulk-danger" onclick="bulkEliminar()"><i class="bi bi-trash-fill"></i> Eliminar seleccionadas</button>
+            <button class="btn-bulk-close" onclick="deseleccionarTodas()" title="Cancelar selección"><i class="bi bi-x-lg"></i></button>
         </div>
 
         <!-- PAGINACIÓN -->
@@ -331,7 +363,10 @@
 <div class="panel-overlay" id="panelOverlay" onclick="cerrarPanel()"></div>
 <div class="panel-lateral" id="panelLateral">
     <div class="panel-head">
-        <h5 id="panelTitulo"><i class="bi bi-building-fill me-2"></i>Nueva Unidad Receptora</h5>
+        <div style="display:flex;flex-direction:column;gap:.25rem;min-width:0;">
+            <h5 id="panelTitulo" style="margin:0;"><i class="bi bi-building-fill me-2"></i>Nueva Unidad Receptora</h5>
+            <div id="panelSubtitle" style="display:none;align-items:center;gap:.4rem;flex-wrap:wrap;"></div>
+        </div>
         <button class="panel-close" onclick="cerrarPanel()"><i class="bi bi-x-lg"></i></button>
     </div>
     <div class="panel-body">
@@ -521,6 +556,52 @@
     </div>
 </div>
 
+<!-- MODAL BULK ESTADO -->
+<div class="modal-siarha" id="modalBulkEstado" onclick="if(event.target===this)cerrarModalBulkEstado()">
+    <div class="modal-box">
+        <div class="modal-box-head">
+            <div class="modal-icon" style="background:#fff3cd;color:#856404;"><i class="bi bi-pencil-fill"></i></div>
+            <h5 id="bulkEstadoTitulo">Cambiar estado</h5>
+        </div>
+        <div class="modal-box-body">
+            <p id="bulkEstadoDesc">¿Confirmas el cambio de estado?</p>
+            <div class="modal-info-strip">
+                <i class="bi bi-info-circle-fill"></i>
+                <span id="bulkEstadoInfo">Este cambio afecta a las URs seleccionadas.</span>
+            </div>
+        </div>
+        <div class="modal-box-foot">
+            <button class="btn-modal-cancel" onclick="cerrarModalBulkEstado()">Cancelar</button>
+            <button id="btnConfirmarBulkEstado" class="btn-save" onclick="ejecutarBulkEstado()">
+                <i class="bi bi-check-circle-fill me-1"></i> Sí, cambiar estado
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL BULK ELIMINAR -->
+<div class="modal-siarha" id="modalBulkEliminar" onclick="if(event.target===this)cerrarModalBulkEliminar()">
+    <div class="modal-box">
+        <div class="modal-box-head">
+            <div class="modal-icon danger"><i class="bi bi-trash-fill"></i></div>
+            <h5 id="bulkEliminarTitulo">Eliminar Unidades Receptoras</h5>
+        </div>
+        <div class="modal-box-body">
+            <p id="bulkEliminarDesc">¿Confirmas que deseas eliminar las URs seleccionadas?</p>
+            <div class="modal-info-strip">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <span>Esta acción es irreversible. Solo se eliminarán las URs sin alumnos asignados.</span>
+            </div>
+        </div>
+        <div class="modal-box-foot">
+            <button class="btn-modal-cancel" onclick="cerrarModalBulkEliminar()">Cancelar</button>
+            <button class="btn-modal-danger" onclick="ejecutarBulkEliminar()">
+                <i class="bi bi-trash-fill me-1"></i> Sí, eliminar
+            </button>
+        </div>
+    </div>
+</div>
+
 <!-- PANEL NOTIFICACIONES -->
 <div class="notif-overlay2" id="notifOverlay2" onclick="cerrarNotif()"></div>
 <div class="notif-panel" id="notifPanel">
@@ -605,6 +686,21 @@ function abrirPanel(ur) {
 
     document.getElementById('panelTitulo').innerHTML =
         `<i class="bi bi-building-fill me-2"></i>${esNueva ? 'Nueva Unidad Receptora' : 'Editar: ' + ur.nombre_ur}`;
+
+    // Subtítulo informativo al editar
+    const panelSub = document.getElementById('panelSubtitle');
+    if (panelSub) {
+        if (!esNueva) {
+            const estadoColor = { activa:'#fdf6e3', inactiva:'#f3f4f6', suspendida:'#fee2e2' }[ur.estado] || '#f3f4f6';
+            const estadoTxt   = { activa:'#7a5a00', inactiva:'#374151', suspendida:'#991b1b' }[ur.estado] || '#374151';
+            const estadoLabel = { activa:'Activa', inactiva:'Inactiva', suspendida:'Suspendida' }[ur.estado] || ur.estado;
+            panelSub.innerHTML = `<span style="background:${estadoColor};color:${estadoTxt};border-radius:20px;font-size:.72rem;font-weight:700;padding:.2rem .65rem;">${estadoLabel}</span>
+                <span style="font-size:.73rem;opacity:.75;">· ${ur.alumnos_activos || 0} alumno${(ur.alumnos_activos||0)!==1?'s':''} · Cupo: ${ur.cupo_maximo || 0}</span>`;
+            panelSub.style.display = 'flex';
+        } else {
+            panelSub.style.display = 'none';
+        }
+    }
     document.getElementById('urId').value        = ur?.id_ur || '';
     document.getElementById('urNombre').value    = ur?.nombre_ur || '';
     document.getElementById('urEmail').value     = ur?.email_ur || '';
@@ -788,8 +884,8 @@ async function guardarUR() {
 
 // ── ELIMINAR UR ─────────────────────────────────────────────
 function confirmarEliminar() {
-    const nombre = document.getElementById('urNombre').value || 'esta UR';
-    document.getElementById('nombreEliminar').textContent = nombre;
+    const nombre = document.getElementById('urNombre').value.trim() || 'esta UR';
+    document.getElementById('nombreEliminar').textContent = '"' + nombre + '"';
     document.getElementById('modalEliminar').classList.add('open');
 }
 
@@ -801,8 +897,9 @@ async function ejecutarEliminar() {
     cerrarModalEliminar();
     try {
         const res = await apiFetch(`/api/unidades-receptoras/${urActualId}`, { method: 'DELETE' });
-        if (!res.ok) { const d = await res.json(); throw new Error(d.message); }
-        showToast('Unidad Receptora eliminada.');
+        const d   = await res.json();
+        if (!res.ok) throw new Error(d.error || d.message || 'Error al eliminar');
+        showToast('Unidad Receptora eliminada correctamente.', true);
         cerrarPanel();
         cargarURs();
     } catch(e) {
@@ -901,8 +998,8 @@ function renderFilaUR(ur) {
     const nombre    = ur.nombre_ur;
     const email     = ur.email_ur || '';
     const tel       = ur.telefono_ur ? ' · ' + ur.telefono_ur : '';
-    const alumnos   = ur.alumnos_activos ?? 0;
-    const cupo      = ur.cupo_maximo ?? 0;
+    const alumnos   = parseInt(ur.alumnos_activos) || 0;
+    const cupo      = parseInt(ur.cupo_maximo) || 0;
     const pct       = cupo > 0 ? Math.round(alumnos / cupo * 100) : 0;
     const pctColor  = pct >= 90 ? '#991b1b' : pct >= 70 ? '#7a5a00' : 'var(--primario)';
     const prog      = ur.programas_aceptados;
@@ -922,6 +1019,7 @@ function renderFilaUR(ur) {
         : `<div style="font-size:.71rem;color:#a16207;margin-top:.15rem;"><i class="bi bi-person-exclamation me-1"></i>Sin encargado registrado</div>`;
 
     return `<tr data-id="${ur.id_ur}" data-nombre="${nombre}" data-estado="${estado}" data-programas="${prog}" data-alumnos="${alumnos}" data-cupo="${cupo}">
+        <td class="td-cb" onclick="event.stopPropagation()"><input type="checkbox" class="cb-ur cb-row" data-id="${ur.id_ur}" onchange="actualizarBulk()"></td>
         <td>
             <div style="font-weight:700;font-size:.86rem;">${nombre}</div>
             <div style="font-size:.72rem;color:var(--muted);">${email}${tel}</div>
@@ -948,7 +1046,7 @@ function renderFilaUR(ur) {
 // ── CARGAR URs DESDE API ─────────────────────────────────────
 async function cargarURs() {
     const tbody = document.getElementById('tablaUR');
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--muted);"><i class="bi bi-arrow-clockwise"></i> Cargando…</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--muted);"><i class="bi bi-arrow-clockwise"></i> Cargando…</td></tr>';
     try {
         const res  = await apiFetch('/api/unidades-receptoras?por_pagina=200');
         const data = await res.json();
@@ -961,8 +1059,9 @@ async function cargarURs() {
         const activas     = urs.filter(u => u.estado === 'activa').length;
         const inactivas   = urs.filter(u => u.estado === 'inactiva').length;
         const suspendidas = urs.filter(u => u.estado === 'suspendida').length;
-        const lugOcup     = urs.reduce((s, u) => s + (u.alumnos_activos ?? 0), 0);
-        const lugTotal    = urs.reduce((s, u) => s + (u.cupo_maximo ?? 0), 0);
+        const ursActivas  = urs.filter(u => u.estado === 'activa');
+        const lugOcup     = ursActivas.reduce((s, u) => s + (parseInt(u.alumnos_activos) || 0), 0);
+        const lugTotal    = ursActivas.reduce((s, u) => s + (parseInt(u.cupo_maximo) || 0), 0);
         document.getElementById('resTotal').textContent      = total;
         document.getElementById('resActivas').textContent    = activas;
         document.getElementById('resInactivas').textContent  = inactivas;
@@ -977,6 +1076,11 @@ async function cargarURs() {
             valLug.style.color  = 'var(--muted)';
             labLug.textContent  = 'Ninguna UR registrada';
             labLug.style.color  = 'var(--muted)';
+        } else if (ursActivas.length === 0) {
+            valLug.textContent  = '0 / 0';
+            valLug.style.color  = 'var(--muted)';
+            labLug.textContent  = 'Sin URs activas';
+            labLug.style.color  = 'var(--muted)';
         } else if (lugTotal > 0 && lugOcup >= lugTotal) {
             // Todos los cupos ocupados
             valLug.textContent  = `${lugOcup} / ${lugTotal}`;
@@ -987,12 +1091,12 @@ async function cargarURs() {
             // Normal: ocupados / totales con espacio disponible
             valLug.textContent  = `${lugOcup} / ${lugTotal}`;
             valLug.style.color  = '';
-            labLug.textContent  = 'Lugares ocupados';
+            labLug.textContent  = 'Lugares ocupados (activas)';
             labLug.style.color  = '';
         }
 
         if (!urs.length) {
-            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2.5rem;color:var(--muted);"><i class="bi bi-building" style="font-size:1.5rem;display:block;margin-bottom:.5rem;"></i>No hay unidades receptoras registradas.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2.5rem;color:var(--muted);"><i class="bi bi-building" style="font-size:1.5rem;display:block;margin-bottom:.5rem;"></i>No hay unidades receptoras registradas.</td></tr>';
         } else {
             tbody.innerHTML = urs.map(renderFilaUR).join('');
         }
@@ -1002,8 +1106,146 @@ async function cargarURs() {
         filtrarDOM(); // aplicar filtros activos
     } catch(e) {
         console.error('Error cargando URs:', e);
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:#991b1b;"><i class="bi bi-exclamation-triangle me-2"></i>Error al cargar unidades receptoras.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:#991b1b;"><i class="bi bi-exclamation-triangle me-2"></i>Error al cargar unidades receptoras.</td></tr>';
     }
+}
+
+// ── SELECCIÓN MÚLTIPLE ─────────────────────────────────────
+function actualizarBulk() {
+    const cbs   = document.querySelectorAll('.cb-row:checked');
+    const total = document.querySelectorAll('.cb-row').length;
+    const count = cbs.length;
+
+    // Resaltar filas seleccionadas
+    document.querySelectorAll('.cb-row').forEach(cb => {
+        cb.closest('tr').classList.toggle('selected-row', cb.checked);
+    });
+
+    // Checkbox cabecera
+    const cbAll = document.getElementById('cbAll');
+    if (cbAll) {
+        cbAll.checked       = count > 0 && count === total;
+        cbAll.indeterminate = count > 0 && count < total;
+    }
+
+    // Barra de acciones
+    const bar = document.getElementById('bulkBar');
+    if (bar) bar.classList.toggle('visible', count > 0);
+    const cnt = document.getElementById('bulkCount');
+    if (cnt) cnt.textContent = count === 1 ? '1 UR seleccionada' : count + ' URs seleccionadas';
+}
+
+function toggleTodas(cb) {
+    document.querySelectorAll('.cb-row').forEach(c => { c.checked = cb.checked; });
+    actualizarBulk();
+}
+
+function deseleccionarTodas() {
+    document.querySelectorAll('.cb-row').forEach(c => { c.checked = false; });
+    const cbAll = document.getElementById('cbAll');
+    if (cbAll) { cbAll.checked = false; cbAll.indeterminate = false; }
+    actualizarBulk();
+}
+
+function getIdsSeleccionados() {
+    return [...document.querySelectorAll('.cb-row:checked')].map(c => c.dataset.id);
+}
+
+// ── MODAL BULK ESTADO ───────────────────────────────────────
+function bulkCambiarEstado() {
+    const ids    = getIdsSeleccionados();
+    const estado = document.getElementById('bulkEstado').value;
+    if (!ids.length) return;
+
+    const LABELS = { activa:'Activa', inactiva:'Inactiva', suspendida:'Suspendida' };
+    const n = ids.length;
+    const label = LABELS[estado] || estado;
+
+    document.getElementById('bulkEstadoTitulo').textContent = `Cambiar estado a «${label}»`;
+    document.getElementById('bulkEstadoDesc').innerHTML =
+        `¿Confirmas cambiar <strong>${n} UR${n > 1 ? 's' : ''}</strong> al estado <strong>«${label}»</strong>?`;
+    document.getElementById('bulkEstadoInfo').textContent =
+        `Este cambio afecta a ${n} unidad${n > 1 ? 'es' : ''} receptora${n > 1 ? 's' : ''} seleccionada${n > 1 ? 's' : ''}.`;
+
+    // Color del icono y botón según estado
+    const iconWrap = document.querySelector('#modalBulkEstado .modal-icon');
+    const btnConf  = document.getElementById('btnConfirmarBulkEstado');
+    if (estado === 'activa') {
+        if (iconWrap) { iconWrap.style.background='#fdf6e3'; iconWrap.style.color='#7a5a00'; }
+        if (btnConf)  { btnConf.style.background='var(--dorado)'; btnConf.style.color='#fff'; }
+    } else if (estado === 'suspendida') {
+        if (iconWrap) { iconWrap.style.background='#fee2e2'; iconWrap.style.color='#991b1b'; }
+        if (btnConf)  { btnConf.style.background='#991b1b'; btnConf.style.color='#fff'; }
+    } else {
+        if (iconWrap) { iconWrap.style.background='#f3f4f6'; iconWrap.style.color='#374151'; }
+        if (btnConf)  { btnConf.style.background='#374151'; btnConf.style.color='#fff'; }
+    }
+
+    document.getElementById('modalBulkEstado').classList.add('open');
+}
+
+function cerrarModalBulkEstado() {
+    document.getElementById('modalBulkEstado').classList.remove('open');
+}
+
+async function ejecutarBulkEstado() {
+    cerrarModalBulkEstado();
+    const ids    = getIdsSeleccionados();
+    const estado = document.getElementById('bulkEstado').value;
+    if (!ids.length) return;
+
+    const LABELS = { activa:'Activa', inactiva:'Inactiva', suspendida:'Suspendida' };
+    try {
+        const res  = await apiFetch('/api/unidades-receptoras/activar-masivo', {
+            method: 'POST',
+            body: JSON.stringify({ id_urs: ids, nuevo_estado: estado })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || data.message || 'Error al actualizar');
+        const n = data.urs_actualizadas?.length || ids.length;
+        showToast(n + ' UR' + (n > 1 ? 's' : '') + ' actualizadas a «' + LABELS[estado] + '».', true);
+    } catch(e) {
+        showToast(e.message || 'Error al cambiar el estado.', false);
+    }
+    deseleccionarTodas();
+    cargarURs();
+}
+
+// ── MODAL BULK ELIMINAR ─────────────────────────────────────
+function bulkEliminar() {
+    const ids = getIdsSeleccionados();
+    if (!ids.length) return;
+
+    const n = ids.length;
+    document.getElementById('bulkEliminarTitulo').textContent =
+        `Eliminar ${n} Unidad${n > 1 ? 'es' : ''} Receptora${n > 1 ? 's' : ''}`;
+    document.getElementById('bulkEliminarDesc').innerHTML =
+        `¿Confirmas que deseas eliminar <strong>${n} UR${n > 1 ? 's' : ''}</strong>? Esta acción es <strong>irreversible</strong>.`;
+
+    document.getElementById('modalBulkEliminar').classList.add('open');
+}
+
+function cerrarModalBulkEliminar() {
+    document.getElementById('modalBulkEliminar').classList.remove('open');
+}
+
+async function ejecutarBulkEliminar() {
+    cerrarModalBulkEliminar();
+    const ids = getIdsSeleccionados();
+    if (!ids.length) return;
+
+    let ok = 0, err = 0;
+    for (const id of ids) {
+        try {
+            const res = await apiFetch('/api/unidades-receptoras/' + id, { method: 'DELETE' });
+            if (res.ok) ok++; else err++;
+        } catch(e) { err++; }
+    }
+
+    if (ok)  showToast(ok + ' UR' + (ok > 1 ? 's' : '') + ' eliminadas correctamente.', true);
+    if (err) showToast(err + ' UR' + (err > 1 ? 's' : '') + ' no pudieron eliminarse (pueden tener alumnos asignados).', false);
+    deseleccionarTodas();
+    cargarURs();
 }
 
 // ── INIT ────────────────────────────────────────────────────

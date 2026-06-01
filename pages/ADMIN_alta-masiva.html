@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SIARHA | Alta Masiva de Alumnos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/siarha.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        :root{--primario:#501013;--primario-dk:#3a0b0e;--primario-lt:#f7eaea;--dorado:#C9A24D;--dorado-lt:#fdf6e3;--bg:#F2F4F8;--card-bg:#fff;--text:#1F2933;--muted:#6b7280;--border:#E5E7EB;--radius-card:18px;--radius-sm:10px;--shadow:0 2px 16px rgba(80,16,19,.08);}
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+        .navbar-custom{background:var(--primario);padding:0 1.5rem;height:70px;box-shadow:0 2px 16px rgba(0,0,0,.15);position:sticky;top:0;z-index:1050;display:flex;align-items:center;}
+        .brand-text{font-size:1.5rem;font-weight:800;letter-spacing:.04em;line-height:1;}
+        .navbar-subtitle{font-size:.7rem;font-weight:500;opacity:.85;}
+        .navbar-toggler{border:none;color:#fff;font-size:1.25rem;padding:.4rem .6rem;border-radius:var(--radius-sm);background:rgba(255,255,255,.12);}
+        .navbar-toggler:hover{background:rgba(255,255,255,.22);}
+        .offcanvas-custom{background:var(--primario-dk);color:#fff;width:280px!important;border-radius:var(--radius-card) 0 0 var(--radius-card);}
+        .offcanvas-custom .offcanvas-header{border-color:rgba(255,255,255,.12)!important;padding:1.25rem 1.5rem;}
+        .offcanvas-custom .nav-link{color:rgba(255,255,255,.8);font-weight:500;font-size:.9rem;padding:.65rem 1rem;border-radius:var(--radius-sm);display:flex;align-items:center;gap:.6rem;transition:background .2s,color .2s;}
+        .offcanvas-custom .nav-link:hover,.offcanvas-custom .nav-link.active{background:rgba(255,255,255,.12);color:#fff;}
+        .offcanvas-custom .nav-link.active{font-weight:700;}
+        .offcanvas-custom .nav-link.danger{color:#ff9090!important;}
+        .offcanvas-custom .nav-link.danger:hover{background:rgba(255,80,80,.15);}
+        .menu-divider{border-color:rgba(255,255,255,.12);margin:.5rem 0;}
+        main{flex:1;padding:1.75rem 1.5rem;max-width:1400px;width:100%;margin:0 auto;}
+        .btn-back{display:inline-flex;align-items:center;gap:.4rem;font-size:.83rem;font-weight:600;color:var(--muted);background:var(--card-bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.45rem .9rem;text-decoration:none;margin-bottom:1.4rem;transition:border-color .2s,color .2s,background .2s;}
+        .btn-back:hover{border-color:var(--primario);color:var(--primario);background:var(--primario-lt);}
+        .btn-primary-custom{background:var(--primario);color:#fff;border:none;border-radius:var(--radius-sm);font-weight:600;font-size:.82rem;padding:.45rem .9rem;display:inline-flex;align-items:center;gap:.4rem;cursor:pointer;transition:background .2s;}
+        .btn-primary-custom:hover{background:var(--primario-dk);}
+        .btn-primary-custom:disabled{opacity:.45;cursor:not-allowed;}
+        .btn-outline-custom{border:1.5px solid var(--border);background:#fff;color:var(--muted);border-radius:var(--radius-sm);font-weight:600;font-size:.82rem;padding:.45rem .9rem;display:inline-flex;align-items:center;gap:.4rem;transition:border-color .2s,color .2s;cursor:pointer;text-decoration:none;}
+        .btn-outline-custom:hover{border-color:var(--primario);color:var(--primario);background:var(--primario-lt);}
+        .btn-dorado{background:var(--dorado);color:#fff;border:none;border-radius:var(--radius-sm);font-weight:600;font-size:.82rem;padding:.45rem .9rem;display:inline-flex;align-items:center;gap:.4rem;cursor:pointer;}
+        .section-card{background:var(--card-bg);border-radius:var(--radius-card);box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden;margin-bottom:1.5rem;}
+        .section-header{padding:1rem 1.4rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+        .section-header .title{font-weight:700;font-size:.95rem;display:flex;align-items:center;gap:.5rem;color:var(--primario);}
+        /* STATS */
+        .stats-bar{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem;}
+        .stat-pill{background:var(--card-bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.45rem 1rem;font-size:.8rem;font-weight:700;display:flex;align-items:center;gap:.4rem;}
+        .stat-pill .val{font-size:1rem;font-weight:800;}
+        /* DRAFT */
+        .draft-panel{background:var(--dorado-lt);border:1.5px solid rgba(201,162,77,.35);border-radius:var(--radius-card);padding:1rem 1.4rem;margin-bottom:1.25rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;}
+        .draft-info{display:flex;align-items:center;gap:.6rem;font-size:.85rem;font-weight:600;color:#7a5a00;}
+        /* AVISO BLOQUEO */
+        .aviso-bloqueo{background:#fef3c7;border:1.5px solid #f59e0b;border-radius:var(--radius-card);padding:1rem 1.4rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:.75rem;font-size:.88rem;font-weight:600;color:#92400e;}
+        /* BARRA HERRAMIENTAS MASIVA */
+        .tools-strip{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;padding:.8rem 1.2rem;border-bottom:1px solid var(--border);background:var(--bg);}
+        .tools-strip select{border:1.5px solid var(--border);background:#fff;border-radius:var(--radius-sm);padding:.38rem .7rem;font-size:.78rem;font-family:inherit;color:var(--text);cursor:pointer;height:34px;}
+        .tools-strip select:focus{outline:none;border-color:var(--primario);}
+        .tools-divider{width:1px;height:28px;background:var(--border);flex-shrink:0;}
+        .apply-btn{background:var(--primario);color:#fff;border:none;border-radius:var(--radius-sm);font-size:.76rem;font-weight:700;padding:.35rem .75rem;cursor:pointer;display:inline-flex;align-items:center;gap:.3rem;height:34px;}
+        .apply-btn:hover{background:var(--primario-dk);}
+        .tools-label{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;}
+        /* SPREADSHEET */
+        .sheet-wrap{overflow-x:auto;overflow-y:auto;max-height:56vh;}
+        table.sheet{border-collapse:separate;border-spacing:0;font-size:.78rem;width:100%;}
+        table.sheet thead th{background:var(--primario);color:#fff;font-weight:700;font-size:.7rem;text-transform:uppercase;letter-spacing:.04em;padding:.6rem .55rem;border:none;white-space:nowrap;position:sticky;top:0;z-index:10;}
+        table.sheet thead th.req::after{content:' *';color:var(--dorado);}
+        table.sheet thead th:first-child{width:46px;position:sticky;left:0;z-index:20;}
+        /* Fila número fija a la izquierda */
+        table.sheet tbody td.row-num{background:var(--bg);color:var(--muted);font-weight:700;font-size:.7rem;text-align:center;border-right:2px solid var(--border);position:sticky;left:0;z-index:5;width:46px;padding:.3rem .2rem;vertical-align:middle;}
+        table.sheet tbody td{padding:0;border-bottom:1px solid var(--border);border-right:1px solid var(--border);vertical-align:middle;background:#fff;transition:background .15s;}
+        table.sheet tbody tr:last-child td{border-bottom:none;}
+        /* Estados de fila — se aplican con clases, NO re-render */
+        table.sheet tbody tr.row-ok  > td:not(.row-num){background:#f0fdf4;}
+        table.sheet tbody tr.row-err > td:not(.row-num){background:#fff5f5;}
+        table.sheet tbody tr.row-dup > td:not(.row-num){background:#fffbeb;}
+        table.sheet tbody tr.row-filled > td:not(.row-num){background:#fefce8;}
+        /* Input / select de celda — NO re-render al escribir */
+        table.sheet td input,
+        table.sheet td select{width:100%;height:36px;padding:.3rem .55rem;border:none;background:transparent;font-family:inherit;font-size:.78rem;color:var(--text);outline:none;display:block;}
+        table.sheet td input:focus,
+        table.sheet td select:focus{background:rgba(80,16,19,.05);box-shadow:inset 0 0 0 2px var(--primario);}
+        /* Celda con error */
+        table.sheet td.cell-err > input,
+        table.sheet td.cell-err > select{box-shadow:inset 0 0 0 2px #dc2626;background:#fff5f5;}
+        table.sheet td.cell-ok  > input,
+        table.sheet td.cell-ok  > select{background:#f0fdf4;}
+        table.sheet td.cell-dup > input{background:#fffbeb;box-shadow:inset 0 0 0 2px #d97706;}
+        /* Tooltip error en celda */
+        table.sheet td[data-tip]{position:relative;cursor:help;}
+        table.sheet td[data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 4px);left:0;min-width:160px;max-width:260px;background:#1f2933;color:#fff;font-size:.68rem;padding:.3rem .6rem;border-radius:6px;z-index:100;white-space:pre-wrap;pointer-events:none;line-height:1.4;}
+        /* Acciones */
+        .cell-actions{display:flex;align-items:center;justify-content:center;gap:.3rem;padding:.2rem;}
+        .btn-danger-sm{background:#fee2e2;color:#991b1b;border:none;border-radius:var(--radius-sm);font-size:.78rem;font-weight:700;padding:.28rem .55rem;cursor:pointer;}
+        .btn-danger-sm:hover{background:#fecaca;}
+        /* Status icon */
+        .row-status{width:17px;height:17px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.6rem;flex-shrink:0;}
+        .rs-ok{background:#dcfce7;color:#16a34a;}.rs-err{background:#fee2e2;color:#dc2626;}.rs-pend{background:#f3f4f6;color:var(--muted);}.rs-dup{background:#fef3c7;color:#d97706;}.rs-done{background:var(--primario-lt);color:var(--primario);}
+        /* Resultados */
+        .result-panel{display:none;}.result-panel.show{display:block;}
+        .result-item{display:flex;align-items:flex-start;gap:.5rem;font-size:.82rem;padding:.5rem .75rem;border-radius:var(--radius-sm);margin-bottom:.4rem;}
+        .ri-ok{background:#f0fdf4;color:#16a34a;}.ri-err{background:#fee2e2;color:#dc2626;}
+        .progress-bar-custom{height:6px;background:var(--border);border-radius:99px;overflow:hidden;margin-top:.5rem;}
+        .progress-fill{height:100%;background:var(--primario);border-radius:99px;transition:width .3s;}
+        .footer-custom{background:var(--primario);color:rgba(255,255,255,.7);text-align:center;padding:.75rem;font-size:.75rem;}
+        .notif-btn{position:relative;background:rgba(255,255,255,.12);border:none;color:#fff;width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;}
+        @media(max-width:767px){main{padding:1rem .75rem;}}
+    </style>
+</head>
+<body>
+
+<!-- ── CATÁLOGOS ─────────────────────────────────────────────── -->
+<script>
+const INSTITUTOS = [
+    { id:2,  codigo:'IDA',    nombre:'Instituto de Artes' },
+    { id:3,  codigo:'ICAP',   nombre:'Instituto de Ciencias Agropecuarias' },
+    { id:4,  codigo:'ICBI',   nombre:'Instituto de Ciencias Básicas e Ingeniería' },
+    { id:5,  codigo:'ICSa',   nombre:'Instituto de Ciencias de la Salud' },
+    { id:6,  codigo:'ICEA',   nombre:'Instituto de Ciencias Económico Administrativas' },
+    { id:7,  codigo:'ICSHu',  nombre:'Instituto de Ciencias Sociales y Humanidades' },
+    { id:8,  codigo:'ES-ACT', nombre:'Escuela Superior de Actopan' },
+    { id:9,  codigo:'ES-APA', nombre:'Escuela Superior de Apan' },
+    { id:10, codigo:'ES-ATO', nombre:'Escuela Superior de Atotonilco de Tula' },
+    { id:11, codigo:'ES-SAH', nombre:'Escuela Superior de Ciudad Sahagún' },
+    { id:12, codigo:'ES-HUE', nombre:'Escuela Superior de Huejutla' },
+    { id:13, codigo:'ES-TEP', nombre:'Escuela Superior de Tepeji del Río' },
+    { id:14, codigo:'ES-TIZ', nombre:'Escuela Superior de Tizayuca' },
+    { id:15, codigo:'ES-TLA', nombre:'Escuela Superior de Tlahuelilpan' },
+    { id:16, codigo:'ES-ZIM', nombre:'Escuela Superior de Zimapán' },
+];
+const CARRERAS = {
+    'IDA':    ['Arte Dramático','Artes Visuales','Danza','Música'],
+    'ICAP':   ['Alimentación Sustentable','Ingeniería Agroindustrial','Ingeniería en Agronomía para la Producción Sustentable','Ingeniería en Alimentos','Ingeniería Forestal','Medicina Veterinaria y Zootecnia'],
+    'ICBI':   ['Arquitectura','Biología','Ciencias Computacionales','Física y Tecnología Avanzada','Ingeniería Civil','Ingeniería de Materiales','Ingeniería en Electrónica','Ingeniería en Geología Ambiental','Ingeniería en Telecomunicaciones','Ingeniería Industrial','Matemáticas Aplicadas','Química','Química de Alimentos'],
+    'ICSa':   ['Cirujano Dentista','Enfermería','Farmacia','Gerontología','Médico Cirujano','Nutrición','Psicología'],
+    'ICEA':   ['Administración','Comercio Exterior','Contaduría','Economía','Gastronomía','Mercadotecnia','Turismo'],
+    'ICSHu':  ['Antropología Social','Ciencia Política y Administración Pública','Ciencias de la Educación','Comunicación','Derecho','Enseñanza de la Lengua Inglesa','Historia de México','Planeación y Desarrollo Regional','Sociología','Trabajo Social'],
+    'ES-ACT': ['Creación y Desarrollo de Empresas','Derecho','Diseño Gráfico','Psicología'],
+    'ES-APA': ['Ingeniería Económica y Financiera','Ingeniería en Biociencias','Ingeniería en Nanotecnología','Ingeniería en Tecnología del Frío'],
+    'ES-ATO': ['Inteligencia de Mercados','Psicología'],
+    'ES-SAH': ['Contaduría','Ingeniería Industrial','Ingeniería Mecánica','Ingeniería en Minero Metalúrgica'],
+    'ES-HUE': ['Administración','Ciencias Computacionales','Derecho','Enfermería','Médico Cirujano'],
+    'ES-TEP': ['Administración','Ingeniería Industrial','Médico Cirujano'],
+    'ES-TIZ': ['Gestión Tecnológica','Ingeniería en Automatización Industrial','Tecnologías de la Información','Turismo'],
+    'ES-TLA': ['Administración','Enfermería','Ingeniería de Software','Médico Cirujano'],
+    'ES-ZIM': ['Contaduría','Derecho','Ingeniería en Procesamiento de Recursos Minerales'],
+};
+let URS_CACHE      = [];
+let PERIODOS_CACHE = [];
+let INST_PERMITIDOS = []; // institutos que puede usar este admin
+</script>
+
+<!-- NAVBAR -->
+<nav class="navbar-custom w-100">
+    <div class="container-fluid d-flex align-items-center" style="height:70px;">
+        <div class="d-flex align-items-center gap-2">
+            <a href="https://www.uaeh.edu.mx" target="_blank" rel="noopener noreferrer"><img src="../assets/img/Logo_Login.svg" alt="Logo" height="46"></a>
+            <div class="d-flex flex-column">
+                <span class="brand-text text-white">SIARHA</span>
+                <span class="navbar-subtitle text-white d-none d-md-block">Dirección de Servicio Social y Prácticas Profesionales</span>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-2 ms-auto">
+            <div class="d-none d-md-flex align-items-center gap-2 text-white" style="font-size:.83rem;font-weight:600;opacity:.9;">
+                <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;"><i class="bi bi-shield-fill"></i></div>
+                <span>Administrador</span>
+            </div>
+            <button class="notif-btn"><i class="bi bi-bell-fill"></i></button>
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuAdmin"><i class="bi bi-list"></i></button>
+        </div>
+    </div>
+</nav>
+
+<!-- OFFCANVAS -->
+<div class="offcanvas offcanvas-end offcanvas-custom" tabindex="-1" id="menuAdmin">
+    <div class="offcanvas-header">
+        <div class="d-flex align-items-center gap-2">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;"><i class="bi bi-shield-fill"></i></div>
+            <div><div style="font-weight:700;font-size:.9rem;">Administrador</div><div style="font-size:.72rem;opacity:.7;">Panel de control</div></div>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="navbar-nav gap-1">
+            <li><a class="nav-link" href="ADMIN_dashboard-servicio.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link active" href="ADMIN_alumnos.html"><i class="bi bi-people-fill"></i> Alumnos</a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link" href="ADMIN_gestion-ur.html"><i class="bi bi-building"></i> Unidades Receptoras</a></li>
+            <li data-visible="superadmin"><a class="nav-link" href="ADMIN_gestion-administradores.html"><i class="bi bi-person-gear"></i> Administradores</a></li>
+            <li data-visible="superadmin"><a class="nav-link" href="ADMIN_periodos.html"><i class="bi bi-calendar-range-fill"></i> Periodos</a></li>
+            <li data-visible="superadmin,admin_area"><a class="nav-link" href="ADMIN_reportes-globales.html"><i class="bi bi-bar-chart-fill"></i> Reportes Globales</a></li>
+            <li><a class="nav-link" href="ADMIN_mensajes-admin.html"><i class="bi bi-chat-dots-fill"></i> Mensajes</a></li>
+            <hr class="menu-divider">
+            <li><a class="nav-link danger" href="#"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
+        </ul>
+    </div>
+</div>
+
+<main>
+    <a href="ADMIN_alumnos.html" class="btn-back"><i class="bi bi-arrow-left"></i> Volver a Alumnos</a>
+
+    <!-- Aviso sin periodo -->
+    <div class="aviso-bloqueo d-none" id="avisoPeriodoBloqueo">
+        <i class="bi bi-exclamation-triangle-fill" style="font-size:1.2rem;flex-shrink:0;"></i>
+        <div><strong>Sin periodo activo.</strong> No es posible dar de alta alumnos.
+            <a href="ADMIN_periodos.html" style="color:#92400e;text-decoration:underline;">Ir a Periodos</a>.</div>
+    </div>
+
+    <!-- Encabezado -->
+    <div class="d-flex align-items-start justify-content-between flex-wrap gap-2 mb-3">
+        <div>
+            <h1 style="font-size:1.35rem;font-weight:800;">Alta Masiva de Alumnos</h1>
+            <p style="font-size:.83rem;color:var(--muted);margin-top:.2rem;">Llena la tabla, importa un Excel o usa los aplicadores masivos de la barra. Borrador guardado automáticamente.</p>
+        </div>
+        <span id="draftStatus" class="d-none" style="font-size:.75rem;font-weight:600;color:var(--muted);align-self:center;"><i class="bi bi-cloud-check"></i> Guardado</span>
+    </div>
+
+    <!-- Borrador -->
+    <div class="draft-panel d-none" id="draftPanel">
+        <div class="draft-info"><i class="bi bi-bookmark-fill"></i> Tienes un borrador con <strong id="draftCount">0</strong> filas. ¿Recuperarlo?</div>
+        <div class="d-flex gap-2">
+            <button class="btn-dorado" onclick="loadDraft()"><i class="bi bi-arrow-clockwise"></i> Cargar</button>
+            <button class="btn-outline-custom" onclick="discardDraft()"><i class="bi bi-trash"></i> Descartar</button>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-bar">
+        <div class="stat-pill"><span class="val" id="statTotal">0</span>&nbsp;filas</div>
+        <div class="stat-pill"><i class="bi bi-check-circle-fill" style="color:#16a34a"></i><span class="val" id="statOk">0</span>&nbsp;válidas</div>
+        <div class="stat-pill"><i class="bi bi-exclamation-circle-fill" style="color:#d97706"></i><span class="val" id="statDup">0</span>&nbsp;duplicados</div>
+        <div class="stat-pill"><i class="bi bi-x-circle-fill" style="color:#dc2626"></i><span class="val" id="statErr">0</span>&nbsp;errores</div>
+        <div class="stat-pill ms-auto d-none" id="periodoActivoBadge" style="background:var(--primario-lt);border-color:rgba(80,16,19,.2);color:var(--primario);"></div>
+    </div>
+
+    <div class="section-card" id="mainCard">
+
+        <!-- ── BARRA DE HERRAMIENTAS PRINCIPAL ── -->
+        <div class="tools-strip">
+            <button class="btn-outline-custom" onclick="addRows(5)" style="height:34px;"><i class="bi bi-plus-lg"></i> +5</button>
+            <button class="btn-outline-custom" onclick="addRows(10)" style="height:34px;"><i class="bi bi-plus-square"></i> +10</button>
+            <button class="btn-outline-custom" onclick="addRows(1)" style="height:34px;"><i class="bi bi-plus"></i> +1</button>
+            <div class="tools-divider"></div>
+            <button class="btn-outline-custom" onclick="triggerImport()" style="height:34px;"><i class="bi bi-file-earmark-excel-fill" style="color:#217346"></i> Excel/CSV</button>
+            <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" class="d-none" onchange="handleFileImport(event)">
+            <button class="btn-outline-custom" onclick="descargarPlantilla()" style="height:34px;"><i class="bi bi-download"></i> Plantilla</button>
+            <div class="tools-divider"></div>
+            <button class="btn-outline-custom" onclick="limpiarTabla()" style="height:34px;"><i class="bi bi-eraser"></i> Limpiar</button>
+            <div class="ms-auto">
+                <button class="btn-primary-custom" id="btnEnviar" onclick="enviarAltas()" disabled style="height:34px;">
+                    <i class="bi bi-send-fill"></i> Dar de alta (<span id="btnCount">0</span>)
+                </button>
+            </div>
+        </div>
+
+        <!-- ── BARRA DE APLICACIÓN MASIVA ── -->
+        <div class="tools-strip" style="background:#fff;border-top:1px solid var(--border);gap:.6rem;">
+            <span class="tools-label">Aplicar a filas vacías:</span>
+
+            <!-- Programa masivo -->
+            <select id="masPrograma" style="min-width:140px;">
+                <option value="">— Programa —</option>
+                <!-- se llena según el admin -->
+            </select>
+
+            <!-- Instituto masivo -->
+            <select id="masInstituto" style="min-width:175px;" onchange="actualizarCarrerasMasivas()">
+                <option value="">— Instituto —</option>
+                <!-- se llena según el admin -->
+            </select>
+
+            <!-- Carrera masiva (depende del instituto masivo) -->
+            <select id="masCarrera" style="min-width:200px;" disabled>
+                <option value="">— Selecciona instituto primero —</option>
+            </select>
+
+            <!-- Periodo masivo -->
+            <select id="masPeriodo" style="min-width:180px;">
+                <option value="">— Periodo —</option>
+                <!-- se llena con periodos activos -->
+            </select>
+
+            <button class="apply-btn" onclick="aplicarMasivo()">
+                <i class="bi bi-lightning-fill"></i> Aplicar a vacías
+            </button>
+            <button class="apply-btn" onclick="aplicarMasivo(true)" style="background:#7a5a00;">
+                <i class="bi bi-lightning-charge-fill"></i> Aplicar a TODAS
+            </button>
+        </div>
+
+        <!-- ── TABLA SPREADSHEET ── -->
+        <div class="sheet-wrap">
+            <table class="sheet">
+                <thead>
+                    <tr>
+                        <th style="min-width:46px">N°</th>
+                        <th class="req" style="min-width:88px">No. Cuenta</th>
+                        <th class="req" style="min-width:125px">Nombre(s)</th>
+                        <th class="req" style="min-width:118px">Ap. Paterno</th>
+                        <th style="min-width:110px">Ap. Materno</th>
+                        <th class="req" style="min-width:180px">Correo @uaeh</th>
+                        <th style="min-width:98px">Teléfono</th>
+                        <th style="min-width:158px">CURP</th>
+                        <th class="req" style="min-width:125px">Programa</th>
+                        <th class="req" style="min-width:165px">Instituto</th>
+                        <th class="req" style="min-width:195px">Carrera / Licenciatura</th>
+                        <th class="req" style="min-width:80px">ID UR</th>
+                        <th style="min-width:72px">ID Periodo</th>
+                        <th style="min-width:54px"></th>
+                    </tr>
+                </thead>
+                <tbody id="sheetBody"></tbody>
+            </table>
+        </div>
+
+        <div style="padding:.7rem 1.2rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;">
+            <span style="font-size:.73rem;color:var(--muted);"><i class="bi bi-info-circle"></i> <strong style="color:var(--dorado);">*</strong> obligatorio · Tab/↓/Enter = siguiente celda · Shift+Tab = anterior · Contraseña: <code style="font-size:.7rem;">no_cuenta + 3 letras apellido</code></span>
+            <span id="autoSaveLabel" style="font-size:.73rem;color:var(--muted);"></span>
+        </div>
+    </div>
+
+    <!-- Progreso -->
+    <div class="section-card d-none" id="progressCard">
+        <div class="section-header">
+            <span class="title"><i class="bi bi-hourglass-split"></i> Procesando…</span>
+            <span id="progLabel" style="font-size:.8rem;font-weight:700;color:var(--muted);">0 / 0</span>
+        </div>
+        <div style="padding:1.2rem 1.4rem;"><div class="progress-bar-custom"><div class="progress-fill" id="progFill" style="width:0%"></div></div></div>
+    </div>
+
+    <!-- Resultados -->
+    <div class="section-card result-panel" id="resultCard">
+        <div class="section-header">
+            <span class="title"><i class="bi bi-clipboard2-check-fill"></i> Resultados</span>
+            <div class="d-flex gap-2">
+                <button class="btn-outline-custom" onclick="exportarResultados()"><i class="bi bi-file-earmark-excel"></i> Exportar</button>
+                <button class="btn-outline-custom" onclick="document.getElementById('resultCard').classList.remove('show')"><i class="bi bi-x"></i></button>
+            </div>
+        </div>
+        <div style="padding:1.2rem 1.4rem;max-height:320px;overflow-y:auto;" id="resultList"></div>
+    </div>
+</main>
+
+<footer class="footer-custom">© 2026 SIARHA · Uso exclusivo institucional · UAEH</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/admin-guard.js"></script>
+<script src="../assets/js/admin-scope.js"></script>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════
+   SIARHA · Alta Masiva — lógica principal
+   ARQUITECTURA CLAVE: los inputs NUNCA se recrean después del renderTable
+   inicial. Solo se actualizan clases CSS de la <tr> y <td> para los
+   estados (ok, err, dup) sin perder el foco del teclado.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+// ── Estado ───────────────────────────────────────────────────────────
+let rows       = [];
+let rowCounter = 0;
+let autoSaveTimer = null;
+let bloqueado  = false;
+
+// ── Regex (idénticos al backend y al alta individual) ────────────────
+const RE_CUENTA = /^\d{6}$/;
+const RE_CORREO = /^[a-zA-Z0-9._%+\-]+@uaeh\.edu\.mx$/i;
+const RE_TEL    = /^\d{10}$/;
+const RE_CURP   = /^[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z0-9]\d$/;
+
+// ── Borrador por usuario ─────────────────────────────────────────────
+function getDraftKey() {
+    try { return 'siarha_draft_masiva_' + (getAdmin()?.id_administrador || 'anon'); }
+    catch(e) { return 'siarha_draft_masiva_anon'; }
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', async () => {
+    await Promise.all([
+        verificarPeriodo(),
+        cargarURs(),
+    ]);
+    // Los periodos ya se cargaron en verificarPeriodo
+    construirBarraMasiva();
+    checkDraft();
+    if (rows.length === 0) addRows(10);
+    document.querySelectorAll('a.nav-link.danger').forEach(l => {
+        l.addEventListener('click', e => { e.preventDefault(); logout('../index.html'); });
+    });
+});
+
+// ══════════════════════════════════════════════════════════════════════
+// PERIODO — bloquea si no hay ninguno activo
+// ══════════════════════════════════════════════════════════════════════
+async function verificarPeriodo() {
+    try {
+        const res  = await apiFetch('/api/periodos/activos');
+        const data = await res.json();
+        PERIODOS_CACHE = data.periodos || [];
+        if (PERIODOS_CACHE.length === 0) {
+            bloqueado = true;
+            document.getElementById('avisoPeriodoBloqueo').classList.remove('d-none');
+            const mc = document.getElementById('mainCard');
+            mc.style.opacity = '.45';
+            mc.style.pointerEvents = 'none';
+            document.getElementById('btnEnviar').disabled = true;
+        } else {
+            const p = PERIODOS_CACHE[0];
+            const etiq = p.programa === 'ss' ? '[SS]' : p.programa === 'pp' ? '[PP]' : '[SS y PP]';
+            const badge = document.getElementById('periodoActivoBadge');
+            badge.innerHTML = '<i class="bi bi-calendar3 me-1"></i> Periodo: <strong>' + p.nombre_periodo + ' ' + etiq + '</strong>';
+            badge.classList.remove('d-none');
+        }
+    } catch(e) { /* continuar sin bloquear */ }
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// CARGAR CATÁLOGOS
+// ══════════════════════════════════════════════════════════════════════
+async function cargarURs() {
+    try {
+        const res  = await apiFetch('/api/unidades-receptoras?por_pagina=500');
+        const data = await res.json();
+        const admin = getAdmin();
+        const prog  = admin?.programa || 'ambos';
+        URS_CACHE = (data.unidades_receptoras || []).filter(u => {
+            if (u.estado !== 'activa') return false;
+            if (prog === 'ambos' || admin?.rol === 'superadmin') return true;
+            return u.programas_aceptados === prog || u.programas_aceptados === 'ambos';
+        });
+    } catch(e) { URS_CACHE = []; }
+}
+
+// ── Construir barra masiva según el tipo de admin ────────────────────
+function construirBarraMasiva() {
+    const admin   = getAdmin();
+    const rol     = admin?.rol || 'superadmin';
+    const prog    = admin?.programa || 'ambos';
+
+    // ── Institutos permitidos para este admin ──
+    if (rol === 'admin_area' && admin?.institutos?.length) {
+        const idsAsig = admin.institutos.map(i => parseInt(i.id_instituto ?? i.id, 10));
+        INST_PERMITIDOS = INSTITUTOS.filter(i => idsAsig.includes(i.id));
+        if (INST_PERMITIDOS.length === 0) INST_PERMITIDOS = INSTITUTOS; // fallback
+    } else {
+        INST_PERMITIDOS = INSTITUTOS;
+    }
+
+    // ── Select Programa masivo ──
+    const selProg = document.getElementById('masPrograma');
+    selProg.innerHTML = '<option value="">— Programa —</option>';
+    if (prog === 'ambos' || rol === 'superadmin') {
+        selProg.innerHTML += '<option value="ss">Servicio Social</option><option value="pp">Prácticas Profesionales</option>';
+    } else if (prog === 'ss') {
+        selProg.innerHTML += '<option value="ss">Servicio Social</option>';
+        selProg.value = 'ss';
+    } else {
+        selProg.innerHTML += '<option value="pp">Prácticas Profesionales</option>';
+        selProg.value = 'pp';
+    }
+
+    // ── Select Instituto masivo ──
+    const selInst = document.getElementById('masInstituto');
+    selInst.innerHTML = '<option value="">— Instituto —</option>';
+    INST_PERMITIDOS.forEach(i => {
+        const o = document.createElement('option');
+        o.value = String(i.id);
+        o.textContent = i.codigo + ' – ' + i.nombre;
+        selInst.appendChild(o);
+    });
+
+    // ── Select Periodo masivo ──
+    const selPer = document.getElementById('masPeriodo');
+    selPer.innerHTML = '<option value="">— Periodo —</option>';
+    PERIODOS_CACHE.forEach(p => {
+        const o = document.createElement('option');
+        o.value = String(p.id_periodo);
+        const etiq = p.programa === 'ss' ? '[SS]' : p.programa === 'pp' ? '[PP]' : '[SS+PP]';
+        o.textContent = p.nombre_periodo + ' ' + etiq;
+        selPer.appendChild(o);
+    });
+}
+
+// Cuando el admin elige instituto en la barra masiva, carga carreras de ese instituto
+function actualizarCarrerasMasivas() {
+    const instId = parseInt(document.getElementById('masInstituto').value);
+    const selCar = document.getElementById('masCarrera');
+    selCar.innerHTML = '<option value="">— Carrera —</option>';
+    selCar.disabled  = true;
+    if (!instId) return;
+    const instObj = INSTITUTOS.find(i => i.id === instId);
+    if (!instObj) return;
+    const lista = CARRERAS[instObj.codigo] || [];
+    lista.forEach(c => {
+        const o = document.createElement('option');
+        o.value = c; o.textContent = c;
+        selCar.appendChild(o);
+    });
+    selCar.disabled = lista.length === 0;
+}
+
+// Aplicar masivo: llena celdas vacías (o todas) de las filas seleccionadas
+function aplicarMasivo(sobreescribir = false) {
+    const prog    = document.getElementById('masPrograma').value;
+    const instId  = document.getElementById('masInstituto').value;
+    const carrera = document.getElementById('masCarrera').value;
+    const perId   = document.getElementById('masPeriodo').value;
+
+    if (!prog && !instId && !carrera && !perId) {
+        showToast('Selecciona al menos un valor para aplicar.', 'error');
+        return;
+    }
+
+    let cambiadas = 0;
+    rows.forEach((row, idx) => {
+        if (row.result === 'ok') return; // ya dada de alta, no tocar
+        let cambio = false;
+
+        if (prog    && (sobreescribir || !row.data.programa))            { row.data.programa = prog;    cambio = true; }
+        if (instId  && (sobreescribir || !row.data.id_instituto))        { row.data.id_instituto = instId; cambio = true; }
+        if (carrera && (sobreescribir || !row.data.nombre_licenciatura)) { row.data.nombre_licenciatura = carrera; cambio = true; }
+        if (perId   && (sobreescribir || !row.data.id_periodo))          { row.data.id_periodo = perId; cambio = true; }
+
+        if (cambio) {
+            cambiadas++;
+            // Actualizar los inputs del DOM directamente SIN re-render
+            actualizarInputsFilaDOM(idx);
+            validateRow(idx);
+        }
+    });
+
+    if (cambiadas > 0) {
+        showToast(cambiadas + ' filas actualizadas.', 'success');
+        scheduleAutoSave();
+    } else {
+        showToast('Ninguna fila necesitaba ese valor.', 'info');
+    }
+}
+
+// Actualiza los inputs de una fila en el DOM sin re-renderizarla
+function actualizarInputsFilaDOM(idx) {
+    const row = rows[idx];
+    if (!row) return;
+    const d = row.data;
+
+    // Usar IDs de td en lugar de indices hardcodeados (mas robusto)
+    function setSelect(key, val) {
+        const td = document.getElementById('td-' + row.id + '-' + key);
+        if (!td) return;
+        const el = td.querySelector('select');
+        if (el && val) { el.value = val; }
+    }
+    function setInput(key, val) {
+        const td = document.getElementById('td-' + row.id + '-' + key);
+        if (!td) return;
+        const el = td.querySelector('input');
+        if (el && val) { el.value = val; }
+    }
+
+    if (d.programa)             { setSelect('programa', d.programa); }
+    if (d.id_instituto) {
+        setSelect('id_instituto', d.id_instituto);
+        // Primero cargar las carreras del instituto, luego seleccionar la carrera
+        actualizarCarrerasFilaDOM(idx);
+    }
+    if (d.nombre_licenciatura)  {
+        // Pequeno delay para que actualizarCarrerasFilaDOM termine de poblar el select
+        setTimeout(function() { setSelect('nombre_licenciatura', d.nombre_licenciatura); }, 10);
+    }
+    if (d.id_periodo)           { setInput('id_periodo', d.id_periodo); }
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// TABLA — renderTable SOLO se llama 1 vez (al init o al agregar filas)
+// Los cambios posteriores actualizan solo clases CSS, NO recrean el DOM
+// ══════════════════════════════════════════════════════════════════════
+function addRows(n) {
+    const tbody = document.getElementById('sheetBody');
+    for (let i = 0; i < n; i++) {
+        rowCounter++;
+        const row = { id: rowCounter, data: emptyRow(), status: 'pend', errors: {}, result: null };
+        rows.push(row);
+        tbody.appendChild(crearFilaDOM(rows.length - 1));
+    }
+    updateStats();
+    scheduleAutoSave();
+}
+
+function emptyRow() {
+    return { no_cuenta:'', nombre_alum:'', apellido_p_alum:'', apellido_m_alum:'',
+             correo:'', telefono:'', curp:'', programa:'',
+             id_instituto:'', nombre_licenciatura:'', id_ur:'', id_periodo:'' };
+}
+
+// Crea el <tr> completo con todos sus inputs — solo se llama UNA VEZ por fila
+function crearFilaDOM(idx) {
+    const row = rows[idx];
+    const admin = getAdmin();
+    const rol   = admin?.rol || 'superadmin';
+    const prog  = admin?.programa || 'ambos';
+
+    const tr = document.createElement('tr');
+    tr.id = 'row-' + row.id;
+
+    // ── Columna número + status ──────────────────────────────────────
+    const tdN = document.createElement('td');
+    tdN.className = 'row-num';
+    tdN.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;gap:2px;">' +
+        '<span class="row-num-n" style="font-size:.7rem;">' + (idx + 1) + '</span>' +
+        '<span class="row-status rs-pend" id="rs-' + row.id + '">·</span>' +
+        '</div>';
+    tr.appendChild(tdN);
+
+    // Helper: crear td con input de texto
+    function tdText(key, opts) {
+        const td  = document.createElement('td');
+        td.id     = 'td-' + row.id + '-' + key;
+        const inp = document.createElement('input');
+        inp.type  = 'text';
+        inp.value = row.data[key] || '';
+        inp.placeholder = opts.placeholder || '';
+        if (opts.maxlen)    inp.maxLength = opts.maxlen;
+        if (opts.inputmode) inp.inputMode = opts.inputmode;
+        if (opts.upper)     inp.style.textTransform = 'uppercase';
+        inp.addEventListener('input', function(e) {
+            if (opts.inputmode === 'numeric') e.target.value = e.target.value.replace(/\D/g, '');
+            if (opts.upper) e.target.value = e.target.value.toUpperCase();
+            row.data[key] = e.target.value;
+            validarCeldaEnVivo(row, key, e.target);
+            scheduleAutoSave();
+            scheduleValidateRow(idx);
+        });
+        inp.addEventListener('keydown', function(e) { keyNav(e, idx, colIndex(key)); });
+        td.appendChild(inp);
+        return td;
+    }
+
+    // Helper: crear td con select
+    function tdSelect(key, opciones) {
+        const td  = document.createElement('td');
+        td.id     = 'td-' + row.id + '-' + key;
+        const sel = document.createElement('select');
+        const emp = document.createElement('option');
+        emp.value = ''; emp.textContent = '—';
+        sel.appendChild(emp);
+        opciones.forEach(function(op) {
+            const o = document.createElement('option');
+            o.value = op.v; o.textContent = op.l;
+            if (row.data[key] === op.v) o.selected = true;
+            sel.appendChild(o);
+        });
+        sel.addEventListener('change', function(e) {
+            row.data[key] = e.target.value;
+            if (key === 'id_instituto') actualizarCarrerasFilaDOM(idx);
+            if (key === 'programa') actualizarCarrerasFilaDOM(idx); // por si cambia compatibilidad
+            scheduleAutoSave();
+            scheduleValidateRow(idx);
+        });
+        sel.addEventListener('keydown', function(e) { keyNav(e, idx, colIndex(key)); });
+        td.appendChild(sel);
+        return td;
+    }
+
+    // ── Columnas de datos ────────────────────────────────────────────
+
+    // 1. No. cuenta
+    tr.appendChild(tdText('no_cuenta', { maxlen:6, inputmode:'numeric', placeholder:'000000' }));
+    // 2. Nombre
+    tr.appendChild(tdText('nombre_alum', { placeholder:'Nombre(s)' }));
+    // 3. Ap. paterno
+    tr.appendChild(tdText('apellido_p_alum', { placeholder:'Apellido paterno' }));
+    // 4. Ap. materno
+    tr.appendChild(tdText('apellido_m_alum', { placeholder:'Ap. materno (opc.)' }));
+    // 5. Correo
+    tr.appendChild(tdText('correo', { placeholder:'usuario@uaeh.edu.mx' }));
+    // 6. Teléfono
+    tr.appendChild(tdText('telefono', { maxlen:10, inputmode:'numeric', placeholder:'7711234567' }));
+    // 7. CURP
+    tr.appendChild(tdText('curp', { maxlen:18, upper:true, placeholder:'XXXX000000XXXXXX00' }));
+
+    // 8. Programa — select restringido según admin
+    const opsProg = [];
+    if (prog === 'ambos' || rol === 'superadmin') {
+        opsProg.push({ v:'ss', l:'Servicio Social' }, { v:'pp', l:'Prácticas Prof.' });
+    } else if (prog === 'ss') {
+        opsProg.push({ v:'ss', l:'Servicio Social' });
+        row.data.programa = row.data.programa || 'ss';
+    } else {
+        opsProg.push({ v:'pp', l:'Prácticas Prof.' });
+        row.data.programa = row.data.programa || 'pp';
+    }
+    tr.appendChild(tdSelect('programa', opsProg));
+
+    // 9. Instituto — select con solo los permitidos
+    const opsInst = INST_PERMITIDOS.map(function(i) { return { v: String(i.id), l: i.codigo + ' – ' + i.nombre }; });
+    tr.appendChild(tdSelect('id_instituto', opsInst));
+
+    // 10. Carrera — select dinámico (se rellena cuando elige instituto)
+    const tdCar = document.createElement('td');
+    tdCar.id = 'td-' + row.id + '-nombre_licenciatura';
+    const selCar = document.createElement('select');
+    selCar.innerHTML = '<option value="">— elige instituto —</option>';
+    selCar.addEventListener('change', function(e) {
+        row.data.nombre_licenciatura = e.target.value;
+        scheduleAutoSave();
+        scheduleValidateRow(idx);
+    });
+    selCar.addEventListener('keydown', function(e) { keyNav(e, idx, colIndex('nombre_licenciatura')); });
+    tdCar.appendChild(selCar);
+    tr.appendChild(tdCar);
+
+    // 11. ID Unidad Receptora — input + datalist
+    const tdUR = document.createElement('td');
+    tdUR.id = 'td-' + row.id + '-id_ur';
+    const inpUR = document.createElement('input');
+    inpUR.type = 'text'; inpUR.inputMode = 'numeric'; inpUR.value = row.data.id_ur || '';
+    inpUR.placeholder = 'ID UR'; inpUR.setAttribute('list', 'dlURs');
+    inpUR.addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/\D/g, '');
+        row.data.id_ur = e.target.value;
+        scheduleAutoSave();
+        scheduleValidateRow(idx);
+    });
+    inpUR.addEventListener('keydown', function(e) { keyNav(e, idx, colIndex('id_ur')); });
+    tdUR.appendChild(inpUR);
+    tr.appendChild(tdUR);
+
+    // 12. ID Periodo — input + datalist
+    const tdPer = document.createElement('td');
+    tdPer.id = 'td-' + row.id + '-id_periodo';
+    const inpPer = document.createElement('input');
+    inpPer.type = 'text'; inpPer.inputMode = 'numeric'; inpPer.value = row.data.id_periodo || '';
+    inpPer.placeholder = 'ID período'; inpPer.setAttribute('list', 'dlPeriodos');
+    inpPer.addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/\D/g, '');
+        row.data.id_periodo = e.target.value;
+        scheduleAutoSave();
+        scheduleValidateRow(idx);
+    });
+    inpPer.addEventListener('keydown', function(e) { keyNav(e, idx, colIndex('id_periodo')); });
+    tdPer.appendChild(inpPer);
+    tr.appendChild(tdPer);
+
+    // 13. Eliminar
+    const tdA = document.createElement('td');
+    tdA.innerHTML = '<div class="cell-actions"><button class="btn-danger-sm" title="Eliminar" onclick="deleteRow(' + row.id + ')"><i class="bi bi-trash3"></i></button></div>';
+    tr.appendChild(tdA);
+
+    // Si hay datos previos (carga de borrador), inicializa carreras
+    if (row.data.id_instituto) {
+        setTimeout(function() { actualizarCarrerasFilaDOM(idx); }, 0);
+    }
+
+    return tr;
+}
+
+// Índice de columna para keyNav (0-based, sin contar row-num)
+const COL_KEYS = ['no_cuenta','nombre_alum','apellido_p_alum','apellido_m_alum','correo',
+                  'telefono','curp','programa','id_instituto','nombre_licenciatura','id_ur','id_periodo'];
+function colIndex(key) { return COL_KEYS.indexOf(key); }
+
+// ── Actualizar carreras en una fila cuando cambia el instituto ───────
+function actualizarCarrerasFilaDOM(idx) {
+    const row    = rows[idx];
+    if (!row) return;
+    const instId = parseInt(row.data.id_instituto);
+
+    // Usar ID del td en lugar de indice hardcodeado
+    const tdCar = document.getElementById('td-' + row.id + '-nombre_licenciatura');
+    if (!tdCar) return;
+    const selCar = tdCar.querySelector('select');
+    if (!selCar) return;
+
+    selCar.innerHTML = '<option value="">— seleccionar carrera —</option>';
+    selCar.disabled  = true;
+    if (!instId) return;
+
+    const instObj = INSTITUTOS.find(function(i) { return i.id === instId; });
+    if (!instObj) return;
+
+    const lista = CARRERAS[instObj.codigo] || [];
+    lista.forEach(function(c) {
+        const o = document.createElement('option');
+        o.value = c; o.textContent = c;
+        if (row.data.nombre_licenciatura === c) o.selected = true;
+        selCar.appendChild(o);
+    });
+    selCar.disabled = lista.length === 0;
+    // Si la carrera actual no existe en este instituto, limpiarla
+    if (row.data.nombre_licenciatura && !lista.includes(row.data.nombre_licenciatura)) {
+        row.data.nombre_licenciatura = '';
+        selCar.value = '';
+    }
+}
+
+// Render de tabla completo (SOLO al iniciar o cargar borrador)
+function renderTableFull() {
+    const tbody = document.getElementById('sheetBody');
+    tbody.innerHTML = '';
+    rows.forEach(function(_, idx) {
+        tbody.appendChild(crearFilaDOM(idx));
+    });
+    // Re-validar todas las filas después de crear el DOM
+    rows.forEach(function(_, idx) { validateRow(idx); });
+    updateStats();
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// VALIDACIÓN EN VIVO — actualiza solo la celda afectada SIN re-render
+// ══════════════════════════════════════════════════════════════════════
+function validarCeldaEnVivo(row, key, el) {
+    const td = document.getElementById('td-' + row.id + '-' + key);
+    if (!td) return;
+    const v  = el ? el.value.trim() : (row.data[key] || '').trim();
+    const err = getErrorCampo(row.data, key, v);
+    td.classList.toggle('cell-err', !!err);
+    td.classList.toggle('cell-ok',  !err && !!v);
+    if (err) { td.setAttribute('data-tip', err); }
+    else     { td.removeAttribute('data-tip'); }
+}
+
+function getErrorCampo(d, key, v) {
+    switch(key) {
+        case 'no_cuenta':
+            if (!v) return 'Requerido';
+            if (!RE_CUENTA.test(v)) return 'Exactamente 6 dígitos';
+            return '';
+        case 'nombre_alum':
+        case 'apellido_p_alum':
+            if (!v) return 'Requerido';
+            if (!/^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ\s'\-]+$/.test(v)) return 'Solo letras y espacios';
+            return '';
+        case 'apellido_m_alum':
+            if (v && !/^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ\s'\-]+$/.test(v)) return 'Solo letras y espacios';
+            return '';
+        case 'correo':
+            if (!v) return 'Requerido';
+            if (!RE_CORREO.test(v)) return 'Debe ser @uaeh.edu.mx';
+            return '';
+        case 'telefono':
+            if (v && !RE_TEL.test(v)) return '10 dígitos exactos';
+            return '';
+        case 'curp':
+            if (v && !RE_CURP.test(v.toUpperCase())) return 'Formato CURP inválido';
+            return '';
+        case 'programa':
+            if (!v) return 'Requerido';
+            if (!['ss','pp'].includes(v)) return 'ss o pp';
+            const admin = getAdmin();
+            if (admin?.rol === 'admin_area' && admin?.programa !== 'ambos' && admin.programa !== v) {
+                return 'No tienes permiso para ' + (v === 'ss' ? 'Servicio Social' : 'Prácticas Profesionales');
+            }
+            return '';
+        case 'id_instituto':
+            if (!v) return 'Requerido';
+            if (!INSTITUTOS.find(function(i) { return String(i.id) === v; })) return 'Instituto no válido';
+            return '';
+        case 'nombre_licenciatura':
+            if (!v) return 'Requerido';
+            return '';
+        case 'id_ur':
+            if (!v) return 'Requerido';
+            const ur = URS_CACHE.find(function(u) { return String(u.id_ur) === v; });
+            if (!ur) return 'UR no existe o no está activa';
+            if (d.programa && ur.programas_aceptados !== 'ambos' && ur.programas_aceptados !== d.programa) {
+                return 'UR no acepta ' + (d.programa === 'ss' ? 'Servicio Social' : 'Prácticas Prof.');
+            }
+            if (parseInt(ur.alumnos_activos || 0) >= parseInt(ur.cupo_maximo || 0)) return 'UR sin lugares disponibles';
+            return '';
+        case 'id_periodo':
+            if (!v) return '';
+            const per = PERIODOS_CACHE.find(function(p) { return String(p.id_periodo) === v; });
+            if (!per) return 'Periodo no existe o no está activo';
+            if (d.programa && per.programa !== 'ambos' && per.programa !== d.programa) {
+                return 'Periodo no corresponde a ' + (d.programa === 'ss' ? 'SS' : 'PP');
+            }
+            return '';
+        default: return '';
+    }
+}
+
+// Timer para no validar la fila entera en cada tecla (debounce)
+const validateTimers = {};
+function scheduleValidateRow(idx) {
+    clearTimeout(validateTimers[idx]);
+    validateTimers[idx] = setTimeout(function() { validateRow(idx); }, 300);
+}
+
+// Valida la fila completa y actualiza el status icon + clase de fila
+function validateRow(idx) {
+    const row = rows[idx];
+    if (!row) return;
+    const d = row.data;
+
+    // Validar todos los campos y acumular errores
+    const errs = {};
+    COL_KEYS.forEach(function(key) {
+        const err = getErrorCampo(d, key, (d[key] || '').trim());
+        if (err) errs[key] = err;
+        // Actualizar td
+        const td = document.getElementById('td-' + row.id + '-' + key);
+        if (td) {
+            td.classList.toggle('cell-err', !!err);
+            td.classList.toggle('cell-ok',  !err && !!(d[key] || '').trim());
+            if (err) { td.setAttribute('data-tip', err); }
+            else     { td.removeAttribute('data-tip'); }
+        }
+    });
+
+    row.errors = errs;
+
+    // Detectar duplicado interno de no_cuenta
+    const cuenta = (d.no_cuenta || '').trim();
+    let isDup = false;
+    if (cuenta && Object.keys(errs).length === 0) {
+        isDup = rows.some(function(r, i) {
+            return i !== idx && (r.data.no_cuenta || '').trim() === cuenta && r.result !== 'ok';
+        });
+    }
+
+    // Determinar status
+    const hayDatos = ['no_cuenta','nombre_alum','apellido_p_alum','correo'].some(function(k) { return !!(d[k] || '').trim(); });
+    if (!hayDatos) {
+        row.status = 'pend';
+    } else if (isDup) {
+        row.status = 'dup';
+        row.errors.no_cuenta = 'Duplicado en la tabla';
+        const tdC = document.getElementById('td-' + row.id + '-no_cuenta');
+        if (tdC) { tdC.classList.add('cell-dup'); tdC.setAttribute('data-tip','Duplicado en la tabla'); }
+    } else if (Object.keys(errs).length === 0) {
+        row.status = 'ok';
+    } else {
+        row.status = 'err';
+    }
+
+    // Actualizar status icon
+    const rsEl = document.getElementById('rs-' + row.id);
+    const tr   = document.getElementById('row-' + row.id);
+    if (rsEl) {
+        rsEl.className = 'row-status ' + rsClass(row);
+        rsEl.innerHTML = rsIcon(row);
+        rsEl.title     = rsTitle(row);
+    }
+    if (tr) {
+        tr.classList.remove('row-ok','row-err','row-dup','row-filled');
+        if      (row.result === 'ok') tr.classList.add('row-ok');
+        else if (row.status === 'ok') tr.classList.add('row-filled');
+        else if (row.status === 'err') tr.classList.add('row-err');
+        else if (row.status === 'dup') tr.classList.add('row-dup');
+    }
+
+    updateStats();
+}
+
+function rsClass(r) {
+    if (r.result === 'ok') return 'rs-done';
+    if (r.status === 'ok')  return 'rs-ok';
+    if (r.status === 'dup') return 'rs-dup';
+    if (r.status === 'err') return 'rs-err';
+    return 'rs-pend';
+}
+function rsTitle(r) {
+    if (r.result === 'ok')  return 'Dado de alta';
+    if (r.status === 'ok')  return 'Válido — listo para enviar';
+    if (r.status === 'dup') return 'No. de cuenta duplicado en la tabla';
+    if (r.status === 'err') return Object.values(r.errors).join(' · ');
+    return 'Pendiente';
+}
+function rsIcon(r) {
+    if (r.result === 'ok') return '<i class="bi bi-check2-all"></i>';
+    if (r.status === 'ok') return '<i class="bi bi-check2"></i>';
+    if (r.status === 'err' || r.status === 'dup') return '<i class="bi bi-exclamation"></i>';
+    return '·';
+}
+
+function updateStats() {
+    const ok  = rows.filter(function(r) { return r.status === 'ok'; }).length;
+    const err = rows.filter(function(r) { return r.status === 'err'; }).length;
+    const dup = rows.filter(function(r) { return r.status === 'dup'; }).length;
+    document.getElementById('statTotal').textContent = rows.length;
+    document.getElementById('statOk').textContent    = ok;
+    document.getElementById('statErr').textContent   = err;
+    document.getElementById('statDup').textContent   = dup;
+    document.getElementById('btnCount').textContent  = ok;
+    document.getElementById('btnEnviar').disabled    = ok === 0 || bloqueado;
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// NAVEGACIÓN TECLADO (Tab / Enter / Flechas)
+// ══════════════════════════════════════════════════════════════════════
+function keyNav(e, ri, ci) {
+    const maxR = rows.length - 1;
+    const maxC = COL_KEYS.length - 1;
+    let nr = ri, nc = ci;
+
+    if (e.key === 'Tab' && !e.shiftKey) {
+        e.preventDefault();
+        if (nc < maxC) { nc++; }
+        else { nr = ri + 1; nc = 0; if (nr > maxR) { addRows(1); return; } }
+    } else if (e.key === 'Tab' && e.shiftKey) {
+        e.preventDefault();
+        if (nc > 0) { nc--; } else { nr = ri - 1; nc = maxC; }
+    } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (ri < maxR) { nr = ri + 1; } else { addRows(1); return; }
+    } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (ri < maxR) nr = ri + 1;
+    } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (ri > 0) nr = ri - 1;
+    } else {
+        return;
+    }
+
+    if (nr < 0) return;
+    const targetRow = rows[nr];
+    if (!targetRow) return;
+    const tr = document.getElementById('row-' + targetRow.id);
+    if (!tr) return;
+    // +1 porque la primera columna es row-num
+    const targetTd = tr.cells[nc + 1];
+    if (!targetTd) return;
+    const el = targetTd.querySelector('input, select');
+    if (el) { el.focus(); if (typeof el.select === 'function' && el.type === 'text') el.select(); }
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// DATALISTS para UR y Periodo
+// ══════════════════════════════════════════════════════════════════════
+function construirDataLists() {
+    // URs
+    let dlU = document.getElementById('dlURs');
+    if (!dlU) { dlU = document.createElement('datalist'); dlU.id = 'dlURs'; document.body.appendChild(dlU); }
+    dlU.innerHTML = '';
+    URS_CACHE.forEach(function(u) {
+        const o = document.createElement('option');
+        o.value = String(u.id_ur);
+        o.label = u.nombre_ur;
+        dlU.appendChild(o);
+    });
+    // Periodos
+    let dlP = document.getElementById('dlPeriodos');
+    if (!dlP) { dlP = document.createElement('datalist'); dlP.id = 'dlPeriodos'; document.body.appendChild(dlP); }
+    dlP.innerHTML = '';
+    PERIODOS_CACHE.forEach(function(p) {
+        const o = document.createElement('option');
+        o.value = String(p.id_periodo);
+        o.label = p.nombre_periodo;
+        dlP.appendChild(o);
+    });
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// ELIMINAR / LIMPIAR
+// ══════════════════════════════════════════════════════════════════════
+function deleteRow(id) {
+    const idx = rows.findIndex(function(r) { return r.id === id; });
+    if (idx < 0) return;
+    rows.splice(idx, 1);
+    const tr = document.getElementById('row-' + id);
+    if (tr) tr.remove();
+    // Renumerar
+    document.querySelectorAll('#sheetBody tr').forEach(function(tr, i) {
+        const sp = tr.querySelector('.row-num-n');
+        if (sp) sp.textContent = i + 1;
+    });
+    if (rows.length === 0) addRows(5);
+    else updateStats();
+    scheduleAutoSave();
+}
+
+function limpiarTabla() {
+    if (!confirm('¿Limpiar toda la tabla? Se perderán los datos no guardados.')) return;
+    rows = []; rowCounter = 0;
+    document.getElementById('sheetBody').innerHTML = '';
+    addRows(10);
+    discardDraft();
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// AUTO-SAVE BORRADOR
+// ══════════════════════════════════════════════════════════════════════
+function scheduleAutoSave() {
+    clearTimeout(autoSaveTimer);
+    autoSaveTimer = setTimeout(saveDraft, 900);
+}
+function saveDraft() {
+    const dataRows = rows.filter(function(r) {
+        return ['no_cuenta','nombre_alum','apellido_p_alum','correo'].some(function(k) { return !!(r.data[k] || '').trim(); });
+    });
+    if (!dataRows.length) return;
+    try {
+        localStorage.setItem(getDraftKey(), JSON.stringify({
+            savedAt: new Date().toISOString(),
+            rows: dataRows.map(function(r) { return { id: r.id, data: r.data }; })
+        }));
+        const hora = new Date().toLocaleTimeString('es-MX', { hour:'2-digit', minute:'2-digit' });
+        const lbl = document.getElementById('autoSaveLabel');
+        if (lbl) lbl.textContent = 'Borrador guardado ' + hora;
+        const ds = document.getElementById('draftStatus');
+        if (ds) ds.classList.remove('d-none');
+    } catch(e) {}
+}
+function checkDraft() {
+    try {
+        const raw = localStorage.getItem(getDraftKey());
+        if (!raw) return;
+        const d = JSON.parse(raw);
+        if (!d.rows || !d.rows.length) return;
+        document.getElementById('draftCount').textContent = d.rows.length;
+        document.getElementById('draftPanel').classList.remove('d-none');
+    } catch(e) {}
+}
+function loadDraft() {
+    try {
+        const raw = localStorage.getItem(getDraftKey());
+        const d   = JSON.parse(raw);
+        rows = []; rowCounter = 0;
+        document.getElementById('sheetBody').innerHTML = '';
+        d.rows.forEach(function(r) {
+            rowCounter++;
+            rows.push({ id: rowCounter, data: r.data, status: 'pend', errors: {}, result: null });
+        });
+        construirDataLists();
+        renderTableFull();
+        document.getElementById('draftPanel').classList.add('d-none');
+        showToast('Borrador cargado: ' + rows.length + ' filas.', 'info');
+    } catch(e) { showToast('Error al cargar el borrador.', 'error'); }
+}
+function discardDraft() {
+    localStorage.removeItem(getDraftKey());
+    document.getElementById('draftPanel').classList.add('d-none');
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// IMPORTAR EXCEL / CSV
+// ══════════════════════════════════════════════════════════════════════
+function triggerImport() { document.getElementById('fileInput').click(); }
+function handleFileImport(evt) {
+    const file = evt.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const wb   = XLSX.read(e.target.result, { type:'binary' });
+            const ws   = wb.Sheets[wb.SheetNames[0]];
+            const data = XLSX.utils.sheet_to_json(ws, { header:1, defval:'' });
+            importarFilas(data);
+        } catch(err) { showToast('Error al leer el archivo.', 'error'); }
+    };
+    reader.readAsBinaryString(file);
+    evt.target.value = '';
+}
+const HEADER_MAP = {
+    no_cuenta:           ['no_cuenta','numero_cuenta','no cuenta','cuenta','matricula'],
+    nombre_alum:         ['nombre_alum','nombre','nombres'],
+    apellido_p_alum:     ['apellido_p_alum','apellido_p','apellido paterno'],
+    apellido_m_alum:     ['apellido_m_alum','apellido_m','apellido materno'],
+    correo:              ['correo','email','correo electronico'],
+    telefono:            ['telefono','tel','celular'],
+    curp:                ['curp'],
+    programa:            ['programa','tipo_programa'],
+    id_instituto:        ['id_instituto','instituto'],
+    nombre_licenciatura: ['nombre_licenciatura','licenciatura','carrera'],
+    id_ur:               ['id_ur','unidad receptora','ur'],
+    id_periodo:          ['id_periodo','periodo'],
+};
+function resolveHeader(h) {
+    const lh = String(h).toLowerCase().trim().replace(/\s+/g,' ');
+    for (const col in HEADER_MAP) {
+        if (HEADER_MAP[col].includes(lh)) return col;
+    }
+    return null;
+}
+function importarFilas(data) {
+    if (!data || data.length < 2) { showToast('Archivo vacío o sin datos.', 'error'); return; }
+    const headers = data[0].map(function(h) { return resolveHeader(h); });
+    let n = 0;
+    for (let i = 1; i < data.length; i++) {
+        const raw = data[i];
+        if (raw.every(function(v) { return !String(v).trim(); })) continue;
+        const d = emptyRow();
+        headers.forEach(function(col, ci) { if (col) d[col] = String(raw[ci] || '').trim(); });
+        const pr = d.programa.toLowerCase();
+        if (['ss','servicio social'].includes(pr)) d.programa = 'ss';
+        if (['pp','practicas','prácticas profesionales'].includes(pr)) d.        rowCounter++;
+        rows.push({ id: rowCounter, data: d, status:'pend', errors:{}, result:null });
+        document.getElementById('sheetBody').appendChild(crearFilaDOM(rows.length - 1));
+        n++;
+    }
+    rows.forEach(function(_, idx) { validateRow(idx); });
+    construirDataLists();
+    showToast(n + ' filas importadas.', 'success');
+    scheduleAutoSave();
+}
+
+function descargarPlantilla() {
+    const hdrs = ['No. Cuenta *','Nombre(s) *','Ap. Paterno *','Ap. Materno','Correo @uaeh *','Telefono','CURP','Programa * (ss/pp)','ID Instituto *','Carrera/Licenciatura *','ID Unidad Receptora *','ID Periodo'];
+    const ej   = ['123456','Juan Carlos','Gonzalez','Perez','juan@uaeh.edu.mx','7711234567','GOPJ900101HHGNRN01','ss','4','Ingenieria en Electronica','12',''];
+    const pRef = PERIODOS_CACHE.map(function(p) { return ['ID ' + p.id_periodo + ': ' + p.nombre_periodo + ' [' + p.programa + ']']; });
+    const uRef = URS_CACHE.slice(0,8).map(function(u) { return ['ID ' + u.id_ur + ': ' + u.nombre_ur]; });
+    const instRef = INST_PERMITIDOS.map(function(i) { return ['ID ' + i.id + ': ' + i.codigo + ' - ' + i.nombre]; });
+    const ws = XLSX.utils.aoa_to_sheet([hdrs, ej, [],
+        ['PERIODOS ACTIVOS:'], ...pRef, [],
+        ['UNIDADES RECEPTORAS ACTIVAS (primeras 8):'], ...uRef, [],
+        ['INSTITUTOS DISPONIBLES:'], ...instRef
+    ]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Alta Masiva');
+    XLSX.writeFile(wb, 'plantilla_alta_masiva.xlsx');
+}
+
+// ENVIAR ALTAS
+async function enviarAltas() {
+    if (bloqueado) { showToast('No hay periodo activo.', 'error'); return; }
+    const validas = rows.filter(function(r) { return r.status === 'ok' && r.result !== 'ok'; });
+    if (!validas.length) { showToast('No hay filas validas para enviar.', 'error'); return; }
+
+    document.getElementById('btnEnviar').disabled = true;
+    document.getElementById('progressCard').classList.remove('d-none');
+    document.getElementById('progFill').style.width = '10%';
+    document.getElementById('progLabel').textContent = 'Enviando ' + validas.length + ' alumno(s)...';
+    document.getElementById('resultCard').classList.remove('show');
+    document.getElementById('resultList').innerHTML = '';
+
+    const payload = validas.map(function(r) {
+        const d = Object.assign({}, r.data);
+        Object.keys(d).forEach(function(k) { if (!d[k]) delete d[k]; });
+        return d;
+    });
+
+    try {
+        const res  = await apiFetch('/api/alumnos/admin/alta-masiva', {
+            method: 'POST', body: JSON.stringify({ alumnos: payload })
+        });
+        const json = await res.json();
+        document.getElementById('progFill').style.width  = '100%';
+        document.getElementById('progLabel').textContent = json.exitosos + ' OK / ' + json.fallidos + ' errores';
+
+        json.resultados.forEach(function(r, i) {
+            const row = validas[i];
+            if (!row) return;
+            const li = document.createElement('div');
+            if (r.ok) {
+                row.result = 'ok'; row.status = 'done';
+                li.className = 'result-item ri-ok';
+                li.innerHTML = '<i class="bi bi-check-circle-fill"></i><div><strong>' + r.no_cuenta + '</strong> dado de alta. Contrasena: <code>' + r.contrasena_temporal + '</code></div>';
+                const tr = document.getElementById('row-' + row.id);
+                if (tr) tr.className = 'row-ok';
+                const rs = document.getElementById('rs-' + row.id);
+                if (rs) { rs.className = 'row-status rs-done'; rs.innerHTML = '<i class="bi bi-check2-all"></i>'; rs.title = 'Dado de alta'; }
+            } else {
+                row.status = 'err'; row.errors._server = r.error;
+                li.className = 'result-item ri-err';
+                li.innerHTML = '<i class="bi bi-x-circle-fill"></i><div><strong>' + (r.no_cuenta || 'Fila ' + r.fila) + '</strong> - ' + r.error + '</div>';
+            }
+            document.getElementById('resultList').appendChild(li);
+        });
+
+        document.getElementById('resultCard').classList.add('show');
+        updateStats();
+        showToast(json.mensaje, json.fallidos === 0 ? 'success' : 'info');
+        if (json.fallidos === 0) discardDraft(); else scheduleAutoSave();
+    } catch(e) {
+        showToast('Error de conexion al enviar.', 'error');
+        document.getElementById('progLabel').textContent = 'Error de conexion';
+    }
+    document.getElementById('btnEnviar').disabled = false;
+}
+
+function exportarResultados() {
+    const hdrs = ['No. Cuenta','Nombre','Ap. Paterno','Ap. Materno','Correo','Programa','Instituto','Carrera','ID UR','ID Periodo','Estado','Error'];
+    const data = rows.map(function(r) { return [
+        r.data.no_cuenta, r.data.nombre_alum, r.data.apellido_p_alum, r.data.apellido_m_alum,
+        r.data.correo, r.data.programa, r.data.id_instituto, r.data.nombre_licenciatura,
+        r.data.id_ur, r.data.id_periodo,
+        r.result === 'ok' ? 'Dado de alta' : r.status === 'err' ? 'Error' : 'Pendiente',
+        r.errors._server || ''
+    ]; });
+    const ws = XLSX.utils.aoa_to_sheet([hdrs, ...data]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Resultados');
+    XLSX.writeFile(wb, 'resultados_alta_masiva_' + new Date().toISOString().slice(0,10) + '.xlsx');
+}
+
+window.addEventListener('load', function() { construirDataLists(); });
+</script>
+</body>
+</html>

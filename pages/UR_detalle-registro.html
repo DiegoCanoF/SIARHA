@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SIARHA | Detalle de Registro - UR</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/siarha.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primario:#501013;--primario-dk:#3a0b0e;--primario-lt:#f7eaea;
+            --primario-mid:#7a1820;--dorado:#C9A24D;--dorado-lt:#fdf6e3;
+            --bg:#F2F4F8;--card-bg:#ffffff;--text:#1F2933;--muted:#6b7280;
+            --border:#E5E7EB;--radius-card:18px;--radius-sm:10px;
+            --shadow:0 2px 16px rgba(80,16,19,.08);
+        }
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+        .navbar-custom{background:var(--primario);padding:0 1.5rem;height:70px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:1050;box-shadow:0 2px 16px rgba(0,0,0,.15);}
+        .brand-text{font-size:1.3rem;font-weight:800;color:#fff;letter-spacing:.03em;}
+        main{max-width:780px;margin:0 auto;padding:2rem 1.5rem;}
+        .section-card{background:#fff;border-radius:var(--radius-card);box-shadow:var(--shadow);margin-bottom:1.5rem;overflow:hidden;}
+        .section-header{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+        .section-header .title{font-weight:700;font-size:.95rem;display:flex;align-items:center;gap:.5rem;}
+        .section-body{padding:1.2rem 1.4rem;}
+        .dato-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;padding:1.2rem 1.4rem;}
+        .dato-item{display:flex;flex-direction:column;gap:.2rem;}
+        .dato-label{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;}
+        .dato-value{font-size:.9rem;font-weight:600;color:var(--text);}
+        .dato-value.accent{color:var(--primario);font-size:1rem;font-weight:800;}
+        .dato-value.highlight{color:#065f46;font-size:1.1rem;font-weight:800;}
+
+        /* Banners */
+        .status-banner{display:flex;align-items:flex-start;gap:1rem;padding:1.25rem 1.4rem;border-radius:var(--radius-card);margin-bottom:1.5rem;}
+        .status-banner.aprobado{background:#dcfce7;border:1.5px solid #86efac;}
+        .status-banner.pendiente{background:#fef9c3;border:1.5px solid #fde047;}
+        .status-banner.rechazado{background:#fee2e2;border:1.5px solid #fca5a5;}
+        .status-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+        .status-icon.aprobado{background:#bbf7d0;color:#065f46;}
+        .status-icon.pendiente{background:#fef08a;color:#854d0e;}
+        .status-icon.rechazado{background:#fecaca;color:#991b1b;}
+        .status-label{font-size:.75rem;font-weight:600;color:var(--muted);}
+        .status-value{font-size:1rem;font-weight:800;}
+        .status-value.aprobado{color:#065f46;} .status-value.pendiente{color:#854d0e;} .status-value.rechazado{color:#991b1b;}
+        .status-desc{font-size:.82rem;color:var(--muted);margin-top:.2rem;}
+
+        /* Observaciones */
+        .obs-box{border-radius:var(--radius-sm);padding:1rem 1.2rem;}
+        .obs-box.rechazado{background:#fee2e2;border:1px solid #fca5a5;}
+        .obs-box.aprobado{background:#dcfce7;border:1px solid #86efac;}
+        .obs-header{font-size:.78rem;font-weight:700;margin-bottom:.4rem;display:flex;align-items:center;gap:.4rem;}
+        .obs-header.rechazado{color:#991b1b;} .obs-header.aprobado{color:#065f46;}
+        .obs-body{font-size:.87rem;color:var(--text);line-height:1.6;}
+
+        /* Acciones */
+        .btn-aprobar{background:var(--primario);color:#fff;border:none;border-radius:var(--radius-sm);font-weight:700;font-size:.85rem;padding:.6rem 1.3rem;cursor:pointer;display:inline-flex;align-items:center;gap:.5rem;transition:background .2s;}
+        .btn-aprobar:hover{background:var(--primario-dk);}
+        .btn-rechazar{background:#fff;color:#991b1b;border:1.5px solid #fca5a5;border-radius:var(--radius-sm);font-weight:700;font-size:.85rem;padding:.6rem 1.3rem;cursor:pointer;display:inline-flex;align-items:center;gap:.5rem;transition:all .2s;}
+        .btn-rechazar:hover{background:#fee2e2;}
+        .btn-back{background:#fff;color:var(--muted);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-weight:600;font-size:.83rem;padding:.45rem 1rem;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;text-decoration:none;}
+        .btn-back:hover{border-color:var(--primario);color:var(--primario);}
+
+        .badge-aprobado{background:#dcfce7;color:#065f46;border-radius:20px;font-size:.73rem;font-weight:700;padding:.25rem .7rem;display:inline-block;}
+        .badge-pendiente{background:#fef9c3;color:#854d0e;border-radius:20px;font-size:.73rem;font-weight:700;padding:.25rem .7rem;display:inline-block;}
+        .badge-rechazado{background:#fee2e2;color:#991b1b;border-radius:20px;font-size:.73rem;font-weight:700;padding:.25rem .7rem;display:inline-block;}
+
+        /* Modal rechazo */
+        .modal-overlay{display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.48);align-items:center;justify-content:center;padding:1rem;}
+        .modal-box{background:#fff;border-radius:14px;max-width:440px;width:100%;overflow:hidden;box-shadow:0 24px 64px rgba(80,16,19,.25);}
+        .modal-head{background:var(--primario);padding:1rem 1.4rem;display:flex;align-items:center;justify-content:space-between;}
+        .modal-head h6{color:#fff;font-weight:700;margin:0;font-size:.95rem;}
+        .modal-body-p{padding:1.2rem 1.4rem;}
+        .modal-foot{padding:.9rem 1.4rem;border-top:1px solid var(--border);display:flex;gap:.6rem;justify-content:flex-end;}
+        .form-field{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.6rem .8rem;font-family:inherit;font-size:.88rem;outline:none;transition:border-color .2s;}
+        .form-field:focus{border-color:var(--primario);}
+        .form-label-sm{font-size:.78rem;font-weight:700;color:var(--text);display:block;margin-bottom:.3rem;}
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar-custom">
+    <span class="brand-text">SIARHA</span>
+    <a id="btnVolver" href="UR_ur-bitacora-alumno.html" class="btn-back">
+        <i class="bi bi-arrow-left"></i> Volver a bitácora
+    </a>
+</nav>
+
+<main>
+
+    <!-- Encabezado del registro -->
+    <div style="margin-bottom:1.25rem;">
+        <h5 style="font-weight:800;font-size:1.15rem;margin-bottom:.2rem;" id="tituloDetalle">Cargando…</h5>
+        <div style="font-size:.82rem;color:var(--muted);" id="subtituloAlumno"></div>
+    </div>
+
+    <!-- Banner de estado -->
+    <div class="status-banner pendiente" id="statusBanner">
+        <div class="status-icon pendiente"><i class="bi bi-hourglass-split"></i></div>
+        <div>
+            <div class="status-label">Estado del registro</div>
+            <div class="status-value pendiente" id="statusTexto">Pendiente de revisión</div>
+            <div class="status-desc" id="statusDesc">Este registro está esperando tu validación.</div>
+        </div>
+    </div>
+
+    <!-- Datos de la jornada -->
+    <div class="section-card">
+        <div class="section-header">
+            <span class="title"><i class="bi bi-calendar-check"></i> Datos de la jornada</span>
+            <span id="badgeEstado" class="badge-pendiente">Pendiente</span>
+        </div>
+        <div class="dato-grid">
+            <div class="dato-item"><span class="dato-label">Fecha</span><span class="dato-value accent" id="dFecha">—</span></div>
+            <div class="dato-item"><span class="dato-label">Día</span><span class="dato-value" id="dDia">—</span></div>
+            <div class="dato-item"><span class="dato-label">Hora de entrada</span><span class="dato-value" id="dEntrada">—</span></div>
+            <div class="dato-item"><span class="dato-label">Hora de salida</span><span class="dato-value" id="dSalida">—</span></div>
+            <div class="dato-item col-span-2" style="grid-column:1/-1;">
+                <span class="dato-label">Total de horas</span>
+                <span class="dato-value highlight" id="dTotal">—</span>
+            </div>
+        </div>
+        <div style="padding:0 1.4rem 1.2rem;">
+            <div class="dato-label" style="margin-bottom:.4rem;">Descripción de la actividad</div>
+            <div id="dActividad" style="font-size:.9rem;line-height:1.7;color:var(--text);background:var(--bg);border-radius:var(--radius-sm);padding:.75rem 1rem;border:1px solid var(--border);">—</div>
+        </div>
+    </div>
+
+    <!-- Observaciones / motivo -->
+    <div class="section-card" id="obsWrap" style="display:none;">
+        <div class="section-header">
+            <span class="title"><i class="bi bi-chat-left-text"></i> Observaciones</span>
+        </div>
+        <div class="section-body">
+            <div id="obsBox" class="obs-box rechazado">
+                <div class="obs-header rechazado"><i class="bi bi-x-circle-fill"></i> Motivo de rechazo</div>
+                <div class="obs-body" id="obsMotivo">—</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Acciones UR -->
+    <div class="section-card" id="accionesWrap">
+        <div class="section-header">
+            <span class="title"><i class="bi bi-check2-square"></i> Acciones</span>
+        </div>
+        <div class="section-body" id="accionesBody">
+            <div style="text-align:center;color:var(--muted);padding:1rem;">Cargando…</div>
+        </div>
+    </div>
+
+</main>
+
+<!-- MODAL RECHAZAR -->
+<div id="modalRechazar" class="modal-overlay" onclick="if(event.target===this)cerrarModalRechazar()">
+    <div class="modal-box">
+        <div class="modal-head">
+            <h6><i class="bi bi-x-circle-fill me-2"></i>Rechazar registro</h6>
+            <button onclick="cerrarModalRechazar()" style="background:none;border:none;color:#fff;cursor:pointer;font-size:1rem;"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="modal-body-p">
+            <label class="form-label-sm">Motivo del rechazo <span style="color:var(--primario);">*</span></label>
+            <textarea id="motivoRechazo" class="form-field" rows="4"
+                      placeholder="Explica al alumno por qué se rechaza este registro…"></textarea>
+            <div id="motivoError" style="font-size:.78rem;color:#991b1b;margin-top:.4rem;display:none;">El motivo es obligatorio.</div>
+        </div>
+        <div class="modal-foot">
+            <button onclick="cerrarModalRechazar()" class="btn-back">Cancelar</button>
+            <button onclick="confirmarRechazar()" class="btn-rechazar">
+                <i class="bi bi-x-circle-fill"></i> Confirmar rechazo
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/ur-api.js"></script>
+<script src="../assets/js/ur-guard.js"></script>
+<script>
+    const DIAS = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+    function fmtF(iso){if(!iso)return'—';return new Date(iso).toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'});}
+    function fmtT(iso){if(!iso)return'—';return new Date(iso).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit',hour12:false});}
+    function fmtH(h){if(!h)return'—';const hh=Math.floor(parseFloat(h)),mm=Math.round((parseFloat(h)-hh)*60);return`${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')} hrs`;}
+    function set(id,v,p='textContent'){const e=document.getElementById(id);if(e)e[p]=v;}
+
+    let _reg = null;
+    let _noCuenta = null;
+
+    async function cargarDetalle() {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        _noCuenta = params.get('no_cuenta');
+
+        // Actualizar link volver
+        if (_noCuenta) document.getElementById('btnVolver').href = `UR_ur-bitacora-alumno.html?no_cuenta=${_noCuenta}`;
+
+        if (!id) { window.location.href = 'UR_dashboard-ur.html'; return; }
+
+        try {
+            const res  = await apiFetchUR(`/api/ur/registro/${id}`);
+            const data = await res.json();
+            if (!res.ok || !data.registro) { alert('Registro no encontrado.'); history.back(); return; }
+
+            const r = data.registro;
+            _reg = r;
+            const estado = r.estado_fin || 'Pendiente';
+            const nombre = [r.nombre_alum, r.apellido_p_alum, r.apellido_m_alum].filter(Boolean).join(' ');
+
+            // Encabezado
+            set('tituloDetalle', `Registro del ${fmtF(r.hora_entrada)} — ID #REG-${String(r.id_registro).padStart(8,'0')}`);
+            set('subtituloAlumno', `Alumno: ${nombre} · No. cuenta: ${r.no_cuenta}`);
+
+            // Banner
+            const cfg = {
+                Aprobado:  { cls:'aprobado',  ico:'bi-check-circle-fill',  txt:'Aprobado', desc:'Este registro fue aprobado. Las horas se sumaron al progreso del alumno.' },
+                Pendiente: { cls:'pendiente', ico:'bi-hourglass-split',    txt:'Pendiente de revisión', desc:'Este registro espera tu validación.' },
+                Rechazado: { cls:'rechazado', ico:'bi-x-circle-fill',      txt:'Rechazado', desc:'Este registro fue rechazado.' },
+            };
+            const c = cfg[estado] || cfg.Pendiente;
+            const banner = document.getElementById('statusBanner');
+            banner.className = `status-banner ${c.cls}`;
+            banner.innerHTML = `<div class="status-icon ${c.cls}"><i class="bi ${c.ico}"></i></div>
+                <div><div class="status-label">Estado del registro</div>
+                <div class="status-value ${c.cls}">${c.txt}</div>
+                <div class="status-desc">${c.desc}</div></div>`;
+
+            const badge = document.getElementById('badgeEstado');
+            badge.className = `badge-${c.cls}`; badge.textContent = estado;
+
+            // Datos jornada
+            set('dFecha',    fmtF(r.hora_entrada));
+            set('dDia',      DIAS[new Date(r.hora_entrada).getDay()]);
+            set('dEntrada',  fmtT(r.hora_entrada));
+            set('dSalida',   fmtT(r.hora_salida));
+            set('dTotal',    fmtH(r.horas_trabajadas));
+            set('dActividad', r.actividad_desc || '—');
+
+            // Observaciones
+            const obsWrap = document.getElementById('obsWrap');
+            if (estado === 'Rechazado' && r.motivo_rechazo) {
+                obsWrap.style.display = '';
+                set('obsMotivo', r.motivo_rechazo);
+            } else { obsWrap.style.display = 'none'; }
+
+            // Acciones
+            const body = document.getElementById('accionesBody');
+            if (estado === 'Pendiente') {
+                body.innerHTML = `<p style="font-size:.83rem;color:var(--muted);margin-bottom:1rem;">
+                    Revisa la descripción y las horas. Si todo es correcto, aprueba el registro.</p>
+                    <div class="d-flex gap-3 flex-wrap">
+                        <button class="btn-aprobar" onclick="aprobarRegistro()">
+                            <i class="bi bi-check-lg"></i> Aprobar registro
+                        </button>
+                        <button class="btn-rechazar" onclick="abrirModalRechazar()">
+                            <i class="bi bi-x-lg"></i> Rechazar registro
+                        </button>
+                    </div>`;
+            } else if (estado === 'Aprobado') {
+                body.innerHTML = `<p style="font-size:.83rem;color:#065f46;font-weight:600;">
+                    <i class="bi bi-check-circle-fill me-1"></i>Este registro fue aprobado. Las horas ya están sumadas al progreso del alumno.</p>`;
+            } else {
+                body.innerHTML = `<p style="font-size:.83rem;color:#991b1b;font-weight:600;">
+                    <i class="bi bi-x-circle-fill me-1"></i>Este registro fue rechazado. El alumno puede eliminarlo y crear uno nuevo.</p>
+                    <button class="btn-aprobar" style="margin-top:.75rem;" onclick="aprobarRegistro()">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i> Revertir y aprobar
+                    </button>`;
+            }
+
+        } catch(e) { console.error('[UR Detalle]', e.message); }
+    }
+
+    async function aprobarRegistro() {
+        if (!_reg) return;
+        try {
+            const res  = await apiFetchUR(`/api/ur/registro/${_reg.id_registro}/validar`, {
+                method: 'PATCH', body: JSON.stringify({ accion: 'aprobar' })
+            });
+            const data = await res.json();
+            if (!res.ok) { alert(data.error || 'Error al aprobar.'); return; }
+            alert('Registro aprobado. Las horas han sido sumadas al progreso del alumno.');
+            cargarDetalle();
+        } catch(e) { alert('Error de conexión.'); }
+    }
+
+    function abrirModalRechazar() {
+        document.getElementById('motivoRechazo').value = '';
+        document.getElementById('motivoError').style.display = 'none';
+        document.getElementById('modalRechazar').style.display = 'flex';
+    }
+    function cerrarModalRechazar() { document.getElementById('modalRechazar').style.display = 'none'; }
+
+    async function confirmarRechazar() {
+        const motivo = document.getElementById('motivoRechazo').value.trim();
+        if (!motivo) { document.getElementById('motivoError').style.display = 'block'; return; }
+        cerrarModalRechazar();
+        try {
+            const res  = await apiFetchUR(`/api/ur/registro/${_reg.id_registro}/validar`, {
+                method: 'PATCH', body: JSON.stringify({ accion: 'rechazar', motivo_rechazo: motivo })
+            });
+            const data = await res.json();
+            if (!res.ok) { alert(data.error || 'Error al rechazar.'); return; }
+            cargarDetalle();
+        } catch(e) { alert('Error de conexión.'); }
+    }
+
+    window.addEventListener('load', cargarDetalle);
+</script>
+</body>
+</html>

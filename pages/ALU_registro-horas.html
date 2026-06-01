@@ -354,9 +354,9 @@
     </div>
 
     <!-- AVISO -->
-    <div class="aviso-info mb-4">
+    <div class="aviso-info mb-4" id="avisoPeriodo">
         <i class="bi bi-info-circle-fill"></i>
-        <span>Solo puedes registrar <strong>un día a la vez</strong> y no puedes registrar fechas <strong>futuras</strong> ni días que ya hayas registrado.</span>
+        <span>Solo puedes registrar <strong>un día a la vez</strong> dentro de tu periodo activo.</span>
     </div>
 
     <!-- FORMULARIO PRINCIPAL -->
@@ -414,19 +414,6 @@
                               placeholder="Describe brevemente las actividades realizadas durante la jornada…"></textarea>
                 </div>
 
-                <!-- FILA 4: evidencia -->
-                <div class="mb-4">
-                    <label class="form-label-sm">Evidencia <span style="color:#9ca3af;">(opcional)</span></label>
-                    <div class="upload-zone" id="uploadZone">
-                        <input type="file" id="evidenciaFile"
-                               accept=".pdf,.jpg,.jpeg,.png"
-                               onchange="mostrarArchivo(this)">
-                        <i class="bi bi-cloud-arrow-up"></i>
-                        <span id="uploadLabel">Arrastra un archivo o haz clic para seleccionar</span>
-                        <span class="hint">PDF, JPG o PNG · Máximo 5 MB</span>
-                    </div>
-                </div>
-
                 <!-- ACCIONES -->
                 <div class="d-flex align-items-center gap-3 flex-wrap">
                     <button type="submit" class="btn-submit">
@@ -449,37 +436,16 @@
     <div class="section-card">
         <div class="section-header">
             <span class="title"><i class="bi bi-clock-history"></i> Últimos registros enviados</span>
+            <button onclick="cargarHistorial()" title="Actualizar"
+                style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:.95rem;padding:.2rem .4rem;">
+                <i class="bi bi-arrow-clockwise"></i>
+            </button>
         </div>
-
-        <div class="registro-item">
-            <span class="reg-fecha">12 feb 2026</span>
-            <span class="reg-actividad">Apoyo en evento institucional</span>
-            <span class="reg-horas">05:00</span>
-            <span class="badge-aprobado">Aprobado</span>
-        </div>
-        <div class="registro-item">
-            <span class="reg-fecha">11 feb 2026</span>
-            <span class="reg-actividad">Revisión de expedientes</span>
-            <span class="reg-horas">04:30</span>
-            <span class="badge-pendiente">Pendiente</span>
-        </div>
-        <div class="registro-item">
-            <span class="reg-fecha">10 feb 2026</span>
-            <span class="reg-actividad">Capacitación interna</span>
-            <span class="reg-horas">07:00</span>
-            <span class="badge-aprobado">Aprobado</span>
-        </div>
-        <div class="registro-item">
-            <span class="reg-fecha">08 feb 2026</span>
-            <span class="reg-actividad">Elaboración de reportes mensuales</span>
-            <span class="reg-horas">06:00</span>
-            <span class="badge-pendiente">Pendiente</span>
-        </div>
-        <div class="registro-item">
-            <span class="reg-fecha">04 feb 2026</span>
-            <span class="reg-actividad">Organización de archivo físico</span>
-            <span class="reg-horas">04:00</span>
-            <span class="badge-rechazado">Rechazado</span>
+        <div id="listaHistorial" style="min-height:60px;">
+            <div style="text-align:center;padding:1.5rem;color:var(--muted);font-size:.85rem;">
+                <i class="bi bi-arrow-repeat" style="font-size:1.2rem;display:block;margin-bottom:.4rem;"></i>
+                Cargando registros…
+            </div>
         </div>
     </div>
 
@@ -545,9 +511,101 @@
 <script>
     const dias = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 
-    // Bloquear fechas futuras
-    const hoy = new Date().toISOString().split('T')[0];
-    document.getElementById('fechaInput').setAttribute('max', hoy);
+    // ─── Variables globales de periodo (necesarias para validar en el submit) ──
+    var _periodoInicio = null;
+    var _periodoFin    = null;
+
+    // ─── Cargar periodo del alumno y restringir fechas ──────────
+    async function cargarPeriodoAlumno() {
+        const hoy = new Date().toISOString().split('T')[0];
+        const inp = document.getElementById('fechaInput');
+
+        try {
+            const res  = await apiFetchAlu('/api/alumno/perfil');
+            const data = await res.json();
+
+            if (!res.ok || !data.perfil) {
+                // Sin respuesta válida — solo bloquear futuras
+                inp.setAttribute('max', hoy);
+                return;
+            }
+
+            const p = data.perfil;
+            const avisoEl = document.getElementById('avisoPeriodo');
+
+            if (p.fecha_inicio && p.fecha_fin) {
+                _periodoInicio = p.fecha_inicio.split('T')[0];
+                _periodoFin    = p.fecha_fin.split('T')[0];
+
+                // min = inicio del periodo, max = hoy o fin del periodo (el menor)
+                const maxFecha = _periodoFin < hoy ? _periodoFin : hoy;
+                inp.setAttribute('min', _periodoInicio);
+                inp.setAttribute('max', maxFecha);
+
+                // Si el periodo aún no ha comenzado → deshabilitar el input
+                if (_periodoInicio > hoy) {
+                    inp.disabled = true;
+                    inp.setAttribute('min', _periodoInicio);
+                    if (avisoEl) {
+                        avisoEl.innerHTML = `<i class="bi bi-exclamation-triangle-fill" style="color:#854d0e;"></i>
+                            <span>Tu periodo <strong>${p.nombre_periodo || ''}</strong> aún no ha comenzado.
+                            Podrás registrar horas a partir del <strong>${new Date(_periodoInicio + 'T12:00:00').toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'})}</strong>.</span>`;
+                        avisoEl.style.background = '#fef9c3';
+                        avisoEl.style.borderColor = '#fde047';
+                        avisoEl.style.color = '#854d0e';
+                    }
+                    // Deshabilitar también el botón de enviar
+                    const btn = document.querySelector('button[type="submit"]');
+                    if (btn) {
+                        btn.disabled = true;
+                        btn.style.opacity = '.5';
+                        btn.style.cursor  = 'not-allowed';
+                    }
+                    return;
+                }
+
+                // Si el periodo ya terminó → deshabilitar
+                if (_periodoFin < hoy) {
+                    inp.disabled = true;
+                    if (avisoEl) {
+                        avisoEl.innerHTML = `<i class="bi bi-x-circle-fill" style="color:#991b1b;"></i>
+                            <span>Tu periodo <strong>${p.nombre_periodo || ''}</strong> ya finalizó el
+                            <strong>${new Date(_periodoFin + 'T12:00:00').toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'})}</strong>.
+                            No puedes registrar nuevas horas.</span>`;
+                        avisoEl.style.background = '#fee2e2';
+                        avisoEl.style.borderColor = '#fca5a5';
+                        avisoEl.style.color = '#991b1b';
+                    }
+                    const btn = document.querySelector('button[type="submit"]');
+                    if (btn) { btn.disabled = true; btn.style.opacity = '.5'; btn.style.cursor = 'not-allowed'; }
+                    return;
+                }
+
+                // Periodo activo — mostrar rango en el aviso
+                if (avisoEl) {
+                    const fmtD = iso => new Date(iso + 'T12:00:00').toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'});
+                    avisoEl.innerHTML = `<i class="bi bi-info-circle-fill"></i>
+                        <span>Periodo activo: <strong>${p.nombre_periodo || ''}</strong>
+                        (${fmtD(_periodoInicio)} al ${fmtD(_periodoFin)}).
+                        Solo puedes registrar fechas dentro de este rango.</span>`;
+                }
+
+            } else {
+                // Sin periodo asignado
+                inp.setAttribute('max', hoy);
+                if (avisoEl) {
+                    avisoEl.innerHTML = `<i class="bi bi-exclamation-triangle-fill" style="color:#854d0e;"></i>
+                        <span>No tienes un periodo activo asignado. Contacta a tu encargado de área antes de registrar horas.</span>`;
+                    avisoEl.style.background = '#fef9c3';
+                    avisoEl.style.borderColor = '#fde047';
+                    avisoEl.style.color = '#854d0e';
+                }
+            }
+        } catch(e) {
+            // Error de conexión — solo bloquear futuras
+            document.getElementById('fechaInput').setAttribute('max', hoy);
+        }
+    }
 
     // Calcular día y semana al seleccionar fecha
     document.getElementById('fechaInput').addEventListener('change', function () {
@@ -588,20 +646,8 @@
     document.getElementById('horaEntrada').addEventListener('change', calcularTotal);
     document.getElementById('horaSalida').addEventListener('change', calcularTotal);
 
-    // Mostrar nombre de archivo subido
-    function mostrarArchivo(input) {
-        const label = document.getElementById('uploadLabel');
-        if (input.files && input.files[0]) {
-            const f = input.files[0];
-            const kb = (f.size / 1024).toFixed(0);
-            label.innerHTML = `<strong style="color:var(--primario);">${f.name}</strong> · ${kb} KB`;
-            document.getElementById('uploadZone').style.borderColor = 'var(--primario)';
-            document.getElementById('uploadZone').style.background = 'var(--primario-lt)';
-        }
-    }
-
     // Validación y envío
-    document.getElementById('formRegistro').addEventListener('submit', function (e) {
+    document.getElementById('formRegistro').addEventListener('submit', async function (e) {
         e.preventDefault();
 
         const fecha    = document.getElementById('fechaInput').value;
@@ -615,6 +661,15 @@
 
         if (!fecha) {
             errTxt.textContent = 'Selecciona una fecha válida.';
+            errMsg.style.display = 'inline-flex'; return;
+        }
+        // Validar que la fecha esté dentro del periodo
+        if (_periodoInicio && fecha < _periodoInicio) {
+            errTxt.textContent = `La fecha no puede ser anterior al inicio del periodo (${_periodoInicio}).`;
+            errMsg.style.display = 'inline-flex'; return;
+        }
+        if (_periodoFin && fecha > _periodoFin) {
+            errTxt.textContent = `La fecha no puede ser posterior al fin del periodo (${_periodoFin}).`;
             errMsg.style.display = 'inline-flex'; return;
         }
         if (!entrada || !salida) {
@@ -632,20 +687,135 @@
             errMsg.style.display = 'inline-flex'; return;
         }
 
-        // Simular envío
-        const toast = document.getElementById('toastOk');
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3500);
+        // Construir timestamps completos
+        const horaEntradaISO = `${fecha}T${entrada}:00`;
+        const horaSalidaISO  = `${fecha}T${salida}:00`;
 
-        // Reset
-        this.reset();
-        document.getElementById('totalHoras').textContent = '— : —';
-        document.getElementById('diaSemana').value = '';
-        document.getElementById('semanaNum').value = '';
-        document.getElementById('uploadLabel').textContent = 'Arrastra un archivo o haz clic para seleccionar';
-        document.getElementById('uploadZone').style.borderColor = '';
-        document.getElementById('uploadZone').style.background = '';
+        const btnSubmit = this.querySelector('button[type="submit"]');
+        const textoOrig = btnSubmit.innerHTML;
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = '<i class="bi bi-arrow-repeat"></i> Enviando…';
+
+        try {
+            const res  = await apiFetchAlu('/api/alumno/registro-horas', {
+                method: 'POST',
+                body: JSON.stringify({
+                    hora_entrada:   horaEntradaISO,
+                    hora_salida:    horaSalidaISO,
+                    actividad_desc: actividad
+                })
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                errTxt.textContent = data.error || 'Error al guardar el registro.';
+                errMsg.style.display = 'inline-flex';
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = textoOrig;
+                return;
+            }
+
+            // Éxito
+            const toast = document.getElementById('toastOk');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3500);
+
+            cargarHistorial();
+
+            // Reset
+            this.reset();
+            document.getElementById('totalHoras').textContent = '— : —';
+            document.getElementById('diaSemana').value = '';
+            document.getElementById('semanaNum').value = '';
+
+        } catch(e) {
+            errTxt.textContent = 'No se pudo conectar con el servidor.';
+            errMsg.style.display = 'inline-flex';
+        } finally {
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = textoOrig;
+        }
     });
+
+    // ─── Helpers de formato ───────────────────────────────────────
+    function _fmtFecha(iso) {
+        if (!iso) return '—';
+        return new Date(iso).toLocaleDateString('es-MX', {day:'2-digit', month:'short', year:'numeric'});
+    }
+    function _fmtHoras(h) {
+        if (!h && h !== 0) return '—';
+        const hh = Math.floor(parseFloat(h));
+        const mm = Math.round((parseFloat(h) - hh) * 60);
+        return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
+    }
+
+    // ─── Cargar los últimos 5 registros ───────────────────────────
+    async function cargarHistorial() {
+        const lista = document.getElementById('listaHistorial');
+        if (!lista) return;
+
+        lista.innerHTML = `<div style="text-align:center;padding:1.2rem;color:var(--muted);font-size:.82rem;">
+            <i class="bi bi-arrow-repeat"></i> Cargando…</div>`;
+
+        try {
+            const res  = await apiFetchAlu('/api/alumno/registros');
+            const data = await res.json();
+
+            if (!res.ok) {
+                lista.innerHTML = `<div style="text-align:center;padding:1.2rem;color:var(--muted);font-size:.82rem;">
+                    Error al cargar registros.</div>`;
+                return;
+            }
+
+            const registros = (data.registros || []).slice(0, 5);
+
+            if (registros.length === 0) {
+                lista.innerHTML = `<div style="text-align:center;padding:1.5rem;color:var(--muted);font-size:.85rem;">
+                    <i class="bi bi-inbox" style="font-size:1.3rem;display:block;margin-bottom:.4rem;"></i>
+                    Aún no tienes registros enviados.</div>`;
+                return;
+            }
+
+            const BADGE = {
+                'Aprobado':  '<span class="badge-aprobado">Aprobado</span>',
+                'Pendiente': '<span class="badge-pendiente">Pendiente</span>',
+                'Rechazado': '<span class="badge-rechazado">Rechazado</span>',
+            };
+
+            lista.innerHTML = registros.map(r => {
+                const badge = BADGE[r.estado_fin] || `<span class="badge-pendiente">${r.estado_fin||'Pendiente'}</span>`;
+                const href  = `ALU_detalle-registro.html?id=${r.id_registro}`;
+                const motivo = r.estado_fin === 'Rechazado' && r.motivo_rechazo
+                    ? `<div style="font-size:.71rem;color:#991b1b;margin-top:.15rem;grid-column:1/-1;">
+                           <i class="bi bi-exclamation-circle-fill me-1"></i>${r.motivo_rechazo}</div>`
+                    : '';
+                return `<div class="registro-item" onclick="window.location.href='${href}'"
+                             style="cursor:pointer;transition:background .15s;"
+                             onmouseenter="this.style.background='var(--primario-lt)'"
+                             onmouseleave="this.style.background=''">
+                    <span class="reg-fecha">${_fmtFecha(r.hora_entrada)}</span>
+                    <span class="reg-actividad" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"
+                          title="${(r.actividad_desc||'').replace(/"/g,'')}">${r.actividad_desc || '—'}</span>
+                    <span class="reg-horas">${_fmtHoras(r.horas_trabajadas)}</span>
+                    ${badge}
+                    ${motivo}
+                </div>`;
+            }).join('');
+
+        } catch(e) {
+            lista.innerHTML = `<div style="text-align:center;padding:1.2rem;color:var(--muted);font-size:.82rem;">
+                No se pudo conectar con el servidor.</div>`;
+        }
+    }
+
+    // ─── Llamar al cargar la página ────────────────────────────────
+    window.addEventListener('load', () => {
+        cargarPeriodoAlumno();
+        cargarHistorial();
+    });
+
+    // ── Después de enviar exitosamente, recargar el historial ──────
+    // (se llama desde dentro del submit cuando res.ok)
 
     // ══ NOTIFICACIONES ══════════════════════════════════════════════
     let _nOpen=false;

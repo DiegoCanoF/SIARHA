@@ -146,6 +146,39 @@
         [data-visible] { transition: opacity .2s; }
         @media (max-width: 767px) { main { padding: 1.25rem 1rem; } }
         @media (max-width: 480px) { .notif-panel { width: 100%; border-radius: 0; } }
+
+        /* ── SELECCIÓN MÚLTIPLE ── */
+        .cb-al { width: 16px; height: 16px; cursor: pointer; accent-color: var(--primario); }
+        th.th-cb, td.td-cb { width: 40px; text-align: center; padding: .7rem .5rem !important; }
+        table tbody tr.selected-row { background: var(--primario-lt) !important; }
+
+        /* ── BULK BAR ── */
+        .bulk-bar { display: none; background: var(--primario); color: #fff; padding: .75rem 1.4rem; align-items: center; gap: .75rem; flex-wrap: wrap; border-top: 3px solid var(--primario-dk); }
+        .bulk-bar.visible { display: flex; }
+        .bulk-count { font-size: .85rem; font-weight: 700; }
+        .bulk-sep { width: 1px; height: 20px; background: rgba(255,255,255,.25); }
+        .btn-bulk { border: 1.5px solid rgba(255,255,255,.35); background: transparent; color: #fff; border-radius: var(--radius-sm); font-weight: 600; font-size: .8rem; padding: .38rem .9rem; display: inline-flex; align-items: center; gap: .35rem; cursor: pointer; transition: background .2s; }
+        .btn-bulk:hover { background: rgba(255,255,255,.15); }
+        .btn-bulk-close { margin-left: auto; background: none; border: none; color: rgba(255,255,255,.7); font-size: 1.1rem; cursor: pointer; padding: .2rem; }
+        .bulk-est-sel { border: 1.5px solid rgba(255,255,255,.35); background: rgba(255,255,255,.1); color: #fff; border-radius: var(--radius-sm); font-size: .8rem; font-family: inherit; padding: .35rem .7rem; cursor: pointer; outline: none; }
+        .bulk-est-sel option { color: var(--text); background: #fff; }
+
+        /* ── MODAL CUSTOM ── */
+        .modal-siarha { display: none; position: fixed; inset: 0; z-index: 2000; align-items: center; justify-content: center; padding: 1rem; background: rgba(0,0,0,.45); }
+        .modal-siarha.open { display: flex; }
+        .modal-box { background: #fff; border-radius: var(--radius-card); box-shadow: 0 24px 64px rgba(80,16,19,.25); max-width: 440px; width: 100%; overflow: hidden; animation: modalIn .25s ease; }
+        @keyframes modalIn { from { opacity: 0; transform: scale(.94) translateY(12px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .modal-box-head { padding: 1.2rem 1.4rem 1rem; display: flex; align-items: center; gap: .75rem; }
+        .modal-icon { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+        .modal-box-head h5 { font-size: 1rem; font-weight: 800; margin: 0; color: var(--text); }
+        .modal-box-body { padding: 0 1.4rem 1.2rem; font-size: .87rem; color: var(--muted); line-height: 1.6; }
+        .modal-info-strip { background: var(--bg); border-radius: var(--radius-sm); padding: .75rem 1rem; margin-top: .75rem; display: flex; align-items: center; gap: .6rem; font-size: .82rem; }
+        .modal-info-strip i { color: var(--dorado); font-size: 1rem; flex-shrink: 0; }
+        .modal-box-foot { padding: .9rem 1.4rem; border-top: 1px solid var(--border); display: flex; gap: .6rem; justify-content: flex-end; }
+        .btn-modal-cancel { background: #fff; color: var(--muted); border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-weight: 600; font-size: .85rem; padding: .5rem 1.1rem; cursor: pointer; transition: border-color .2s, color .2s; }
+        .btn-modal-cancel:hover { border-color: var(--primario); color: var(--primario); }
+        .btn-modal-confirm { color: #fff; border: none; border-radius: var(--radius-sm); font-weight: 700; font-size: .85rem; padding: .5rem 1.2rem; cursor: pointer; transition: opacity .2s; }
+        .btn-modal-confirm:hover { opacity: .88; }
 </style>
 </head>
 <body>
@@ -216,6 +249,7 @@
         <div class="d-flex align-items-center gap-2 flex-wrap">
             <button class="btn-outline-custom" id="btnExportar" onclick="exportarExcel()"><i class="bi bi-file-earmark-excel"></i> Exportar</button>
             <a href="ADMIN_alta-alumno.html" class="btn-primary-custom" data-visible="superadmin,admin_area"><i class="bi bi-person-plus-fill"></i> Nuevo alumno</a>
+            <a href="ADMIN_alta-masiva.html" class="btn-outline-custom" data-visible="superadmin,admin_area" style="border-color:var(--dorado);color:#7a5a00;" title="Dar de alta varios alumnos a la vez desde una tabla o Excel"><i class="bi bi-file-earmark-spreadsheet-fill" style="color:var(--dorado)"></i> Alta masiva</a>
         </div>
     </div>
 
@@ -302,6 +336,7 @@
             <table>
                 <thead>
                     <tr>
+                        <th class="th-cb"><input type="checkbox" class="cb-al" id="cbAll" onchange="toggleTodos(this)" title="Seleccionar todos"></th>
                         <th>Alumno</th>
                         <th>No. Cuenta</th>
                         <th>Programa</th>
@@ -313,9 +348,25 @@
                     </tr>
                 </thead>
                 <tbody id="tablaAlumnos">
-                    <tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--muted);"><i class="bi bi-arrow-clockwise"></i> Cargando alumnos…</td></tr>
+                    <tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--muted);"><i class="bi bi-arrow-clockwise"></i> Cargando alumnos…</td></tr>
                 </tbody>
             </table>
+        </div>
+
+        <!-- BARRA ACCIONES MASIVAS -->
+        <div class="bulk-bar" id="bulkBar">
+            <span class="bulk-count" id="bulkCount">0 seleccionados</span>
+            <div class="bulk-sep"></div>
+            <span style="font-size:.8rem;opacity:.85;">Cambiar estado a:</span>
+            <select class="bulk-est-sel" id="bulkEstado">
+                <option value="activo">Activo</option>
+                <option value="revision">En revisión</option>
+                <option value="pendiente">Pendiente</option>
+                <option value="finalizado">Finalizado</option>
+                <option value="baja">Baja</option>
+            </select>
+            <button class="btn-bulk" onclick="abrirModalBulkEstado()"><i class="bi bi-check-circle-fill"></i> Aplicar estado</button>
+            <button class="btn-bulk-close" onclick="deseleccionarTodos()" title="Cancelar selección"><i class="bi bi-x-lg"></i></button>
         </div>
 
         <!-- PAGINACIÓN -->
@@ -328,6 +379,29 @@
 </main>
 
 <footer class="footer-custom">© 2026 SIARHA · Uso exclusivo institucional · UAEH</footer>
+
+<!-- MODAL BULK ESTADO -->
+<div class="modal-siarha" id="modalBulkEstado" onclick="if(event.target===this)cerrarModalBulkEstado()">
+    <div class="modal-box">
+        <div class="modal-box-head">
+            <div class="modal-icon" id="bulkEstadoIcon" style="background:#fdf6e3;color:#7a5a00;"><i class="bi bi-pencil-fill"></i></div>
+            <h5 id="bulkEstadoTitulo">Cambiar estado</h5>
+        </div>
+        <div class="modal-box-body">
+            <p id="bulkEstadoDesc">¿Confirmas el cambio de estado?</p>
+            <div class="modal-info-strip">
+                <i class="bi bi-info-circle-fill"></i>
+                <span id="bulkEstadoInfo">Este cambio afecta a los alumnos seleccionados.</span>
+            </div>
+        </div>
+        <div class="modal-box-foot">
+            <button class="btn-modal-cancel" onclick="cerrarModalBulkEstado()">Cancelar</button>
+            <button class="btn-modal-confirm" id="btnConfirmarBulkEstado" onclick="ejecutarBulkEstado()" style="background:var(--primario);">
+                <i class="bi bi-check-circle-fill me-1"></i> Sí, cambiar estado
+            </button>
+        </div>
+    </div>
+</div>
 
 <!-- ══ PANEL NOTIFICACIONES ══ -->
 <div class="notif-overlay" id="notifOverlay" onclick="cerrarNotif()"></div>
@@ -383,10 +457,12 @@
         btn.classList.add('active');
         document.querySelectorAll('.notif-item').forEach(i => { i.style.display = (tipo === 'todas' || i.dataset.tipo === tipo) ? '' : 'none'; });
     }
-    function showToast(msg) {
+    function showToast(msg, ok = true) {
         let t = document.getElementById('_toast');
-        if (!t) { t = document.createElement('div'); t.id = '_toast'; t.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;background:#501013;color:#fff;border-radius:10px;padding:.9rem 1.3rem;display:flex;align-items:center;gap:.6rem;font-size:.85rem;font-weight:600;box-shadow:0 8px 24px rgba(80,16,19,.25);transition:transform .35s ease,opacity .35s ease;z-index:9999;transform:translateY(80px);opacity:0;'; document.body.appendChild(t); }
-        t.innerHTML = '<i class="bi bi-check-circle-fill" style="font-size:1.1rem;"></i>' + msg;
+        if (!t) { t = document.createElement('div'); t.id = '_toast'; t.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;border-radius:10px;padding:.9rem 1.3rem;display:flex;align-items:center;gap:.6rem;font-size:.85rem;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:transform .35s,opacity .35s;z-index:9999;transform:translateY(80px);opacity:0;'; document.body.appendChild(t); }
+        t.style.background = ok ? '#1f6b3a' : '#9b1c1c';
+        t.style.color = '#fff';
+        t.innerHTML = `<i class="bi bi-${ok ? 'check-circle-fill' : 'exclamation-triangle-fill'}" style="font-size:1.1rem;"></i>` + msg;
         t.style.transform = 'translateY(0)'; t.style.opacity = '1';
         setTimeout(() => { t.style.transform = 'translateY(80px)'; t.style.opacity = '0'; }, 3200);
     }
@@ -416,41 +492,34 @@ const INSTITUTOS_CAT = {
 
 const _adminData = JSON.parse(localStorage.getItem('admin_data') || '{}');
 
-// Estado de filtros y paginación
-let paginaActual = 1;
-const POR_PAGINA = 200; // carga masiva para filtrado DOM
-let institutoFiltro = ''; // nombre completo del instituto activo
+// Estado de paginación
+let paginaActual   = 1;
+const POR_PAGINA   = 40; // 40 alumnos por página (server-side real)
+let institutoFiltro = '';
 
-// ── FILTRO POR INSTITUTO (chips) — filtra filas en DOM ──────
+// ── FILTRO POR INSTITUTO (chips) ─────────────────────────────
 function filtrarInstituto(nombreInstituto, chip) {
     institutoFiltro = nombreInstituto;
     document.querySelectorAll('.inst-chip').forEach(c => c.classList.remove('active'));
     chip.classList.add('active');
-    filtrarDOM(); // no recarga del backend, solo oculta/muestra filas
+    cargarAlumnos(1); // recarga desde el servidor con el filtro
 }
 
-// Aplica todos los filtros visuales sobre las filas ya cargadas en el DOM
+// filtrarDOM: solo ajusta visibilidad por texto/prog/estado/avance sobre las filas cargadas
 function filtrarDOM() {
-    const buscar  = (document.getElementById('buscarAlumno')?.value || '').toLowerCase().trim();
-    const prog    = document.getElementById('filtroProgramaAl')?.value || '';
-    const estado  = document.getElementById('filtroEstadoAl')?.value || '';
-    const avance  = document.getElementById('filtroAvanceAl')?.value || '';
+    const buscar = (document.getElementById('buscarAlumno')?.value || '').toLowerCase().trim();
+    const prog   = document.getElementById('filtroProgramaAl')?.value || '';
+    const estado = document.getElementById('filtroEstadoAl')?.value  || '';
+    const avance = document.getElementById('filtroAvanceAl')?.value  || '';
 
     let visibles = 0;
     document.querySelectorAll('#tablaAlumnos tr[data-instituto]').forEach(tr => {
         let ok = true;
-        // Filtro instituto (chip)
-        if (institutoFiltro && tr.dataset.instituto !== institutoFiltro) ok = false;
-        // Filtro programa
-        if (prog && tr.dataset.programa !== prog) ok = false;
-        // Filtro estado
-        if (estado && tr.dataset.estado !== estado) ok = false;
-        // Filtro búsqueda texto (nombre + no. cuenta)
+        if (prog   && tr.dataset.programa !== prog)   ok = false;
+        if (estado && tr.dataset.estado   !== estado) ok = false;
         if (buscar) {
-            const texto = tr.textContent.toLowerCase();
-            if (!texto.includes(buscar)) ok = false;
+            if (!tr.textContent.toLowerCase().includes(buscar)) ok = false;
         }
-        // Filtro avance
         if (avance) {
             const pctEl = tr.querySelector('.avance-pct');
             const pct = pctEl ? parseInt(pctEl.textContent) : 0;
@@ -461,30 +530,28 @@ function filtrarDOM() {
         if (ok) visibles++;
     });
 
-    // Actualizar info de resultados visibles
     const total = document.querySelectorAll('#tablaAlumnos tr[data-instituto]').length;
     const infoEl = document.getElementById('pagInfo');
     if (infoEl) {
         infoEl.textContent = visibles === total
             ? `Mostrando ${total} alumnos`
-            : `Mostrando ${visibles} de ${total} alumnos (filtrado)`;
+            : `${visibles} de ${total} alumnos (filtrado)`;
     }
+    // Restablece checkboxes tras filtrar
+    actualizarBulk();
 }
 
-// ── APLICAR FILTROS (texto/programa/estado/avance) — solo DOM ──
-function aplicarFiltros() {
-    filtrarDOM();
-}
+function aplicarFiltros() { cargarAlumnos(1); }
 
 function limpiarFiltros() {
-    document.getElementById('buscarAlumno').value = '';
-    document.getElementById('filtroProgramaAl').value = '';
-    document.getElementById('filtroEstadoAl').value = '';
-    document.getElementById('filtroAvanceAl').value = '';
+    document.getElementById('buscarAlumno').value      = '';
+    document.getElementById('filtroProgramaAl').value  = '';
+    document.getElementById('filtroEstadoAl').value    = '';
+    document.getElementById('filtroAvanceAl').value    = '';
     institutoFiltro = '';
     document.querySelectorAll('.inst-chip').forEach(c => c.classList.remove('active'));
     document.querySelector('.inst-chip')?.classList.add('active');
-    filtrarDOM(); // mostrar todo sin recargar
+    cargarAlumnos(1);
 }
 
 // ── RENDERIZAR FILA DE ALUMNO ────────────────────────────────
@@ -497,12 +564,8 @@ function renderFila(a) {
     const hrs     = a.horas_realizadas ?? 0;
     const hrsMax  = a.programa === 'pp' ? 240 : 480;
     const prog    = a.programa === 'pp'
-        ? `<span class="badge-pp" style="display:inline-flex;align-items:center;gap:.3rem;white-space:nowrap;">
-               <i class="bi bi-briefcase-fill" style="font-size:.65rem;"></i>Prácticas Profesionales
-           </span>`
-        : `<span class="badge-ss" style="display:inline-flex;align-items:center;gap:.3rem;white-space:nowrap;">
-               <i class="bi bi-journal-check" style="font-size:.65rem;"></i>Servicio Social
-           </span>`;
+        ? `<span class="badge-pp" style="display:inline-flex;align-items:center;gap:.3rem;white-space:nowrap;"><i class="bi bi-briefcase-fill" style="font-size:.65rem;"></i>Prácticas Profesionales</span>`
+        : `<span class="badge-ss" style="display:inline-flex;align-items:center;gap:.3rem;white-space:nowrap;"><i class="bi bi-journal-check" style="font-size:.65rem;"></i>Servicio Social</span>`;
     const estado  = a.estado || 'activo';
     const badgeEstado = {
         activo:     '<span class="badge-activo">Activo</span>',
@@ -512,7 +575,8 @@ function renderFila(a) {
         baja:       '<span class="badge-baja">Baja</span>',
     }[estado] || `<span class="badge-inactivo">${estado}</span>`;
 
-    return `<tr data-instituto="${a.nombre_instituto || ''}" data-programa="${a.programa || ''}" data-estado="${estado}">
+    return `<tr data-instituto="${a.nombre_instituto || ''}" data-programa="${a.programa || ''}" data-estado="${estado}" data-cuenta="${a.no_cuenta}">
+        <td class="td-cb" onclick="event.stopPropagation()"><input type="checkbox" class="cb-al cb-row" data-cuenta="${a.no_cuenta}" onchange="actualizarBulk()"></td>
         <td>
             <div style="font-weight:700;font-size:.86rem;">${nombre}</div>
             <div style="font-size:.72rem;color:var(--muted);">${carrera || '—'}</div>
@@ -529,16 +593,16 @@ function renderFila(a) {
         </td>
         <td>${badgeEstado}</td>
         <td style="display:flex;gap:.4rem;">
-                <a href="ADMIN_bitacora-alumno.html?no_cuenta=${a.no_cuenta}" class="btn-outline-custom" title="Ver expediente"><i class="bi bi-journal-text"></i> Ver</a>
-            </td>
+            <a href="ADMIN_bitacora-alumno.html?no_cuenta=${a.no_cuenta}" class="btn-outline-custom" title="Ver expediente"><i class="bi bi-journal-text"></i> Ver</a>
+        </td>
     </tr>`;
 }
 
-// ── RENDERIZAR PAGINACIÓN ────────────────────────────────────
+// ── PAGINACIÓN ───────────────────────────────────────────────
 function renderPaginacion(total, pagina, porPagina) {
     const totalPags = Math.ceil(total / porPagina);
     const wrap = document.getElementById('pagBtns');
-    if (!wrap) return;
+    if (!wrap || totalPags <= 1) { if(wrap) wrap.innerHTML = ''; return; }
 
     let btns = '';
     btns += `<button class="pag-btn" ${pagina <= 1 ? 'disabled' : ''} onclick="cargarAlumnos(${pagina-1})"><i class="bi bi-chevron-left"></i></button>`;
@@ -553,76 +617,167 @@ function renderPaginacion(total, pagina, porPagina) {
     wrap.innerHTML = btns;
 }
 
-// ── CARGA DE ALUMNOS DESDE API ───────────────────────────────
+// ── CARGA DE ALUMNOS DESDE API (server-side paginación 40/página) ──
 async function cargarAlumnos(pagina = 1) {
     paginaActual = pagina;
     const tbody = document.getElementById('tablaAlumnos');
-    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--muted);"><i class="bi bi-arrow-clockwise"></i> Cargando…</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--muted);"><i class="bi bi-arrow-clockwise"></i> Cargando…</td></tr>`;
+    deseleccionarTodos();
 
-    const buscar   = document.getElementById('buscarAlumno')?.value.trim() || '';
-    const programa = document.getElementById('filtroProgramaAl')?.value || '';
-    const estado   = document.getElementById('filtroEstadoAl')?.value || '';
-    const avance   = document.getElementById('filtroAvanceAl')?.value || '';
+    const buscar   = document.getElementById('buscarAlumno')?.value.trim()    || '';
+    const programa = document.getElementById('filtroProgramaAl')?.value        || '';
+    const estado   = document.getElementById('filtroEstadoAl')?.value          || '';
+    const avance   = document.getElementById('filtroAvanceAl')?.value          || '';
 
-    // Construir query params
-    const params = new URLSearchParams({por_pagina: POR_PAGINA, pagina});
-    if (buscar)        params.set('buscar',    buscar);
-    if (programa)      params.set('programa',  programa);
-    if (estado)        params.set('estado',    estado);
-    if (avance)        params.set('avance',    avance);
-    if (institutoFiltro) params.set('instituto', institutoFiltro);
-
-    // Si el admin es admin_area, el backend ya filtra por sus institutos
-    // Si no, enviamos el filtro de instituto que eligió el superadmin
+    const params = new URLSearchParams({ por_pagina: POR_PAGINA, pagina });
+    if (buscar)          params.set('buscar',     buscar);
+    if (programa)        params.set('programa',   programa);
+    if (estado)          params.set('estado',     estado);
+    if (avance)          params.set('avance',     avance);
+    if (institutoFiltro) params.set('instituto',  institutoFiltro);
 
     try {
         const res  = await apiFetch(`/api/alumnos?${params.toString()}`);
         const data = await res.json();
         if (!res.ok) throw new Error(data.message || 'Error al cargar alumnos');
 
-        const alumnos = data.alumnos || [];
-        const total   = data.total   || 0;
-        const desde   = (pagina-1)*POR_PAGINA + 1;
-        const hasta   = Math.min(pagina*POR_PAGINA, total);
+        const alumnos    = data.alumnos || [];
+        const total      = data.total   || 0;
+        const totalPags  = data.total_paginas || Math.ceil(total / POR_PAGINA);
+        const desde      = (pagina - 1) * POR_PAGINA + 1;
+        const hasta      = Math.min(pagina * POR_PAGINA, total);
 
         // Resumen
         document.getElementById('resTotal').textContent = total;
-        document.getElementById('resSS').textContent    = data.total_ss   ?? alumnos.filter(a=>a.programa==='ss').length;
-        document.getElementById('resPP').textContent    = data.total_pp   ?? alumnos.filter(a=>a.programa==='pp').length;
-        document.getElementById('resFin').textContent   = data.total_fin  ?? '—';
-        document.getElementById('resPend').textContent  = data.total_pend ?? '—';
+        document.getElementById('resSS').textContent   = data.total_ss   ?? alumnos.filter(a => a.programa === 'ss').length;
+        document.getElementById('resPP').textContent   = data.total_pp   ?? alumnos.filter(a => a.programa === 'pp').length;
+        document.getElementById('resFin').textContent  = data.total_fin  ?? '—';
+        document.getElementById('resPend').textContent = data.total_pend ?? '—';
 
         // Tabla
         if (alumnos.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:2.5rem;color:var(--muted);"><i class="bi bi-people" style="font-size:1.5rem;display:block;margin-bottom:.5rem;"></i>No se encontraron alumnos con los filtros seleccionados.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:2.5rem;color:var(--muted);"><i class="bi bi-people" style="font-size:1.5rem;display:block;margin-bottom:.5rem;"></i>No se encontraron alumnos con los filtros seleccionados.</td></tr>`;
         } else {
             tbody.innerHTML = alumnos.map(renderFila).join('');
         }
 
-        // Info inicial
-        document.getElementById('pagInfo').textContent =
-            total === 0 ? 'Sin resultados' : `Mostrando ${total} alumnos`;
-        // Ocultar paginación (filtrado DOM, no server-side)
-        document.getElementById('pagBtns').innerHTML = '';
-        // Aplicar filtros DOM por si hay chips activos
-        filtrarDOM();
+        // Paginación e info
+        const infoEl = document.getElementById('pagInfo');
+        if (infoEl) {
+            infoEl.textContent = total === 0
+                ? 'Sin resultados'
+                : `Mostrando ${desde}–${hasta} de ${total} alumnos`;
+        }
+        renderPaginacion(total, pagina, POR_PAGINA);
 
     } catch(e) {
         console.error('Error cargando alumnos:', e);
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:2rem;color:#991b1b;"><i class="bi bi-exclamation-triangle me-2"></i>Error al cargar alumnos. Intenta de nuevo.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:2rem;color:#991b1b;"><i class="bi bi-exclamation-triangle me-2"></i>Error al cargar alumnos. Intenta de nuevo.</td></tr>`;
     }
 }
 
 // ── EXPORTAR ─────────────────────────────────────────────────
-function exportarExcel() {
-    showToast('Preparando exportación…');
-    // TODO: llamar al endpoint de exportación del backend
-    // window.open('/api/alumnos/exportar?...');
+function exportarExcel() { showToast('Preparando exportación…'); }
+
+// ── SELECCIÓN MÚLTIPLE ───────────────────────────────────────
+function actualizarBulk() {
+    const cbs   = document.querySelectorAll('.cb-row:checked');
+    const total = document.querySelectorAll('.cb-row').length;
+    const count = cbs.length;
+
+    document.querySelectorAll('.cb-row').forEach(cb => {
+        cb.closest('tr').classList.toggle('selected-row', cb.checked);
+    });
+
+    const cbAll = document.getElementById('cbAll');
+    if (cbAll) {
+        cbAll.checked       = count > 0 && count === total;
+        cbAll.indeterminate = count > 0 && count < total;
+    }
+
+    const bar = document.getElementById('bulkBar');
+    if (bar) bar.classList.toggle('visible', count > 0);
+    const cnt = document.getElementById('bulkCount');
+    if (cnt) cnt.textContent = count === 1 ? '1 alumno seleccionado' : count + ' alumnos seleccionados';
+}
+
+function toggleTodos(cb) {
+    document.querySelectorAll('.cb-row').forEach(c => { c.checked = cb.checked; });
+    actualizarBulk();
+}
+
+function deseleccionarTodos() {
+    document.querySelectorAll('.cb-row').forEach(c => { c.checked = false; });
+    const cbAll = document.getElementById('cbAll');
+    if (cbAll) { cbAll.checked = false; cbAll.indeterminate = false; }
+    actualizarBulk();
+}
+
+function getCuentasSeleccionadas() {
+    return [...document.querySelectorAll('.cb-row:checked')].map(c => c.dataset.cuenta);
+}
+
+// ── MODAL BULK ESTADO ────────────────────────────────────────
+const ESTADO_LABELS = { activo:'Activo', revision:'En revisión', pendiente:'Pendiente', finalizado:'Finalizado', baja:'Baja' };
+const ESTADO_COLORS = {
+    activo:     { bg:'#fdf6e3', color:'#7a5a00', btn:'#C9A24D' },
+    revision:   { bg:'#f7eaea', color:'#501013', btn:'#501013' },
+    pendiente:  { bg:'#fff3cd', color:'#856404', btn:'#856404' },
+    finalizado: { bg:'#d1fae5', color:'#065f46', btn:'#065f46' },
+    baja:       { bg:'#fee2e2', color:'#991b1b', btn:'#991b1b' },
+};
+
+function abrirModalBulkEstado() {
+    const cuentas = getCuentasSeleccionadas();
+    if (!cuentas.length) return;
+    const estado = document.getElementById('bulkEstado').value;
+    const label  = ESTADO_LABELS[estado] || estado;
+    const n      = cuentas.length;
+    const pal    = ESTADO_COLORS[estado] || { bg:'#f3f4f6', color:'#374151', btn:'#374151' };
+
+    document.getElementById('bulkEstadoTitulo').textContent = `Cambiar estado a «${label}»`;
+    document.getElementById('bulkEstadoDesc').innerHTML =
+        `¿Confirmas cambiar <strong>${n} alumno${n > 1 ? 's' : ''}</strong> al estado <strong>«${label}»</strong>?`;
+    document.getElementById('bulkEstadoInfo').textContent =
+        `Este cambio afecta a ${n} alumno${n > 1 ? 's' : ''} seleccionado${n > 1 ? 's' : ''}.`;
+
+    const iconEl = document.getElementById('bulkEstadoIcon');
+    if (iconEl) { iconEl.style.background = pal.bg; iconEl.style.color = pal.color; }
+    const btnEl  = document.getElementById('btnConfirmarBulkEstado');
+    if (btnEl)   { btnEl.style.background = pal.btn; }
+
+    document.getElementById('modalBulkEstado').classList.add('open');
+}
+
+function cerrarModalBulkEstado() {
+    document.getElementById('modalBulkEstado').classList.remove('open');
+}
+
+async function ejecutarBulkEstado() {
+    cerrarModalBulkEstado();
+    const cuentas = getCuentasSeleccionadas();
+    const estado  = document.getElementById('bulkEstado').value;
+    if (!cuentas.length) return;
+
+    let ok = 0, err = 0;
+    for (const cuenta of cuentas) {
+        try {
+            const res = await apiFetch(`/api/alumnos/${cuenta}/estado`, {
+                method: 'PATCH',
+                body: JSON.stringify({ estado })
+            });
+            if (res.ok) ok++; else err++;
+        } catch(e) { err++; }
+    }
+
+    if (ok)  showToast(ok + ' alumno' + (ok > 1 ? 's' : '') + ' actualizados a «' + (ESTADO_LABELS[estado] || estado) + '».', true);
+    if (err) showToast(err + ' alumno' + (err > 1 ? 's' : '') + ' no pudieron actualizarse.', false);
+    deseleccionarTodos();
+    cargarAlumnos(paginaActual);
 }
 
 // ── INIT ─────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-    // Subtítulo con nombre del admin si es admin_area
     if (_adminData.rol === 'admin_area' && _adminData.institutos?.length) {
         const institutos = _adminData.institutos.map(i => i.nombre_instituto || i).join(' · ');
         document.getElementById('subtituloAlumnos').textContent = institutos + ' · Periodo Enero – Junio 2026';
@@ -636,31 +791,30 @@ async function verificarPeriodoActivo() {
         const res  = await apiFetch('/api/periodos/activos');
         const data = await res.json();
         const periodos = data.periodos || [];
-        const btnNuevo = document.querySelector('[href="ADMIN_alta-alumno.html"], a[href*="alta-alumno"]');
         const admin = getAdmin();
-        // Solo mostrar advertencia si el admin puede dar de alta (no reportes)
         if (admin && admin.rol === 'admin_reportes') return;
 
         if (periodos.length === 0) {
-            // Deshabilitar botón nuevo alumno
+            // Bloquear botón Alta individual
             document.querySelectorAll('a[href="ADMIN_alta-alumno.html"], .btn-primary-custom[href*="alta"]').forEach(btn => {
                 btn.style.opacity = '.45';
                 btn.style.pointerEvents = 'none';
-                btn.title = 'No hay periodo activo';
+                btn.style.cursor = 'not-allowed';
+                btn.title = 'No hay periodo activo. Crea uno en la sección Periodos.';
             });
-            // Mostrar aviso
+            // Bloquear botón Alta masiva
+            document.querySelectorAll('a[href="ADMIN_alta-masiva.html"]').forEach(btn => {
+                btn.style.opacity = '.45';
+                btn.style.pointerEvents = 'none';
+                btn.style.cursor = 'not-allowed';
+                btn.style.filter = 'grayscale(1)';
+                btn.title = 'No hay periodo activo. Crea uno en la sección Periodos.';
+            });
             const aviso = document.createElement('div');
             aviso.style.cssText = 'background:#fef3c7;border:1px solid #f59e0b;border-radius:10px;padding:.65rem 1rem;font-size:.82rem;font-weight:600;color:#92400e;display:flex;align-items:center;gap:.5rem;margin-bottom:1rem;';
             aviso.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i> Sin periodo activo. No es posible dar de alta nuevos alumnos hasta que el superadministrador cree un periodo.';
             const main = document.querySelector('main');
             if (main) main.insertBefore(aviso, main.firstChild);
-        } else {
-            // Mostrar periodo actual en el subtítulo
-            const sub = document.querySelector('.subtitle-institutos, .page-header p');
-            if (sub && !sub.textContent.includes('Periodo')) {
-                const nombres = periodos.map(p => p.nombre_periodo).join(' · ');
-                sub.textContent = sub.textContent + ' · ' + nombres;
-            }
         }
     } catch(e) { /* silencioso */ }
 }

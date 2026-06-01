@@ -386,13 +386,13 @@
             Detalle del registro
         </h4>
         <p style="font-size:.8rem;color:var(--muted);margin-top:.25rem;">
-            Registro del <strong>lunes 04 de febrero de 2026</strong> · ID #REG-20260204
+            <span id="tituloFecha">Cargando…</span>
         </p>
     </div>
 
     <!-- BANNER ESTADO -->
     <!-- Cambia la clase entre: pendiente / aprobado / rechazado / revision -->
-    <div class="status-banner rechazado">
+    <div class="status-banner pendiente" id="statusBanner">
         <div class="status-icon rechazado">
             <i class="bi bi-x-circle-fill"></i>
         </div>
@@ -407,29 +407,29 @@
     <div class="section-card">
         <div class="section-header">
             <span class="title"><i class="bi bi-calendar-event"></i> Datos de la jornada</span>
-            <span class="badge-rechazado">Rechazado</span>
+            <span id="badgeEstado" class="badge-pendiente">—</span>
         </div>
 
         <div class="dato-grid">
             <div class="dato-item">
                 <span class="dato-label">Fecha</span>
-                <span class="dato-value">04 feb 2026</span>
+                <span class="dato-value" id="dFecha">—</span>
             </div>
             <div class="dato-item">
                 <span class="dato-label">Día</span>
-                <span class="dato-value">Jueves</span>
+                <span class="dato-value" id="dDia">—</span>
             </div>
             <div class="dato-item">
                 <span class="dato-label">Hora de entrada</span>
-                <span class="dato-value">08:00</span>
+                <span class="dato-value" id="dEntrada">—</span>
             </div>
             <div class="dato-item">
                 <span class="dato-label">Hora de salida</span>
-                <span class="dato-value">12:00</span>
+                <span class="dato-value" id="dSalida">—</span>
             </div>
             <div class="dato-item">
                 <span class="dato-label">Total de horas</span>
-                <span class="dato-value highlight">04:00 hrs</span>
+                <span class="dato-value highlight" id="dTotal">—</span>
             </div>
             <div class="dato-item">
                 <span class="dato-label">Enviado el</span>
@@ -440,13 +440,13 @@
         <div style="padding: 0 1.4rem 1.4rem;">
             <div class="dato-label" style="margin-bottom:.5rem;">Descripción de actividades</div>
             <div class="actividad-box">
-                Organización y clasificación del archivo físico correspondiente al área de recursos humanos del periodo 2024–2025. Se catalogaron expedientes por orden alfabético y se etiquetaron con código de colores según el tipo de documento.
+                <span id="dActividad">—</span>
             </div>
         </div>
     </div>
 
     <!-- OBSERVACIONES DEL UR -->
-    <div class="section-card">
+    <div class="section-card" id="obsWrap">
         <div class="section-header">
             <span class="title"><i class="bi bi-chat-left-text-fill"></i> Observaciones de la Unidad Receptora</span>
             <span style="font-size:.76rem;color:var(--muted);">Dr. Martínez · 06 feb 2026</span>
@@ -457,35 +457,8 @@
                     <i class="bi bi-exclamation-triangle-fill"></i>
                     Motivo del rechazo
                 </div>
-                El registro no coincide con el horario establecido en tu carta de presentación. Según nuestros registros internos, ese día no hubo actividades por ser día de mantenimiento. Por favor corrige la fecha o adjunta una evidencia que respalde tu asistencia.
+                <span id="obsMotivoTexto">—</span>
             </div>
-        </div>
-    </div>
-
-    <!-- EVIDENCIA -->
-    <div class="section-card">
-        <div class="section-header">
-            <span class="title"><i class="bi bi-paperclip"></i> Evidencia adjunta</span>
-        </div>
-        <div class="section-body">
-            <!-- Con archivo -->
-            <div class="evidencia-card">
-                <div class="evidencia-icon"><i class="bi bi-file-earmark-pdf-fill"></i></div>
-                <div>
-                    <div class="evidencia-name">evidencia_archivo_feb04.pdf</div>
-                    <div class="evidencia-size">348 KB · Subido el 05 feb 2026</div>
-                </div>
-                <a href="#" class="btn-download">
-                    <i class="bi bi-download"></i> Descargar
-                </a>
-            </div>
-
-            <!-- Sin archivo — descomenta si no hay evidencia
-            <div style="text-align:center;padding:1.5rem;color:var(--muted);font-size:.85rem;">
-                <i class="bi bi-paperclip" style="font-size:1.5rem;display:block;margin-bottom:.5rem;"></i>
-                Sin evidencia adjunta
-            </div>
-            -->
         </div>
     </div>
 
@@ -524,48 +497,38 @@
         <div class="section-header">
             <span class="title"><i class="bi bi-tools"></i> Acciones disponibles</span>
         </div>
-        <div class="section-body">
-            <p style="font-size:.83rem;color:var(--muted);margin-bottom:1rem;">
-                Este registro fue <strong style="color:#991b1b;">rechazado</strong>. Puedes editarlo para corregir los datos y volver a enviarlo, o eliminarlo si fue un error.
-            </p>
-            <div class="d-flex gap-3 flex-wrap">
-                <a href="ALU_registro-horas.html" class="btn-editar">
-                    <i class="bi bi-pencil-fill"></i> Editar y reenviar
-                </a>
-                <button class="btn-eliminar" onclick="confirmarEliminar()">
-                    <i class="bi bi-trash-fill"></i> Eliminar registro
-                </button>
-            </div>
-        </div>
+        <div class="section-body" id="accionesWrap"></div>
     </div>
 
 </main>
 
 <!-- MODAL CONFIRMAR ELIMINAR -->
-<div class="modal fade" id="modalEliminar" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius:var(--radius-card);border:none;overflow:hidden;">
-            <div class="modal-header" style="background:var(--primario);border:none;padding:1rem 1.4rem;">
-                <h6 class="modal-title text-white fw-bold" style="margin:0;">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i>Confirmar eliminación
-                </h6>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+<div style="display:none;align-items:center;justify-content:center;
+     padding:1rem;background:rgba(0,0,0,.48);" id="modalEliminar"
+     class="modal-siarha" onclick="if(event.target===this)cerrarModalEliminar()">
+    <div style="background:#fff;border-radius:12px;max-width:400px;width:100%;overflow:hidden;
+                box-shadow:0 24px 64px rgba(80,16,19,.25);animation:modalIn .25s ease;">
+        <div style="padding:1.2rem 1.4rem 1rem;display:flex;align-items:center;gap:.75rem;">
+            <div style="width:48px;height:48px;border-radius:50%;background:#fee2e2;color:#991b1b;
+                        display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;">
+                <i class="bi bi-trash3-fill"></i>
             </div>
-            <div class="modal-body" style="padding:1.4rem;">
-                <p style="font-size:.88rem;color:var(--text);margin:0;">
-                    ¿Estás seguro de que deseas eliminar el registro del <strong>04 de febrero de 2026</strong>?
-                    Esta acción <strong>no se puede deshacer</strong>.
-                </p>
-            </div>
-            <div class="modal-footer" style="border-color:var(--border);padding:.9rem 1.4rem;gap:.6rem;">
-                <button type="button" class="btn-editar" data-bs-dismiss="modal"
-                        style="background:#fff;color:var(--muted);border-color:var(--border);">
-                    Cancelar
-                </button>
-                <button type="button" class="btn-eliminar" onclick="ejecutarEliminar()">
-                    <i class="bi bi-trash-fill"></i> Sí, eliminar
-                </button>
-            </div>
+            <h5 style="font-size:1rem;font-weight:800;margin:0;">Eliminar registro</h5>
+        </div>
+        <div style="padding:0 1.4rem 1.2rem;font-size:.87rem;color:#6b7280;line-height:1.6;">
+            ¿Confirmas que deseas eliminar este registro? Esta acción <strong>no se puede deshacer</strong>.
+        </div>
+        <div style="padding:.9rem 1.4rem;border-top:1px solid #e5e7eb;display:flex;gap:.6rem;justify-content:flex-end;">
+            <button onclick="cerrarModalEliminar()"
+                style="background:#fff;color:#6b7280;border:1.5px solid #e5e7eb;border-radius:8px;
+                       font-weight:600;font-size:.85rem;padding:.5rem 1.1rem;cursor:pointer;">
+                Cancelar
+            </button>
+            <button onclick="ejecutarEliminar()"
+                style="background:#991b1b;color:#fff;border:none;border-radius:8px;
+                       font-weight:700;font-size:.85rem;padding:.5rem 1.2rem;cursor:pointer;">
+                <i class="bi bi-trash3-fill me-1"></i> Sí, eliminar
+            </button>
         </div>
     </div>
 </div>
@@ -580,19 +543,310 @@
 <script src="../assets/js/alu-guard.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+
+    // ─── Obtener id_registro de la URL ────────────────────────────
+    const _idRegistro = new URLSearchParams(window.location.search).get('id');
+
+    // ─── Helpers de formato ───────────────────────────────────────
+    const DIAS = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+
+    function fmtFecha(iso) {
+        if (!iso) return '—';
+        const d = new Date(iso);
+        return d.toLocaleDateString('es-MX', { day:'2-digit', month:'long', year:'numeric' });
+    }
+    function fmtHora(iso) {
+        if (!iso) return '—';
+        return new Date(iso).toLocaleTimeString('es-MX', { hour:'2-digit', minute:'2-digit', hour12: true });
+    }
+    function fmtHoras(h) {
+        if (!h && h !== 0) return '—';
+        const hh = Math.floor(parseFloat(h));
+        const mm = Math.round((parseFloat(h) - hh) * 60);
+        return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')} hrs`;
+    }
+    function fmtDia(iso) {
+        if (!iso) return '—';
+        return DIAS[new Date(iso).getDay()];
+    }
+    function fmtFechaHora(iso) {
+        if (!iso) return '—';
+        const d = new Date(iso);
+        return d.toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'})
+             + ' · '
+             + d.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit',hour12:true});
+    }
+
+    // ─── Configuraciones por estado ───────────────────────────────
+    const CFG = {
+        'Pendiente': {
+            bannerClass: 'pendiente', iconClass: 'pendiente',
+            icon: 'bi-hourglass-split',
+            label: 'Pendiente de revisión',
+            desc:  'Tu registro está en espera de ser revisado por tu Unidad Receptora.',
+            badgeClass: 'badge-pendiente',
+            tlDotClass: 'env', tlIcon: 'bi-send-fill', tlLabel: 'Registro enviado'
+        },
+        'Aprobado': {
+            bannerClass: 'aprobado', iconClass: 'aprobado',
+            icon: 'bi-check-circle-fill',
+            label: 'Aprobado por la Unidad Receptora',
+            desc:  'Las horas de este registro han sido sumadas a tu progreso.',
+            badgeClass: 'badge-aprobado',
+            tlDotClass: 'apr', tlIcon: 'bi-check-circle-fill', tlLabel: 'Aprobado por la Unidad Receptora'
+        },
+        'Rechazado': {
+            bannerClass: 'rechazado', iconClass: 'rechazado',
+            icon: 'bi-x-circle-fill',
+            label: 'Rechazado por la Unidad Receptora',
+            desc:  'Revisa las observaciones e intenta corregir o reenviar el registro.',
+            badgeClass: 'badge-rechazado',
+            tlDotClass: 'rech', tlIcon: 'bi-x-circle-fill', tlLabel: 'Rechazado por la Unidad Receptora'
+        }
+    };
+
+    // ─── Renderizar la página con los datos del registro ──────────
+    function renderRegistro(r) {
+        const estado  = r.estado_fin || 'Pendiente';
+        const cfg     = CFG[estado] || CFG['Pendiente'];
+
+        // Título subtítulo
+        document.getElementById('tituloFecha').textContent =
+            r.hora_entrada ? `Jornada del ${fmtFecha(r.hora_entrada)}` : 'Detalle del registro';
+
+        // ── Banner de estado ──
+        const banner = document.getElementById('statusBanner');
+        banner.className = `status-banner ${cfg.bannerClass}`;
+        banner.innerHTML = `
+            <div class="status-icon ${cfg.iconClass}">
+                <i class="bi ${cfg.icon}"></i>
+            </div>
+            <div>
+                <div class="status-label">Estado del registro</div>
+                <div class="status-value ${cfg.iconClass}">${cfg.label}</div>
+                <div class="status-desc">${cfg.desc}</div>
+            </div>`;
+
+        // ── Badge en section header ──
+        const badge = document.getElementById('badgeEstado');
+        badge.className = cfg.badgeClass;
+        badge.textContent = estado;
+
+        // ── Datos de la jornada ──
+        document.getElementById('dFecha').textContent   = fmtFecha(r.hora_entrada);
+        document.getElementById('dDia').textContent     = fmtDia(r.hora_entrada);
+        document.getElementById('dEntrada').textContent = fmtHora(r.hora_entrada);
+        document.getElementById('dSalida').textContent  = r.hora_salida ? fmtHora(r.hora_salida) : '—';
+        document.getElementById('dTotal').textContent   = fmtHoras(r.horas_trabajadas);
+
+        // Fecha de envío (usamos hora_entrada como referencia si no hay created_at)
+        const fechaEnvio = r.created_at || r.hora_entrada;
+        const elEnviado = document.querySelector('.dato-item:last-child .dato-value');
+        if (elEnviado) elEnviado.textContent = fmtFechaHora(fechaEnvio);
+
+        // ── Descripción de actividad ──
+        document.getElementById('dActividad').textContent = r.actividad_desc || 'Sin descripción registrada.';
+
+        // ── Observaciones / motivo de rechazo ──
+        const obsWrap = document.getElementById('obsWrap');
+        if (estado === 'Rechazado' && r.motivo_rechazo) {
+            obsWrap.style.display = '';
+            document.getElementById('obsMotivoTexto').textContent = r.motivo_rechazo;
+            const obsBox = obsWrap.querySelector('.obs-box');
+            obsBox.className = 'obs-box rechazado';
+            obsBox.querySelector('.obs-header').innerHTML =
+                '<i class="bi bi-exclamation-triangle-fill"></i> Motivo del rechazo';
+        } else if (estado === 'Aprobado') {
+            obsWrap.style.display = '';
+            const obsBox = obsWrap.querySelector('.obs-box');
+            obsBox.className = 'obs-box aprobado';
+            obsBox.querySelector('.obs-header').innerHTML =
+                '<i class="bi bi-check-circle-fill"></i> Observación de la Unidad Receptora';
+            document.getElementById('obsMotivoTexto').textContent =
+                r.motivo_rechazo || 'Registro aprobado sin observaciones adicionales.';
+        } else {
+            obsWrap.style.display = 'none';
+        }
+
+        // ── Historial / timeline ──
+        renderTimeline(r, estado, cfg);
+
+        // ── Acciones disponibles ──
+        renderAcciones(r, estado);
+    }
+
+    function renderTimeline(r, estado, cfg) {
+        const tl = document.querySelector('.timeline');
+        if (!tl) return;
+
+        const fechaEnvio = r.created_at || r.hora_entrada;
+
+        let items = `
+            <div class="tl-item">
+                <div class="tl-dot env"><i class="bi bi-send-fill"></i></div>
+                <div class="tl-body">
+                    <div class="tl-title">Registro enviado</div>
+                    <div class="tl-sub">${fmtFechaHora(fechaEnvio)}</div>
+                </div>
+            </div>`;
+
+        if (estado === 'Pendiente') {
+            items += `
+            <div class="tl-item">
+                <div class="tl-dot rev"><i class="bi bi-hourglass-split"></i></div>
+                <div class="tl-body">
+                    <div class="tl-title">En espera de revisión</div>
+                    <div class="tl-sub">Pendiente de aprobación por tu Unidad Receptora</div>
+                </div>
+            </div>`;
+        } else if (estado === 'Aprobado') {
+            items += `
+            <div class="tl-item">
+                <div class="tl-dot rev"><i class="bi bi-eye-fill"></i></div>
+                <div class="tl-body">
+                    <div class="tl-title">Revisado por la Unidad Receptora</div>
+                    <div class="tl-sub">El registro fue evaluado</div>
+                </div>
+            </div>
+            <div class="tl-item">
+                <div class="tl-dot apr"><i class="bi bi-check-circle-fill"></i></div>
+                <div class="tl-body">
+                    <div class="tl-title">Aprobado · Horas sumadas a tu progreso</div>
+                    <div class="tl-sub">${fmtHoras(r.horas_trabajadas)} acreditadas</div>
+                </div>
+            </div>`;
+        } else if (estado === 'Rechazado') {
+            items += `
+            <div class="tl-item">
+                <div class="tl-dot rev"><i class="bi bi-eye-fill"></i></div>
+                <div class="tl-body">
+                    <div class="tl-title">Revisado por la Unidad Receptora</div>
+                    <div class="tl-sub">El registro fue evaluado</div>
+                </div>
+            </div>
+            <div class="tl-item">
+                <div class="tl-dot rech"><i class="bi bi-x-circle-fill"></i></div>
+                <div class="tl-body">
+                    <div class="tl-title">Rechazado</div>
+                    <div class="tl-sub">${r.motivo_rechazo ? r.motivo_rechazo : 'Sin motivo especificado'}</div>
+                </div>
+            </div>`;
+        }
+
+        tl.innerHTML = items;
+    }
+
+    function renderAcciones(r, estado) {
+        const wrap = document.getElementById('accionesWrap');
+        if (!wrap) return;
+
+        if (estado === 'Aprobado') {
+            wrap.innerHTML = `
+                <div style="display:flex;align-items:center;gap:.75rem;color:#92400e;
+                            background:var(--dorado-lt);border:1px solid var(--dorado);
+                            border-radius:var(--radius-sm);padding:.9rem 1.1rem;font-size:.85rem;font-weight:600;">
+                    <i class="bi bi-lock-fill" style="font-size:1rem;"></i>
+                    Este registro ya fue aprobado y no puede modificarse.
+                </div>`;
+        } else if (estado === 'Pendiente' || estado === 'Rechazado') {
+            const labelEliminar = estado === 'Rechazado'
+                ? '<i class="bi bi-trash3-fill"></i> Eliminar registro'
+                : '<i class="bi bi-trash3-fill"></i> Eliminar';
+            const hint = estado === 'Rechazado'
+                ? '<p style="font-size:.78rem;color:var(--muted);margin-top:.8rem;margin-bottom:0;">Puedes eliminar este registro y crear uno nuevo con la información corregida.</p>'
+                : '';
+            wrap.innerHTML = `
+                <div style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;">
+                    <button class="btn-eliminar" onclick="confirmarEliminar()">
+                        ${labelEliminar}
+                    </button>
+                </div>
+                ${hint}`;
+        } else {
+            wrap.innerHTML = `<p style="font-size:.83rem;color:var(--muted);margin:0;">Sin acciones disponibles.</p>`;
+        }
+    }
+
+    // ─── Mostrar error general ─────────────────────────────────────
+    function mostrarError(msg) {
+        document.querySelector('main').innerHTML = `
+            <a href="ALU_registro-horas.html" class="btn-back">
+                <i class="bi bi-arrow-left"></i> Volver
+            </a>
+            <div style="text-align:center;padding:3rem 1rem;">
+                <i class="bi bi-exclamation-circle" style="font-size:2.5rem;color:var(--muted);display:block;margin-bottom:1rem;"></i>
+                <p style="font-size:.95rem;color:var(--muted);">${msg}</p>
+            </div>`;
+    }
+
+    // ─── Cargar registro desde la API ─────────────────────────────
+    async function cargarRegistro() {
+        if (!_idRegistro) {
+            mostrarError('No se especificó un registro. <a href="ALU_registro-horas.html">Volver a bitácora</a>');
+            return;
+        }
+
+        try {
+            const res  = await apiFetchAlu(`/api/alumno/registro/${_idRegistro}`);
+            const data = await res.json();
+
+            if (!res.ok) {
+                mostrarError(data.error || 'No se pudo cargar el registro.');
+                return;
+            }
+
+            renderRegistro(data.registro);
+
+        } catch (e) {
+            mostrarError('No se pudo conectar con el servidor. Intenta de nuevo más tarde.');
+        }
+    }
+
+    // ─── Modal de eliminar ────────────────────────────────────────
+    let _modalEliminar = null;
+
     function confirmarEliminar() {
-        new bootstrap.Modal(document.getElementById('modalEliminar')).show();
+        const el = document.getElementById('modalEliminar');
+        el.style.display = 'flex';
+        _modalEliminar = el;
     }
-    function ejecutarEliminar() {
-        // Aquí iría la llamada al backend
-        window.location.href = 'dashboard-alumno.html';
+    function cerrarModalEliminar() {
+        if (_modalEliminar) _modalEliminar.style.display = 'none';
     }
+
+    async function ejecutarEliminar() {
+        const btn = document.querySelector('#modalEliminar button[onclick="ejecutarEliminar()"]');
+        if (btn) { btn.disabled = true; btn.textContent = 'Eliminando…'; }
+
+        try {
+            const res  = await apiFetchAlu(`/api/alumno/registro/${_idRegistro}`, { method: 'DELETE' });
+            const data = await res.json();
+
+            if (!res.ok) {
+                cerrarModalEliminar();
+                alert(data.error || 'No se pudo eliminar el registro.');
+                if (btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-trash3-fill me-1"></i> Sí, eliminar'; }
+                return;
+            }
+
+            // Redirigir a bitácora con mensaje de éxito
+            window.location.href = 'ALU_registro-horas.html?eliminado=1';
+
+        } catch (e) {
+            cerrarModalEliminar();
+            alert('No se pudo conectar con el servidor.');
+            if (btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-trash3-fill me-1"></i> Sí, eliminar'; }
+        }
+    }
+
+    // ─── Init ─────────────────────────────────────────────────────
+    window.addEventListener('load', cargarRegistro);
 
     // ══ NOTIFICACIONES ══════════════════════════════════════════════
     let _nOpen=false;
     function toggleNotif(){_nOpen?cerrarNotif():abrirNotif();}
-    function abrirNotif(){document.getElementById('notifPanel').classList.add('open');document.getElementById('notifOverlay').classList.add('open');_nOpen=true;}
-    function cerrarNotif(){document.getElementById('notifPanel').classList.remove('open');document.getElementById('notifOverlay').classList.remove('open');_nOpen=false;}
+    function abrirNotif(){document.getElementById('notifPanel')?.classList.add('open');document.getElementById('notifOverlay')?.classList.add('open');_nOpen=true;}
+    function cerrarNotif(){document.getElementById('notifPanel')?.classList.remove('open');document.getElementById('notifOverlay')?.classList.remove('open');_nOpen=false;}
     function marcarLeida(item){if(!item.classList.contains('unread'))return;item.classList.remove('unread');_badge();}
     function marcarTodasLeidas(){document.querySelectorAll('.notif-item.unread').forEach(i=>i.classList.remove('unread'));_badge();}
     function _badge(){const n=document.querySelectorAll('.notif-item.unread').length;const b=document.getElementById('notifCount');if(b){b.textContent=n;b.style.display=n>0?'flex':'none';}const bt=document.getElementById('badgeTodas');if(bt)bt.textContent=n;}

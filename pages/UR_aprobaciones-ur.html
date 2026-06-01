@@ -954,38 +954,34 @@ async function cargarDatos() {
         // Guardar alumnos
         _todosAlumnos = alumnos;
 
-        // ── Pendientes simulados (en producción vendrán de /api/ur/registros-pendientes)
-        // Construimos datos de muestra basados en alumnos reales para que se vea real
-        // Cuando el endpoint exista, reemplazar este bloque con:
-        //   const resPend = await apiFetchUR('/api/ur/registros-pendientes');
-        //   _pendientesSim = (await resPend.json()).grupos;
-        _pendientesSim = [];
-        let idReg = 1000;
-        alumnos.slice(0, Math.min(3, alumnos.length)).forEach((a, i) => {
-            const nombre = [a.nombre_alum, a.apellido_p_alum, a.apellido_m_alum].filter(Boolean).join(' ');
-            const regs   = [];
-            const nPend  = i === 0 ? 2 : 1;
-            for (let j = 0; j < nPend; j++) {
-                const d = new Date(); d.setDate(d.getDate() - (j * 7 + 3));
-                const dStr = d.toLocaleDateString('es-MX', { day:'2-digit', month:'short', year:'numeric' });
-                regs.push({
-                    id_registro: idReg++,
-                    fecha_fmt:   dStr,
-                    horario:     j % 2 === 0 ? '08:00 – 14:00' : '09:00 – 15:00',
-                    horas_str:   '06:00',
-                    actividad:   ['Apoyo administrativo','Elaboración de reportes','Revisión de expedientes'][j % 3]
-                });
-            }
-            _pendientesSim.push({
-                no_cuenta:       a.no_cuenta,
-                nombre,
-                carrera:         a.nombre_licenciatura,
-                programa:        a.programa,
-                horas_realizadas: a.horas_realizadas,
-                avance_pct:      a.avance_pct,
-                registros:       regs
-            });
-        });
+        // ── Cargar pendientes reales desde el backend ──────
+        const resPend  = await apiFetchUR('/api/ur/registros-pendientes');
+        const dataPend = await resPend.json();
+        if (resPend.ok) {
+            _pendientesSim = dataPend.grupos.map(g => ({
+                no_cuenta:        g.no_cuenta,
+                nombre:           g.nombre,
+                carrera:          g.nombre_licenciatura,
+                programa:         g.programa,
+                horas_realizadas: alumnos.find(a => a.no_cuenta === g.no_cuenta)?.horas_realizadas || 0,
+                avance_pct:       alumnos.find(a => a.no_cuenta === g.no_cuenta)?.avance_pct || 0,
+                registros:        g.registros.map(r => {
+                    const fmtF = (iso) => iso ? new Date(iso).toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'}) : '—';
+                    const fmtT = (iso) => iso ? new Date(iso).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit',hour12:false}) : '—';
+                    const hrs  = r.horas_trabajadas;
+                    const hh   = hrs ? Math.floor(hrs) : 0;
+                    const mm   = hrs ? Math.round((hrs-hh)*60) : 0;
+                    return {
+                        id_registro: r.id_registro,
+                        fecha_fmt:   fmtF(r.hora_entrada),
+                        horario:     `${fmtT(r.hora_entrada)} – ${fmtT(r.hora_salida)}`,
+                        horas_str:   hrs ? `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}` : '—',
+                        actividad:   r.actividad_desc || '—',
+                        no_cuenta:   g.no_cuenta
+                    };
+                })
+            }));
+        }
 
         actualizarContadores();
         renderPendientes();
